@@ -19,7 +19,7 @@ export const SidebarForm = () => {
     } = useDashboard();
 
     return (
-        <aside className="w-full lg:w-1/2 shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
+        <aside className="w-full lg:w-[40%] shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
             {/* Brand Header */}
             <div className="p-8 border-b border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center gap-3 group cursor-default">

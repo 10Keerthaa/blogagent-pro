@@ -19,7 +19,7 @@ export const PostPreview = () => {
 
     if (isGenerating) {
         return (
-            <div className="space-y-10 animate-fadeIn max-w-4xl mx-auto w-full px-8 py-10">
+            <div className="space-y-10 animate-fadeIn max-w-4xl mx-auto w-full px-24 py-20">
                 <Skeleton className="h-10 w-3/4" />
                 <Skeleton className="h-[400px] w-full rounded-none" />
                 <div className="space-y-4">
@@ -47,7 +47,7 @@ export const PostPreview = () => {
 
     return (
         <div className="animate-fadeIn w-full transition-all duration-300">
-            <div className="max-w-4xl mx-auto px-8 py-10">
+            <div className="max-w-4xl mx-auto px-24 py-20">
 
                 {/* Sticky Toolbar */}
                 <div className="flex items-center justify-between mb-10 sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 pb-6 border-b border-slate-100 dark:border-slate-800/50">
@@ -73,7 +73,7 @@ export const PostPreview = () => {
                 </div>
 
                 {/* Blog Title (h1) above the image */}
-                <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-8">
+                <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-8 font-serif">
                     {preview.title}
                 </h1>
 
@@ -93,8 +93,9 @@ export const PostPreview = () => {
                 <article
                     dangerouslySetInnerHTML={{ __html: preview.content }}
                     className="text-slate-600 dark:text-slate-300 text-base leading-relaxed prose prose-indigo dark:prose-invert max-w-none
-                        prose-h2:text-2xl prose-h2:font-extrabold prose-h2:tracking-tight prose-h2:mt-12 prose-h2:mb-6
-                        prose-p:mb-6 prose-a:font-bold prose-a:no-underline prose-a:border-b-2 prose-a:border-indigo-100 hover:prose-a:border-indigo-500 transition-all"
+                        prose-h2:text-2xl prose-h2:font-extrabold prose-h2:tracking-tight prose-h2:mt-12 prose-h2:mb-6 prose-h2:font-serif
+                        prose-h3:text-xl prose-h3:font-bold prose-h3:tracking-tight prose-h3:mt-8 prose-h3:mb-4 prose-h3:font-serif
+                        prose-p:mb-6 prose-a:font-bold prose-a:no-underline prose-a:border-b-2 prose-a:border-indigo-100 hover:prose-a:border-indigo-500 transition-all font-sans"
                 />
 
                 {/* Infographic Section */}

@@ -21,7 +21,7 @@ const DashboardContent = () => {
         <SidebarForm />
 
         {/* RIGHT PANEL: Dynamic Workspace (Refined) */}
-        <main className="flex-1 lg:w-1/2 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900">
+        <main className="flex-1 lg:w-[60%] flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900">
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
 
