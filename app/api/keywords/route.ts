@@ -16,25 +16,19 @@ export async function POST(req: Request) {
     const projectId = await auth.getProjectId();
 
     // Use standard generateContent (not streaming) for predictable parsing
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent`;
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash:generateContent`;
 
-    const aiPrompt = `You are an expert SEO strategist. A user is writing a blog post about: "${prompt}".
+    const aiPrompt = `You are a professional SEO analyst. A user is writing a blog post about: "${prompt}".
 
-Your task: Generate EXACTLY 3 SEO keyword phrases that are:
-- Tightly related to the specific topic above
-- PRIORITY: Must be multi-word phrases (e.g. "document automation strategy" instead of "automation")
-- Long-tail (2 to 4 words each)
-- Phrases a real person would search on Google
+TASK: Generate EXACTLY 3 highly relevant SEO keyword phrases.
+REQUIREMENTS:
+- Each phrase MUST be 2 to 4 words long (No single words).
+- Phrases must be directly related to "${prompt}".
+- Return ONLY the 3 phrases separated by commas.
+- NO numbering, NO bullets, NO quotes, NO introductory text.
 
-OUTPUT FORMAT (CRITICAL):
-Return ONLY the 3 phrases separated by commas on a single line. 
-- NO numbering (do not use 1, 2, 3)
-- NO bullets
-- NO quotes
-- NO extra text
-
-Example output for topic "AI in healthcare":
-AI diagnostics tools, machine learning medical imaging, clinical AI software`;
+GOOD EXAMPLE: AI document automation, enterprise workflow optimization, intelligent character recognition
+BAD EXAMPLE: 1. AI, 2. Document, 3. Enterprise`;
 
     const response = await client.request({
       url,
