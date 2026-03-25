@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const projectId = await auth.getProjectId();
 
     // Use standard generateContent (not streaming) for predictable parsing
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash-002:generateContent`;
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent`;
 
     const aiPrompt = `You are a professional SEO analyst. A user is writing a blog post about: "${prompt}".
 

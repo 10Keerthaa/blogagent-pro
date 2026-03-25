@@ -20,10 +20,10 @@ export async function POST(req: Request) {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    // TASK 1: Generate Visual Summary Prompt via Vertex AI Gemini 2.5 Flash 001
+    // TASK 1: Generate Visual Summary Prompt via Vertex AI Gemini 2.5 Pro
     let visualPrompt = '';
     try {
-      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-001:streamGenerateContent`;
+      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
       const aiPrompt = `
         You are a graphic designer specializing in data visualization.
