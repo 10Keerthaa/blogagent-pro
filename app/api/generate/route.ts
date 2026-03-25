@@ -3,6 +3,8 @@ import { uploadToGCS } from '@/lib/gcs';
 import { generateHeroBanner } from '@/lib/imageProcessor';
 import { getGoogleAuth } from '@/lib/googleAuth';
 
+export const maxDuration = 60; // Set timeout for Vercel
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { uploadToGCS } from '@/lib/gcs';
 import { getGoogleAuth } from '@/lib/googleAuth';
 
+export const maxDuration = 60; // Set timeout for Vercel
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();

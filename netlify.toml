@@ -1,5 +1,0 @@
-[functions]
-  external_node_module_default_enabled = true
-  # Attempt to increase timeout for AI generation (Netlify max is 26s for Pro, 10s for Free)
-  # Background functions are also an option if this continues to fail.
-  timeout = 90
