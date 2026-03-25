@@ -50,18 +50,19 @@ AI diagnostics tools, machine learning medical imaging, clinical AI software`;
     const cleaned = rawText
       .replace(/\*\*/g, '')
       .replace(/\*/g, '')
-      .replace(/^\d+\.\s*/gm, '')  // remove "1. " prefixes
-      .replace(/^[-•]\s*/gm, '')   // remove bullet points
-      .split('\n')
+      .replace(/^\d+\.\s*/gm, '')
+      .replace(/^[-•]\s*/gm, '')
+      .replace(/[\n\r]/g, ', ')
+      .split(',')
       .map((l: string) => l.trim())
       .filter(Boolean)
       .join(', ');
 
-    // Extract up to 3 comma-separated multi-word phrases
+    // Extract up to 3 phrases
     const phrases = cleaned
       .split(',')
       .map((k: string) => k.trim())
-      .filter((k: string) => k.length > 3 && k.includes(' '))
+      .filter((k: string) => k.length >= 2)
       .slice(0, 3);
 
     console.log(`Keywords generated for "${prompt}":`, phrases);
