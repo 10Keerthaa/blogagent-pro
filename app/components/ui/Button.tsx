@@ -18,7 +18,7 @@ export const Button = ({
     disabled,
     ...props
 }: ButtonProps) => {
-    const baseStyles = 'inline-flex items-center justify-center rounded-xl font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none active:shadow-inner select-none uppercase tracking-wider text-[11px]';
+    const baseStyles = 'inline-flex items-center justify-center rounded-none font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-50:ring-offset-2 dark:focus-visible:ring-offset-slate-950 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none active:shadow-inner select-none uppercase tracking-wider text-[11px]';
 
     const variants = {
         primary: 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm hover:shadow-md dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:shadow-none',

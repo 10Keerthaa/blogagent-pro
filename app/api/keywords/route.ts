@@ -22,13 +22,11 @@ export async function POST(req: Request) {
 
 TASK: Generate EXACTLY 3 highly relevant SEO keyword phrases.
 REQUIREMENTS:
-- Each phrase MUST be 3 to 5 words long (No single words).
-- Phrases must be directly related to "${prompt}".
-- Return ONLY the 3 phrases separated by commas.
-- NO numbering, NO bullets, NO quotes, NO introductory text.
+- Each phrase MUST be 2 to 4 words long (No single words).
+- Phrases must be directly related to the topic.
+- Return ONLY a JSON array of 3 strings.
 
-GOOD EXAMPLE: AI document automation, enterprise workflow optimization, intelligent character recognition
-BAD EXAMPLE: 1. AI, 2. Document, 3. Enterprise`;
+EXAMPLE: ["AI document processing", "enterprise automation solutions", "intelligent workflow optimization"]`;
 
     const response = await client.request({
       url,
@@ -37,29 +35,25 @@ BAD EXAMPLE: 1. AI, 2. Document, 3. Enterprise`;
         contents: [{ role: "user", parts: [{ text: aiPrompt }] }],
         generationConfig: {
           temperature: 0.1,
-          topP: 0.8,
-          maxOutputTokens: 128,
+          responseMimeType: "application/json",
         }
       }
     });
 
     const data = response.data as any;
-    const rawText: string = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const responseText: string = data?.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
 
-    // Advanced Global Cleaning: Strip all numbering, dots, and bullets
-    const cleanedArr = rawText
-      .replace(/\*\*/g, '')
-      .replace(/\*/g, '')
-      .replace(/\d+\.\s*/g, ' ')  // remove "1." etc.
-      .replace(/[-•]/g, ' ')     // remove bullets
-      .split(/[,\n\r;|]/)         // Split by multiple possible delimiters
-      .map((l: string) => l.trim().replace(/^"|"$/g, '')) // Remove quotes
-      .filter(Boolean);
-
-    // Extract up to 3 phrases
-    const phrases = cleanedArr
-      .filter((k: string) => k.length >= 2)
-      .slice(0, 3);
+    let phrases: string[] = [];
+    try {
+      const parsed = JSON.parse(responseText);
+      if (Array.isArray(parsed)) {
+        phrases = parsed.slice(0, 3).map(p => String(p).trim());
+      }
+    } catch (e) {
+      console.error("JSON Parse failed for keywords:", responseText);
+      // Minimal fallback cleanup if JSON fails
+      phrases = responseText.replace(/[\[\]"]/g, '').split(',').map(s => s.trim()).slice(0, 3);
+    }
 
     console.log(`Keywords generated for "${prompt}":`, phrases);
     return NextResponse.json({ keywords: phrases.join(', ') });

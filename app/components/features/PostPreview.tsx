@@ -77,16 +77,47 @@ export const PostPreview = () => {
                     {preview.title}
                 </h1>
 
-                {/* Hero Image — title & logo are baked in server-side */}
+                {/* Hero Section Refinement 3.0 */}
                 {preview.imageUrl && (
-                    <Card className="mb-12 rounded-none shadow-xl shadow-indigo-100/20 dark:shadow-none overflow-hidden border-none ring-1 ring-slate-200/50 dark:ring-slate-800/50 group">
+                    <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl ring-1 ring-slate-200/50 dark:ring-slate-800/50">
+                        {/* Base Image */}
                         <img
                             src={preview.imageUrl}
                             alt={preview.title}
                             className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
-                            style={{ maxHeight: '540px' }}
+                            style={{ maxHeight: '580px' }}
                         />
-                    </Card>
+
+                        {/* Protective Overlay Gradient (Bottom-up) */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+
+                        {/* Content Overlay */}
+                        <div className="absolute inset-0 p-10 flex flex-col justify-start z-20">
+                            {/* Blog Tag: 40px padding (p-10), weight 900, Inter */}
+                            <div className="flex">
+                                <span className="bg-[#6366f1] text-white px-4 py-1.5 text-[12px] font-[900] uppercase tracking-wider font-sans leading-none">
+                                    Blog
+                                </span>
+                            </div>
+
+                            {/* Spacing Constraint: 24px margin-bottom */}
+                            <div className="h-[24px]" />
+
+                            {/* Article Title: Semi-Bold Inter, Line-height 1.2 */}
+                            <h2 className="text-white text-4xl lg:text-5xl font-semibold leading-[1.2] tracking-tight max-w-2xl font-sans">
+                                {preview.title}
+                            </h2>
+                        </div>
+
+                        {/* Logo Box: 140px x 80px, flush bottom-right */}
+                        <div className="absolute bottom-0 right-0 w-[140px] h-[80px] bg-white flex items-center justify-center p-3 z-30">
+                            <img
+                                src="/10xDS.png"
+                                alt="Brand Logo"
+                                className="w-full h-full object-contain"
+                            />
+                        </div>
+                    </div>
                 )}
 
                 {/* Article Content */}

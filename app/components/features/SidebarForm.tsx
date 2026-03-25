@@ -59,13 +59,13 @@ export const SidebarForm = () => {
                         </button>
                     </div>
                     <div
-                        className="flex flex-wrap items-center gap-2 min-h-[44px] p-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none cursor-text transition-all focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500 shadow-sm"
+                        className="flex flex-wrap items-center gap-2 min-h-[100px] p-4 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none cursor-text transition-all focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500 shadow-sm"
                         onClick={() => inputRef.current?.focus()}
                     >
                         {keywords.map((tag, idx) => (
                             <span
                                 key={idx}
-                                className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-[11px] font-bold shadow-sm animate-fadeIn"
+                                className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-none text-[11px] font-bold shadow-sm animate-fadeIn"
                             >
                                 {tag}
                                 <button
