@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         const client = await auth.getClient();
         const projectId = await auth.getProjectId();
 
-        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash:streamGenerateContent`;
+        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash-002:streamGenerateContent`;
 
         const aiPrompt = `
         TASK: Generate a single, highly compelling meta description for this blog post.

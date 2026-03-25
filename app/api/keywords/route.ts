@@ -16,13 +16,13 @@ export async function POST(req: Request) {
     const projectId = await auth.getProjectId();
 
     // Use standard generateContent (not streaming) for predictable parsing
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash:generateContent`;
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash-002:generateContent`;
 
     const aiPrompt = `You are a professional SEO analyst. A user is writing a blog post about: "${prompt}".
 
 TASK: Generate EXACTLY 3 highly relevant SEO keyword phrases.
 REQUIREMENTS:
-- Each phrase MUST be 2 to 4 words long (No single words).
+- Each phrase MUST be 3 to 5 words long (No single words).
 - Phrases must be directly related to "${prompt}".
 - Return ONLY the 3 phrases separated by commas.
 - NO numbering, NO bullets, NO quotes, NO introductory text.

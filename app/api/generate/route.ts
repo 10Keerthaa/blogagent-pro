@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    // Task 1: Generate Blog Content via Vertex AI Gemini 1.5 Flash
+    // Task 1: Generate Blog Content via Vertex AI Gemini 1.5 Flash 002
     let blogData: { title: string; metaDesc: string; content: string } = {
       title: "",
       metaDesc: "",
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     };
 
     try {
-      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash:generateContent`;
+      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash-002:generateContent`;
 
       const aiPrompt = `
         You are an expert SEO copywriter. Generate a high-quality, long-form blog post.
