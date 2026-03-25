@@ -54,20 +54,34 @@ export async function POST(req: Request) {
     const stream = new ReadableStream({
       async start(controller) {
         const responseStream = response.data as any;
+        let buffer = '';
 
         responseStream.on('data', (chunk: any) => {
-          const chunkString = chunk.toString();
-          // Extract text from Vertex AI stream chunks using a robust regex
-          const matches = chunkString.match(/"text":\s*"([\s\S]*?)"/g);
+          buffer += chunk.toString();
 
-          if (matches) {
-            matches.forEach((match: string) => {
-              // 1. Extract the raw text part
-              let textContent = match.replace(/^"text":\s*"/, '').replace(/"$/, '');
+          // Robust extraction of "text" values that might span multiple chunks
+          while (true) {
+            const pattern = '"text": "';
+            const startIndex = buffer.indexOf(pattern);
+            if (startIndex === -1) break;
 
-              // 2. Surgical unescape for common JSON/Unicode sequences
-              // This is more resilient against fragmented chunks than JSON.parse
-              textContent = textContent
+            const textValueStart = startIndex + pattern.length;
+            let endIndex = -1;
+
+            // Find the closing quote, skipping escaped quotes (\")
+            for (let i = textValueStart; i < buffer.length; i++) {
+              if (buffer[i] === '"' && (i === 0 || buffer[i - 1] !== '\\')) {
+                endIndex = i;
+                break;
+              }
+            }
+
+            if (endIndex !== -1) {
+              // Extract the raw escaped text
+              let rawText = buffer.slice(textValueStart, endIndex);
+
+              // Unescape common JSON/Unicode sequences
+              const decodedText = rawText
                 .replace(/\\u([a-fA-F0-9]{4})/g, (_, grp) => String.fromCharCode(parseInt(grp, 16)))
                 .replace(/\\n/g, '\n')
                 .replace(/\\r/g, '\r')
@@ -75,8 +89,14 @@ export async function POST(req: Request) {
                 .replace(/\\"/g, '"')
                 .replace(/\\\\/g, '\\');
 
-              controller.enqueue(new TextEncoder().encode(textContent));
-            });
+              controller.enqueue(new TextEncoder().encode(decodedText));
+
+              // Remove the handled portion from the buffer
+              buffer = buffer.slice(endIndex + 1);
+            } else {
+              // The text value is incomplete, wait for more chunks
+              break;
+            }
           }
         });
 
