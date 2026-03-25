@@ -1,23 +1,24 @@
 import { Storage } from '@google-cloud/storage';
-import path from 'path';
+import { getGoogleAuth } from './googleAuth';
 
 /**
  * GOOGLE CLOUD STORAGE UTILITY
  * Handles bucket auto-creation, public permissions, and binary uploads.
- * This is the ultimate bypass for Sucuri's payload size limits.
  */
 
-const keyFilename = path.join(process.cwd(), 'credentials.json');
-const storage = new Storage({ keyFilename });
-
-const bucketName = process.env.FIREBASE_STORAGE_BUCKET || 'kj-blog-images-2026';
+async function getStorageClient() {
+    const auth = await getGoogleAuth(['https://www.googleapis.com/auth/cloud-platform']);
+    const credentials = await auth.getCredentials();
+    return new Storage({ credentials });
+}
 
 export async function uploadToGCS(buffer: Buffer, fileName: string, contentType: string): Promise<string> {
     try {
+        const storage = await getStorageClient();
+        const bucketName = process.env.FIREBASE_STORAGE_BUCKET || 'kj-blog-images-2026';
         const bucket = storage.bucket(bucketName);
 
         // 1. Attempt Graceful Bucket Creation (Optional)
-        // Note: Requires Project-level Storage Admin. If it fails, we assume bucket exists.
         try {
             const [exists] = await bucket.exists();
             if (!exists) {
@@ -36,7 +37,7 @@ export async function uploadToGCS(buffer: Buffer, fileName: string, contentType:
                 console.log(`Bucket ${bucketName} created and made public.`);
             }
         } catch (setupErr: any) {
-            console.warn("GCS Bucket Setup Warning (likely already exists or insufficient permissions):", setupErr.message);
+            console.warn("GCS Bucket Setup Warning:", setupErr.message);
         }
 
         // 2. Upload the Binary Buffer

@@ -1,8 +1,7 @@
-import { GoogleAuth } from 'google-auth-library';
 import { NextResponse } from "next/server";
-import path from 'path';
 import { uploadToGCS } from '@/lib/gcs';
 import { generateHeroBanner } from '@/lib/imageProcessor';
+import { getGoogleAuth } from '@/lib/googleAuth';
 
 export async function POST(req: Request) {
   try {
@@ -13,12 +12,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    // Step 1: Authenticate with Vertex AI using credentials.json
-    const credentialsPath = path.join(process.cwd(), 'credentials.json');
-    const auth = new GoogleAuth({
-      keyFile: credentialsPath,
-      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-    });
+    // Step 1: Authenticate with Vertex AI
+    const auth = await getGoogleAuth(['https://www.googleapis.com/auth/cloud-platform']);
 
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
