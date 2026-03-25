@@ -1,0 +1,80 @@
+import { GoogleAuth } from 'google-auth-library';
+import { NextResponse } from "next/server";
+import path from 'path';
+
+export async function POST(req: Request) {
+  try {
+    const { prompt } = await req.json();
+
+    if (!prompt) {
+      return NextResponse.json({ keywords: '' });
+    }
+
+    const credentialsPath = path.join(process.cwd(), 'credentials.json');
+    const auth = new GoogleAuth({
+      keyFile: credentialsPath,
+      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+    });
+
+    const client = await auth.getClient();
+    const projectId = await auth.getProjectId();
+
+    // Use standard generateContent (not streaming) for predictable parsing
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent`;
+
+    const aiPrompt = `You are an expert SEO strategist. A user is writing a blog post about: "${prompt}".
+
+Your task: Generate EXACTLY 3 SEO keyword phrases that are:
+- Tightly related to the specific topic above
+- Long-tail (2 to 4 words each)
+- Phrases a real person would search on Google
+- NOT generic (do not use words like "technology", "business", "solutions" alone)
+
+OUTPUT FORMAT (strict):
+Return ONLY the 3 phrases separated by commas on a single line. No numbering, no bullets, no explanation, no extra text.
+
+Example output for topic "AI in healthcare":
+AI diagnostics tools, machine learning medical imaging, clinical AI software`;
+
+    const response = await client.request({
+      url,
+      method: 'POST',
+      data: {
+        contents: [{ role: "user", parts: [{ text: aiPrompt }] }],
+        generationConfig: {
+          temperature: 0.1,
+          topP: 0.8,
+          maxOutputTokens: 128,
+        }
+      }
+    });
+
+    const data = response.data as any;
+    const rawText: string = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    // Robust cleaning: strip markdown, bullets, numbering, extra lines
+    const cleaned = rawText
+      .replace(/\*\*/g, '')
+      .replace(/\*/g, '')
+      .replace(/^\d+\.\s*/gm, '')  // remove "1. " prefixes
+      .replace(/^[-•]\s*/gm, '')   // remove bullet points
+      .split('\n')
+      .map((l: string) => l.trim())
+      .filter(Boolean)
+      .join(', ');
+
+    // Extract up to 3 comma-separated multi-word phrases
+    const phrases = cleaned
+      .split(',')
+      .map((k: string) => k.trim())
+      .filter((k: string) => k.length > 3 && k.includes(' '))
+      .slice(0, 3);
+
+    console.log(`Keywords generated for "${prompt}":`, phrases);
+    return NextResponse.json({ keywords: phrases.join(', ') });
+
+  } catch (error: any) {
+    console.error("Vertex AI Keyword fetch failed:", error);
+    return NextResponse.json({ keywords: '', error: error.message }, { status: 200 });
+  }
+}
