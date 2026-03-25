@@ -44,7 +44,7 @@ export const useBlogApi = () => {
         }
     }, []);
 
-    const generateContent = useCallback(async (body: any) => {
+    const generateContent = useCallback(async (body: any, onChunk?: (chunk: string) => void) => {
         setIsGenerating(true);
         try {
             const r = await fetch('/api/generate', {
@@ -52,11 +52,37 @@ export const useBlogApi = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             });
-            if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'Failed');
-            return await r.json();
+            if (!r.ok) throw new Error('Generation failed');
+
+            const reader = r.body?.getReader();
+            const decoder = new TextDecoder();
+            let fullText = '';
+
+            if (reader) {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value);
+                    fullText += chunk;
+                    if (onChunk) onChunk(chunk);
+                }
+            }
+            return fullText;
         } finally {
             setIsGenerating(false);
         }
+    }, []);
+
+    const generateFeaturedImage = useCallback(async (body: any) => {
+        try {
+            const r = await fetch('/api/image/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const d = await r.json();
+            return d.imageUrl || null;
+        } catch { return null; }
     }, []);
 
     const generateDescription = useCallback(async (body: any) => {
@@ -170,6 +196,7 @@ export const useBlogApi = () => {
         fetchHistory,
         fetchDrafts,
         generateContent,
+        generateFeaturedImage,
         generateDescription,
         fetchKeywords,
         saveDraft,
