@@ -32,8 +32,9 @@ export async function POST(req: Request) {
         TASK: Create a highly detailed image generation prompt for a square infographic.
         REQUIREMENTS:
         - Must be a high-resolution, professional data visualization centered ENTIRELY on the provided blog content.
-        - Style: Modern, clean lines, professional typography, vibrant and colorful palette.
-        - Focus: Illustrate the specific key takeaways and data points from the blog text (e.g., if the blog is about hydration, show water/health data).
+        - STYLE: Modern, clean, professional corporate graphics.
+        - COLORS: Strictly use a palette of **Purple, White, Silver, and Black**. (NO other colors are allowed).
+        - Focus: Illustrate the specific key takeaways and data points from the blog text.
         - Aspect Ratio: Square (1:1).
         
         Return ONLY the prompt text. No quotes, no markdown.

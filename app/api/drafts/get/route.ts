@@ -7,7 +7,9 @@ export async function GET() {
     try {
         const draftsSnapshot = await db.collection('drafts')
             .where('status', '==', 'pending')
-            .get(); // Optional: .orderBy('createdAt', 'desc') but requires composite index
+            .get();
+
+        console.log(`Found ${draftsSnapshot.size} pending drafts in database`);
 
         const drafts = draftsSnapshot.docs.map(doc => ({
             id: doc.id,
