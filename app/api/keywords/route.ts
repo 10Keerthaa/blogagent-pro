@@ -19,13 +19,16 @@ export async function POST(req: Request) {
     const aiPrompt = `You are an expert SEO strategist. A user is writing a blog post about: "${prompt}".
 
 Your task: Generate EXACTLY 3 SEO keyword phrases that are:
-- Tightly related to the specific topic above
+- Tightly related to the topic above
 - Long-tail (2 to 4 words each)
 - Phrases a real person would search on Google
-- NOT generic (do not use words like "technology", "business", "solutions" alone)
 
-OUTPUT FORMAT (strict):
-Return ONLY the 3 phrases separated by commas on a single line. No numbering, no bullets, no explanation, no extra text.
+OUTPUT FORMAT (CRITICAL):
+Return ONLY the 3 phrases separated by commas on a single line. 
+- NO numbering (do not use 1, 2, 3)
+- NO bullets
+- NO quotes
+- NO extra text
 
 Example output for topic "AI in healthcare":
 AI diagnostics tools, machine learning medical imaging, clinical AI software`;
@@ -46,23 +49,23 @@ AI diagnostics tools, machine learning medical imaging, clinical AI software`;
     const data = response.data as any;
     const rawText: string = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-    // Robust cleaning: strip markdown, bullets, numbering, extra lines
+    // Advanced Global Cleaning: Strip all numbering, dots, and bullets regardless of line breaks
     const cleaned = rawText
       .replace(/\*\*/g, '')
       .replace(/\*/g, '')
-      .replace(/^\d+\.\s*/gm, '')
-      .replace(/^[-•]\s*/gm, '')
-      .replace(/[\n\r]/g, ', ')
+      .replace(/\d+\.\s*/g, '')  // Global removal of "1.", "2.", etc.
+      .replace(/[-•]/g, '')     // Global removal of bullets
+      .replace(/[\n\r]/g, ', ')  // Convert any line breaks to commas
       .split(',')
-      .map((l: string) => l.trim())
-      .filter(Boolean)
+      .map((l: string) => l.trim().replace(/^"|"$/g, '')) // Remove wrap-around quotes
+      .filter((l: string) => l.length >= 2)
       .join(', ');
 
-    // Extract up to 3 phrases
+    // Extract exactly 3 phrases
     const phrases = cleaned
       .split(',')
       .map((k: string) => k.trim())
-      .filter((k: string) => k.length >= 2)
+      .filter(Boolean)
       .slice(0, 3);
 
     console.log(`Keywords generated for "${prompt}":`, phrases);
