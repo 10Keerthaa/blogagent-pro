@@ -49,23 +49,19 @@ AI diagnostics tools, machine learning medical imaging, clinical AI software`;
     const data = response.data as any;
     const rawText: string = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-    // Advanced Global Cleaning: Strip all numbering, dots, and bullets regardless of line breaks
-    const cleaned = rawText
+    // Advanced Global Cleaning: Strip all numbering, dots, and bullets
+    const cleanedArr = rawText
       .replace(/\*\*/g, '')
       .replace(/\*/g, '')
-      .replace(/\d+\.\s*/g, '')  // Global removal of "1.", "2.", etc.
-      .replace(/[-•]/g, '')     // Global removal of bullets
-      .replace(/[\n\r]/g, ', ')  // Convert any line breaks to commas
-      .split(',')
-      .map((l: string) => l.trim().replace(/^"|"$/g, '')) // Remove wrap-around quotes
-      .filter((l: string) => l.length >= 2)
-      .join(', ');
+      .replace(/\d+\.\s*/g, ' ')  // remove "1." etc.
+      .replace(/[-•]/g, ' ')     // remove bullets
+      .split(/[,\n\r;|]/)         // Split by multiple possible delimiters
+      .map((l: string) => l.trim().replace(/^"|"$/g, '')) // Remove quotes
+      .filter(Boolean);
 
-    // Extract exactly 3 phrases
-    const phrases = cleaned
-      .split(',')
-      .map((k: string) => k.trim())
-      .filter(Boolean)
+    // Extract up to 3 phrases
+    const phrases = cleanedArr
+      .filter((k: string) => k.length >= 2)
       .slice(0, 3);
 
     console.log(`Keywords generated for "${prompt}":`, phrases);
