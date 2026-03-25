@@ -43,11 +43,12 @@ export async function POST(req: Request) {
            - CRITICAL RULE: Length MUST be stringently between 50 and 60 characters. Count spaces. Do not fail this constraint.
            - Must include at least 1 keyword.
         2. META DESCRIPTION:
-           - CRITICAL RULE: Length MUST be strictly between 150 and 160 characters.
+           - CRITICAL RULE: Length MUST be exactly between 150 and 160 characters. Count characters precisely.
            - Must include at least 2 keywords.
         3. BLOG CONTENT:
            - Total Word Count MUST be between 1500 and 2000 words.
            - Expand each section with detailed explanations, industry case studies, and practical examples.
+           - Must include a clear Heading for the final section titled "Conclusion".
            - Do NOT use Markdown (## or ###) for headings. Instead, use standard HTML tags (<h2>, <h3>) so WordPress can apply its native formatting.
            - Do NOT include an H1 or article title at the beginning of the content. Start the blog content directly with the introductory paragraph.
            - Prioritize bulleted points.

@@ -80,9 +80,9 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
           .badge-text { fill: white; font-family: 'Inter', sans-serif; font-weight: 800; font-size: ${fontSize * 0.35}px; text-anchor: middle; }
         </style>
         
-        <!-- BLOG BADGE: matching the purple/white aesthetic of mockup -->
-        <rect x="${leftMargin}" y="${startY - fontSize * 2.0}" width="${fontSize * 1.8}" height="${fontSize * 0.8}" fill="#6366f1" rx="4" ry="4" />
-        <text x="${leftMargin + (fontSize * 0.9)}" y="${startY - fontSize * 2.0 + (fontSize * 0.55)}" class="badge-text" text-anchor="middle">Blog</text>
+        <!-- BLOG BADGE: updated to match sample Image 4 (purple/white clean) -->
+        <rect x="${leftMargin}" y="${startY - fontSize * 1.5}" width="${fontSize * 1.6}" height="${fontSize * 0.7}" fill="#6366f1" />
+        <text x="${leftMargin + (fontSize * 0.8)}" y="${startY - fontSize * 1.5 + (fontSize * 0.48)}" class="badge-text" text-anchor="middle">Blog</text>
 
         <!-- MAIN TITLE -->
         ${lines.map((line, i) => {
@@ -109,11 +109,19 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
 
       const logoMetadata = await sharp(resizedLogo).metadata();
       const logoHeight = logoMetadata.height || 0;
+      const logoPadding = fontSize * 0.4;
+
+      // Add a clean white background rectangle for the logo (as seen in sample Image 4)
+      logoLayer.push({
+        input: Buffer.from(`<svg width="${logoWidth + logoPadding * 2}" height="${logoHeight + logoPadding * 2}"><rect width="100%" height="100%" fill="white" /></svg>`),
+        top: Math.round(height - logoHeight - logoPadding * 2 - (fontSize * 0.5)),
+        left: Math.round(width - logoWidth - logoPadding * 2 - (fontSize * 0.5))
+      });
 
       logoLayer.push({
         input: resizedLogo,
-        top: Math.round(height - logoHeight - (fontSize * 0.5)),
-        left: Math.round(width - logoWidth - (fontSize * 0.5))
+        top: Math.round(height - logoHeight - logoPadding - (fontSize * 0.5)),
+        left: Math.round(width - logoWidth - logoPadding - (fontSize * 0.5))
       });
     } catch (e) {
       console.warn("Logo processing failed:", e);

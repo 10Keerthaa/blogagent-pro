@@ -21,7 +21,8 @@ export async function POST(req: Request) {
     const aiPrompt = `You are an expert SEO strategist. A user is writing a blog post about: "${prompt}".
 
 Your task: Generate EXACTLY 3 SEO keyword phrases that are:
-- Tightly related to the topic above
+- Tightly related to the specific topic above
+- PRIORITY: Must be multi-word phrases (e.g. "document automation strategy" instead of "automation")
 - Long-tail (2 to 4 words each)
 - Phrases a real person would search on Google
 

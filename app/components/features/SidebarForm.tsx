@@ -23,7 +23,7 @@ export const SidebarForm = () => {
             {/* Brand Header */}
             <div className="p-8 border-b border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center gap-3 group cursor-default">
-                    <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-none transition-transform group-hover:scale-110">
+                    <div className="w-10 h-10 bg-indigo-600 rounded-none flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-none transition-transform group-hover:scale-110">
                         <Zap className="text-white w-6 h-6 fill-current" />
                     </div>
                     <div>
@@ -59,7 +59,7 @@ export const SidebarForm = () => {
                         </button>
                     </div>
                     <div
-                        className="flex flex-wrap items-center gap-2 min-h-[44px] p-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl cursor-text transition-all focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500 shadow-sm"
+                        className="flex flex-wrap items-center gap-2 min-h-[44px] p-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none cursor-text transition-all focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500 shadow-sm"
                         onClick={() => inputRef.current?.focus()}
                     >
                         {keywords.map((tag, idx) => (

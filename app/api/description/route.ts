@@ -19,13 +19,17 @@ export async function POST(req: Request) {
 
         const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
 
-        const aiPrompt = `You are an SEO copywriter. Generate a high-quality meta description for a blog post about: '${prompt}'.
-    Keywords to include: ${keywords || "None"}
-    
-    RULES:
-    1. CRITICAL RULE: Length MUST be strictly between 150 and 160 characters. Count every character including spaces. Do not fail this constraint.
-    2. SEO Optimized: Include at least 2 keywords or closely related phrases.
-    3. Return ONLY the description text. No quotes, no intro text, no labels.`;
+        const aiPrompt = `
+        TASK: Generate a single, highly compelling meta description for this blog post.
+        Topic: ${prompt}
+        Keywords: ${keywords || "None"}
+
+        REQUIREMENTS:
+        - Must be closely related to the Topic and Keywords.
+        - MANDATORY LENGTH: EXACTLY between 150 and 160 characters. Count every character including spaces.
+        - Include at least 2 of the provided keywords.
+        - Return ONLY the description text. No quotes, no intro text, no labels.
+        `;
 
         const response = await client.request({
             url,
