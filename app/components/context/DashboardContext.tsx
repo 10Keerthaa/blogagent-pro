@@ -83,7 +83,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!sitemapData || Object.keys(sitemapData).length === 0) return html;
         const parts = html.split(/(<[^>]+>)/g);
         let inHeading = false;
-        const sortedKeywords = Object.keys(sitemapData).sort((a, b) => b.length - a.length);
+
+        // Filter out very common/short phrases and sort by length descending
+        const sortedKeywords = Object.keys(sitemapData)
+            .filter(phrase => phrase.length > 5 && !['doing more', 'can help', 'start here', 'read more'].includes(phrase.toLowerCase()))
+            .sort((a, b) => b.length - a.length);
+
         return parts.map(part => {
             if (part.startsWith('<')) {
                 const tag = part.toLowerCase();
@@ -95,7 +100,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             let text = part;
             sortedKeywords.forEach(phrase => {
                 const regex = new RegExp(`(?<!<[^>]*)\\b(${phrase})\\b(?![^<]*>)`, 'gi');
-                text = text.replace(regex, `<a href="${sitemapData[phrase]}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                // Limit to 1 link per unique phrase to avoid spamminess
+                if (text.match(regex)) {
+                    text = text.replace(regex, `<a href="${sitemapData[phrase]}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                }
             });
             return text;
         }).join('');

@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         Wrap output in <title>, <meta>, and <content> tags.
       `;
 
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash:streamGenerateContent`;
 
     const response = await client.request({
       url,
