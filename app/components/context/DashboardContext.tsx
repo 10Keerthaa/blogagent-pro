@@ -230,125 +230,139 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             if (imgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: imgUrl }));
         } catch (e: any) { setError(e.message); }
     };
-};
 
-const handleApplyReviewFeedback = async () => {
-    if (!selectedReviewDraft || !feedback) return;
-    setError(null);
-    try {
-        const d = await api.generateContent({ prompt: selectedReviewDraft.title, feedback });
-        const contentWithLinks = applySitemapLinks(d.content);
-        const updateData = {
-            title: d.title,
-            content: contentWithLinks,
-            metaDesc: d.metaDesc
-        };
-        await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData });
-        setSelectedReviewDraft({ ...selectedReviewDraft, ...updateData });
-        setFeedback('');
-    } catch (e: any) { setError(e.message); }
-};
+    const handleApplyReviewFeedback = async () => {
+        if (!selectedReviewDraft || !feedback) return;
+        setError(null);
+        try {
+            const fullRawText = await api.generateContent(
+                { prompt: selectedReviewDraft.title, keywords: keywords.join(', '), feedback },
+                (chunk: string) => {
+                    // Review tab update (no real-time preview yet, just keeping it consistent)
+                }
+            );
 
-const handleSaveManualEdits = async () => {
-    if (!selectedReviewDraft) return;
-    setError(null);
-    try {
-        const updateData = {
-            title: selectedReviewDraft.title,
-            content: selectedReviewDraft.content
-        };
-        await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData });
-        fetchDrafts();
-    } catch (e: any) { setError(e.message); }
-};
+            const titleMatch = fullRawText.match(/<title>([\s\S]*?)<\/title>/i);
+            const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
+            const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
 
-const handleSaveDraft = async () => {
-    if (!preview) return;
-    setError(null);
-    try {
-        await api.saveDraft({
-            title: preview.title,
-            content: preview.content,
-            metaDesc: description || preview.meta,
-            imageUrl: preview.imageUrl
-        });
-        setActiveTab('review');
-    } catch (e: any) { setError(e.message); }
-};
+            const finalTitle = titleMatch ? titleMatch[1].trim() : (selectedReviewDraft?.title || prompt);
+            const finalMeta = metaMatch ? metaMatch[1].trim() : (selectedReviewDraft?.metaDesc || "");
+            let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
+            finalContent = applySitemapLinks(finalContent);
 
-const handleRejectDraft = async (id: string) => {
-    setError(null);
-    try {
-        await api.updateDraft({ id, action: 'reject' });
-        setSelectedReviewDraft(null);
-        fetchDrafts();
-    } catch (e: any) { setError(e.message); }
-};
+            const updateData = {
+                title: finalTitle,
+                content: finalContent,
+                metaDesc: finalMeta
+            };
 
-const handleApproveDraft = async (draft: any) => {
-    setError(null);
-    try {
-        const pubData = await api.publishToWordPress({
-            title: draft.title,
-            content: draft.content,
-            metaDesc: draft.metaDesc,
-            slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, ''),
-            imageUrl: draft.imageUrl
-        });
+            await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData });
+            setSelectedReviewDraft({ ...selectedReviewDraft, ...updateData });
+            setFeedback('');
+        } catch (e: any) { setError(e.message); }
+    };
 
-        await api.updateDraft({ id: draft.id, action: 'publish', wpUrl: pubData.url });
+    const handleSaveManualEdits = async () => {
+        if (!selectedReviewDraft) return;
+        setError(null);
+        try {
+            const updateData = {
+                title: selectedReviewDraft.title,
+                content: selectedReviewDraft.content
+            };
+            await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData });
+            fetchDrafts();
+        } catch (e: any) { setError(e.message); }
+    };
 
-        setSelectedReviewDraft(null);
-        fetchDrafts();
-        fetchHistory();
-        setActiveTab('history');
-    } catch (e: any) { setError(e.message); }
-};
+    const handleSaveDraft = async () => {
+        if (!preview) return;
+        setError(null);
+        try {
+            await api.saveDraft({
+                title: preview.title,
+                content: preview.content,
+                metaDesc: description || preview.meta,
+                imageUrl: preview.imageUrl
+            });
+            setActiveTab('review');
+        } catch (e: any) { setError(e.message); }
+    };
 
-const handleGenerateInfographic = async () => {
-    const target = preview || selectedReviewDraft;
-    if (!target) return;
-    try {
-        const url = await api.generateInfographic({ content: target.content, title: target.title });
-        if (url) setInfographicUrl(url);
-    } catch (e: any) { setError(e.message); }
-};
+    const handleRejectDraft = async (id: string) => {
+        setError(null);
+        try {
+            await api.updateDraft({ id, action: 'reject' });
+            setSelectedReviewDraft(null);
+            fetchDrafts();
+        } catch (e: any) { setError(e.message); }
+    };
 
-const value = {
-    prompt, setPrompt,
-    keywordInput, setKeywordInput,
-    keywords, setKeywords,
-    feedback, setFeedback,
-    description, setDescription,
-    activeTab, setActiveTab,
-    preview, setPreview,
-    reviewDrafts, isFetchingDrafts: api.isFetchingDrafts,
-    selectedReviewDraft, setSelectedReviewDraft,
-    history, error, setError,
-    isGenerating: api.isGenerating,
-    isApplyingFeedback: api.isApplyingFeedback,
-    isGeneratingDescription: api.isGeneratingDescription,
-    isGeneratingInfographic: api.isGeneratingInfographic,
-    infographicUrl, setInfographicUrl,
-    isSavingDraft: api.isSavingDraft,
-    isRejecting: api.isRejecting,
-    isSavingManual: api.isSavingManual,
-    isPublished: api.isPublished,
-    isFetchingKeywords: api.isFetchingKeywords,
-    handleAddKeyword, removeKeyword,
-    handleFetchKeywords, handleClearForm,
-    handleGenerate, handleGenerateDescription,
-    handleApplyFeedback, handleApplyReviewFeedback,
-    handleSaveManualEdits, handleSaveDraft,
-    handleRejectDraft, handleApproveDraft,
-    handleGenerateInfographic, fetchDrafts
-};
+    const handleApproveDraft = async (draft: any) => {
+        setError(null);
+        try {
+            const pubData = await api.publishToWordPress({
+                title: draft.title,
+                content: draft.content,
+                metaDesc: draft.metaDesc,
+                slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, ''),
+                imageUrl: draft.imageUrl
+            });
 
-return (
-    <DashboardContext.Provider value={value}>
-        {children}
-    </DashboardContext.Provider>
-);
+            await api.updateDraft({ id: draft.id, action: 'publish', wpUrl: pubData.url });
+
+            setSelectedReviewDraft(null);
+            fetchDrafts();
+            fetchHistory();
+            setActiveTab('history');
+        } catch (e: any) { setError(e.message); }
+    };
+
+    const handleGenerateInfographic = async () => {
+        const target = preview || selectedReviewDraft;
+        if (!target) return;
+        try {
+            const url = await api.generateInfographic({ content: target.content, title: target.title });
+            if (url) setInfographicUrl(url);
+        } catch (e: any) { setError(e.message); }
+    };
+
+    const value = {
+        prompt, setPrompt,
+        keywordInput, setKeywordInput,
+        keywords, setKeywords,
+        feedback, setFeedback,
+        description, setDescription,
+        activeTab, setActiveTab,
+        preview, setPreview,
+        reviewDrafts, isFetchingDrafts: api.isFetchingDrafts,
+        selectedReviewDraft, setSelectedReviewDraft,
+        history, error, setError,
+        isGenerating: api.isGenerating,
+        isApplyingFeedback: api.isApplyingFeedback,
+        isGeneratingDescription: api.isGeneratingDescription,
+        isGeneratingInfographic: api.isGeneratingInfographic,
+        infographicUrl, setInfographicUrl,
+        isSavingDraft: api.isSavingDraft,
+        isRejecting: api.isRejecting,
+        isSavingManual: api.isSavingManual,
+        isPublished: api.isPublished,
+        isFetchingKeywords: api.isFetchingKeywords,
+        handleAddKeyword, removeKeyword,
+        handleFetchKeywords, handleClearForm,
+        handleGenerate, handleGenerateDescription,
+        handleApplyFeedback, handleApplyReviewFeedback,
+        handleSaveManualEdits, handleSaveDraft,
+        handleRejectDraft, handleApproveDraft,
+        handleGenerateInfographic, fetchDrafts
+    };
+
+    return (
+        <DashboardContext.Provider value={value}>
+            {children}
+        </DashboardContext.Provider>
+    );
 };
 
 export const useDashboard = () => {
