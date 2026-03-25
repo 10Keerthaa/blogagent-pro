@@ -28,9 +28,13 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
     const metadata = await sharp(imageBuffer).metadata();
     const width = metadata.width || 1024;
 
-    // Just ensure standard width for performance, keep aspect ratio
+    // Enforce exact 960x720 Elite dimensions with high-quality cubic interpolation
     return await sharp(imageBuffer)
-      .resize({ width: 1200 })
+      .resize(960, 720, {
+        fit: 'cover',
+        position: 'center',
+        kernel: 'cubic'
+      })
       .toBuffer();
 
   } catch (error) {

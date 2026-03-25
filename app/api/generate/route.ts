@@ -57,15 +57,24 @@ export async function POST(req: Request) {
 
         responseStream.on('data', (chunk: any) => {
           const chunkString = chunk.toString();
-          // Extract text from Vertex AI stream chunks
+          // Extract text from Vertex AI stream chunks using a robust regex
           const matches = chunkString.match(/"text":\s*"([\s\S]*?)"/g);
+
           if (matches) {
             matches.forEach((match: string) => {
-              const textContent = match
-                .replace('"text": "', '')
-                .replace(/"$/, '')
+              // 1. Extract the raw text part
+              let textContent = match.replace(/^"text":\s*"/, '').replace(/"$/, '');
+
+              // 2. Surgical unescape for common JSON/Unicode sequences
+              // This is more resilient against fragmented chunks than JSON.parse
+              textContent = textContent
+                .replace(/\\u([a-fA-F0-9]{4})/g, (_, grp) => String.fromCharCode(parseInt(grp, 16)))
                 .replace(/\\n/g, '\n')
-                .replace(/\\"/g, '"');
+                .replace(/\\r/g, '\r')
+                .replace(/\\t/g, '\t')
+                .replace(/\\"/g, '"')
+                .replace(/\\\\/g, '\\');
+
               controller.enqueue(new TextEncoder().encode(textContent));
             });
           }

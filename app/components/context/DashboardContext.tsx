@@ -165,7 +165,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
-                        return { ...prev, content: newContent, title: prompt, meta: '' };
+                        const titleMatch = newContent.match(/<title>([\s\S]*?)<\/title>/i);
+                        const currentTitle = titleMatch ? titleMatch[1].trim() : prompt;
+                        return { ...prev, content: newContent, title: currentTitle, meta: '' };
                     });
                 }
             );
@@ -204,12 +206,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const fullRawText = await api.generateContent(
                 { prompt: preview?.title || prompt, keywords: keywords.join(', '), feedback },
                 (chunk: string) => {
-                    setPreview((prev: any) => ({
-                        ...prev,
-                        content: (prev?.content || '') + chunk,
-                        title: prev?.title || prompt,
-                        meta: prev?.meta || ''
-                    }));
+                    setPreview((prev: any) => {
+                        const newContent = (prev?.content || '') + chunk;
+                        const titleMatch = newContent.match(/<title>([\s\S]*?)<\/title>/i);
+                        const currentTitle = titleMatch ? titleMatch[1].trim() : (prev?.title || prompt);
+                        return { ...prev, content: newContent, title: currentTitle, meta: prev?.meta || '' };
+                    });
                 }
             );
 
