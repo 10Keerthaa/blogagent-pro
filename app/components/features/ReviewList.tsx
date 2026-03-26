@@ -32,9 +32,11 @@ export const ReviewList = () => {
         refinementRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
+    const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
+
     if (selectedReviewDraft) {
         return (
-            <div className="animate-fadeIn w-full space-y-12 pb-24 transition-all duration-300">
+            <div className={`animate-fadeIn w-full transition-all duration-300 ${isPreviewOpen ? 'overflow-hidden h-screen' : 'space-y-12 pb-24'}`}>
                 {/* Header Actions */}
                 <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 border-b border-slate-100 dark:border-slate-800/50">
                     <div className="max-w-4xl mx-auto flex items-center justify-between py-8">
@@ -178,6 +180,14 @@ export const ReviewList = () => {
                         Reject
                     </Button>
                     <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setIsPreviewOpen(true)}
+                        className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-bold"
+                    >
+                        Preview
+                    </Button>
+                    <Button
                         variant="primary"
                         size="sm"
                         onClick={() => handleApproveDraft(selectedReviewDraft)}
@@ -188,6 +198,77 @@ export const ReviewList = () => {
                         Approve & Publish
                     </Button>
                 </div>
+
+                {/* Preview Modal */}
+                {isPreviewOpen && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn">
+                        <div className="bg-white dark:bg-slate-900 w-[90%] max-w-5xl h-[90vh] flex flex-col rounded-lg shadow-2xl relative animate-scaleIn overflow-hidden">
+                            {/* Close Button */}
+                            <button
+                                onClick={() => setIsPreviewOpen(false)}
+                                className="absolute top-6 right-6 p-2 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors z-30"
+                            >
+                                <X className="w-6 h-6 text-slate-500" />
+                            </button>
+
+                            {/* Scrollable Content */}
+                            <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-20">
+                                <div className="max-w-4xl mx-auto space-y-12">
+                                    <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif">
+                                        {selectedReviewDraft.title}
+                                    </h1>
+
+                                    {selectedReviewDraft.imageUrl && (
+                                        <div className="relative group overflow-hidden rounded-none shadow-xl border border-slate-100 dark:border-slate-800">
+                                            <img
+                                                src={selectedReviewDraft.imageUrl}
+                                                alt={selectedReviewDraft.title}
+                                                className="w-full h-auto object-cover"
+                                                style={{ aspectRatio: '4/3' }}
+                                            />
+                                            <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }} />
+                                            <div className="absolute inset-0 pointer-events-none">
+                                                <img src="/Blog.png" className="absolute top-[20px] left-[20px] h-8 w-auto" alt="blog" />
+                                                <h2 className="absolute left-[20px] text-white text-3xl font-bold max-w-2xl drop-shadow-md" style={{ top: 'calc(20px + 32px + 24px)' }}>
+                                                    {selectedReviewDraft.title}
+                                                </h2>
+                                                <img src="/10xDS.png" className="absolute bottom-[20px] right-[20px] h-12 w-auto" alt="logo" />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <article
+                                        dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
+                                        className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed prose prose-indigo dark:prose-invert max-w-none"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Modal Footer Actions */}
+                            <div className="p-8 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4 bg-slate-50/50 dark:bg-slate-900/50">
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => setIsPreviewOpen(false)}
+                                    className="px-8 h-14 rounded-none border border-slate-200 dark:border-slate-800"
+                                >
+                                    Continue Editing
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    onClick={() => {
+                                        handleApproveDraft(selectedReviewDraft);
+                                        setIsPreviewOpen(false);
+                                    }}
+                                    isLoading={isPublished}
+                                    className="px-8 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-none shadow-lg shadow-emerald-600/10"
+                                >
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    Approve & Publish Now
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
