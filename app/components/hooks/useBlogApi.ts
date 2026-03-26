@@ -115,7 +115,7 @@ export const useBlogApi = () => {
         }
     }, []);
 
-    const saveDraft = useCallback(async (data: { title: string, content: string, metaDesc?: string, imageUrl?: string, prompt?: string, keywords?: string[] }) => {
+    const saveDraft = useCallback(async (data: { title: string, content: string, metaDesc?: string, imageUrl?: string, infographicUrl?: string | null, prompt?: string, keywords?: string[] }) => {
         setIsSavingDraft(true);
         try {
             const r = await fetch('/api/drafts/save', {

@@ -56,6 +56,7 @@ interface DashboardContextType {
     fetchDrafts: () => Promise<void>;
     handleSelectReviewDraft: (id: string) => Promise<void>;
     isFetchingDraftDetails: boolean;
+    resetEditorState: () => void;
 }
 
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
@@ -79,6 +80,16 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
     const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
+
+    const resetEditorState = useCallback(() => {
+        setPrompt('');
+        setKeywords([]);
+        setKeywordInput('');
+        setPrimaryKeyword(null);
+        setDescription('');
+        setPreview(null);
+        setInfographicUrl(null);
+    }, []);
 
     const fetchSitemap = useCallback(async () => {
         const data = await apiFetchSitemap();
@@ -374,10 +385,13 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 content: preview.content,
                 metaDesc: description || preview.meta,
                 imageUrl: preview.imageUrl,
+                infographicUrl: infographicUrl,
                 prompt: prompt,
                 keywords: keywords
             });
+            resetEditorState();
             setActiveTab('review');
+            fetchDrafts();
         } catch (e: any) { setError(e.message); }
     };
 
@@ -397,8 +411,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 title: draft.title,
                 content: draft.content,
                 metaDesc: draft.metaDesc,
+                imageUrl: draft.imageUrl,
+                infographicUrl: draft.infographicUrl,
                 slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, ''),
-                imageUrl: draft.imageUrl
             });
 
             await api.updateDraft({ id: draft.id, action: 'publish', wpUrl: pubData.url });
@@ -474,7 +489,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         handleRejectDraft, handleApproveDraft,
         handleGenerateInfographic, fetchDrafts,
         handleSelectReviewDraft, isFetchingDraftDetails,
-        primaryKeyword, setPrimaryKeyword
+        primaryKeyword, setPrimaryKeyword,
+        resetEditorState
     };
 
     return (

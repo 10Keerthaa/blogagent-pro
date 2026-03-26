@@ -131,6 +131,18 @@ export const ReviewList = () => {
                             className="text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold"
                         />
+
+                        {/* Infographic Section */}
+                        {selectedReviewDraft.infographicUrl && (
+                            <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
+                                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8 text-center">Visual Insight</h4>
+                                <div className="max-w-4xl mx-auto">
+                                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                                        <img src={selectedReviewDraft.infographicUrl} alt="Infographic" className="w-full h-auto" />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </section>
 
                     {/* AI Refinement Section - Edge to Edge */}
@@ -308,6 +320,16 @@ export const ReviewList = () => {
                                     className="text-black dark:text-white text-lg leading-relaxed prose prose-stone dark:prose-invert max-w-none
                                         prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold"
                                 />
+
+                                {/* Modal Infographic */}
+                                {selectedReviewDraft.infographicUrl && (
+                                    <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
+                                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8 text-center">Visual Summary</h4>
+                                        <div className="border border-slate-200 dark:border-slate-800 shadow-xl">
+                                            <img src={selectedReviewDraft.infographicUrl} alt="Infographic" className="w-full h-auto" />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

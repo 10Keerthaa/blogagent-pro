@@ -14,7 +14,8 @@ export const PostPreview = () => {
         feedback, setFeedback,
         isApplyingFeedback, handleApplyFeedback,
         isGeneratingInfographic, handleGenerateInfographic,
-        infographicUrl, isSavingDraft, handleSaveDraft
+        infographicUrl, isSavingDraft, handleSaveDraft,
+        resetEditorState
     } = useDashboard();
 
     if (isGenerating) {
@@ -67,7 +68,17 @@ export const PostPreview = () => {
                             onClick={handleGenerate}
                             aria-label="Regenerate content"
                         >
-                            <RefreshCw className="w-4 h-4" />
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Regenerate
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={resetEditorState}
+                            className="border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-indigo-600 transition-colors"
+                        >
+                            <Zap className="w-4 h-4 mr-2" />
+                            Start New Post
                         </Button>
                     </div>
                 </div>
@@ -188,13 +199,6 @@ export const PostPreview = () => {
                                     className="px-10 h-16 w-full lg:w-64 rounded-none font-bold"
                                 >
                                     Save to Review Queue
-                                </Button>
-                                <Button
-                                    variant="ghost"
-                                    onClick={() => window.location.reload()}
-                                    className="px-10 h-16 w-full lg:w-64 rounded-none font-bold border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-indigo-600 transition-colors"
-                                >
-                                    Start New Post
                                 </Button>
                             </div>
                         </div>
