@@ -78,17 +78,17 @@ export const ReviewList = () => {
                                 style={{ maxHeight: '580px', minHeight: '400px' }}
                             />
 
-                            {/* Solid Purple Overlay (rgba(88, 28, 230, 0.45)) */}
+                            {/* Solid Purple Overlay (#7E57C2 at 0.45 opacity) */}
                             <div
                                 className="absolute inset-0 z-10 pointer-events-none"
-                                style={{ backgroundColor: 'rgba(88, 28, 230, 0.45)' }}
+                                style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }}
                             />
 
                             {/* Overlays Container */}
                             <div className="absolute inset-0 z-20 pointer-events-none">
                                 {/* Blog Tag Overlay (Top-Left: 20px) */}
                                 <img
-                                    src="/blog.png"
+                                    src="/Blog.png"
                                     alt="Blog Tag"
                                     className="absolute top-[20px] left-[20px] w-auto h-8 object-contain"
                                 />

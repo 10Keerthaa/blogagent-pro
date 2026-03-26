@@ -38,15 +38,15 @@ export async function POST(req: Request) {
     // 1. Embed Featured Image at the top with Overlays
     if (imageUrl) {
       const origin = new URL(req.url).origin;
-      const blogTagUrl = `${origin}/blog.png`;
+      const blogTagUrl = `${origin}/Blog.png`;
       const logoUrl = `${origin}/10xDS.png`;
 
       finalContent += `
       <div class="featured-image-wrapper" style="position: relative; margin-bottom: 40px; overflow: hidden; border-radius: 0;">
         <img src="${imageUrl}" alt="${title}" style="width: 100%; height: auto; display: block; object-fit: cover; max-height: 580px;" />
         
-        <!-- Purple Overlay Tint -->
-        <div style="position: absolute; inset: 0; background-color: rgba(88, 28, 230, 0.45); z-index: 1; pointer-events: none;"></div>
+        <!-- Purple Overlay Tint (#7E57C2) -->
+        <div style="position: absolute; inset: 0; background-color: rgba(126, 87, 194, 0.45); z-index: 1; pointer-events: none;"></div>
         
         <!-- Overlays -->
         <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none;">
