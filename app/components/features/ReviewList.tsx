@@ -22,7 +22,8 @@ export const ReviewList = () => {
         feedback, setFeedback,
         isApplyingFeedback, handleApplyReviewFeedback,
         isGeneratingInfographic, handleGenerateInfographic,
-        infographicUrl, handleSelectReviewDraft, isFetchingDraftDetails
+        infographicUrl, handleSelectReviewDraft, isFetchingDraftDetails,
+        handleClearForm
     } = useDashboard();
 
     const refinementRef = React.useRef<HTMLDivElement>(null);
@@ -38,7 +39,15 @@ export const ReviewList = () => {
                 <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 border-b border-slate-100 dark:border-slate-800/50">
                     <div className="max-w-4xl mx-auto flex items-center justify-between py-8">
                         <div className="flex items-center gap-6">
-                            <Button variant="ghost" size="sm" onClick={() => setSelectedReviewDraft(null)} className="h-10 rounded-none">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                    setSelectedReviewDraft(null);
+                                    handleClearForm();
+                                }}
+                                className="h-10 rounded-none text-slate-400 hover:text-indigo-600 transition-colors"
+                            >
                                 <X className="w-4 h-4 mr-3" />
                                 Return
                             </Button>
@@ -135,15 +144,17 @@ export const ReviewList = () => {
                             placeholder="Inject directives..."
                             className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
                         />
-                        <Button
-                            variant="secondary"
-                            onClick={handleApplyReviewFeedback}
-                            isLoading={isApplyingFeedback}
-                            disabled={!feedback}
-                            className="w-full h-16 rounded-none border-none bg-slate-100/50 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors uppercase tracking-[0.2em] text-[11px] mb-4"
-                        >
-                            Apply Refinement
-                        </Button>
+                        <div className="max-w-4xl mx-auto w-full flex justify-center">
+                            <Button
+                                variant="secondary"
+                                onClick={handleApplyReviewFeedback}
+                                isLoading={isApplyingFeedback}
+                                disabled={!feedback}
+                                className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm"
+                            >
+                                Apply Refinement
+                            </Button>
+                        </div>
                     </div>
                 </section>
 

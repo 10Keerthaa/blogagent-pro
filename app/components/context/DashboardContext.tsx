@@ -153,7 +153,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         const parts = processedHtml.split(/(<[^>]+>)/g);
         processedHtml = parts.map(part => {
             if (part.startsWith('<')) return part; // Skip HTML tags
-            return part.replace(mainRegex, '<span style="text-decoration: underline; text-decoration-color: black;">$1</span>');
+            return part.replace(mainRegex, '<span style="color: #374151; font-weight: 600;">$1</span>'); // Dim black/Dark Gray-700
         }).join('');
 
         return processedHtml;
