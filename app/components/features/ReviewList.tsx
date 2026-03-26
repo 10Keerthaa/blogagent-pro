@@ -33,32 +33,34 @@ export const ReviewList = () => {
 
     if (selectedReviewDraft) {
         return (
-            <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-12 pb-24 transition-all duration-300">
+            <div className="animate-fadeIn w-full space-y-12 pb-24 transition-all duration-300">
                 {/* Header Actions */}
-                <div className="flex items-center justify-between sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 py-8 border-b border-slate-100 dark:border-slate-800/50">
-                    <div className="flex items-center gap-6">
-                        <Button variant="ghost" size="sm" onClick={() => setSelectedReviewDraft(null)} className="h-10 rounded-none">
-                            <X className="w-4 h-4 mr-3" />
-                            Return
-                        </Button>
-                        <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
-                        <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={scrollToRefinement}
-                            className="whitespace-nowrap px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100 dark:shadow-none font-bold uppercase tracking-widest text-[10px]"
-                        >
-                            <Sparkles className="w-4 h-4 mr-2" />
-                            Refine With AI
-                        </Button>
+                <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 border-b border-slate-100 dark:border-slate-800/50">
+                    <div className="max-w-4xl mx-auto flex items-center justify-between py-8">
+                        <div className="flex items-center gap-6">
+                            <Button variant="ghost" size="sm" onClick={() => setSelectedReviewDraft(null)} className="h-10 rounded-none">
+                                <X className="w-4 h-4 mr-3" />
+                                Return
+                            </Button>
+                            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
+                            <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={scrollToRefinement}
+                                className="whitespace-nowrap px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100 dark:shadow-none font-bold uppercase tracking-widest text-[10px]"
+                            >
+                                <Sparkles className="w-4 h-4 mr-2" />
+                                Refine With AI
+                            </Button>
+                        </div>
                     </div>
                 </div>
 
                 {/* content Section */}
-                <section className="space-y-10">
+                <section className="max-w-4xl mx-auto space-y-10 px-4 lg:px-0">
                     <Input
                         label="Editorial Title"
                         value={selectedReviewDraft.title}
@@ -81,28 +83,35 @@ export const ReviewList = () => {
                     />
                 </section>
 
-                {/* Action Grid */}
-                <section className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-16 border-t border-slate-100 dark:border-slate-800/50" ref={refinementRef}>
-                    <Card className="p-8 rounded-none bg-slate-50/50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 space-y-6">
-                        <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
+                {/* AI Refinement Section - Edge to Edge */}
+                <section
+                    className="w-auto mx-[-1.5rem] lg:mx-[-2.5rem] border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30"
+                    ref={refinementRef}
+                >
+                    <div className="flex flex-col">
+                        <div className="max-w-4xl mx-auto w-full py-4 px-4 lg:px-0">
+                            <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
+                        </div>
                         <Textarea
                             value={feedback}
                             onChange={(e) => setFeedback(e.target.value)}
                             placeholder="Inject directives..."
-                            className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 min-h-[120px] shadow-sm rounded-none"
+                            className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
                         />
-                        <Button variant="secondary" onClick={handleApplyReviewFeedback} isLoading={isApplyingFeedback} disabled={!feedback} className="w-full h-14 rounded-none">
+                        <Button
+                            variant="secondary"
+                            onClick={handleApplyReviewFeedback}
+                            isLoading={isApplyingFeedback}
+                            disabled={!feedback}
+                            className="w-full h-16 rounded-none border-none bg-slate-100/50 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors uppercase tracking-[0.2em] text-[11px] mb-4"
+                        >
                             Apply Refinement
                         </Button>
-                    </Card>
-
-                    <div className="flex flex-col gap-4 pt-10">
-                        {/* Placeholder or other structural content if needed */}
                     </div>
                 </section>
 
                 {/* Standalone Bottom Actions */}
-                <div className="pt-20 pb-10 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50">
+                <div className="max-w-4xl mx-auto pt-0 pb-10 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50">
                     <Button
                         variant="secondary"
                         onClick={handleSaveManualEdits}

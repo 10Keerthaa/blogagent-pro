@@ -36,6 +36,8 @@ interface DashboardContextType {
     isSavingManual: boolean;
     isPublished: boolean;
     isFetchingKeywords: boolean;
+    primaryKeyword: string | null;
+    setPrimaryKeyword: (v: string | null) => void;
 
     // Handlers
     handleAddKeyword: (e: React.KeyboardEvent) => void;
@@ -73,6 +75,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [error, setError] = useState<string | null>(null);
     const [infographicUrl, setInfographicUrl] = useState<string | null>(null);
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
+    const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
 
     const fetchSitemap = useCallback(async () => {
         const data = await apiFetchSitemap();
@@ -108,6 +111,50 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             return text;
         }).join('');
     }, [sitemapData]);
+
+    // Feature 2 & 3: Keyword Frequency Enforcement & Underlining
+    const processKeywordsInContent = useCallback((html: string, allKeywords: string[], primary: string | null): string => {
+        if (!html || allKeywords.length === 0) return html;
+        let processedHtml = html;
+
+        // 1. Keyword Frequency Enforcement Logic (Feature 2)
+        allKeywords.forEach(kw => {
+            const isPrimary = kw === primary;
+            const targetCount = isPrimary ? 3 : 2;
+
+            // Count using regex with word boundaries
+            const regex = new RegExp(`\\b${kw}\\b`, 'gi');
+            const matches = processedHtml.match(regex) || [];
+            const currentCount = matches.length;
+
+            if (currentCount < targetCount) {
+                const missing = targetCount - currentCount;
+                // Simple insertion: at the end of the content before the last </p> or at the very end
+                for (let j = 0; j < missing; j++) {
+                    const insertionText = ` <span style="opacity: 0.9;">Note: <strong>${kw}</strong> is a key theme in this context.</span>`;
+                    if (processedHtml.includes('</p>')) {
+                        const lastIndex = processedHtml.lastIndexOf('</p>');
+                        processedHtml = processedHtml.substring(0, lastIndex) + insertionText + processedHtml.substring(lastIndex);
+                    } else {
+                        processedHtml += `<p>${insertionText}</p>`;
+                    }
+                }
+            }
+        });
+
+        // 2. Underlining with Black (Feature 3) - Single Pass to avoid nesting
+        const sortedKws = [...allKeywords].sort((a, b) => b.length - a.length);
+        const pattern = sortedKws.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        const mainRegex = new RegExp(`\\b(${pattern})\\b`, 'gi');
+
+        const parts = processedHtml.split(/(<[^>]+>)/g);
+        processedHtml = parts.map(part => {
+            if (part.startsWith('<')) return part; // Skip HTML tags
+            return part.replace(mainRegex, '<span style="text-decoration: underline; text-decoration-color: black;">$1</span>');
+        }).join('');
+
+        return processedHtml;
+    }, []);
 
     const fetchHistory = useCallback(async () => {
         const data = await apiFetchHistory();
@@ -150,6 +197,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         try {
             const keys = await api.fetchKeywords(prompt);
             setKeywords(keys);
+            if (primaryKeyword && !keys.includes(primaryKeyword)) {
+                setPrimaryKeyword(null);
+            }
         } catch (e: any) { setError(e.message); }
     };
 
@@ -188,6 +238,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const finalMeta = metaMatch ? metaMatch[1].trim() : "";
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
             finalContent = applySitemapLinks(finalContent);
+            finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
 
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
             setDescription(finalMeta);
@@ -201,7 +252,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!prompt.trim()) return;
         setError(null);
         try {
-            const d = await api.generateDescription({ prompt, keywords: keywords.join(', ') });
+            const body = {
+                prompt,
+                keywords: keywords.join(', '),
+                primaryKeyword: primaryKeyword
+            };
+            const d = await api.generateDescription(body);
             setDescription(d);
         } catch (e: any) { setError(e.message); }
     };
@@ -231,6 +287,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const finalMeta = metaMatch ? metaMatch[1].trim() : (preview?.meta || "");
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
             finalContent = applySitemapLinks(finalContent);
+            finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
 
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: currentImageUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
             setDescription(finalMeta);
@@ -260,6 +317,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const finalMeta = metaMatch ? metaMatch[1].trim() : (selectedReviewDraft?.metaDesc || "");
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
             finalContent = applySitemapLinks(finalContent);
+            finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
 
             const updateData = {
                 title: finalTitle,
@@ -385,7 +443,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         handleApplyFeedback, handleApplyReviewFeedback,
         handleSaveManualEdits, handleSaveDraft,
         handleRejectDraft, handleApproveDraft,
-        handleGenerateInfographic, fetchDrafts
+        handleGenerateInfographic, fetchDrafts,
+        primaryKeyword, setPrimaryKeyword
     };
 
     return (

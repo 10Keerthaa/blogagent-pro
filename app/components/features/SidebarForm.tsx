@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { Zap, Loader2, X, RefreshCw } from 'lucide-react';
+import { Zap, Loader2, X, RefreshCw, Star } from 'lucide-react';
 import { useDashboard } from '../context/DashboardContext';
 import { Textarea } from '../ui/Textarea';
 import { Button } from '../ui/Button';
@@ -16,10 +16,16 @@ export const SidebarForm = () => {
         isGenerating, handleGenerate,
         isFetchingKeywords, handleFetchKeywords,
         isGeneratingDescription, handleGenerateDescription,
-        selectedReviewDraft
+        selectedReviewDraft,
+        primaryKeyword, setPrimaryKeyword
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
+
+    // Prioritize values from selectedReviewDraft if available
+    const displayPrompt = selectedReviewDraft?.prompt || prompt;
+    const displayKeywords = selectedReviewDraft ? (Array.isArray(selectedReviewDraft.keywords) ? selectedReviewDraft.keywords : (typeof selectedReviewDraft.keywords === 'string' ? selectedReviewDraft.keywords.split(',').map((k: string) => k.trim()) : [])) : keywords;
+    const displayDescription = selectedReviewDraft?.metaDesc || description;
 
     return (
         <aside className="w-full lg:w-[40%] shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
@@ -42,7 +48,7 @@ export const SidebarForm = () => {
                     <Textarea
                         label="Main Blog Topic"
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
-                        value={prompt}
+                        value={displayPrompt}
                         onChange={(e) => setPrompt(e.target.value)}
                         className="shadow-sm focus:shadow-md"
                         readOnly={isReadOnly}
@@ -66,22 +72,40 @@ export const SidebarForm = () => {
                         className={`flex flex-wrap items-center gap-2 min-h-[100px] p-4 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500'}`}
                         onClick={() => !isReadOnly && inputRef.current?.focus()}
                     >
-                        {keywords.map((tag, idx) => (
-                            <span
-                                key={idx}
-                                className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-none text-[11px] font-bold shadow-sm animate-fadeIn"
-                            >
-                                {tag}
-                                {!isReadOnly && (
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); removeKeyword(tag); }}
-                                        className="hover:text-red-500 transition-colors"
-                                    >
-                                        <X className="w-3 h-3" />
-                                    </button>
-                                )}
-                            </span>
-                        ))}
+                        {displayKeywords.map((tag: string, idx: number) => {
+                            const isPrimary = tag === primaryKeyword;
+                            return (
+                                <span
+                                    key={idx}
+                                    className={`inline-flex items-center gap-1.5 px-3 py-1 border rounded-none text-[11px] font-bold shadow-sm animate-fadeIn transition-all ${isPrimary
+                                            ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 ring-1 ring-indigo-500/20'
+                                            : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
+                                        }`}
+                                >
+                                    {!isReadOnly && (
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); setPrimaryKeyword(isPrimary ? null : tag); }}
+                                            className={`transition-colors ${isPrimary ? 'text-indigo-600 animate-pulse' : 'text-slate-400 hover:text-indigo-500'}`}
+                                            title={isPrimary ? "Primary Keyword" : "Mark as Primary"}
+                                        >
+                                            <Star className={`w-3 h-3 ${isPrimary ? 'fill-current' : ''}`} />
+                                        </button>
+                                    )}
+                                    {isPrimary && <span className="w-1 h-3 bg-indigo-500 mr-1 opacity-50" />}
+                                    <span className={isPrimary ? 'underline decoration-indigo-500/50 underline-offset-4' : ''}>
+                                        {tag}
+                                    </span>
+                                    {!isReadOnly && (
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); removeKeyword(tag); if (isPrimary) setPrimaryKeyword(null); }}
+                                            className="hover:text-red-500 transition-colors ml-1"
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </button>
+                                    )}
+                                </span>
+                            );
+                        })}
                         {!isReadOnly && (
                             <input
                                 ref={inputRef}
@@ -111,7 +135,7 @@ export const SidebarForm = () => {
                     </div>
                     <Textarea
                         placeholder="SEO optimized summary..."
-                        value={description}
+                        value={displayDescription}
                         onChange={(e) => setDescription(e.target.value)}
                         className="min-h-[140px] shadow-sm focus:shadow-md"
                         readOnly={isReadOnly}

@@ -5,7 +5,7 @@ export const maxDuration = 60; // Set timeout for Vercel
 
 export async function POST(req: Request) {
     try {
-        const { prompt, keywords } = await req.json();
+        const { prompt, keywords, primaryKeyword } = await req.json();
 
         if (!prompt) {
             return NextResponse.json({ description: '' });
@@ -17,17 +17,18 @@ export async function POST(req: Request) {
         const client = await auth.getClient();
         const projectId = await auth.getProjectId();
 
-        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
+        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:streamGenerateContent`;
 
         const aiPrompt = `
         TASK: Generate a single, highly compelling meta description for this blog post.
         Topic: ${prompt}
         Keywords: ${keywords || "None"}
+        Primary Keyword: ${primaryKeyword || "None"}
 
         REQUIREMENTS:
         - Must be closely related to the Topic and Keywords.
         - MANDATORY LENGTH: EXACTLY between 150 and 160 characters. Count every character including spaces.
-        - Include at least 2 of the provided keywords.
+        - Include the Primary Keyword ("${primaryKeyword || ""}") EXACTLY at least once.
         - Return ONLY the description text. No quotes, no intro text, no labels.
         `;
 
