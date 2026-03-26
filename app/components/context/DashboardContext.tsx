@@ -153,7 +153,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         const parts = processedHtml.split(/(<[^>]+>)/g);
         processedHtml = parts.map(part => {
             if (part.startsWith('<')) return part; // Skip HTML tags
-            return part.replace(mainRegex, '<span style="color: #374151; font-weight: 600;">$1</span>'); // Dim black/Dark Gray-700
+            return part.replace(mainRegex, '<span style="color: #666666; font-weight: 600; text-decoration: none;">$1</span>'); // Dim Gray-600, No underline
         }).join('');
 
         return processedHtml;
@@ -428,7 +428,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 setSelectedReviewDraft(draft);
                 // Explicitly sync sidebar fields
                 setPrompt(draft.prompt || '');
-                setDescription(draft.metaDesc || '');
+                setDescription(draft.metaDesc || draft.description || draft.seoDescription || '');
 
                 if (Array.isArray(draft.keywords)) {
                     setKeywords(draft.keywords);

@@ -202,11 +202,11 @@ export const ReviewList = () => {
                 {/* Preview Modal */}
                 {isPreviewOpen && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn">
-                        <div className="bg-white dark:bg-slate-900 w-[90%] max-w-5xl h-[90vh] flex flex-col rounded-lg shadow-2xl relative animate-scaleIn overflow-hidden">
+                        <div className="bg-white dark:bg-slate-950 w-full h-screen flex flex-col rounded-none relative animate-fadeIn overflow-y-auto p-8 lg:p-20">
                             {/* Close Button */}
                             <button
                                 onClick={() => setIsPreviewOpen(false)}
-                                className="absolute top-6 right-6 p-2 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors z-30"
+                                className="absolute top-8 right-8 p-3 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-all z-30 shadow-sm"
                             >
                                 <X className="w-6 h-6 text-slate-500" />
                             </button>
