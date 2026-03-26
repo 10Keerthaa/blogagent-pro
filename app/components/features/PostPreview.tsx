@@ -161,7 +161,7 @@ export const PostPreview = () => {
                             <div className="space-y-5">
                                 <label className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 ml-1">
                                     <Sparkles className="w-3 h-3 text-indigo-500" />
-                                    Contextual Refinement
+                                    AI Refinement
                                 </label>
                                 <Textarea
                                     value={feedback}
@@ -178,7 +178,7 @@ export const PostPreview = () => {
                                     disabled={!feedback}
                                     className="px-10 h-16 w-full lg:w-64 text-[11px] font-extrabold tracking-widest shadow-xl shadow-indigo-600/10 dark:shadow-none rounded-none"
                                 >
-                                    Apply Directives
+                                    Apply Refinement
                                 </Button>
                                 <Button
                                     variant="secondary"
@@ -186,7 +186,14 @@ export const PostPreview = () => {
                                     isLoading={isSavingDraft}
                                     className="px-10 h-16 w-full lg:w-64 rounded-none font-bold"
                                 >
-                                    Finalize Draft
+                                    Save to Review Queue
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => window.location.reload()}
+                                    className="px-10 h-16 w-full lg:w-64 rounded-none font-bold border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-indigo-600 transition-colors"
+                                >
+                                    Start New Post
                                 </Button>
                             </div>
                         </div>
