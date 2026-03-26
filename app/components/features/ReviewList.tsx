@@ -34,306 +34,306 @@ export const ReviewList = () => {
 
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
 
-    if (selectedReviewDraft) {
-        return (
-            <div className={`animate-fadeIn w-full transition-all duration-300 ${isPreviewOpen ? 'overflow-hidden h-screen' : 'space-y-12 pb-24'}`}>
-                {/* Header Actions */}
-                <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 border-b border-slate-100 dark:border-slate-800/50">
-                    <div className="max-w-4xl mx-auto flex items-center justify-between py-8">
-                        <div className="flex items-center gap-6">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                    setSelectedReviewDraft(null);
-                                    handleClearForm();
-                                }}
-                                className="h-10 rounded-none text-slate-400 hover:text-indigo-600 transition-colors"
-                            >
-                                <X className="w-4 h-4 mr-3" />
-                                Return
-                            </Button>
-                            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
-                            <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <Button
-                                variant="primary"
-                                size="sm"
-                                onClick={scrollToRefinement}
-                                className="whitespace-nowrap px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100 dark:shadow-none font-bold uppercase tracking-widest text-[10px]"
-                            >
-                                <Sparkles className="w-4 h-4 mr-2" />
-                                Refine With AI
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* content Section */}
-                <section className="max-w-4xl mx-auto space-y-10 px-4 lg:px-0">
-                    <Input
-                        label="Editorial Title"
-                        value={selectedReviewDraft.title}
-                        onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                        className="text-3xl font-extrabold py-8 px-0 border-none bg-transparent focus:ring-0 focus:border-indigo-500 rounded-none border-b border-slate-100 dark:border-slate-800 tracking-tight"
-                    />
-
-                    {selectedReviewDraft.imageUrl && (
-                        <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl">
-                            {/* Base Image */}
-                            <img
-                                src={selectedReviewDraft.imageUrl}
-                                alt={selectedReviewDraft.title}
-                                className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
-                                style={{ aspectRatio: '4/3' }}
-                            />
-
-                            {/* Solid Purple Overlay (#7E57C2 at 0.45 opacity) */}
-                            <div
-                                className="absolute inset-0 z-10 pointer-events-none"
-                                style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }}
-                            />
-
-                            {/* Overlays Container */}
-                            <div className="absolute inset-0 z-20 pointer-events-none">
-                                {/* Blog Tag Overlay (Top-Left: 20px) */}
-                                <img
-                                    src="/Blog.png"
-                                    alt="Blog Tag"
-                                    className="absolute top-[20px] left-[20px] w-auto h-8 object-contain"
-                                />
-
-                                {/* Title Overlay (24px below blog tag) */}
-                                <h2
-                                    className="absolute left-[20px] text-white text-3xl lg:text-4xl font-bold leading-tight tracking-tight max-w-2xl drop-shadow-lg"
-                                    style={{ top: 'calc(20px + 32px + 24px)' }}
+    return (
+        <div className="relative">
+            {selectedReviewDraft ? (
+                <div className={`animate-fadeIn w-full transition-all duration-300 ${isPreviewOpen ? 'opacity-0 pointer-events-none' : 'space-y-12 pb-24'}`}>
+                    {/* Header Actions */}
+                    <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 border-b border-slate-100 dark:border-slate-800/50">
+                        <div className="max-w-4xl mx-auto flex items-center justify-between py-8">
+                            <div className="flex items-center gap-6">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                        setSelectedReviewDraft(null);
+                                        handleClearForm();
+                                    }}
+                                    className="h-10 rounded-none text-slate-400 hover:text-indigo-600 transition-colors"
                                 >
-                                    {selectedReviewDraft.title}
-                                </h2>
-
-                                {/* Logo Overlay (Bottom-Right: 20px) */}
-                                <img
-                                    src="/10xDS.png"
-                                    alt="Brand Logo"
-                                    className="absolute bottom-[20px] right-[20px] w-auto h-12 object-contain"
-                                />
+                                    <X className="w-4 h-4 mr-3" />
+                                    Return
+                                </Button>
+                                <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
+                                <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    variant="primary"
+                                    size="sm"
+                                    onClick={scrollToRefinement}
+                                    className="whitespace-nowrap px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100 dark:shadow-none font-bold uppercase tracking-widest text-[10px]"
+                                >
+                                    <Sparkles className="w-4 h-4 mr-2" />
+                                    Refine With AI
+                                </Button>
                             </div>
                         </div>
-                    )}
-
-                    <div
-                        contentEditable
-                        suppressContentEditableWarning
-                        onBlur={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, content: e.currentTarget.innerHTML })}
-                        dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
-                        className="text-slate-600 dark:text-slate-300 text-base leading-relaxed prose prose-indigo dark:prose-invert max-w-none focus:outline-none min-h-[500px]"
-                    />
-                </section>
-
-                {/* AI Refinement Section - Edge to Edge */}
-                <section
-                    className="w-auto mx-[-1.5rem] lg:mx-[-2.5rem] border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30"
-                    ref={refinementRef}
-                >
-                    <div className="flex flex-col">
-                        <div className="max-w-4xl mx-auto w-full py-4 px-4 lg:px-0">
-                            <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
-                        </div>
-                        <Textarea
-                            value={feedback}
-                            onChange={(e) => setFeedback(e.target.value)}
-                            placeholder="Inject directives..."
-                            className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
-                        />
-                        <div className="max-w-4xl mx-auto w-full flex justify-center">
-                            <Button
-                                variant="secondary"
-                                onClick={handleApplyReviewFeedback}
-                                isLoading={isApplyingFeedback}
-                                disabled={!feedback}
-                                className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm"
-                            >
-                                Apply Refinement
-                            </Button>
-                        </div>
                     </div>
-                </section>
 
-                {/* Standalone Bottom Actions */}
-                <div className="max-w-4xl mx-auto pt-0 pb-10 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50">
-                    <Button
-                        variant="secondary"
-                        onClick={handleSaveManualEdits}
-                        isLoading={isSavingManual}
-                        className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
-                    >
-                        Save Edits
-                    </Button>
-                    <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => handleRejectDraft(selectedReviewDraft.id)}
-                        isLoading={isRejecting}
-                        className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
-                    >
-                        Reject
-                    </Button>
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => setIsPreviewOpen(true)}
-                        className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-bold"
-                    >
-                        Preview
-                    </Button>
-                    <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => handleApproveDraft(selectedReviewDraft)}
-                        isLoading={isPublished}
-                        className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]"
-                    >
-                        <CheckCircle className="w-4 h-4 mr-2 shrink-0" />
-                        Approve & Publish
-                    </Button>
-                </div>
+                    {/* Content Section */}
+                    <section className="max-w-4xl mx-auto space-y-10 px-4 lg:px-0">
+                        <Input
+                            label="Editorial Title"
+                            value={selectedReviewDraft.title}
+                            onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
+                            className="text-3xl font-extrabold py-8 px-0 border-none bg-transparent focus:ring-0 focus:border-indigo-500 rounded-none border-b border-slate-100 dark:border-slate-800 tracking-tight"
+                        />
 
-                {/* Preview Modal */}
-                {isPreviewOpen && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn">
-                        <div className="bg-white dark:bg-slate-950 w-full h-screen flex flex-col rounded-none relative animate-fadeIn overflow-y-auto p-8 lg:p-20">
-                            {/* Close Button */}
-                            <button
-                                onClick={() => setIsPreviewOpen(false)}
-                                className="absolute top-8 right-8 p-3 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-all z-30 shadow-sm"
-                            >
-                                <X className="w-6 h-6 text-slate-500" />
-                            </button>
+                        {selectedReviewDraft.imageUrl && (
+                            <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl">
+                                {/* Base Image */}
+                                <img
+                                    src={selectedReviewDraft.imageUrl}
+                                    alt={selectedReviewDraft.title}
+                                    className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
+                                    style={{ aspectRatio: '4/3' }}
+                                />
 
-                            {/* Scrollable Content */}
-                            <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-20">
-                                <div className="max-w-4xl mx-auto space-y-12">
-                                    <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif">
+                                {/* Solid Purple Overlay (#7E57C2 at 0.45 opacity) */}
+                                <div
+                                    className="absolute inset-0 z-10 pointer-events-none"
+                                    style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }}
+                                />
+
+                                {/* Overlays Container */}
+                                <div className="absolute inset-0 z-20 pointer-events-none">
+                                    {/* Blog Tag Overlay (Top-Left: 20px) */}
+                                    <img
+                                        src="/Blog.png"
+                                        alt="Blog Tag"
+                                        className="absolute top-[20px] left-[20px] w-auto h-8 object-contain"
+                                    />
+
+                                    {/* Title Overlay (24px below blog tag) */}
+                                    <h2
+                                        className="absolute left-[20px] text-white text-3xl lg:text-4xl font-bold leading-tight tracking-tight max-w-2xl drop-shadow-lg"
+                                        style={{ top: 'calc(20px + 32px + 24px)' }}
+                                    >
                                         {selectedReviewDraft.title}
-                                    </h1>
+                                    </h2>
 
-                                    {selectedReviewDraft.imageUrl && (
-                                        <div className="relative group overflow-hidden rounded-none shadow-xl border border-slate-100 dark:border-slate-800">
-                                            <img
-                                                src={selectedReviewDraft.imageUrl}
-                                                alt={selectedReviewDraft.title}
-                                                className="w-full h-auto object-cover"
-                                                style={{ aspectRatio: '4/3' }}
-                                            />
-                                            <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }} />
-                                            <div className="absolute inset-0 pointer-events-none">
-                                                <img src="/Blog.png" className="absolute top-[20px] left-[20px] h-8 w-auto" alt="blog" />
-                                                <h2 className="absolute left-[20px] text-white text-3xl font-bold max-w-2xl drop-shadow-md" style={{ top: 'calc(20px + 32px + 24px)' }}>
-                                                    {selectedReviewDraft.title}
-                                                </h2>
-                                                <img src="/10xDS.png" className="absolute bottom-[20px] right-[20px] h-12 w-auto" alt="logo" />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <article
-                                        dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
-                                        className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed prose prose-indigo dark:prose-invert max-w-none"
+                                    {/* Logo Overlay (Bottom-Right: 20px) */}
+                                    <img
+                                        src="/10xDS.png"
+                                        alt="Brand Logo"
+                                        className="absolute bottom-[20px] right-[20px] w-auto h-12 object-contain"
                                     />
                                 </div>
                             </div>
+                        )}
 
-                            {/* Modal Footer Actions */}
-                            <div className="p-8 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4 bg-slate-50/50 dark:bg-slate-900/50">
+                        <div
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, content: e.currentTarget.innerHTML })}
+                            dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
+                            className="text-slate-600 dark:text-slate-300 text-base leading-relaxed prose prose-indigo dark:prose-invert max-w-none focus:outline-none min-h-[500px]"
+                        />
+                    </section>
+
+                    {/* AI Refinement Section - Edge to Edge */}
+                    <section
+                        className="w-auto mx-[-1.5rem] lg:mx-[-2.5rem] border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30"
+                        ref={refinementRef}
+                    >
+                        <div className="flex flex-col">
+                            <div className="max-w-4xl mx-auto w-full py-4 px-4 lg:px-0">
+                                <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
+                            </div>
+                            <Textarea
+                                value={feedback}
+                                onChange={(e) => setFeedback(e.target.value)}
+                                placeholder="Inject directives..."
+                                className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
+                            />
+                            <div className="max-w-4xl mx-auto w-full flex justify-center">
                                 <Button
                                     variant="secondary"
-                                    onClick={() => setIsPreviewOpen(false)}
-                                    className="px-8 h-14 rounded-none border border-slate-200 dark:border-slate-800"
+                                    onClick={handleApplyReviewFeedback}
+                                    isLoading={isApplyingFeedback}
+                                    disabled={!feedback}
+                                    className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm"
                                 >
-                                    Continue Editing
-                                </Button>
-                                <Button
-                                    variant="primary"
-                                    onClick={() => {
-                                        handleApproveDraft(selectedReviewDraft);
-                                        setIsPreviewOpen(false);
-                                    }}
-                                    isLoading={isPublished}
-                                    className="px-8 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-none shadow-lg shadow-emerald-600/10"
-                                >
-                                    <CheckCircle className="w-4 h-4 mr-2" />
-                                    Approve & Publish Now
+                                    Apply Refinement
                                 </Button>
                             </div>
                         </div>
-                    </div>
-                )}
-            </div>
-        );
-    }
+                    </section>
 
-    return (
-        <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-300">
-            <div className="flex items-center justify-between mb-2 px-1">
-                <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({reviewDrafts.length})</h2>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6">
-                {isFetchingDrafts ? (
-                    Array.from({ length: 3 }).map((_, i) => (
-                        <div key={i} className="flex gap-6 items-center p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse">
-                            <Skeleton className="w-16 h-16 rounded-2xl shrink-0" />
-                            <div className="flex-1 space-y-3">
-                                <Skeleton className="h-5 w-2/3" />
-                                <Skeleton className="h-3 w-1/4" />
-                            </div>
-                        </div>
-                    ))
-                ) : reviewDrafts.length > 0 ? (
-                    reviewDrafts.map((draft) => (
-                        <Card
-                            key={draft.id}
-                            hoverable
-                            className="p-8 cursor-pointer group border-slate-200 dark:border-slate-800"
+                    {/* Standalone Bottom Actions */}
+                    <div className="max-w-4xl mx-auto pt-0 pb-10 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50">
+                        <Button
+                            variant="secondary"
+                            onClick={handleSaveManualEdits}
+                            isLoading={isSavingManual}
+                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
                         >
-                            <div
-                                className={`flex items-center justify-between p-4 cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-indigo-50/50 dark:bg-indigo-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
-                                onClick={() => handleSelectReviewDraft(draft.id)}
-                            >                                <div className="flex items-center gap-7">
-                                    <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-all duration-300 shadow-sm">
-                                        <FileText className="w-8 h-8 text-indigo-400 group-hover:text-white transition-colors" />
+                            Save Edits
+                        </Button>
+                        <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleRejectDraft(selectedReviewDraft.id)}
+                            isLoading={isRejecting}
+                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
+                        >
+                            Reject
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => setIsPreviewOpen(true)}
+                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-bold"
+                        >
+                            Preview
+                        </Button>
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => handleApproveDraft(selectedReviewDraft)}
+                            isLoading={isPublished}
+                            className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]"
+                        >
+                            <CheckCircle className="w-4 h-4 mr-2 shrink-0" />
+                            Approve & Publish
+                        </Button>
+                    </div>
+                </div>
+            ) : (
+                <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-300">
+                    <div className="flex items-center justify-between mb-2 px-1">
+                        <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({reviewDrafts.length})</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-6">
+                        {isFetchingDrafts ? (
+                            Array.from({ length: 3 }).map((_, i) => (
+                                <div key={i} className="flex gap-6 items-center p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse">
+                                    <Skeleton className="w-16 h-16 rounded-2xl shrink-0" />
+                                    <div className="flex-1 space-y-3">
+                                        <Skeleton className="h-5 w-2/3" />
+                                        <Skeleton className="h-3 w-1/4" />
                                     </div>
-                                    <div className="space-y-2">
-                                        <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors tracking-tight">
-                                            {draft.title}
-                                        </h3>
-                                        <div className="flex items-center gap-6">
-                                            <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                                                <Calendar className="w-3.5 h-3.5" />
-                                                {new Date(draft.createdAt).toLocaleDateString()}
-                                            </span>
-                                            <Badge variant="outline" className="px-3">Draft</Badge>
+                                </div>
+                            ))
+                        ) : reviewDrafts.length > 0 ? (
+                            reviewDrafts.map((draft) => (
+                                <Card
+                                    key={draft.id}
+                                    hoverable
+                                    className="p-8 cursor-pointer group border-slate-200 dark:border-slate-800"
+                                >
+                                    <div
+                                        className={`flex items-center justify-between p-4 cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-indigo-50/50 dark:bg-indigo-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                                        onClick={() => handleSelectReviewDraft(draft.id)}
+                                    >                                <div className="flex items-center gap-7">
+                                            <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-all duration-300 shadow-sm">
+                                                <FileText className="w-8 h-8 text-indigo-400 group-hover:text-white transition-colors" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors tracking-tight">
+                                                    {draft.title}
+                                                </h3>
+                                                <div className="flex items-center gap-6">
+                                                    <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                                        <Calendar className="w-3.5 h-3.5" />
+                                                        {new Date(draft.createdAt).toLocaleDateString()}
+                                                    </span>
+                                                    <Badge variant="outline" className="px-3">Draft</Badge>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
+                                            <span className="text-[11px] font-extrabold uppercase tracking-widest text-indigo-500">Launch Review</span>
+                                            <ArrowRight className="w-5 h-5 text-indigo-500" />
                                         </div>
                                     </div>
+                                </Card>
+                            ))
+                        ) : (
+                            <div className="flex flex-col items-center justify-center p-24 text-center bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/10 dark:to-purple-950/10 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800/50 shadow-sm">
+                                <div className="w-20 h-20 rounded-3xl bg-white dark:bg-slate-900 flex items-center justify-center mb-8 shadow-xl shadow-indigo-100 dark:shadow-none">
+                                    <Zap className="w-9 h-9 text-indigo-600 dark:text-indigo-400 fill-current opacity-40" />
                                 </div>
-                                <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
-                                    <span className="text-[11px] font-extrabold uppercase tracking-widest text-indigo-500">Launch Review</span>
-                                    <ArrowRight className="w-5 h-5 text-indigo-500" />
-                                </div>
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Editorial Buffer Empty</h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[320px] font-medium leading-relaxed">System is ready for new high-intent content generations.</p>
                             </div>
-                        </Card>
-                    ))
-                ) : (
-                    <div className="flex flex-col items-center justify-center p-24 text-center bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/10 dark:to-purple-950/10 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800/50 shadow-sm">
-                        <div className="w-20 h-20 rounded-3xl bg-white dark:bg-slate-900 flex items-center justify-center mb-8 shadow-xl shadow-indigo-100 dark:shadow-none">
-                            <Zap className="w-9 h-9 text-indigo-600 dark:text-indigo-400 fill-current opacity-40" />
-                        </div>
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Editorial Buffer Empty</h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[320px] font-medium leading-relaxed">System is ready for new high-intent content generations.</p>
+                        )}
                     </div>
-                )}
-            </div>
+                </div>
+            )}
+
+            {/* Preview Modal - Sibling to all content, truly fixed */}
+            {isPreviewOpen && selectedReviewDraft && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn">
+                    <div className="bg-white dark:bg-slate-950 w-[96%] h-[94vh] flex flex-col rounded-lg shadow-2xl relative animate-scaleIn overflow-hidden border border-slate-200 dark:border-slate-800">
+                        {/* Close Button */}
+                        <button
+                            onClick={() => setIsPreviewOpen(false)}
+                            className="absolute top-8 right-8 p-3 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-all z-30 shadow-sm"
+                        >
+                            <X className="w-6 h-6 text-slate-500" />
+                        </button>
+
+                        {/* Scrollable Content */}
+                        <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-20">
+                            <div className="max-w-4xl mx-auto space-y-12">
+                                <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif">
+                                    {selectedReviewDraft.title}
+                                </h1>
+
+                                {selectedReviewDraft.imageUrl && (
+                                    <div className="relative group overflow-hidden rounded-none shadow-xl border border-slate-100 dark:border-slate-800">
+                                        <img
+                                            src={selectedReviewDraft.imageUrl}
+                                            alt={selectedReviewDraft.title}
+                                            className="w-full h-auto object-cover"
+                                            style={{ aspectRatio: '4/3' }}
+                                        />
+                                        <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }} />
+                                        <div className="absolute inset-0 pointer-events-none">
+                                            <img src="/Blog.png" className="absolute top-[20px] left-[20px] h-8 w-auto" alt="blog" />
+                                            <h2 className="absolute left-[20px] text-white text-3xl font-bold max-w-2xl drop-shadow-md" style={{ top: 'calc(20px + 32px + 24px)' }}>
+                                                {selectedReviewDraft.title}
+                                            </h2>
+                                            <img src="/10xDS.png" className="absolute bottom-[20px] right-[20px] h-12 w-auto" alt="logo" />
+                                        </div>
+                                    </div>
+                                )}
+
+                                <article
+                                    dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
+                                    className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed prose prose-indigo dark:prose-invert max-w-none"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Modal Footer Actions */}
+                        <div className="p-8 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4 bg-slate-50/50 dark:bg-slate-900/50">
+                            <Button
+                                variant="secondary"
+                                onClick={() => setIsPreviewOpen(false)}
+                                className="px-8 h-14 rounded-none border border-slate-200 dark:border-slate-800"
+                            >
+                                Continue Editing
+                            </Button>
+                            <Button
+                                variant="primary"
+                                onClick={() => {
+                                    handleApproveDraft(selectedReviewDraft);
+                                    setIsPreviewOpen(false);
+                                }}
+                                isLoading={isPublished}
+                                className="px-8 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-none shadow-lg shadow-emerald-600/10"
+                            >
+                                <CheckCircle className="w-4 h-4 mr-2" />
+                                Approve & Publish Now
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

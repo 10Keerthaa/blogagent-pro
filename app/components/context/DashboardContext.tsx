@@ -428,7 +428,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 setSelectedReviewDraft(draft);
                 // Explicitly sync sidebar fields
                 setPrompt(draft.prompt || '');
-                setDescription(draft.metaDesc || draft.description || draft.seoDescription || '');
+                setDescription(draft.metaDesc || draft.meta || draft.description || draft.seoDescription || draft.seo_description || '');
 
                 if (Array.isArray(draft.keywords)) {
                     setKeywords(draft.keywords);
