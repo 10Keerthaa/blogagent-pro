@@ -124,9 +124,10 @@ export const PostPreview = () => {
                 {/* Article Content */}
                 <article
                     dangerouslySetInnerHTML={{ __html: preview.content }}
-                    className="text-slate-600 dark:text-slate-300 text-base leading-relaxed prose prose-indigo dark:prose-invert max-w-none
-                        prose-h2:text-2xl prose-h2:font-extrabold prose-h2:tracking-tight prose-h2:mt-12 prose-h2:mb-6 prose-h2:font-serif
-                        prose-h3:text-xl prose-h3:font-bold prose-h3:tracking-tight prose-h3:mt-8 prose-h3:mb-4 prose-h3:font-serif
+                    className="text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none
+                        prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold
+                        prose-h2:text-2xl prose-h2:tracking-tight prose-h2:mt-12 prose-h2:mb-6 prose-h2:font-serif
+                        prose-h3:text-xl prose-h3:tracking-tight prose-h3:mt-8 prose-h3:mb-4 prose-h3:font-serif
                         prose-p:mb-6 prose-a:font-bold prose-a:no-underline prose-a:border-b-2 prose-a:border-indigo-100 hover:prose-a:border-indigo-500 transition-all font-sans"
                 />
 

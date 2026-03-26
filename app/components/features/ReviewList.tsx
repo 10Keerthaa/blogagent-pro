@@ -128,7 +128,8 @@ export const ReviewList = () => {
                             suppressContentEditableWarning
                             onBlur={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, content: e.currentTarget.innerHTML })}
                             dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
-                            className="text-slate-600 dark:text-slate-300 text-base leading-relaxed prose prose-indigo dark:prose-invert max-w-none focus:outline-none min-h-[500px]"
+                            className="text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
+                                prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold"
                         />
                     </section>
 
@@ -167,7 +168,7 @@ export const ReviewList = () => {
                             variant="secondary"
                             onClick={handleSaveManualEdits}
                             isLoading={isSavingManual}
-                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
+                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-indigo-50/80 text-indigo-700 border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 transition-colors shadow-none"
                         >
                             Save Edits
                         </Button>
@@ -184,7 +185,7 @@ export const ReviewList = () => {
                             variant="secondary"
                             size="sm"
                             onClick={() => setIsPreviewOpen(true)}
-                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-bold"
+                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors shadow-none font-bold"
                         >
                             Preview
                         </Button>
@@ -304,7 +305,8 @@ export const ReviewList = () => {
 
                                 <article
                                     dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
-                                    className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed prose prose-indigo dark:prose-invert max-w-none"
+                                    className="text-black dark:text-white text-lg leading-relaxed prose prose-stone dark:prose-invert max-w-none
+                                        prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold"
                                 />
                             </div>
                         </div>

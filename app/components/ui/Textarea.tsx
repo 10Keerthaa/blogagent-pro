@@ -36,7 +36,7 @@ export const Textarea = ({
           focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500
           placeholder:text-slate-400 disabled:opacity-50 disabled:bg-slate-50
           dark:disabled:bg-slate-950 min-h-[120px] resize-none font-medium
-          text-slate-900 dark:text-slate-100 shadow-sm
+          text-black dark:text-white shadow-sm
           ${error ? 'border-red-500 focus:ring-red-500/10 focus:border-red-500' : ''}
           ${className}
         `}
