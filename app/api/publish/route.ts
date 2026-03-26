@@ -35,11 +35,31 @@ export async function POST(req: Request) {
 
     let finalContent = "";
 
-    // 1. Embed Featured Image at the top
+    // 1. Embed Featured Image at the top with Overlays
     if (imageUrl) {
-      finalContent += `<div class="featured-image-container" style="margin-bottom: 30px; text-align: center;">
-        <img src="${imageUrl}" alt="${title}" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);" />
-      </div>`;
+      const origin = new URL(req.url).origin;
+      const blogTagUrl = `${origin}/blog.png`;
+      const logoUrl = `${origin}/10xDS.png`;
+
+      finalContent += `
+      <div class="featured-image-wrapper" style="position: relative; margin-bottom: 40px; overflow: hidden; border-radius: 0;">
+        <img src="${imageUrl}" alt="${title}" style="width: 100%; height: auto; display: block; object-fit: cover; max-height: 580px;" />
+        
+        <!-- Purple Overlay Tint -->
+        <div style="position: absolute; inset: 0; background-color: rgba(88, 28, 230, 0.45); z-index: 1; pointer-events: none;"></div>
+        
+        <!-- Overlays -->
+        <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none;">
+          <img src="${blogTagUrl}" alt="Blog" style="position: absolute; top: 20px; left: 20px; height: 32px; width: auto;" />
+          
+          <h2 style="position: absolute; top: 76px; left: 20px; color: #ffffff; font-size: 32px; font-weight: bold; margin: 0; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.3); max-width: 80%;">
+            ${title}
+          </h2>
+          
+          <img src="${logoUrl}" alt="10xDS" style="position: absolute; bottom: 20px; right: 20px; height: 48px; width: auto;" />
+        </div>
+      </div>
+      `;
     }
 
     // 2. Add the main content

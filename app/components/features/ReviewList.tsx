@@ -69,9 +69,46 @@ export const ReviewList = () => {
                     />
 
                     {selectedReviewDraft.imageUrl && (
-                        <Card className="rounded-none shadow-sm hover:shadow-md border-slate-200">
-                            <img src={selectedReviewDraft.imageUrl} alt="Featured" className="w-full h-auto object-cover max-h-[460px] rounded-none" />
-                        </Card>
+                        <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl">
+                            {/* Base Image */}
+                            <img
+                                src={selectedReviewDraft.imageUrl}
+                                alt={selectedReviewDraft.title}
+                                className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
+                                style={{ maxHeight: '580px', minHeight: '400px' }}
+                            />
+
+                            {/* Solid Purple Overlay (rgba(88, 28, 230, 0.45)) */}
+                            <div
+                                className="absolute inset-0 z-10 pointer-events-none"
+                                style={{ backgroundColor: 'rgba(88, 28, 230, 0.45)' }}
+                            />
+
+                            {/* Overlays Container */}
+                            <div className="absolute inset-0 z-20 pointer-events-none">
+                                {/* Blog Tag Overlay (Top-Left: 20px) */}
+                                <img
+                                    src="/blog.png"
+                                    alt="Blog Tag"
+                                    className="absolute top-[20px] left-[20px] w-auto h-8 object-contain"
+                                />
+
+                                {/* Title Overlay (24px below blog tag) */}
+                                <h2
+                                    className="absolute left-[20px] text-white text-3xl lg:text-4xl font-bold leading-tight tracking-tight max-w-2xl drop-shadow-lg"
+                                    style={{ top: 'calc(20px + 32px + 24px)' }}
+                                >
+                                    {selectedReviewDraft.title}
+                                </h2>
+
+                                {/* Logo Overlay (Bottom-Right: 20px) */}
+                                <img
+                                    src="/10xDS.png"
+                                    alt="Brand Logo"
+                                    className="absolute bottom-[20px] right-[20px] w-auto h-12 object-contain"
+                                />
+                            </div>
+                        </div>
                     )}
 
                     <div
