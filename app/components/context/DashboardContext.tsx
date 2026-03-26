@@ -54,6 +54,8 @@ interface DashboardContextType {
     handleApproveDraft: (draft: any) => Promise<void>;
     handleGenerateInfographic: () => Promise<void>;
     fetchDrafts: () => Promise<void>;
+    handleSelectReviewDraft: (id: string) => Promise<void>;
+    isFetchingDraftDetails: boolean;
 }
 
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
@@ -76,6 +78,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [infographicUrl, setInfographicUrl] = useState<string | null>(null);
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
     const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
+    const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
 
     const fetchSitemap = useCallback(async () => {
         const data = await apiFetchSitemap();
@@ -416,6 +419,32 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         } catch (e: any) { setError(e.message); }
     };
 
+    const handleSelectReviewDraft = async (id: string) => {
+        setIsFetchingDraftDetails(true);
+        setError(null);
+        try {
+            const draft = await api.fetchDraftById(id);
+            if (draft) {
+                setSelectedReviewDraft(draft);
+                // Explicitly sync sidebar fields
+                setPrompt(draft.prompt || '');
+                setDescription(draft.metaDesc || '');
+
+                if (Array.isArray(draft.keywords)) {
+                    setKeywords(draft.keywords);
+                } else if (typeof draft.keywords === 'string') {
+                    setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
+                } else {
+                    setKeywords([]);
+                }
+            }
+        } catch (e: any) {
+            setError("Failed to load post details");
+        } finally {
+            setIsFetchingDraftDetails(false);
+        }
+    };
+
     const value = {
         prompt, setPrompt,
         keywordInput, setKeywordInput,
@@ -444,6 +473,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         handleSaveManualEdits, handleSaveDraft,
         handleRejectDraft, handleApproveDraft,
         handleGenerateInfographic, fetchDrafts,
+        handleSelectReviewDraft, isFetchingDraftDetails,
         primaryKeyword, setPrimaryKeyword
     };
 

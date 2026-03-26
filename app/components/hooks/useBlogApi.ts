@@ -149,6 +149,14 @@ export const useBlogApi = () => {
         }
     }, []);
 
+    const fetchDraftById = useCallback(async (id: string) => {
+        try {
+            const r = await fetch(`/api/drafts/details?id=${id}`);
+            const d = await r.json();
+            return d.success ? d.draft : null;
+        } catch { return null; }
+    }, []);
+
     const publishToWordPress = useCallback(async (body: any) => {
         setIsPublished(true);
         try {
@@ -202,6 +210,7 @@ export const useBlogApi = () => {
         saveDraft,
         updateDraft,
         publishToWordPress,
-        generateInfographic
+        generateInfographic,
+        fetchDraftById
     };
 };

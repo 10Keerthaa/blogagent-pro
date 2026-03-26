@@ -22,7 +22,7 @@ export const ReviewList = () => {
         feedback, setFeedback,
         isApplyingFeedback, handleApplyReviewFeedback,
         isGeneratingInfographic, handleGenerateInfographic,
-        infographicUrl
+        infographicUrl, handleSelectReviewDraft, isFetchingDraftDetails
     } = useDashboard();
 
     const refinementRef = React.useRef<HTMLDivElement>(null);
@@ -205,8 +205,10 @@ export const ReviewList = () => {
                             hoverable
                             className="p-8 cursor-pointer group border-slate-200 dark:border-slate-800"
                         >
-                            <div className="flex items-center justify-between" onClick={() => setSelectedReviewDraft(draft)}>
-                                <div className="flex items-center gap-7">
+                            <div
+                                className={`flex items-center justify-between p-4 cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-indigo-50/50 dark:bg-indigo-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                                onClick={() => handleSelectReviewDraft(draft.id)}
+                            >                                <div className="flex items-center gap-7">
                                     <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-all duration-300 shadow-sm">
                                         <FileText className="w-8 h-8 text-indigo-400 group-hover:text-white transition-colors" />
                                     </div>
