@@ -115,13 +115,13 @@ export const useBlogApi = () => {
         }
     }, []);
 
-    const saveDraft = useCallback(async (body: any) => {
+    const saveDraft = useCallback(async (data: { title: string, content: string, metaDesc?: string, imageUrl?: string, prompt?: string, keywords?: string[] }) => {
         setIsSavingDraft(true);
         try {
             const r = await fetch('/api/drafts/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
+                body: JSON.stringify(data)
             });
             const d = await r.json();
             if (!r.ok) throw new Error(d.error || 'Failed to save draft');

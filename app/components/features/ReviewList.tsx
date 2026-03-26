@@ -9,7 +9,7 @@ import { Textarea } from '../ui/Textarea';
 import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
-    FileText, Calendar, ArrowRight, X, CheckCircle, XCircle, BarChart2, Zap
+    FileText, Calendar, ArrowRight, X, CheckCircle, XCircle, BarChart2, Zap, Sparkles
 } from 'lucide-react';
 
 export const ReviewList = () => {
@@ -24,6 +24,12 @@ export const ReviewList = () => {
         isGeneratingInfographic, handleGenerateInfographic,
         infographicUrl
     } = useDashboard();
+
+    const refinementRef = React.useRef<HTMLDivElement>(null);
+
+    const scrollToRefinement = () => {
+        refinementRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     if (selectedReviewDraft) {
         return (
@@ -40,23 +46,13 @@ export const ReviewList = () => {
                     </div>
                     <div className="flex items-center gap-3">
                         <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => handleRejectDraft(selectedReviewDraft.id)}
-                            isLoading={isRejecting}
-                            className="whitespace-nowrap px-5 py-2.5"
-                        >
-                            Reject
-                        </Button>
-                        <Button
                             variant="primary"
                             size="sm"
-                            onClick={() => handleApproveDraft(selectedReviewDraft)}
-                            isLoading={isPublished}
-                            className="whitespace-nowrap px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 shadow-emerald-100 dark:shadow-none"
+                            onClick={scrollToRefinement}
+                            className="whitespace-nowrap px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100 dark:shadow-none font-bold uppercase tracking-widest text-[10px]"
                         >
-                            <CheckCircle className="w-4 h-4 mr-2 shrink-0" />
-                            Approve & Publish
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Refine With AI
                         </Button>
                     </div>
                 </div>
@@ -86,29 +82,54 @@ export const ReviewList = () => {
                 </section>
 
                 {/* Action Grid */}
-                <section className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-16 border-t border-slate-100 dark:border-slate-800/50">
+                <section className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-16 border-t border-slate-100 dark:border-slate-800/50" ref={refinementRef}>
                     <Card className="p-8 rounded-3xl bg-slate-50/50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 space-y-6">
-                        <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">Contextual Refinement</h4>
+                        <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
                         <Textarea
                             value={feedback}
                             onChange={(e) => setFeedback(e.target.value)}
                             placeholder="Inject directives..."
-                            className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 min-h-[120px] shadow-sm"
+                            className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 min-h-[120px] shadow-sm rounded-none"
                         />
                         <Button variant="secondary" onClick={handleApplyReviewFeedback} isLoading={isApplyingFeedback} disabled={!feedback} className="w-full h-14">
-                            Apply AI Feedback
+                            Apply Refinement
                         </Button>
                     </Card>
 
-                    <Card className="p-8 rounded-3xl border-slate-200 dark:border-slate-800 space-y-6">
-                        <h4 className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Structural Actions</h4>
-                        <div className="flex flex-col gap-4">
-                            <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="w-full h-14">
-                                Commit Edits
-                            </Button>
-                        </div>
-                    </Card>
+                    <div className="flex flex-col gap-4 pt-10">
+                        <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="w-full h-14">
+                            Save Edits
+                        </Button>
+                    </div>
                 </section>
+
+                {/* Sticky Bottom Actions */}
+                <div className="sticky bottom-6 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl z-30 p-6 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Editorial Control</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleRejectDraft(selectedReviewDraft.id)}
+                            isLoading={isRejecting}
+                            className="whitespace-nowrap px-8 py-3 rounded-xl h-12"
+                        >
+                            Reject
+                        </Button>
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => handleApproveDraft(selectedReviewDraft)}
+                            isLoading={isPublished}
+                            className="whitespace-nowrap px-8 py-3 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-xl h-12"
+                        >
+                            <CheckCircle className="w-4 h-4 mr-2 shrink-0" />
+                            Approve & Publish
+                        </Button>
+                    </div>
+                </div>
             </div>
         );
     }

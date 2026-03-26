@@ -286,6 +286,14 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         } catch (e: any) { setError(e.message); }
     };
 
+    useEffect(() => {
+        if (selectedReviewDraft) {
+            setPrompt(selectedReviewDraft.prompt || '');
+            setKeywords(selectedReviewDraft.keywords || []);
+            setDescription(selectedReviewDraft.metaDesc || '');
+        }
+    }, [selectedReviewDraft]);
+
     const handleSaveDraft = async () => {
         if (!preview) return;
         setError(null);
@@ -294,7 +302,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 title: preview.title,
                 content: preview.content,
                 metaDesc: description || preview.meta,
-                imageUrl: preview.imageUrl
+                imageUrl: preview.imageUrl,
+                prompt: prompt,
+                keywords: keywords
             });
             setActiveTab('review');
         } catch (e: any) { setError(e.message); }

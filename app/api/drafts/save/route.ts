@@ -4,7 +4,7 @@ import { db } from "@/lib/firebaseAdmin";
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { title, content, metaDesc, imageUrl } = body;
+        const { title, content, metaDesc, imageUrl, prompt, keywords } = body;
 
         if (!title || !content) {
             return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
@@ -16,6 +16,8 @@ export async function POST(req: Request) {
             content,
             metaDesc: metaDesc || '',
             imageUrl: imageUrl || '',
+            prompt: prompt || '',
+            keywords: keywords || [],
             status: 'pending',
             createdAt: Date.now(),
             author: 'User'

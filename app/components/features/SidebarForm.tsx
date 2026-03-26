@@ -15,8 +15,11 @@ export const SidebarForm = () => {
         description, setDescription,
         isGenerating, handleGenerate,
         isFetchingKeywords, handleFetchKeywords,
-        isGeneratingDescription, handleGenerateDescription
+        isGeneratingDescription, handleGenerateDescription,
+        selectedReviewDraft
     } = useDashboard();
+
+    const isReadOnly = !!selectedReviewDraft;
 
     return (
         <aside className="w-full lg:w-[40%] shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
@@ -42,6 +45,7 @@ export const SidebarForm = () => {
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
                         className="shadow-sm focus:shadow-md"
+                        readOnly={isReadOnly}
                     />
                 </section>
 
@@ -51,7 +55,7 @@ export const SidebarForm = () => {
                         <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Keywords</label>
                         <button
                             onClick={handleFetchKeywords}
-                            disabled={isFetchingKeywords || !prompt}
+                            disabled={isFetchingKeywords || !prompt || isReadOnly}
                             className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
                         >
                             {isFetchingKeywords ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
@@ -59,8 +63,8 @@ export const SidebarForm = () => {
                         </button>
                     </div>
                     <div
-                        className="flex flex-wrap items-center gap-2 min-h-[100px] p-4 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none cursor-text transition-all focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500 shadow-sm"
-                        onClick={() => inputRef.current?.focus()}
+                        className={`flex flex-wrap items-center gap-2 min-h-[100px] p-4 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500'}`}
+                        onClick={() => !isReadOnly && inputRef.current?.focus()}
                     >
                         {keywords.map((tag, idx) => (
                             <span
@@ -68,23 +72,27 @@ export const SidebarForm = () => {
                                 className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-none text-[11px] font-bold shadow-sm animate-fadeIn"
                             >
                                 {tag}
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); removeKeyword(tag); }}
-                                    className="hover:text-red-500 transition-colors"
-                                >
-                                    <X className="w-3 h-3" />
-                                </button>
+                                {!isReadOnly && (
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); removeKeyword(tag); }}
+                                        className="hover:text-red-500 transition-colors"
+                                    >
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                )}
                             </span>
                         ))}
-                        <input
-                            ref={inputRef}
-                            type="text"
-                            placeholder={keywords.length === 0 ? "Add keywords..." : "Add more..."}
-                            className="flex-1 min-w-[80px] bg-transparent border-none outline-none ring-0 focus:ring-0 text-xs font-bold p-0 text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
-                            value={keywordInput}
-                            onChange={(e) => setKeywordInput(e.target.value)}
-                            onKeyDown={handleAddKeyword}
-                        />
+                        {!isReadOnly && (
+                            <input
+                                ref={inputRef}
+                                type="text"
+                                placeholder={keywords.length === 0 ? "Add keywords..." : "Add more..."}
+                                className="flex-1 min-w-[80px] bg-transparent border-none outline-none ring-0 focus:ring-0 text-xs font-bold p-0 text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
+                                value={keywordInput}
+                                onChange={(e) => setKeywordInput(e.target.value)}
+                                onKeyDown={handleAddKeyword}
+                            />
+                        )}
                     </div>
                 </section>
 
@@ -94,7 +102,7 @@ export const SidebarForm = () => {
                         <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Description</label>
                         <button
                             onClick={handleGenerateDescription}
-                            disabled={isGeneratingDescription || !prompt}
+                            disabled={isGeneratingDescription || !prompt || isReadOnly}
                             className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
                         >
                             {isGeneratingDescription ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
@@ -106,12 +114,13 @@ export const SidebarForm = () => {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className="min-h-[140px] shadow-sm focus:shadow-md"
+                        readOnly={isReadOnly}
                     />
                 </section>
             </div>
 
             {/* Action Bar */}
-            <div className="p-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent">
+            <div className={`p-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent ${isReadOnly ? 'hidden' : ''}`}>
                 <Button
                     onClick={handleGenerate}
                     isLoading={isGenerating}
