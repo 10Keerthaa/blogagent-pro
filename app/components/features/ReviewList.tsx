@@ -37,7 +37,7 @@ export const ReviewList = () => {
                 {/* Header Actions */}
                 <div className="flex items-center justify-between sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 py-8 border-b border-slate-100 dark:border-slate-800/50">
                     <div className="flex items-center gap-6">
-                        <Button variant="ghost" size="sm" onClick={() => setSelectedReviewDraft(null)} className="h-10">
+                        <Button variant="ghost" size="sm" onClick={() => setSelectedReviewDraft(null)} className="h-10 rounded-none">
                             <X className="w-4 h-4 mr-3" />
                             Return
                         </Button>
@@ -67,8 +67,8 @@ export const ReviewList = () => {
                     />
 
                     {selectedReviewDraft.imageUrl && (
-                        <Card className="rounded-[2.5rem] shadow-sm hover:shadow-md border-slate-200">
-                            <img src={selectedReviewDraft.imageUrl} alt="Featured" className="w-full h-auto object-cover max-h-[460px]" />
+                        <Card className="rounded-none shadow-sm hover:shadow-md border-slate-200">
+                            <img src={selectedReviewDraft.imageUrl} alt="Featured" className="w-full h-auto object-cover max-h-[460px] rounded-none" />
                         </Card>
                     )}
 
@@ -83,7 +83,7 @@ export const ReviewList = () => {
 
                 {/* Action Grid */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-16 border-t border-slate-100 dark:border-slate-800/50" ref={refinementRef}>
-                    <Card className="p-8 rounded-3xl bg-slate-50/50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 space-y-6">
+                    <Card className="p-8 rounded-none bg-slate-50/50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 space-y-6">
                         <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
                         <Textarea
                             value={feedback}
@@ -91,44 +91,45 @@ export const ReviewList = () => {
                             placeholder="Inject directives..."
                             className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 min-h-[120px] shadow-sm rounded-none"
                         />
-                        <Button variant="secondary" onClick={handleApplyReviewFeedback} isLoading={isApplyingFeedback} disabled={!feedback} className="w-full h-14">
+                        <Button variant="secondary" onClick={handleApplyReviewFeedback} isLoading={isApplyingFeedback} disabled={!feedback} className="w-full h-14 rounded-none">
                             Apply Refinement
                         </Button>
                     </Card>
 
                     <div className="flex flex-col gap-4 pt-10">
-                        <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="w-full h-14">
-                            Save Edits
-                        </Button>
+                        {/* Placeholder or other structural content if needed */}
                     </div>
                 </section>
 
-                {/* Sticky Bottom Actions */}
-                <div className="sticky bottom-6 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl z-30 p-6 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Editorial Control</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => handleRejectDraft(selectedReviewDraft.id)}
-                            isLoading={isRejecting}
-                            className="whitespace-nowrap px-8 py-3 rounded-xl h-12"
-                        >
-                            Reject
-                        </Button>
-                        <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={() => handleApproveDraft(selectedReviewDraft)}
-                            isLoading={isPublished}
-                            className="whitespace-nowrap px-8 py-3 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-xl h-12"
-                        >
-                            <CheckCircle className="w-4 h-4 mr-2 shrink-0" />
-                            Approve & Publish
-                        </Button>
-                    </div>
+                {/* Standalone Bottom Actions */}
+                <div className="pt-20 pb-10 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50">
+                    <Button
+                        variant="secondary"
+                        onClick={handleSaveManualEdits}
+                        isLoading={isSavingManual}
+                        className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
+                    >
+                        Save Edits
+                    </Button>
+                    <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => handleRejectDraft(selectedReviewDraft.id)}
+                        isLoading={isRejecting}
+                        className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
+                    >
+                        Reject
+                    </Button>
+                    <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleApproveDraft(selectedReviewDraft)}
+                        isLoading={isPublished}
+                        className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]"
+                    >
+                        <CheckCircle className="w-4 h-4 mr-2 shrink-0" />
+                        Approve & Publish
+                    </Button>
                 </div>
             </div>
         );

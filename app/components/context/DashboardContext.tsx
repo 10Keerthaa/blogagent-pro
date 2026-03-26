@@ -289,7 +289,17 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (selectedReviewDraft) {
             setPrompt(selectedReviewDraft.prompt || '');
-            setKeywords(selectedReviewDraft.keywords || []);
+
+            // Handle keywords being either an array or a comma-separated string
+            const kw = selectedReviewDraft.keywords;
+            if (Array.isArray(kw)) {
+                setKeywords(kw);
+            } else if (typeof kw === 'string' && kw.trim()) {
+                setKeywords(kw.split(',').map(s => s.trim()).filter(Boolean));
+            } else {
+                setKeywords([]);
+            }
+
             setDescription(selectedReviewDraft.metaDesc || '');
         }
     }, [selectedReviewDraft]);
