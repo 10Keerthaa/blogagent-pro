@@ -84,7 +84,7 @@ export const PostPreview = () => {
                             src={preview.imageUrl}
                             alt={preview.title}
                             className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
-                            style={{ maxHeight: '580px', minHeight: '400px' }}
+                            style={{ aspectRatio: '4/3' }}
                         />
 
                         {/* Solid Purple Overlay (#7E57C2 at 0.45 opacity) */}
