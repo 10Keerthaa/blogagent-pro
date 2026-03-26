@@ -231,6 +231,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const handleGenerate = async () => {
         setError(null); setInfographicUrl(null);
         setPreview(null);
+        // We DO NOT clear the description here, so it persists until the new one is ready
         try {
             const fullRawText = await api.generateContent(
                 { prompt, keywords: keywords.join(', ') },
@@ -238,7 +239,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
                         const titleMatch = newContent.match(/<title>([\s\S]*?)<\/title>/i);
-                        const currentTitle = titleMatch ? titleMatch[1].trim() : prompt;
+                        const currentTitle = titleMatch ? titleMatch[1].trim().replace(/\*\*|#/g, '') : prompt;
                         return { ...prev, content: newContent, title: currentTitle, meta: '' };
                     });
                 }
@@ -248,14 +249,39 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
 
-            const finalTitle = titleMatch ? titleMatch[1].trim() : prompt;
+            let finalTitle = titleMatch ? titleMatch[1].trim() : "";
             const finalMeta = metaMatch ? metaMatch[1].trim() : "";
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
+
+            // Robust Fallback: If title tag is missing, look for bold text at the top
+            if (!finalTitle) {
+                const boldMatch = finalContent.match(/^(\*\*|#+)\s*([\s\S]*?)\s*(\*\*|#*)\n/);
+                if (boldMatch) {
+                    finalTitle = boldMatch[2].trim();
+                    // Clean content: remove the recovered title line from the content body
+                    finalContent = finalContent.replace(boldMatch[0], "").trim();
+                } else {
+                    finalTitle = prompt; // Absolute fallback
+                }
+            }
+
+            // Always clean the title from any residual markdown
+            finalTitle = finalTitle.replace(/\*\*|#/g, '').trim();
+
             finalContent = applySitemapLinks(finalContent);
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
 
-            setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
-            setDescription(finalMeta);
+            setPreview({
+                title: finalTitle,
+                meta: finalMeta,
+                content: finalContent,
+                imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80'
+            });
+
+            // Only update description if a new one was actually generated
+            if (finalMeta) {
+                setDescription(finalMeta);
+            }
 
             const imgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
             if (imgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: imgUrl }));

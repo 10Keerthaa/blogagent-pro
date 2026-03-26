@@ -29,10 +29,19 @@ export async function POST(req: Request) {
         1. BLOG TITLE (Meta Title): 50-60 characters.
         2. META DESCRIPTION: 150-160 characters.
         3. BLOG CONTENT: 1500 to 2000 words.
-        4. Use <h2> and <h3> for headings. No markdown (#).
+        4. Use <h2> and <h3> for headings. 
+        5. NEVER use Markdown headers (#) or bold markdown (**) for titles or headings.
+        6. Always use valid HTML tags for structure.
 
-        FORMATTING REQUIREMENT:
-        Wrap output in <title>, <meta>, and <content> tags.
+        PERFECT FORMAT EXAMPLE:
+        <title>Professional Blog Title Here</title>
+        <meta>Engaging 155-character meta description goes here.</meta>
+        <content>
+          <h2>Primary Section Heading</h2>
+          <p>Introductory paragraph content...</p>
+          <h3>Sub-topic Detail</h3>
+          <p>Detailed insight content...</p>
+        </content>
       `;
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
