@@ -7,8 +7,12 @@ import { User } from 'lucide-react';
 export const TabNavigation = () => {
     const { activeTab, setActiveTab, reviewDrafts, user, role, handleLogout } = useDashboard();
 
+    const [isProfileOpen, setIsProfileOpen] = React.useState(false);
+
     const formattedEmail = user?.email?.split('@')[0] || 'User';
-    const displayRole = role === 'admin' ? 'Elite Admin' : 'Elite Editor';
+
+    // Improved role display for Admin/Editor
+    const displayRole = role?.toLowerCase() === 'admin' ? 'Elite Admin' : 'Elite Editor';
 
     const tabs = [
         { id: 'create', label: 'Editor' },
@@ -48,18 +52,44 @@ export const TabNavigation = () => {
                 ))}
             </div>
 
-            <div
-                className="flex items-center gap-6 cursor-pointer group hover:bg-slate-50 dark:hover:bg-slate-900/50 p-2 rounded-2xl transition-all"
-                onClick={handleLogout}
-                title="Click to logout"
-            >
-                <div className="flex flex-col items-end">
-                    <span className="text-xs font-bold text-slate-900 dark:text-slate-200 leading-none capitalize">{formattedEmail}</span>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1.5 group-hover:text-red-500 transition-colors">{displayRole}</span>
+            <div className="relative">
+                <div
+                    className="flex items-center gap-6 cursor-pointer group hover:bg-slate-50 dark:hover:bg-slate-900/50 p-2 rounded-2xl transition-all"
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                >
+                    <div className="flex flex-col items-end">
+                        <span className="text-xs font-bold text-slate-900 dark:text-slate-200 leading-none capitalize">{formattedEmail}</span>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1.5 group-hover:text-indigo-600 transition-colors">
+                            {displayRole}
+                        </span>
+                    </div>
+                    <div className={`w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 flex items-center justify-center text-indigo-500 dark:text-indigo-400 shadow-sm transition-all ${isProfileOpen ? 'ring-2 ring-indigo-500/20 scale-105' : 'group-hover:scale-105'}`}>
+                        <User className="w-6 h-6" />
+                    </div>
                 </div>
-                <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 flex items-center justify-center text-indigo-500 dark:text-indigo-400 shadow-sm group-hover:scale-105 group-hover:bg-red-50 dark:group-hover:bg-red-950/20 group-hover:text-red-500 group-hover:border-red-100 dark:group-hover:border-red-900/50 transition-all">
-                    <User className="w-6 h-6" />
-                </div>
+
+                {/* Profile Dropdown */}
+                {isProfileOpen && (
+                    <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] border border-slate-100 dark:border-slate-800 p-2 animate-fadeIn z-[100]">
+                        <div className="p-3 border-b border-slate-50 dark:border-slate-800/50 mb-1">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Authenticated Account</span>
+                            <span className="text-xs font-bold text-slate-900 dark:text-white truncate block">{user?.email}</span>
+                        </div>
+                        <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-3 p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all group/logout"
+                        >
+                            <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center group-hover/logout:bg-red-100 transition-colors">
+                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                    <polyline points="16 17 21 12 16 7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
+                                </svg>
+                            </div>
+                            <span className="text-xs font-extrabold uppercase tracking-widest">Log Out</span>
+                        </button>
+                    </div>
+                )}
             </div>
         </nav>
     );
