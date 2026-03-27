@@ -115,17 +115,26 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchUserRole = async (userId: string) => {
         try {
+            console.log('Fetching role for user:', userId);
             const { data, error } = await supabase
                 .from('profiles')
                 .select('role')
                 .eq('id', userId)
                 .single();
 
-            if (data && !error) {
+            if (error) {
+                console.error('Supabase Profile Query Error:', error.message);
+                return;
+            }
+
+            if (data) {
+                console.log('Profile found, role confirmed:', data.role);
                 setRole(data.role as 'admin' | 'editor');
+            } else {
+                console.warn('No profile row found for user ID:', userId);
             }
         } catch (err) {
-            console.error('Error fetching role:', err);
+            console.error('Crash fetching role:', err);
         }
     };
 
