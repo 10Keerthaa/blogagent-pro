@@ -23,7 +23,10 @@ export async function POST(req: Request) {
         Topic: ${prompt}
         Keywords to include: ${keywords || "None"}
         STRICT CONSTRAINT: Stay strictly focused on ${prompt}.
-        ${feedback ? `\nReference this feedback for refinement: ${feedback}` : ""}
+        ${feedback ? `\nSMART REFINEMENT MODE: 
+        Apply these changes SURGICALLY: ${feedback}. 
+        PRESERVE the rest of the existing article structure, headings, and detailed paragraphs exactly as they are. 
+        DO NOT rewrite unrelated sections. If asked to add a heading, insert it naturally without deleting other content.` : ""}
 
         STRICT REQUIREMENTS:
         1. BLOG TITLE (Meta Title): 50-60 characters.
@@ -32,6 +35,7 @@ export async function POST(req: Request) {
         4. Use <h2> and <h3> for headings. 
         5. NEVER use Markdown headers (#) or bold markdown (**) for titles or headings.
         6. Always use valid HTML tags for structure.
+        7. DO NOT repeat the blog title as an <h1> in the <content> tag. Start directly with an <h2>.
 
         PERFECT FORMAT EXAMPLE:
         <title>Professional Blog Title Here</title>
@@ -39,8 +43,6 @@ export async function POST(req: Request) {
         <content>
           <h2>Primary Section Heading</h2>
           <p>Introductory paragraph content...</p>
-          <h3>Sub-topic Detail</h3>
-          <p>Detailed insight content...</p>
         </content>
       `;
 

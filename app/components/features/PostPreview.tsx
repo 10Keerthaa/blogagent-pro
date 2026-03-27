@@ -6,7 +6,7 @@ import { Button } from '../ui/Button';
 import { Textarea } from '../ui/Textarea';
 import { Card } from '../ui/Card';
 import { Skeleton } from '../ui/Skeleton';
-import { RefreshCw, Copy, BarChart2, Zap, Sparkles } from 'lucide-react';
+import { RefreshCw, Copy, BarChart2, Zap, Sparkles, Bold, Italic, Link as LinkIcon } from 'lucide-react';
 
 export const PostPreview = () => {
     const {
@@ -15,8 +15,12 @@ export const PostPreview = () => {
         isApplyingFeedback, handleApplyFeedback,
         isGeneratingInfographic, handleGenerateInfographic,
         infographicUrl, isSavingDraft, handleSaveDraft,
-        resetEditorState
+        resetEditorState, setPreview
     } = useDashboard();
+
+    const handleFormat = (command: string, value: string = '') => {
+        document.execCommand(command, false, value);
+    };
 
     if (isGenerating) {
         return (
@@ -82,11 +86,22 @@ export const PostPreview = () => {
                         </Button>
                     </div>
                 </div>
+            </div>
 
-                {/* Blog Title (h1) above the image */}
-                <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-8 font-serif">
-                    {preview.title}
-                </h1>
+            {/* Toolbar for ContentEditable */}
+            <div className="flex items-center gap-2 mb-6 p-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 sticky top-[72px] z-30 shadow-sm backdrop-blur-md">
+                <button onClick={() => handleFormat('bold')} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="Bold"><Bold className="w-4 h-4" /></button>
+                <button onClick={() => handleFormat('italic')} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="Italic"><Italic className="w-4 h-4" /></button>
+                <button onClick={() => {
+                    const url = prompt('Enter link URL:');
+                    if (url) handleFormat('createLink', url);
+                }} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="Link"><LinkIcon className="w-4 h-4" /></button>
+                <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 mx-2" />
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2">Editor Tools</span>
+            </div>
+
+            <div className="max-w-4xl mx-auto px-24 pb-20">
+                {/* Blog Title (h1) REMOVED FROM HERE as it overlaps with overlay/redundant */}
 
                 {preview.imageUrl && (
                     <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl">
@@ -106,36 +121,45 @@ export const PostPreview = () => {
 
                         {/* Overlays Container */}
                         <div className="absolute inset-0 z-20 pointer-events-none">
-                            {/* Blog Tag Overlay (Top-Left: 20px) */}
+                            {/* Blog Tag Overlay (Top-Left: 40px) */}
                             <img
                                 src="/Blog.png"
                                 alt="Blog Tag"
-                                className="absolute top-[20px] left-[20px] w-auto h-8 object-contain"
+                                className="absolute top-[40px] left-[40px] w-auto h-10 object-contain"
                             />
 
-                            {/* Title Overlay (24px below blog tag) */}
-                            {/* Assuming blog tag height is roughly 32px (h-8) */}
-                            <h2
-                                className="absolute left-[20px] text-white text-3xl lg:text-4xl font-bold leading-tight tracking-tight max-w-2xl drop-shadow-lg"
-                                style={{ top: 'calc(20px + 32px + 24px)' }}
+                            {/* Title Overlay (20px below blog tag, 40px from left) */}
+                            <div
+                                className="absolute left-[40px] text-white flex flex-col gap-2 max-w-2xl drop-shadow-xl"
+                                style={{ top: 'calc(40px + 40px + 20px)' }}
                             >
-                                {preview.title}
-                            </h2>
+                                <h1 className="text-[56px] font-bold leading-[1.1] tracking-tight m-0">
+                                    {preview.title.split(':')[0]}
+                                </h1>
+                                {preview.title.includes(':') && (
+                                    <p className="text-[44px] font-medium leading-tight opacity-90 m-0">
+                                        {preview.title.split(':').slice(1).join(':')}
+                                    </p>
+                                )}
+                            </div>
 
-                            {/* Logo Overlay (Bottom-Right: 20px) */}
+                            {/* Logo Overlay (Bottom-Right: 40px) */}
                             <img
                                 src="/10xDS.png"
                                 alt="Brand Logo"
-                                className="absolute bottom-[20px] right-[20px] w-auto h-12 object-contain"
+                                className="absolute bottom-[40px] right-[40px] w-auto h-14 object-contain"
                             />
                         </div>
                     </div>
                 )}
 
-                {/* Article Content */}
+                {/* Article Content - Now contentEditable */}
                 <article
+                    contentEditable
+                    suppressContentEditableWarning
+                    onBlur={(e) => setPreview({ ...preview, content: e.currentTarget.innerHTML })}
                     dangerouslySetInnerHTML={{ __html: preview.content }}
-                    className="text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none
+                    className="text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[400px]
                         prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold
                         prose-h2:text-2xl prose-h2:tracking-tight prose-h2:mt-12 prose-h2:mb-6 prose-h2:font-serif
                         prose-h3:text-xl prose-h3:tracking-tight prose-h3:mt-8 prose-h3:mb-4 prose-h3:font-serif
@@ -179,7 +203,7 @@ export const PostPreview = () => {
                                     value={feedback}
                                     onChange={(e) => setFeedback(e.target.value)}
                                     placeholder="Inject directives to refine this draft..."
-                                    className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 min-h-[160px] shadow-sm text-sm rounded-none p-6"
+                                    className="bg-white dark:bg-slate-950 border-slate-200 dark:border-800 min-h-[160px] shadow-sm text-sm rounded-none p-6"
                                 />
                             </div>
                             <div className="flex flex-col gap-5">

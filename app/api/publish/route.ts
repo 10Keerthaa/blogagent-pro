@@ -41,6 +41,11 @@ export async function POST(req: Request) {
       const blogTagUrl = `${origin}/Blog.png`;
       const logoUrl = `${origin}/10xDS.png`;
 
+      // Split title for overlay formatting (same as preview)
+      const titleParts = title.split(':');
+      const mainTitle = titleParts[0];
+      const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':') : '';
+
       finalContent += `
       <div class="featured-image-wrapper" style="position: relative; margin-bottom: 40px; overflow: hidden; border-radius: 0;">
         <img src="${imageUrl}" alt="${title}" style="width: 100%; height: auto; display: block; object-fit: cover; max-height: 580px;" />
@@ -50,13 +55,17 @@ export async function POST(req: Request) {
         
         <!-- Overlays -->
         <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none;">
-          <img src="${blogTagUrl}" alt="Blog" style="position: absolute; top: 20px; left: 20px; height: 32px; width: auto;" />
+          <!-- Blog Tag (Top-Left 40px) -->
+          <img src="${blogTagUrl}" alt="Blog" style="position: absolute; top: 40px; left: 40px; height: 40px; width: auto;" />
           
-          <h2 style="position: absolute; top: 76px; left: 20px; color: #ffffff; font-size: 32px; font-weight: bold; margin: 0; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.3); max-width: 80%;">
-            ${title}
-          </h2>
+          <!-- Title Group (40px Left, Below Blog Tag) -->
+          <div style="position: absolute; top: 100px; left: 40px; color: #ffffff; max-width: 80%;">
+             <h1 style="font-size: 56px; font-weight: bold; margin: 0; line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.4);">${mainTitle}</h1>
+             ${subtitle ? `<p style="font-size: 44px; margin: 8px 0 0 0; line-height: 1.1; opacity: 0.9; text-shadow: 0 4px 15px rgba(0,0,0,0.3);">${subtitle}</p>` : ''}
+          </div>
           
-          <img src="${logoUrl}" alt="10xDS" style="position: absolute; bottom: 20px; right: 20px; height: 48px; width: auto;" />
+          <!-- Logo (Bottom-Right 40px) -->
+          <img src="${logoUrl}" alt="10xDS" style="position: absolute; bottom: 40px; right: 40px; height: 56px; width: auto;" />
         </div>
       </div>
       `;
@@ -100,8 +109,8 @@ export async function POST(req: Request) {
 
     // RESTORED: Log the Publication for the History Tab
     try {
-      const logsDir = path.join(process.cwd(), 'logs');
-      const logFile = path.join(logsDir, 'publications.json');
+      const logsDir = path.resolve(process.cwd(), 'logs');
+      const logFile = path.resolve(logsDir, 'publications.json');
       await fs.mkdir(logsDir, { recursive: true });
       let history = [];
       try {
@@ -110,6 +119,7 @@ export async function POST(req: Request) {
       } catch (e) { }
       history.unshift({ title, url: postData.link, date: new Date().toISOString(), id: postData.id });
       await fs.writeFile(logFile, JSON.stringify(history.slice(0, 100), null, 2));
+      console.log(`Publication logged successfully to ${logFile}. Total entries: ${history.length}`);
     } catch (logErr) {
       console.error("Failed to log publication:", logErr);
     }

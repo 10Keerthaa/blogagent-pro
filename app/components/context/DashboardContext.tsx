@@ -142,17 +142,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const currentCount = matches.length;
 
             if (currentCount < targetCount) {
-                const missing = targetCount - currentCount;
-                // Simple insertion: at the end of the content before the last </p> or at the very end
-                for (let j = 0; j < missing; j++) {
-                    const insertionText = ` <span style="opacity: 0.9;">Note: <strong>${kw}</strong> is a key theme in this context.</span>`;
-                    if (processedHtml.includes('</p>')) {
-                        const lastIndex = processedHtml.lastIndexOf('</p>');
-                        processedHtml = processedHtml.substring(0, lastIndex) + insertionText + processedHtml.substring(lastIndex);
-                    } else {
-                        processedHtml += `<p>${insertionText}</p>`;
-                    }
-                }
+                // Feature 2: Keyword Frequency Enforcement Logic
+                // REMOVED: Auto-insertion of "Note: [Keyword]" as per user request.
             }
         });
 
@@ -252,6 +243,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             let finalTitle = titleMatch ? titleMatch[1].trim() : "";
             const finalMeta = metaMatch ? metaMatch[1].trim() : "";
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
+
+            // CLEANUP: Strip leading H1 or H2 if it duplicates the title (since we show title in overlay)
+            finalContent = finalContent.replace(/^<(h1|h2)[^>]*>.*?<\/\1>/i, '').trim();
 
             // Robust Fallback: If title tag is missing, look for bold text at the top
             if (!finalTitle) {
