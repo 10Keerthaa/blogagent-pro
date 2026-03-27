@@ -75,21 +75,21 @@ export const Login = () => {
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F9FAFB] dark:bg-slate-950 flex items-center justify-center p-6 lg:p-20 overflow-y-auto shrink-0">
-                <div className="w-full max-w-[480px] bg-white dark:bg-[#0a0a0a] rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 p-10 lg:p-12 animate-fadeIn relative z-10">
-                    <div className="mb-10 text-center lg:text-left">
-                        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">Welcome Back</h2>
+                <div className="w-full max-w-[540px] bg-white dark:bg-[#0a0a0a] rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 p-12 lg:p-14 animate-fadeIn relative z-10 transition-all">
+                    <div className="mb-14 text-center lg:text-left">
+                        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">Welcome Back</h2>
                         <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">Please enter your credentials to access the platform.</p>
                     </div>
 
                     {error && (
-                        <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-xl flex items-center gap-3 animate-shake uppercase tracking-wider">
+                        <div className="mb-10 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-xl flex items-center gap-3 animate-shake uppercase tracking-wider">
                             <Lock className="w-4 h-4 shrink-0 text-red-500" />
                             {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleEmailLogin} className="space-y-6">
-                        <div className="space-y-2">
+                    <form onSubmit={handleEmailLogin} className="space-y-8">
+                        <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 mb-2">
                                 <Mail className="w-3.5 h-3.5" />
                                 Work Email
@@ -100,11 +100,11 @@ export const Login = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="name@company.com"
-                                className="w-full h-14 bg-slate-50 dark:bg-slate-900 rounded-xl px-6 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium placeholder:text-slate-400"
+                                className="w-full h-16 bg-slate-50 dark:bg-slate-900 rounded-xl px-6 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium placeholder:text-slate-400"
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 mb-2">
                                 <Lock className="w-3.5 h-3.5" />
                                 Access Code
@@ -115,7 +115,7 @@ export const Login = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="w-full h-14 bg-slate-50 dark:bg-slate-900 rounded-xl px-6 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium placeholder:text-slate-400"
+                                className="w-full h-16 bg-slate-50 dark:bg-slate-900 rounded-xl px-6 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium placeholder:text-slate-400"
                             />
                         </div>
 
@@ -123,13 +123,13 @@ export const Login = () => {
                             type="submit"
                             variant="primary"
                             isLoading={loading}
-                            className="w-full h-14 rounded-xl bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/10 uppercase tracking-[0.2em] text-[11px] font-black mt-4 transition-all hover:scale-[1.02]"
+                            className="w-full h-16 rounded-xl bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/10 uppercase tracking-[0.2em] text-[11px] font-black mt-6 transition-all hover:scale-[1.01]"
                         >
                             Authenticate Profile
                         </Button>
                     </form>
 
-                    <div className="relative my-10 flex items-center justify-center">
+                    <div className="relative my-14 flex items-center justify-center">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-slate-100 dark:border-slate-900" />
                         </div>
@@ -139,7 +139,7 @@ export const Login = () => {
                     <Button
                         variant="secondary"
                         onClick={handleGoogleLogin}
-                        className="w-full h-14 rounded-xl border-slate-200 dark:border-slate-800 flex items-center justify-center gap-3 font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all hover:scale-[1.01]"
+                        className="w-full h-16 rounded-xl border-slate-200 dark:border-slate-800 flex items-center justify-center gap-3 font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all hover:scale-[1.01]"
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -150,7 +150,7 @@ export const Login = () => {
                         Continue with Single Sign-On
                     </Button>
 
-                    <p className="mt-12 text-center text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black">
+                    <p className="mt-16 text-center text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black">
                         Secured by <span className="text-emerald-500">Supabase Auth Layer</span>
                     </p>
                 </div>
