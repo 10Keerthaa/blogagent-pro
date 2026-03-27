@@ -16,33 +16,38 @@ export const PostPreview = () => {
     const editorRef = useRef<HTMLDivElement>(null);
 
     // Handle text selection for floating menu
-    const updateBubblePosition = useCallback(() => {
-        const selection = window.getSelection();
-        if (!selection || selection.isCollapsed || !editorRef.current) {
-            setBubbleMenu(prev => ({ ...prev, show: false }));
-            return;
-        }
-
-        const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-
-        // Ensure the selection is inside our editor
-        if (!editorRef.current.contains(range.commonAncestorContainer)) {
-            setBubbleMenu(prev => ({ ...prev, show: false }));
-            return;
-        }
-
-        setBubbleMenu({
-            x: rect.left + (rect.width / 2),
-            y: rect.top + window.scrollY - 10,
-            show: true
-        });
-    }, []);
-
     useEffect(() => {
-        document.addEventListener('selectionchange', updateBubblePosition);
-        return () => document.removeEventListener('selectionchange', updateBubblePosition);
-    }, [updateBubblePosition]);
+        const handleSelectionChange = () => {
+            const selection = window.getSelection();
+            if (!selection || selection.isCollapsed || !editorRef.current) {
+                setBubbleMenu(prev => ({ ...prev, show: false }));
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+
+            // Check if selection is within the editor content
+            if (!editorRef.current.contains(range.commonAncestorContainer)) {
+                setBubbleMenu(prev => ({ ...prev, show: false }));
+                return;
+            }
+
+            const rect = range.getBoundingClientRect();
+
+            setBubbleMenu({
+                x: rect.left + (rect.width / 2),
+                y: rect.top + window.pageYOffset - 15,
+                show: true
+            });
+        };
+
+        document.addEventListener('mouseup', handleSelectionChange);
+        document.addEventListener('keyup', handleSelectionChange);
+        return () => {
+            document.removeEventListener('mouseup', handleSelectionChange);
+            document.removeEventListener('keyup', handleSelectionChange);
+        };
+    }, []);
 
     if (!preview) return null;
 
@@ -87,6 +92,11 @@ export const PostPreview = () => {
 
             {/* MAIN EDITOR AREA - "BLANK PAGE" STYLE */}
             <div className="max-w-4xl mx-auto w-full px-8 pb-40">
+                {/* RESTORED: Blog Title (h1) above the image */}
+                <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center">
+                    {preview.title}
+                </h1>
+
                 {/* 10xDS Brand Overlay */}
                 <div className="relative mb-20 group overflow-hidden shadow-2xl ring-1 ring-slate-200 dark:ring-slate-800">
                     <img
@@ -123,8 +133,18 @@ export const PostPreview = () => {
                     suppressContentEditableWarning
                     onBlur={(e) => setPreview({ ...preview, content: e.currentTarget.innerHTML })}
                     dangerouslySetInnerHTML={{ __html: preview.content }}
-                    className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif"
+                    className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif prose-a:cursor-pointer hover:prose-a:text-indigo-600 prose-a:transition-colors"
                     style={{ minHeight: '60vh' }}
+                    onClick={(e) => {
+                        const target = e.target as HTMLElement;
+                        if (target.tagName === 'A') {
+                            const href = (target as HTMLAnchorElement).href;
+                            if (href) {
+                                e.preventDefault();
+                                window.open(href, '_blank');
+                            }
+                        }
+                    }}
                 />
 
                 {preview.infographicUrl && (
@@ -149,21 +169,13 @@ export const PostPreview = () => {
 
                     <div className="flex items-center gap-4">
                         <Button
-                            variant="secondary"
+                            variant="primary"
                             onClick={handleSaveDraft}
                             isLoading={isSavingDraft}
-                            className="h-12 px-8 rounded-full border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2"
-                        >
-                            <Save className="w-4 h-4" />
-                            Save Edits
-                        </Button>
-                        <Button
-                            variant="primary"
-                            onClick={() => setActiveTab('review')}
                             className="h-12 px-10 rounded-full bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 font-bold text-[11px] uppercase tracking-widest gap-2"
                         >
-                            Next: Review & Publish
-                            <ArrowRight className="w-4 h-4" />
+                            <Save className="w-4 h-4" />
+                            Send to Review Queue
                         </Button>
                     </div>
                 </div>
