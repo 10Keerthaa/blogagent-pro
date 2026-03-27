@@ -60,17 +60,7 @@ export const Login = () => {
                     </div>
                 </div>
 
-                <div className="relative z-10">
-                    <div className="inline-flex items-center gap-4 py-4 px-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl">
-                        <div className="w-10 h-10 rounded-xl bg-emerald-400/20 flex items-center justify-center text-emerald-400">
-                            <Sparkles className="w-5 h-5" />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Enterprise Ready</span>
-                            <span className="text-sm text-indigo-100/60 font-medium">Multi-user RBAC system active.</span>
-                        </div>
-                    </div>
-                </div>
+                <div className="relative z-10" />
             </div>
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
@@ -133,7 +123,7 @@ export const Login = () => {
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-slate-100 dark:border-slate-900" />
                         </div>
-                        <span className="relative px-6 bg-white dark:bg-[#0a0a0a] text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Enterprise SSO</span>
+                        <span className="relative px-6 bg-white dark:bg-[#0a0a0a] text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">or</span>
                     </div>
 
                     <Button
@@ -149,10 +139,6 @@ export const Login = () => {
                         </svg>
                         Continue with Single Sign-On
                     </Button>
-
-                    <p className="mt-16 text-center text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black">
-                        Secured by <span className="text-emerald-500">Supabase Auth Layer</span>
-                    </p>
                 </div>
             </div>
         </div>
