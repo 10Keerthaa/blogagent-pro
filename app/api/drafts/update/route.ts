@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
         if (action === 'reject') {
             updates.status = 'rejected';
-        } else if (action === 'approve') {
+        } else if (action === 'approve' || action === 'publish') {
             updates.status = 'published';
         } else if (action === 'edit' && updateData) {
             // Allows AI refinement content updates

@@ -49,7 +49,13 @@ export async function GET() {
             } catch (e) { return []; }
         }
 
-        const allLocs = await getLocs(sitemapUrl);
+        let allLocs: string[] = [];
+        try {
+            allLocs = await getLocs(sitemapUrl);
+        } catch (fetchErr: any) {
+            console.error("Failed to fetch initial sitemap:", fetchErr.message);
+        }
+
         const urls = [...new Set(allLocs)].filter(l => l.includes("10xds.com") && !l.endsWith(".xml"));
 
         // 3. Load Cache and Generate Baseline
@@ -108,14 +114,17 @@ export async function GET() {
             const newKeywordMap = { ...cachedData.keywordMap, ...metadataMatches };
             const newCrawledUrls = [...alreadyCrawled, ...toCrawl];
 
-            if (!fs.existsSync(path.dirname(CACHE_FILE))) fs.mkdirSync(path.dirname(CACHE_FILE), { recursive: true });
-            fs.writeFileSync(CACHE_FILE, JSON.stringify({
-                timestamp: Date.now(),
-                keywordMap: newKeywordMap,
-                crawledUrls: newCrawledUrls
-            }, null, 2));
-
-            console.log(`Cache updated. Now ${newCrawledUrls.length}/${urls.length} URLs fully indexed.`);
+            try {
+                if (!fs.existsSync(path.dirname(CACHE_FILE))) fs.mkdirSync(path.dirname(CACHE_FILE), { recursive: true });
+                fs.writeFileSync(CACHE_FILE, JSON.stringify({
+                    timestamp: Date.now(),
+                    keywordMap: newKeywordMap,
+                    crawledUrls: newCrawledUrls
+                }, null, 2));
+                console.log(`Cache updated. Now ${newCrawledUrls.length}/${urls.length} URLs fully indexed.`);
+            } catch (cacheErr: any) {
+                console.error("Failed to write sitemap cache:", cacheErr.message);
+            }
 
             // Return updated map for this hit
             return NextResponse.json({ keywordMap: { ...finalMap, ...metadataMatches } });
