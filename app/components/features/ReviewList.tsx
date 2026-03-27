@@ -9,8 +9,9 @@ import { Textarea } from '../ui/Textarea';
 import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
-    FileText, Calendar, ArrowRight, X, CheckCircle, XCircle, BarChart2, Zap, Sparkles
+    FileText, Calendar, ArrowRight, X, CheckCircle, XCircle, BarChart2, Zap, Sparkles, Users
 } from 'lucide-react';
+import { AdminTracking } from './AdminTracking';
 
 export const ReviewList = () => {
     const {
@@ -23,7 +24,8 @@ export const ReviewList = () => {
         isApplyingFeedback, handleApplyReviewFeedback,
         isGeneratingInfographic, handleGenerateInfographic,
         infographicUrl, handleSelectReviewDraft, isFetchingDraftDetails,
-        handleClearForm
+        handleClearForm,
+        user, role
     } = useDashboard();
 
     const refinementRef = React.useRef<HTMLDivElement>(null);
@@ -32,7 +34,15 @@ export const ReviewList = () => {
         refinementRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
+    const isReadOnly = role === 'editor';
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
+
+    // Role-based filtering of the visual list
+    const filteredDrafts = React.useMemo(() => {
+        if (!role) return [];
+        if (role === 'admin') return reviewDrafts;
+        return reviewDrafts.filter(d => d.created_by === user?.id || d.createdBy === user?.id);
+    }, [reviewDrafts, role, user]);
 
     return (
         <div className="relative">
@@ -58,15 +68,17 @@ export const ReviewList = () => {
                                 <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
                             </div>
                             <div className="flex items-center gap-3">
-                                <Button
-                                    variant="primary"
-                                    size="sm"
-                                    onClick={scrollToRefinement}
-                                    className="whitespace-nowrap px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100 dark:shadow-none font-bold uppercase tracking-widest text-[10px]"
-                                >
-                                    <Sparkles className="w-4 h-4 mr-2" />
-                                    Refine With AI
-                                </Button>
+                                {role === 'admin' && (
+                                    <Button
+                                        variant="primary"
+                                        size="sm"
+                                        onClick={scrollToRefinement}
+                                        className="whitespace-nowrap px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100 dark:shadow-none font-bold uppercase tracking-widest text-[10px]"
+                                    >
+                                        <Sparkles className="w-4 h-4 mr-2" />
+                                        Refine With AI
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -137,12 +149,12 @@ export const ReviewList = () => {
                         )}
 
                         <div
-                            contentEditable
+                            contentEditable={!isReadOnly}
                             suppressContentEditableWarning
-                            onBlur={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, content: e.currentTarget.innerHTML })}
+                            onBlur={(e) => !isReadOnly && setSelectedReviewDraft({ ...selectedReviewDraft, content: e.currentTarget.innerHTML })}
                             dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
-                            className="text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
-                                prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold"
+                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
+                                prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
                         />
 
                         {/* Infographic Section */}
@@ -158,54 +170,60 @@ export const ReviewList = () => {
                         )}
                     </section>
 
-                    {/* AI Refinement Section - Edge to Edge */}
-                    <section
-                        className="w-auto mx-[-1.5rem] lg:mx-[-2.5rem] border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30"
-                        ref={refinementRef}
-                    >
-                        <div className="flex flex-col">
-                            <div className="max-w-4xl mx-auto w-full py-4 px-4 lg:px-0">
-                                <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
+                    {/* AI Refinement Section - Only for Admins */}
+                    {!isReadOnly && (
+                        <section
+                            className="w-auto mx-[-1.5rem] lg:mx-[-2.5rem] border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30"
+                            ref={refinementRef}
+                        >
+                            <div className="flex flex-col">
+                                <div className="max-w-4xl mx-auto w-full py-4 px-4 lg:px-0">
+                                    <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
+                                </div>
+                                <Textarea
+                                    value={feedback}
+                                    onChange={(e) => setFeedback(e.target.value)}
+                                    placeholder="Inject directives..."
+                                    className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
+                                />
+                                <div className="max-w-4xl mx-auto w-full flex justify-center">
+                                    <Button
+                                        variant="secondary"
+                                        onClick={handleApplyReviewFeedback}
+                                        isLoading={isApplyingFeedback}
+                                        disabled={!feedback}
+                                        className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm"
+                                    >
+                                        Apply Refinement
+                                    </Button>
+                                </div>
                             </div>
-                            <Textarea
-                                value={feedback}
-                                onChange={(e) => setFeedback(e.target.value)}
-                                placeholder="Inject directives..."
-                                className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
-                            />
-                            <div className="max-w-4xl mx-auto w-full flex justify-center">
-                                <Button
-                                    variant="secondary"
-                                    onClick={handleApplyReviewFeedback}
-                                    isLoading={isApplyingFeedback}
-                                    disabled={!feedback}
-                                    className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm"
-                                >
-                                    Apply Refinement
-                                </Button>
-                            </div>
-                        </div>
-                    </section>
+                        </section>
+                    )}
 
                     {/* Standalone Bottom Actions */}
                     <div className="max-w-4xl mx-auto pt-0 pb-10 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50">
-                        <Button
-                            variant="secondary"
-                            onClick={handleSaveManualEdits}
-                            isLoading={isSavingManual}
-                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-indigo-50/80 text-indigo-700 border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 transition-colors shadow-none"
-                        >
-                            Save Edits
-                        </Button>
-                        <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => handleRejectDraft(selectedReviewDraft.id)}
-                            isLoading={isRejecting}
-                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
-                        >
-                            Reject
-                        </Button>
+                        {!isReadOnly && (
+                            <>
+                                <Button
+                                    variant="secondary"
+                                    onClick={handleSaveManualEdits}
+                                    isLoading={isSavingManual}
+                                    className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-indigo-50/80 text-indigo-700 border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 transition-colors shadow-none"
+                                >
+                                    Save Edits
+                                </Button>
+                                <Button
+                                    variant="danger"
+                                    size="sm"
+                                    onClick={() => handleRejectDraft(selectedReviewDraft.id)}
+                                    isLoading={isRejecting}
+                                    className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
+                                >
+                                    Reject
+                                </Button>
+                            </>
+                        )}
                         <Button
                             variant="secondary"
                             size="sm"
@@ -214,22 +232,30 @@ export const ReviewList = () => {
                         >
                             Preview
                         </Button>
-                        <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={() => handleApproveDraft(selectedReviewDraft)}
-                            isLoading={isPublished}
-                            className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]"
-                        >
-                            <CheckCircle className="w-4 h-4 mr-2 shrink-0" />
-                            Approve & Publish
-                        </Button>
+                        {!isReadOnly && (
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={() => handleApproveDraft(selectedReviewDraft)}
+                                isLoading={isPublished}
+                                className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]"
+                            >
+                                <CheckCircle className="w-4 h-4 mr-2 shrink-0" />
+                                Approve & Publish
+                            </Button>
+                        )}
+                        {isReadOnly && (
+                            <div className="px-10 py-4 text-slate-400 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
+                                <FileText className="w-4 h-4" />
+                                Review Only Mode
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : (
                 <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-300">
                     <div className="flex items-center justify-between mb-2 px-1">
-                        <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({reviewDrafts.length})</h2>
+                        <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts.length})</h2>
                     </div>
 
                     <div className="grid grid-cols-1 gap-6">
@@ -243,8 +269,8 @@ export const ReviewList = () => {
                                     </div>
                                 </div>
                             ))
-                        ) : reviewDrafts.length > 0 ? (
-                            reviewDrafts.map((draft) => (
+                        ) : filteredDrafts.length > 0 ? (
+                            filteredDrafts.map((draft) => (
                                 <Card
                                     key={draft.id}
                                     hoverable
@@ -264,8 +290,13 @@ export const ReviewList = () => {
                                                 <div className="flex items-center gap-6">
                                                     <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
                                                         <Calendar className="w-3.5 h-3.5" />
-                                                        {new Date(draft.createdAt).toLocaleDateString()}
+                                                        {new Date(draft.createdAt || draft.created_at).toLocaleDateString()}
                                                     </span>
+                                                    {(draft.user_email || draft.createdBy) && (
+                                                        <span className="text-[10px] font-medium text-indigo-400 lowercase italic">
+                                                            by {draft.user_email || draft.createdBy}
+                                                        </span>
+                                                    )}
                                                     <Badge variant="outline" className="px-3">Draft</Badge>
                                                 </div>
                                             </div>
@@ -287,6 +318,9 @@ export const ReviewList = () => {
                             </div>
                         )}
                     </div>
+
+                    {/* Admin Activity Dashboard Section */}
+                    {role === 'admin' && <AdminTracking />}
                 </div>
             )}
 

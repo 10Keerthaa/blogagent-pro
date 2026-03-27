@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { supabase } from '../../../lib/supabase';
+import { User } from '@supabase/supabase-js';
 
 export const useBlogApi = () => {
     const [isFetchingDrafts, setIsFetchingDrafts] = useState(false);
@@ -13,6 +15,7 @@ export const useBlogApi = () => {
     const [isSavingManual, setIsSavingManual] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
     const [isFetchingKeywords, setIsFetchingKeywords] = useState(false);
+    const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
 
     const fetchSitemap = useCallback(async () => {
         try {
@@ -188,6 +191,46 @@ export const useBlogApi = () => {
         }
     }, []);
 
+    const upsertPost = useCallback(async (data: any) => {
+        setIsSavingManual(true);
+        try {
+            const { error } = await supabase
+                .from('posts')
+                .upsert({
+                    ...data,
+                    last_edited_at: new Date().toISOString()
+                });
+            if (error) throw error;
+        } finally {
+            setIsSavingManual(false);
+        }
+    }, []);
+
+    const fetchLastInProgressDraft = useCallback(async (userId: string) => {
+        try {
+            const { data, error } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('created_by', userId)
+                .eq('status', 'in_progress')
+                .order('last_edited_at', { ascending: false })
+                .limit(1)
+                .single();
+            if (error) return null;
+            return data;
+        } catch { return null; }
+    }, []);
+
+    const fetchAdminReport = useCallback(async () => {
+        try {
+            const { data, error } = await supabase
+                .from('user_activity_report')
+                .select('*');
+            if (error) throw error;
+            return data;
+        } catch { return []; }
+    }, []);
+
     return {
         isFetchingDrafts,
         isGenerating,
@@ -211,6 +254,11 @@ export const useBlogApi = () => {
         updateDraft,
         publishToWordPress,
         generateInfographic,
-        fetchDraftById
+        fetchDraftById,
+        upsertPost,
+        fetchLastInProgressDraft,
+        fetchAdminReport,
+        isFetchingDraftDetails,
+        setIsFetchingDraftDetails
     };
 };

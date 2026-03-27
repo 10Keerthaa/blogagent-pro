@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useBlogApi } from '../hooks/useBlogApi';
+import { supabase } from '../../../lib/supabase';
+import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 interface DashboardContextType {
     prompt: string;
@@ -38,6 +40,9 @@ interface DashboardContextType {
     isFetchingKeywords: boolean;
     primaryKeyword: string | null;
     setPrimaryKeyword: (v: string | null) => void;
+    user: User | null;
+    role: 'admin' | 'editor' | null;
+    handleLogout: () => Promise<void>;
 
     // Handlers
     handleAddKeyword: (e: React.KeyboardEvent) => void;
@@ -55,6 +60,9 @@ interface DashboardContextType {
     handleGenerateInfographic: () => Promise<void>;
     fetchDrafts: () => Promise<void>;
     handleSelectReviewDraft: (id: string) => Promise<void>;
+    handleResumeDraft: () => Promise<void>;
+    upsertPost: (data: any) => Promise<void>;
+    isResuming: boolean;
     isFetchingDraftDetails: boolean;
     resetEditorState: () => void;
 }
@@ -80,6 +88,52 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
     const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
+    const [isResuming, setIsResuming] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
+    const [role, setRole] = useState<'admin' | 'editor' | null>(null);
+
+    // Auth & Role Synchronization
+    useEffect(() => {
+        // Initial session check
+        supabase.auth.getSession().then(({ data: { session } }: { data: { session: Session | null } }) => {
+            setUser(session?.user ?? null);
+            if (session?.user) fetchUserRole(session.user.id);
+        });
+
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+            setUser(session?.user ?? null);
+            if (session?.user) {
+                fetchUserRole(session.user.id);
+            } else {
+                setRole(null);
+            }
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    const fetchUserRole = async (userId: string) => {
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', userId)
+                .single();
+
+            if (data && !error) {
+                setRole(data.role as 'admin' | 'editor');
+            }
+        } catch (err) {
+            console.error('Error fetching role:', err);
+        }
+    };
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        resetEditorState();
+        setActiveTab('create');
+    };
 
     const resetEditorState = useCallback(() => {
         setPrompt('');
@@ -462,6 +516,40 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         } catch (e: any) { setError(e.message); }
     };
 
+    const handleResumeDraft = async () => {
+        if (!user) return;
+        setIsResuming(true);
+        setError(null);
+        try {
+            const draft = await api.fetchLastInProgressDraft(user.id);
+            if (draft) {
+                setPreview({
+                    title: draft.title,
+                    content: draft.content,
+                    imageUrl: draft.image_url || draft.imageUrl,
+                    infographicUrl: draft.infographic_url || draft.infographicUrl
+                });
+                setPrompt(draft.prompt || '');
+                setDescription(draft.meta_desc || draft.metaDesc || '');
+
+                if (Array.isArray(draft.keywords)) {
+                    setKeywords(draft.keywords);
+                } else if (typeof draft.keywords === 'string') {
+                    setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
+                }
+
+                setInfographicUrl(draft.infographic_url || draft.infographicUrl || null);
+                setActiveTab('create'); // Ensure we are in create mode so editor shows
+            } else {
+                setError("No recent draft found to resume.");
+            }
+        } catch (err) {
+            setError("Failed to resume draft");
+        } finally {
+            setIsResuming(false);
+        }
+    };
+
     const handleSelectReviewDraft = async (id: string) => {
         setIsFetchingDraftDetails(true);
         setError(null);
@@ -517,8 +605,11 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         handleRejectDraft, handleApproveDraft,
         handleGenerateInfographic, fetchDrafts,
         handleSelectReviewDraft, isFetchingDraftDetails,
+        handleResumeDraft, isResuming,
+        upsertPost: api.upsertPost,
         primaryKeyword, setPrimaryKeyword,
-        resetEditorState
+        resetEditorState,
+        user, role, handleLogout
     };
 
     return (

@@ -17,7 +17,8 @@ export const SidebarForm = () => {
         isFetchingKeywords, handleFetchKeywords,
         isGeneratingDescription, handleGenerateDescription,
         selectedReviewDraft,
-        primaryKeyword, setPrimaryKeyword
+        primaryKeyword, setPrimaryKeyword,
+        handleResumeDraft, isResuming, user
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -144,7 +145,19 @@ export const SidebarForm = () => {
             </div>
 
             {/* Action Bar */}
-            <div className={`p-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent ${isReadOnly ? 'hidden' : ''}`}>
+            <div className={`p-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent ${isReadOnly ? 'hidden' : ''} space-y-4`}>
+                {user && (
+                    <Button
+                        variant="secondary"
+                        onClick={handleResumeDraft}
+                        isLoading={isResuming}
+                        className="w-full text-xs font-bold uppercase tracking-widest border-slate-200 dark:border-slate-800 gap-2"
+                    >
+                        <RefreshCw className={`w-3.5 h-3.5 ${isResuming ? 'animate-spin' : ''}`} />
+                        Resume Last Draft
+                    </Button>
+                )}
+
                 <Button
                     onClick={handleGenerate}
                     isLoading={isGenerating}

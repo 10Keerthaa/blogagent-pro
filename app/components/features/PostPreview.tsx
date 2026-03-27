@@ -10,8 +10,11 @@ export const PostPreview = () => {
     const {
         preview, setPreview, isSavingDraft, handleSaveDraft, setActiveTab,
         feedback, setFeedback, handleApplyFeedback, isApplyingFeedback,
-        isGeneratingInfographic, handleGenerateInfographic, infographicUrl
+        isGeneratingInfographic, handleGenerateInfographic, infographicUrl,
+        user, upsertPost, isSavingManual
     } = useDashboard();
+
+    const [currentPostId, setCurrentPostId] = useState<string | null>(null);
 
     // Bubble Menu State
     const [bubbleMenu, setBubbleMenu] = useState<{ x: number, y: number, show: boolean }>({ x: 0, y: 0, show: false });
@@ -73,9 +76,26 @@ export const PostPreview = () => {
     const execCommand = (command: string, value: string = '') => {
         document.execCommand(command, false, value);
         if (editorRef.current) {
-            setPreview({ ...preview, content: editorRef.current.innerHTML });
+            const newContent = editorRef.current.innerHTML;
+            setPreview({ ...preview, content: newContent });
+            handleAutoSave({ ...preview, content: newContent });
         }
     };
+
+    const handleAutoSave = useCallback(async (updatedPreview: any) => {
+        if (!user) return;
+        await upsertPost({
+            id: currentPostId || undefined,
+            title: updatedPreview.title,
+            content: updatedPreview.content,
+            image_url: updatedPreview.imageUrl,
+            infographic_url: updatedPreview.infographicUrl || infographicUrl,
+            status: 'in_progress',
+            created_by: user.id,
+            prompt: updatedPreview.prompt || '',
+            keywords: updatedPreview.keywords || []
+        });
+    }, [user, currentPostId, infographicUrl, upsertPost]);
 
     const addLink = () => {
         const url = prompt('Enter URL:');
@@ -115,7 +135,11 @@ export const PostPreview = () => {
                 <h1
                     contentEditable
                     suppressContentEditableWarning
-                    onBlur={(e) => setPreview({ ...preview, title: e.currentTarget.innerText })}
+                    onBlur={(e) => {
+                        const newTitle = e.currentTarget.innerText;
+                        setPreview({ ...preview, title: newTitle });
+                        handleAutoSave({ ...preview, title: newTitle });
+                    }}
                     className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-indigo-500/10 rounded-lg p-2 transition-all"
                 >
                     {preview.title}
@@ -152,7 +176,11 @@ export const PostPreview = () => {
                     ref={editorRef}
                     contentEditable
                     suppressContentEditableWarning
-                    onBlur={(e) => setPreview({ ...preview, content: e.currentTarget.innerHTML })}
+                    onBlur={(e) => {
+                        const newContent = e.currentTarget.innerHTML;
+                        setPreview({ ...preview, content: newContent });
+                        handleAutoSave({ ...preview, content: newContent });
+                    }}
                     dangerouslySetInnerHTML={{ __html: preview.content }}
                     className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif"
                     style={{ minHeight: '50vh' }}
