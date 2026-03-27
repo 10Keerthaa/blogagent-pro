@@ -20,7 +20,7 @@ export const PostPreview = () => {
     useEffect(() => {
         const handleSelectionChange = () => {
             const selection = window.getSelection();
-            if (!selection || selection.isCollapsed || !editorRef.current) {
+            if (!selection || selection.rangeCount === 0 || selection.isCollapsed || !editorRef.current) {
                 setBubbleMenu(prev => ({ ...prev, show: false }));
                 return;
             }
@@ -33,21 +33,27 @@ export const PostPreview = () => {
                 return;
             }
 
-            const rect = range.getBoundingClientRect();
+            const rects = range.getClientRects();
+            if (rects.length === 0) return;
+
+            const rect = rects[0];
 
             setBubbleMenu({
                 x: rect.left + (rect.width / 2),
-                y: rect.top + window.scrollY - 15,
+                y: rect.top + window.scrollY - 10,
                 show: true
             });
         };
 
-        // Use 'selectionchange' for more immediate feedback, but also mouseup for safety
+        // Aggressive selection tracking
         document.addEventListener('selectionchange', handleSelectionChange);
         document.addEventListener('mouseup', handleSelectionChange);
+        window.addEventListener('scroll', handleSelectionChange);
+
         return () => {
             document.removeEventListener('selectionchange', handleSelectionChange);
             document.removeEventListener('mouseup', handleSelectionChange);
+            window.removeEventListener('scroll', handleSelectionChange);
         };
     }, []);
 
@@ -150,12 +156,12 @@ export const PostPreview = () => {
                 />
 
                 {/* AI Refinement Section - Restored to Editor Tab */}
-                <div className="mt-20 pt-16 border-t border-slate-100 dark:border-slate-800">
+                <div className="mt-20 pt-16 border-t border-slate-100 dark:border-slate-800 space-y-8">
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center justify-between">
                             <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-500 flex items-center gap-2">
-                                <Sparkles className="w-3.5 h-3.5" />
-                                AI Content Refinement
+                                <Wand2 className="w-3.5 h-3.5" />
+                                AI Content Stream Active
                             </h4>
                         </div>
                         <textarea
@@ -164,15 +170,38 @@ export const PostPreview = () => {
                             placeholder="Type instructions to refine this post (e.g., 'Add a new heading about market trends')..."
                             className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none min-h-[120px]"
                         />
+
+                        {/* 1. Apply Refinement Button (Just below textarea) */}
                         <Button
-                            variant="secondary"
+                            variant="primary"
                             onClick={handleApplyFeedback}
                             isLoading={isApplyingFeedback}
                             disabled={!feedback}
-                            className="w-full h-14 rounded-none border-slate-200 dark:border-slate-800 uppercase tracking-widest text-[10px] font-bold"
+                            className="w-full h-14 rounded-none bg-indigo-600 hover:bg-indigo-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
                         >
                             Apply AI Refinement
                         </Button>
+
+                        {/* 2. Save Buttons (Below Apply Refinement) */}
+                        <div className="flex gap-4">
+                            <Button
+                                variant="secondary"
+                                onClick={handleSaveDraft}
+                                isLoading={isSavingDraft}
+                                className="flex-1 h-14 rounded-none border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2"
+                            >
+                                <Save className="w-4 h-4" />
+                                Save Edits
+                            </Button>
+                            <Button
+                                variant="primary"
+                                onClick={handleSaveDraft}
+                                isLoading={isSavingDraft}
+                                className="flex-1 h-14 rounded-none bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 font-bold text-[11px] uppercase tracking-widest gap-2"
+                            >
+                                Send to Review Queue
+                            </Button>
+                        </div>
                     </div>
                 </div>
 
@@ -188,35 +217,8 @@ export const PostPreview = () => {
                 )}
             </div>
 
-            {/* STICKY BOTTOM ACTION BAR */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 z-50 py-6">
-                <div className="max-w-4xl mx-auto flex items-center justify-between px-8">
-                    <div className="flex items-center gap-2 text-slate-400">
-                        <Wand2 className="w-4 h-4 animate-pulse text-indigo-500" />
-                        <span className="text-[11px] font-bold uppercase tracking-widest">AI Content Stream Active</span>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        <Button
-                            variant="secondary"
-                            onClick={handleSaveDraft}
-                            isLoading={isSavingDraft}
-                            className="h-12 px-8 rounded-full border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2"
-                        >
-                            <Save className="w-4 h-4" />
-                            Save Edits
-                        </Button>
-                        <Button
-                            variant="primary"
-                            onClick={handleSaveDraft}
-                            isLoading={isSavingDraft}
-                            className="h-12 px-10 rounded-full bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 font-bold text-[11px] uppercase tracking-widest gap-2"
-                        >
-                            Send to Review Queue
-                        </Button>
-                    </div>
-                </div>
-            </div>
+            {/* REMOVED: FIXED BOTTOM BAR as requested (buttons moved above) */}
+            <div className="h-20" /> {/* Spacer for footer */}
         </div>
     );
 };
