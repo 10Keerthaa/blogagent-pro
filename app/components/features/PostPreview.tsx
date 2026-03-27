@@ -251,19 +251,34 @@ export const PostPreview = () => {
                     <div className="flex gap-4">
                         <Button
                             variant="secondary"
-                            onClick={handleSaveDraft}
-                            isLoading={isSavingDraft}
+                            onClick={() => handleAutoSave(preview)}
+                            isLoading={isSavingManual}
                             className="flex-1 h-14 rounded-none border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2"
                         >
-                            <Save className="w-4 h-4" />
+                            <Save className={`w-4 h-4 ${isSavingManual ? 'animate-spin' : ''}`} />
                             Save Edits
                         </Button>
                         <Button
                             variant="primary"
-                            onClick={handleSaveDraft}
-                            isLoading={isSavingDraft}
+                            onClick={async () => {
+                                if (!user) return;
+                                await upsertPost({
+                                    id: currentPostId || undefined,
+                                    title: preview.title,
+                                    content: preview.content,
+                                    image_url: preview.imageUrl,
+                                    infographic_url: preview.infographicUrl || infographicUrl,
+                                    status: 'review',
+                                    created_by: user.id,
+                                    prompt: preview.prompt || '',
+                                    keywords: preview.keywords || []
+                                });
+                                setActiveTab('review');
+                            }}
+                            isLoading={isSavingManual}
                             className="flex-1 h-14 rounded-none bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 font-bold text-[11px] uppercase tracking-widest gap-2"
                         >
+                            <ArrowRight className="w-4 h-4" />
                             Send to Review Queue
                         </Button>
                     </div>
