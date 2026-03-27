@@ -98,26 +98,39 @@ export const ReviewList = () => {
 
                                 {/* Overlays Container */}
                                 <div className="absolute inset-0 z-20 pointer-events-none">
-                                    {/* Blog Tag Overlay (Top-Left: 20px) */}
+                                    {/* Blog Tag Overlay (Top-Left: 40px) */}
                                     <img
                                         src="/Blog.png"
                                         alt="Blog Tag"
-                                        className="absolute top-[20px] left-[20px] w-auto h-8 object-contain"
+                                        className="absolute top-[40px] left-[40px] w-auto h-10 object-contain"
                                     />
 
-                                    {/* Title Overlay (24px below blog tag) */}
-                                    <h2
-                                        className="absolute left-[20px] text-white text-3xl lg:text-4xl font-bold leading-tight tracking-tight max-w-2xl drop-shadow-lg"
-                                        style={{ top: 'calc(20px + 32px + 24px)' }}
+                                    {/* Title Overlay (20px below blog tag, 40px from left) */}
+                                    <div
+                                        className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
+                                        style={{ top: '100px', lineHeight: '1.3' }}
                                     >
-                                        {selectedReviewDraft.title}
-                                    </h2>
+                                        {selectedReviewDraft.title.includes(':') ? (
+                                            <>
+                                                <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                    {selectedReviewDraft.title.split(':')[0]}:
+                                                </h1>
+                                                <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
+                                                    {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                {selectedReviewDraft.title}
+                                            </h1>
+                                        )}
+                                    </div>
 
-                                    {/* Logo Overlay (Bottom-Right: 20px) */}
+                                    {/* Logo Overlay (Bottom-Right: 40px) */}
                                     <img
                                         src="/10xDS.png"
                                         alt="Brand Logo"
-                                        className="absolute bottom-[20px] right-[20px] w-auto h-12 object-contain"
+                                        className="absolute bottom-[40px] right-[40px] w-auto h-14 object-contain"
                                     />
                                 </div>
                             </div>
@@ -306,11 +319,32 @@ export const ReviewList = () => {
                                         />
                                         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }} />
                                         <div className="absolute inset-0 pointer-events-none">
-                                            <img src="/Blog.png" className="absolute top-[20px] left-[20px] h-8 w-auto" alt="blog" />
-                                            <h2 className="absolute left-[20px] text-white text-3xl font-bold max-w-2xl drop-shadow-md" style={{ top: 'calc(20px + 32px + 24px)' }}>
-                                                {selectedReviewDraft.title}
-                                            </h2>
-                                            <img src="/10xDS.png" className="absolute bottom-[20px] right-[20px] h-12 w-auto" alt="logo" />
+                                            {/* Blog Tag Overlay (Top-Left: 40px) */}
+                                            <img src="/Blog.png" className="absolute top-[40px] left-[40px] h-10 w-auto" alt="blog" />
+
+                                            {/* Title Group Overlay */}
+                                            <div
+                                                className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
+                                                style={{ top: '100px', lineHeight: '1.3' }}
+                                            >
+                                                {selectedReviewDraft.title.includes(':') ? (
+                                                    <>
+                                                        <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                            {selectedReviewDraft.title.split(':')[0]}:
+                                                        </h1>
+                                                        <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
+                                                            {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                        </p>
+                                                    </>
+                                                ) : (
+                                                    <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                        {selectedReviewDraft.title}
+                                                    </h1>
+                                                )}
+                                            </div>
+
+                                            {/* Logo Overlay (Bottom-Right: 40px) */}
+                                            <img src="/10xDS.png" className="absolute bottom-[40px] right-[40px] h-14 w-auto" alt="logo" />
                                         </div>
                                     </div>
                                 )}

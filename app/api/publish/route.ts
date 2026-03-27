@@ -41,10 +41,10 @@ export async function POST(req: Request) {
       const blogTagUrl = `${origin}/Blog.png`;
       const logoUrl = `${origin}/10xDS.png`;
 
-      // Split title for overlay formatting (same as preview)
+      // Split title for overlay formatting (10xDS Brand Standard)
       const titleParts = title.split(':');
-      const mainTitle = titleParts[0];
-      const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':') : '';
+      const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
+      const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
 
       finalContent += `
       <div class="featured-image-wrapper" style="position: relative; margin-bottom: 40px; overflow: hidden; border-radius: 0;">
@@ -58,10 +58,10 @@ export async function POST(req: Request) {
           <!-- Blog Tag (Top-Left 40px) -->
           <img src="${blogTagUrl}" alt="Blog" style="position: absolute; top: 40px; left: 40px; height: 40px; width: auto;" />
           
-          <!-- Title Group (40px Left, Below Blog Tag) -->
-          <div style="position: absolute; top: 100px; left: 40px; color: #ffffff; max-width: 80%;">
-             <h1 style="font-size: 56px; font-weight: bold; margin: 0; line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.4);">${mainTitle}</h1>
-             ${subtitle ? `<p style="font-size: 44px; margin: 8px 0 0 0; line-height: 1.1; opacity: 0.9; text-shadow: 0 4px 15px rgba(0,0,0,0.3);">${subtitle}</p>` : ''}
+          <!-- Title Group (40px Left, 100px Top) -->
+          <div style="position: absolute; top: 100px; left: 40px; color: #ffffff; max-width: 85%; font-family: sans-serif; line-height: 1.3;">
+             <h1 style="font-size: 56px; font-weight: 700; margin: 0; padding: 0; line-height: 1.3; text-shadow: 0 4px 20px rgba(0,0,0,0.4);">${mainTitle}</h1>
+             ${subtitle ? `<p style="font-size: 44px; font-weight: 400; margin: 0; padding: 0; line-height: 1.3; opacity: 0.95; text-shadow: 0 4px 15px rgba(0,0,0,0.3);">${subtitle}</p>` : ''}
           </div>
           
           <!-- Logo (Bottom-Right 40px) -->

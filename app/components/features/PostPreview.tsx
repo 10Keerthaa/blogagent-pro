@@ -130,16 +130,22 @@ export const PostPreview = () => {
 
                             {/* Title Overlay (20px below blog tag, 40px from left) */}
                             <div
-                                className="absolute left-[40px] text-white flex flex-col gap-2 max-w-2xl drop-shadow-xl"
-                                style={{ top: 'calc(40px + 40px + 20px)' }}
+                                className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
+                                style={{ top: '100px', lineHeight: '1.3' }}
                             >
-                                <h1 className="text-[56px] font-bold leading-[1.1] tracking-tight m-0">
-                                    {preview.title.split(':')[0]}
-                                </h1>
-                                {preview.title.includes(':') && (
-                                    <p className="text-[44px] font-medium leading-tight opacity-90 m-0">
-                                        {preview.title.split(':').slice(1).join(':')}
-                                    </p>
+                                {preview.title.includes(':') ? (
+                                    <>
+                                        <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                            {preview.title.split(':')[0]}:
+                                        </h1>
+                                        <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
+                                            {preview.title.split(':').slice(1).join(':').trim()}
+                                        </p>
+                                    </>
+                                ) : (
+                                    <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                        {preview.title}
+                                    </h1>
                                 )}
                             </div>
 
