@@ -71,19 +71,8 @@ export const PostPreview = () => {
         };
     }, [updateBubblePosition]);
 
-    if (!preview) return null;
-
-    const execCommand = (command: string, value: string = '') => {
-        document.execCommand(command, false, value);
-        if (editorRef.current) {
-            const newContent = editorRef.current.innerHTML;
-            setPreview({ ...preview, content: newContent });
-            handleAutoSave({ ...preview, content: newContent });
-        }
-    };
-
     const handleAutoSave = useCallback(async (updatedPreview: any) => {
-        if (!user) return;
+        if (!user || !updatedPreview) return;
         await upsertPost({
             id: currentPostId || undefined,
             title: updatedPreview.title,
@@ -96,6 +85,17 @@ export const PostPreview = () => {
             keywords: updatedPreview.keywords || []
         });
     }, [user, currentPostId, infographicUrl, upsertPost]);
+
+    if (!preview) return null;
+
+    const execCommand = (command: string, value: string = '') => {
+        document.execCommand(command, false, value);
+        if (editorRef.current) {
+            const newContent = editorRef.current.innerHTML;
+            setPreview({ ...preview, content: newContent });
+            handleAutoSave({ ...preview, content: newContent });
+        }
+    };
 
     const addLink = () => {
         const url = prompt('Enter URL:');
