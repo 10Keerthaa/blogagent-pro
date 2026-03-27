@@ -72,7 +72,7 @@ export const PostPreview = () => {
     }, [updateBubblePosition]);
 
     const handleAutoSave = useCallback(async (updatedPreview: any) => {
-        if (!user || !updatedPreview) return;
+        if (!user || !updatedPreview || isSavingManual || isSavingReview) return;
         const result = await upsertPost({
             id: currentPostId || undefined,
             title: updatedPreview.title,
@@ -85,7 +85,7 @@ export const PostPreview = () => {
             keywords: updatedPreview.keywords || []
         });
         if (result?.id) setCurrentPostId(result.id);
-    }, [user, currentPostId, infographicUrl, upsertPost]);
+    }, [user, currentPostId, infographicUrl, upsertPost, isSavingManual, isSavingReview]);
 
     if (!preview) return null;
 
