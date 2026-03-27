@@ -37,23 +37,20 @@ export const PostPreview = () => {
             if (rects.length === 0) return;
 
             const rect = rects[0];
+            const containerRect = editorRef.current.getBoundingClientRect();
 
             setBubbleMenu({
-                x: rect.left + (rect.width / 2),
-                y: rect.top + window.scrollY - 10,
+                x: rect.left - containerRect.left + (rect.width / 2),
+                y: rect.top - containerRect.top - 10,
                 show: true
             });
         };
 
-        // Aggressive selection tracking
         document.addEventListener('selectionchange', handleSelectionChange);
         document.addEventListener('mouseup', handleSelectionChange);
-        window.addEventListener('scroll', handleSelectionChange);
-
         return () => {
             document.removeEventListener('selectionchange', handleSelectionChange);
             document.removeEventListener('mouseup', handleSelectionChange);
-            window.removeEventListener('scroll', handleSelectionChange);
         };
     }, []);
 
@@ -73,33 +70,33 @@ export const PostPreview = () => {
 
     return (
         <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12">
-            {/* FLOATING BUBBLE MENU */}
-            {bubbleMenu.show && (
-                <div
-                    className="fixed z-[100] flex items-center bg-slate-900 dark:bg-slate-800 text-white rounded-full shadow-2xl border border-white/10 p-1.5 animate-in fade-in zoom-in duration-200"
-                    style={{
-                        left: `${bubbleMenu.x}px`,
-                        top: `${bubbleMenu.y}px`,
-                        transform: 'translate(-50%, -100%) translateY(-10px)'
-                    }}
-                >
-                    <div className="flex items-center gap-1 px-1">
-                        <button onClick={() => execCommand('bold')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Bold className="w-4 h-4" /></button>
-                        <button onClick={() => execCommand('italic')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Italic className="w-4 h-4" /></button>
-                        <div className="w-px h-4 bg-white/20 mx-1" />
-                        <button onClick={() => execCommand('formatBlock', 'h2')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Heading2 className="w-4 h-4" /></button>
-                        <button onClick={() => execCommand('formatBlock', 'h3')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Heading3 className="w-4 h-4" /></button>
-                        <div className="w-px h-4 bg-white/20 mx-1" />
-                        <button onClick={() => execCommand('insertUnorderedList')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><List className="w-4 h-4" /></button>
-                        <button onClick={() => execCommand('insertOrderedList')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><ListOrdered className="w-4 h-4" /></button>
-                        <div className="w-px h-4 bg-white/20 mx-1" />
-                        <button onClick={addLink} className="p-2 hover:bg-white/10 rounded-full transition-colors"><LinkIcon className="w-4 h-4" /></button>
-                    </div>
-                </div>
-            )}
-
             {/* MAIN EDITOR AREA - "BLANK PAGE" STYLE */}
-            <div className="max-w-4xl mx-auto w-full px-8 pb-40">
+            <div className="max-w-4xl mx-auto w-full px-8 pb-40 relative">
+                {/* FLOATING BUBBLE MENU - Now ABSOLUTE inside the relative container */}
+                {bubbleMenu.show && (
+                    <div
+                        className="absolute z-[100] flex items-center bg-slate-900 dark:bg-slate-800 text-white rounded-full shadow-2xl border border-white/10 p-1.5 animate-in fade-in zoom-in duration-200"
+                        style={{
+                            left: `${bubbleMenu.x}px`,
+                            top: `${bubbleMenu.y}px`,
+                            transform: 'translate(-50%, -100%)'
+                        }}
+                    >
+                        <div className="flex items-center gap-1 px-1">
+                            <button onClick={() => execCommand('bold')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Bold className="w-4 h-4" /></button>
+                            <button onClick={() => execCommand('italic')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Italic className="w-4 h-4" /></button>
+                            <div className="w-px h-4 bg-white/20 mx-1" />
+                            <button onClick={() => execCommand('formatBlock', 'h2')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Heading2 className="w-4 h-4" /></button>
+                            <button onClick={() => execCommand('formatBlock', 'h3')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Heading3 className="w-4 h-4" /></button>
+                            <div className="w-px h-4 bg-white/20 mx-1" />
+                            <button onClick={() => execCommand('insertUnorderedList')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><List className="w-4 h-4" /></button>
+                            <button onClick={() => execCommand('insertOrderedList')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><ListOrdered className="w-4 h-4" /></button>
+                            <div className="w-px h-4 bg-white/20 mx-1" />
+                            <button onClick={addLink} className="p-2 hover:bg-white/10 rounded-full transition-colors"><LinkIcon className="w-4 h-4" /></button>
+                        </div>
+                    </div>
+                )}
+
                 {/* RESTORED: Blog Title (h1) above the image */}
                 <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center">
                     {preview.title}
@@ -155,7 +152,7 @@ export const PostPreview = () => {
                     }}
                 />
 
-                {/* AI Refinement Section - Restored to Editor Tab */}
+                {/* AI Refinement Section */}
                 <div className="mt-20 pt-16 border-t border-slate-100 dark:border-slate-800 space-y-8">
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center justify-between">
@@ -171,7 +168,7 @@ export const PostPreview = () => {
                             className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none min-h-[120px]"
                         />
 
-                        {/* 1. Apply Refinement Button (Just below textarea) */}
+                        {/* Apply Refinement Button */}
                         <Button
                             variant="primary"
                             onClick={handleApplyFeedback}
@@ -182,7 +179,7 @@ export const PostPreview = () => {
                             Apply AI Refinement
                         </Button>
 
-                        {/* 2. Save Buttons (Below Apply Refinement) */}
+                        {/* Save Buttons */}
                         <div className="flex gap-4">
                             <Button
                                 variant="secondary"
@@ -217,8 +214,7 @@ export const PostPreview = () => {
                 )}
             </div>
 
-            {/* REMOVED: FIXED BOTTOM BAR as requested (buttons moved above) */}
-            <div className="h-20" /> {/* Spacer for footer */}
+            <div className="h-20" />
         </div>
     );
 };
