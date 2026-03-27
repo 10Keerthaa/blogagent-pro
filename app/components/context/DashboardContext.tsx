@@ -14,8 +14,8 @@ interface DashboardContextType {
     setFeedback: (v: string) => void;
     description: string;
     setDescription: (v: string) => void;
-    activeTab: 'create' | 'review' | 'editor' | 'history' | 'settings';
-    setActiveTab: (v: 'create' | 'review' | 'editor' | 'history' | 'settings') => void;
+    activeTab: 'create' | 'review' | 'history';
+    setActiveTab: (v: 'create' | 'review' | 'history') => void;
     preview: any | null;
     setPreview: (v: any | null) => void;
     reviewDrafts: any[];
@@ -70,7 +70,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [keywords, setKeywords] = useState<string[]>([]);
     const [feedback, setFeedback] = useState('');
     const [description, setDescription] = useState('');
-    const [activeTab, setActiveTab] = useState<'create' | 'review' | 'editor' | 'history' | 'settings'>('create');
+    const [activeTab, setActiveTab] = useState<'create' | 'review' | 'history'>('create');
     const [preview, setPreview] = useState<any | null>(null);
     const [reviewDrafts, setReviewDrafts] = useState<any[]>([]);
     const [selectedReviewDraft, setSelectedReviewDraft] = useState<any>(null);
@@ -279,9 +279,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
             const imgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
             if (imgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: imgUrl }));
-
-            // AUTO-NAVIGATE to Editor Workspace after generation
-            setActiveTab('editor');
         } catch (e: any) { setError(e.message); }
     };
 
@@ -475,9 +472,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 } else {
                     setKeywords([]);
                 }
-
-                // AUTO-NAVIGATE to Editor Workspace when launching review
-                setActiveTab('editor');
             }
         } catch (e: any) {
             setError("Failed to load post details");
