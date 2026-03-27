@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { Zap, Loader2, X, RefreshCw, Star } from 'lucide-react';
+import { Zap, Loader2, X, RefreshCw, Star, PlusCircle, Sparkles } from 'lucide-react';
 import { useDashboard } from '../context/DashboardContext';
 import { Textarea } from '../ui/Textarea';
 import { Button } from '../ui/Button';
@@ -17,7 +17,8 @@ export const SidebarForm = () => {
         isFetchingKeywords, handleFetchKeywords,
         isGeneratingDescription, handleGenerateDescription,
         selectedReviewDraft,
-        primaryKeyword, setPrimaryKeyword
+        primaryKeyword, setPrimaryKeyword,
+        handleClearForm
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -28,132 +29,139 @@ export const SidebarForm = () => {
     const displayDescription = selectedReviewDraft?.metaDesc || description;
 
     return (
-        <aside className="w-full lg:w-[40%] shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
-            {/* Brand Header */}
-            <div className="p-8 border-b border-slate-100 dark:border-slate-800/50">
-                <div className="flex items-center gap-3 group cursor-default">
-                    <div className="w-10 h-10 bg-indigo-600 rounded-none flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-none transition-transform group-hover:scale-110">
-                        <Zap className="text-white w-6 h-6 fill-current" />
+        <div className="w-full max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* View Header */}
+            <div className="flex items-center justify-between pb-8 border-b border-slate-100 dark:border-slate-800/50">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl flex items-center justify-center text-indigo-600">
+                        <PlusCircle className="w-6 h-6" />
                     </div>
                     <div>
-                        <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-none tracking-tight">BlogAgent <span className="text-indigo-600">Pro</span></h1>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Enterprise Engine V3.0</p>
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Create New Post</h2>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Configure your content strategy</p>
                     </div>
+                </div>
+
+                <Button
+                    variant="ghost"
+                    onClick={handleClearForm}
+                    className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 hover:text-red-500"
+                >
+                    Clear Form
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                {/* Left Column: Topic & Meta */}
+                <div className="space-y-10">
+                    <section className="space-y-4">
+                        <label className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400 px-1">Content focus</label>
+                        <Textarea
+                            placeholder="E.g., The Future of AI in Enterprise Automation..."
+                            value={displayPrompt}
+                            onChange={(e) => setPrompt(e.target.value)}
+                            className="min-h-[120px] shadow-sm focus:shadow-md bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-base"
+                            readOnly={isReadOnly}
+                        />
+                    </section>
+
+                    <section className="space-y-4">
+                        <div className="flex items-center justify-between px-1">
+                            <label className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">SEO Strategy</label>
+                            <button
+                                onClick={handleGenerateDescription}
+                                disabled={isGeneratingDescription || !prompt || isReadOnly}
+                                className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
+                            >
+                                {isGeneratingDescription ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                                AI Assist
+                            </button>
+                        </div>
+                        <Textarea
+                            placeholder="SEO optimized summary..."
+                            value={displayDescription}
+                            onChange={(e) => setDescription(e.target.value)}
+                            className="min-h-[160px] shadow-sm focus:shadow-md bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-base"
+                            readOnly={isReadOnly}
+                        />
+                    </section>
+                </div>
+
+                {/* Right Column: Keywords */}
+                <div className="space-y-10">
+                    <section className="space-y-4">
+                        <div className="flex items-center justify-between px-1">
+                            <label className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">Target Keywords</label>
+                            <button
+                                onClick={handleFetchKeywords}
+                                disabled={isFetchingKeywords || !prompt || isReadOnly}
+                                className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
+                            >
+                                {isFetchingKeywords ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                                Semantic Sync
+                            </button>
+                        </div>
+                        <div
+                            className={`flex flex-wrap items-center gap-2 min-h-[180px] p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500'}`}
+                            onClick={() => !isReadOnly && inputRef.current?.focus()}
+                        >
+                            {displayKeywords.map((tag: string, idx: number) => {
+                                const isPrimary = tag === primaryKeyword;
+                                return (
+                                    <span
+                                        key={idx}
+                                        className={`inline-flex items-center gap-2 px-4 py-2 border rounded-xl text-[11px] font-bold shadow-sm animate-fadeIn transition-all ${isPrimary
+                                            ? 'bg-indigo-600 border-indigo-500 text-white'
+                                            : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300'
+                                            }`}
+                                    >
+                                        {!isReadOnly && (
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setPrimaryKeyword(isPrimary ? null : tag); }}
+                                                className={`transition-colors ${isPrimary ? 'text-white/80' : 'text-slate-400 hover:text-indigo-500'}`}
+                                            >
+                                                <Star className={`w-3.5 h-3.5 ${isPrimary ? 'fill-current' : ''}`} />
+                                            </button>
+                                        )}
+                                        {tag}
+                                        {!isReadOnly && (
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); removeKeyword(tag); if (isPrimary) setPrimaryKeyword(null); }}
+                                                className={`transition-colors ml-1 ${isPrimary ? 'text-white/60 hover:text-white' : 'text-slate-400 hover:text-red-500'}`}
+                                            >
+                                                <X className="w-3.5 h-3.5" />
+                                            </button>
+                                        )}
+                                    </span>
+                                );
+                            })}
+                            {!isReadOnly && (
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    placeholder={keywords.length === 0 ? "Add keywords..." : "Add more..."}
+                                    className="flex-1 min-w-[120px] bg-transparent border-none outline-none ring-0 focus:ring-0 text-sm font-bold p-0 text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
+                                    value={keywordInput}
+                                    onChange={(e) => setKeywordInput(e.target.value)}
+                                    onKeyDown={handleAddKeyword}
+                                />
+                            )}
+                        </div>
+                    </section>
                 </div>
             </div>
 
-            <div className="p-8 space-y-8 flex-1 bg-slate-50/30 dark:bg-transparent">
-                {/* Blog Topic */}
-                <section className="space-y-3">
-                    <Textarea
-                        label="Main Blog Topic"
-                        placeholder="E.g., The Future of AI in Enterprise Automation..."
-                        value={displayPrompt}
-                        onChange={(e) => setPrompt(e.target.value)}
-                        className="shadow-sm focus:shadow-md"
-                        readOnly={isReadOnly}
-                    />
-                </section>
-
-                {/* SEO Keywords */}
-                <section className="space-y-4">
-                    <div className="flex items-center justify-between px-1">
-                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Keywords</label>
-                        <button
-                            onClick={handleFetchKeywords}
-                            disabled={isFetchingKeywords || !prompt || isReadOnly}
-                            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
-                        >
-                            {isFetchingKeywords ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
-                            Auto Fetch
-                        </button>
-                    </div>
-                    <div
-                        className={`flex flex-wrap items-center gap-2 min-h-[100px] p-4 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500'}`}
-                        onClick={() => !isReadOnly && inputRef.current?.focus()}
-                    >
-                        {displayKeywords.map((tag: string, idx: number) => {
-                            const isPrimary = tag === primaryKeyword;
-                            return (
-                                <span
-                                    key={idx}
-                                    className={`inline-flex items-center gap-1.5 px-3 py-1 border rounded-none text-[11px] font-bold shadow-sm animate-fadeIn transition-all ${isPrimary
-                                            ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 ring-1 ring-indigo-500/20'
-                                            : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
-                                        }`}
-                                >
-                                    {!isReadOnly && (
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); setPrimaryKeyword(isPrimary ? null : tag); }}
-                                            className={`transition-colors ${isPrimary ? 'text-indigo-600 animate-pulse' : 'text-slate-400 hover:text-indigo-500'}`}
-                                            title={isPrimary ? "Primary Keyword" : "Mark as Primary"}
-                                        >
-                                            <Star className={`w-3 h-3 ${isPrimary ? 'fill-current' : ''}`} />
-                                        </button>
-                                    )}
-                                    {isPrimary && <span className="w-1 h-3 bg-indigo-500 mr-1 opacity-50" />}
-                                    <span className={isPrimary ? 'underline decoration-indigo-500/50 underline-offset-4' : ''}>
-                                        {tag}
-                                    </span>
-                                    {!isReadOnly && (
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); removeKeyword(tag); if (isPrimary) setPrimaryKeyword(null); }}
-                                            className="hover:text-red-500 transition-colors ml-1"
-                                        >
-                                            <X className="w-3 h-3" />
-                                        </button>
-                                    )}
-                                </span>
-                            );
-                        })}
-                        {!isReadOnly && (
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                placeholder={keywords.length === 0 ? "Add keywords..." : "Add more..."}
-                                className="flex-1 min-w-[80px] bg-transparent border-none outline-none ring-0 focus:ring-0 text-xs font-bold p-0 text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
-                                value={keywordInput}
-                                onChange={(e) => setKeywordInput(e.target.value)}
-                                onKeyDown={handleAddKeyword}
-                            />
-                        )}
-                    </div>
-                </section>
-
-                {/* Meta Description */}
-                <section className="space-y-4">
-                    <div className="flex items-center justify-between px-1">
-                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Description</label>
-                        <button
-                            onClick={handleGenerateDescription}
-                            disabled={isGeneratingDescription || !prompt || isReadOnly}
-                            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
-                        >
-                            {isGeneratingDescription ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
-                            Refine
-                        </button>
-                    </div>
-                    <Textarea
-                        placeholder="SEO optimized summary..."
-                        value={displayDescription}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="min-h-[140px] shadow-sm focus:shadow-md"
-                        readOnly={isReadOnly}
-                    />
-                </section>
-            </div>
-
-            {/* Action Bar */}
-            <div className={`p-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent ${isReadOnly ? 'hidden' : ''}`}>
+            {/* Sticky Action Footer - Simplified for Create view */}
+            <div className={`pt-12 border-t border-slate-100 dark:border-slate-800 flex justify-center ${isReadOnly ? 'hidden' : ''}`}>
                 <Button
                     onClick={handleGenerate}
                     isLoading={isGenerating}
                     disabled={!prompt}
-                    className="w-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-indigo-600/10 dark:shadow-none"
+                    className="w-full max-w-xl h-16 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-[13px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-indigo-600/30 dark:shadow-none"
                 >
-                    {isGenerating ? 'Synthesizing...' : 'Generate Elite post'}
+                    {isGenerating ? 'Synthesizing Content...' : 'Generate Enterprise Post'}
                 </Button>
             </div>
-        </aside>
+        </div>
     );
 };
