@@ -36,6 +36,7 @@ interface DashboardContextType {
     isSavingDraft: boolean;
     isRejecting: boolean;
     isSavingManual: boolean;
+    isSavingReview: boolean;
     isPublished: boolean;
     isFetchingKeywords: boolean;
     primaryKeyword: string | null;
@@ -61,7 +62,7 @@ interface DashboardContextType {
     fetchDrafts: () => Promise<void>;
     handleSelectReviewDraft: (id: string) => Promise<void>;
     handleResumeDraft: () => Promise<void>;
-    upsertPost: (data: any) => Promise<void>;
+    upsertPost: (data: any) => Promise<any>;
     isResuming: boolean;
     isFetchingDraftDetails: boolean;
     resetEditorState: () => void;
@@ -604,6 +605,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         isSavingDraft: api.isSavingDraft,
         isRejecting: api.isRejecting,
         isSavingManual: api.isSavingManual,
+        isSavingReview: api.isSavingReview,
         isPublished: api.isPublished,
         isFetchingKeywords: api.isFetchingKeywords,
         handleAddKeyword, removeKeyword,

@@ -11,7 +11,7 @@ export const PostPreview = () => {
         preview, setPreview, isSavingDraft, handleSaveDraft, setActiveTab,
         feedback, setFeedback, handleApplyFeedback, isApplyingFeedback,
         isGeneratingInfographic, handleGenerateInfographic, infographicUrl,
-        user, upsertPost, isSavingManual
+        user, upsertPost, isSavingManual, isSavingReview
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
@@ -73,7 +73,7 @@ export const PostPreview = () => {
 
     const handleAutoSave = useCallback(async (updatedPreview: any) => {
         if (!user || !updatedPreview) return;
-        await upsertPost({
+        const result = await upsertPost({
             id: currentPostId || undefined,
             title: updatedPreview.title,
             content: updatedPreview.content,
@@ -84,6 +84,7 @@ export const PostPreview = () => {
             prompt: updatedPreview.prompt || '',
             keywords: updatedPreview.keywords || []
         });
+        if (result?.id) setCurrentPostId(result.id);
     }, [user, currentPostId, infographicUrl, upsertPost]);
 
     if (!preview) return null;
@@ -247,40 +248,43 @@ export const PostPreview = () => {
                         </Button>
                     </div>
 
-                    {/* 3. Final Save Buttons */}
-                    <div className="flex gap-4">
-                        <Button
-                            variant="secondary"
-                            onClick={() => handleAutoSave(preview)}
-                            isLoading={isSavingManual}
-                            className="flex-1 h-14 rounded-none border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2"
-                        >
-                            <Save className={`w-4 h-4 ${isSavingManual ? 'animate-spin' : ''}`} />
-                            Save Edits
-                        </Button>
-                        <Button
-                            variant="primary"
-                            onClick={async () => {
-                                if (!user) return;
-                                await upsertPost({
-                                    id: currentPostId || undefined,
-                                    title: preview.title,
-                                    content: preview.content,
-                                    image_url: preview.imageUrl,
-                                    infographic_url: preview.infographicUrl || infographicUrl,
-                                    status: 'review',
-                                    created_by: user.id,
-                                    prompt: preview.prompt || '',
-                                    keywords: preview.keywords || []
-                                });
-                                setActiveTab('review');
-                            }}
-                            isLoading={isSavingManual}
-                            className="flex-1 h-14 rounded-none bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 font-bold text-[11px] uppercase tracking-widest gap-2"
-                        >
-                            <ArrowRight className="w-4 h-4" />
-                            Send to Review Queue
-                        </Button>
+                    {/* 3. Sticky Action Bar */}
+                    <div className="sticky bottom-0 left-0 right-0 py-6 px-4 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 z-50 mt-20 -mx-8">
+                        <div className="max-w-4xl mx-auto flex gap-4">
+                            <Button
+                                variant="secondary"
+                                onClick={() => handleAutoSave(preview)}
+                                isLoading={isSavingManual}
+                                className="flex-1 h-14 rounded-none border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2 bg-white dark:bg-slate-900"
+                            >
+                                <Save className={`w-4 h-4 ${isSavingManual ? 'animate-spin' : ''}`} />
+                                Save Edits
+                            </Button>
+                            <Button
+                                variant="primary"
+                                onClick={async () => {
+                                    if (!user) return;
+                                    const result = await upsertPost({
+                                        id: currentPostId || undefined,
+                                        title: preview.title,
+                                        content: preview.content,
+                                        image_url: preview.imageUrl,
+                                        infographic_url: preview.infographicUrl || infographicUrl,
+                                        status: 'review',
+                                        created_by: user.id,
+                                        prompt: preview.prompt || '',
+                                        keywords: preview.keywords || []
+                                    });
+                                    if (result?.id) setCurrentPostId(result.id);
+                                    setActiveTab('review');
+                                }}
+                                isLoading={isSavingReview}
+                                className="flex-1 h-14 rounded-none bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 font-bold text-[11px] uppercase tracking-widest gap-2"
+                            >
+                                <ArrowRight className={`w-4 h-4 ${isSavingReview ? 'animate-spin' : ''}`} />
+                                Send to Review Queue
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

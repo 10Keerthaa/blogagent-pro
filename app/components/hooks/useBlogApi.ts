@@ -13,6 +13,7 @@ export const useBlogApi = () => {
     const [isSavingDraft, setIsSavingDraft] = useState(false);
     const [isRejecting, setIsRejecting] = useState(false);
     const [isSavingManual, setIsSavingManual] = useState(false);
+    const [isSavingReview, setIsSavingReview] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
     const [isFetchingKeywords, setIsFetchingKeywords] = useState(false);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
@@ -192,17 +193,24 @@ export const useBlogApi = () => {
     }, []);
 
     const upsertPost = useCallback(async (data: any) => {
-        setIsSavingManual(true);
+        const isReview = data.status === 'review';
+        if (isReview) setIsSavingReview(true);
+        else setIsSavingManual(true);
+
         try {
-            const { error } = await supabase
+            const { data: upsertedData, error } = await supabase
                 .from('posts')
                 .upsert({
                     ...data,
                     last_edited_at: new Date().toISOString()
-                });
+                })
+                .select()
+                .single();
             if (error) throw error;
+            return upsertedData;
         } finally {
-            setIsSavingManual(false);
+            if (isReview) setIsSavingReview(false);
+            else setIsSavingManual(false);
         }
     }, []);
 
@@ -241,6 +249,7 @@ export const useBlogApi = () => {
         isSavingDraft,
         isRejecting,
         isSavingManual,
+        isSavingReview,
         isPublished,
         isFetchingKeywords,
         fetchSitemap,
