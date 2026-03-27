@@ -68,13 +68,9 @@ export const TabNavigation = () => {
                     </div>
                 </div>
 
-                {/* Profile Dropdown */}
+                {/* Profile Dropdown: Simplified (Logout Only) */}
                 {isProfileOpen && (
-                    <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] border border-slate-100 dark:border-slate-800 p-2 animate-fadeIn z-[100]">
-                        <div className="p-3 border-b border-slate-50 dark:border-slate-800/50 mb-1">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Authenticated Account</span>
-                            <span className="text-xs font-bold text-slate-900 dark:text-white truncate block">{user?.email}</span>
-                        </div>
+                    <div className="absolute right-0 mt-3 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] border border-slate-100 dark:border-slate-800 p-1.5 animate-fadeIn z-[100]">
                         <button
                             onClick={handleLogout}
                             className="w-full flex items-center gap-3 p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all group/logout"
