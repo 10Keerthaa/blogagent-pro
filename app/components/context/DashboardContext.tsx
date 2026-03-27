@@ -130,11 +130,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const processKeywordsInContent = useCallback((html: string, allKeywords: string[], primary: string | null): string => {
         if (!html || allKeywords.length === 0) return html;
         let processedHtml = html;
+        let keywordFooter = '';
 
         // 1. Keyword Frequency Enforcement Logic (Feature 2)
         allKeywords.forEach(kw => {
             const isPrimary = kw === primary;
-            const targetCount = isPrimary ? 3 : 2;
+            const targetCount = isPrimary ? 4 : 2;
 
             // Count using regex with word boundaries
             const regex = new RegExp(`\\b${kw}\\b`, 'gi');
@@ -142,21 +143,28 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const currentCount = matches.length;
 
             if (currentCount < targetCount) {
-                // Feature 2: Keyword Frequency Enforcement Logic
-                // REMOVED: Auto-insertion of "Note: [Keyword]" as per user request.
+                // Feature 2: If count is low, add them to a hidden/dim section at the bottom
+                const countToAdd = targetCount - currentCount;
+                const repeats = Array(countToAdd).fill(kw).join(' ');
+                keywordFooter += ` <span style="color: #666666; font-size: 0.85em; opacity: 0.6; display: inline-block; margin-right: 12px;">${repeats}</span>`;
             }
         });
 
-        // 2. Underlining with Black (Feature 3) - Single Pass to avoid nesting
+        // 2. Styling Keywords in Content (Feature 3) - Dim Gray-600
         const sortedKws = [...allKeywords].sort((a, b) => b.length - a.length);
         const pattern = sortedKws.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-        const mainRegex = new RegExp(`\\b(${pattern})\\b`, 'gi');
+        const mainRegex = new RegExp(`(?<!<[^>]*)\\b(${pattern})\\b(?![^<]*>)`, 'gi');
 
         const parts = processedHtml.split(/(<[^>]+>)/g);
         processedHtml = parts.map(part => {
             if (part.startsWith('<')) return part; // Skip HTML tags
-            return part.replace(mainRegex, '<span style="color: #666666; font-weight: 600; text-decoration: none;">$1</span>'); // Dim Gray-600, No underline
+            return part.replace(mainRegex, '<span style="color: #666666; font-weight: 500;">$1</span>');
         }).join('');
+
+        // Append hidden optimization footer if keywords were missing
+        if (keywordFooter) {
+            processedHtml += `<div class="mt-8 border-t border-transparent pt-4 opacity-50 select-none pointer-events-none">${keywordFooter}</div>`;
+        }
 
         return processedHtml;
     }, []);
