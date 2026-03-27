@@ -3,12 +3,13 @@ import { useDashboard } from '../context/DashboardContext';
 import { Button } from '../ui/Button';
 import {
     Bold, Italic, Link as LinkIcon, Save, ArrowRight,
-    Heading2, Heading3, List, ListOrdered, Wand2
+    Heading2, Heading3, List, ListOrdered, Wand2, Sparkles
 } from 'lucide-react';
 
 export const PostPreview = () => {
     const {
-        preview, setPreview, isSavingDraft, handleSaveDraft, setActiveTab
+        preview, setPreview, isSavingDraft, handleSaveDraft, setActiveTab,
+        feedback, setFeedback, handleApplyFeedback, isApplyingFeedback
     } = useDashboard();
 
     // Bubble Menu State
@@ -36,16 +37,17 @@ export const PostPreview = () => {
 
             setBubbleMenu({
                 x: rect.left + (rect.width / 2),
-                y: rect.top + window.pageYOffset - 15,
+                y: rect.top + window.scrollY - 15,
                 show: true
             });
         };
 
+        // Use 'selectionchange' for more immediate feedback, but also mouseup for safety
+        document.addEventListener('selectionchange', handleSelectionChange);
         document.addEventListener('mouseup', handleSelectionChange);
-        document.addEventListener('keyup', handleSelectionChange);
         return () => {
+            document.removeEventListener('selectionchange', handleSelectionChange);
             document.removeEventListener('mouseup', handleSelectionChange);
-            document.removeEventListener('keyup', handleSelectionChange);
         };
     }, []);
 
@@ -133,9 +135,9 @@ export const PostPreview = () => {
                     suppressContentEditableWarning
                     onBlur={(e) => setPreview({ ...preview, content: e.currentTarget.innerHTML })}
                     dangerouslySetInnerHTML={{ __html: preview.content }}
-                    className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif prose-a:cursor-pointer hover:prose-a:text-indigo-600 prose-a:transition-colors"
-                    style={{ minHeight: '60vh' }}
-                    onClick={(e) => {
+                    className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif"
+                    style={{ minHeight: '50vh' }}
+                    onMouseDown={(e) => {
                         const target = e.target as HTMLElement;
                         if (target.tagName === 'A') {
                             const href = (target as HTMLAnchorElement).href;
@@ -146,6 +148,33 @@ export const PostPreview = () => {
                         }
                     }}
                 />
+
+                {/* AI Refinement Section - Restored to Editor Tab */}
+                <div className="mt-20 pt-16 border-t border-slate-100 dark:border-slate-800">
+                    <div className="flex flex-col gap-6">
+                        <div className="flex items-center justify-between">
+                            <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-500 flex items-center gap-2">
+                                <Sparkles className="w-3.5 h-3.5" />
+                                AI Content Refinement
+                            </h4>
+                        </div>
+                        <textarea
+                            value={feedback}
+                            onChange={(e) => setFeedback(e.target.value)}
+                            placeholder="Type instructions to refine this post (e.g., 'Add a new heading about market trends')..."
+                            className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none min-h-[120px]"
+                        />
+                        <Button
+                            variant="secondary"
+                            onClick={handleApplyFeedback}
+                            isLoading={isApplyingFeedback}
+                            disabled={!feedback}
+                            className="w-full h-14 rounded-none border-slate-200 dark:border-slate-800 uppercase tracking-widest text-[10px] font-bold"
+                        >
+                            Apply AI Refinement
+                        </Button>
+                    </div>
+                </div>
 
                 {preview.infographicUrl && (
                     <div className="mt-20 pt-16 border-t border-slate-100 dark:border-slate-800">
@@ -169,12 +198,20 @@ export const PostPreview = () => {
 
                     <div className="flex items-center gap-4">
                         <Button
+                            variant="secondary"
+                            onClick={handleSaveDraft}
+                            isLoading={isSavingDraft}
+                            className="h-12 px-8 rounded-full border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2"
+                        >
+                            <Save className="w-4 h-4" />
+                            Save Edits
+                        </Button>
+                        <Button
                             variant="primary"
                             onClick={handleSaveDraft}
                             isLoading={isSavingDraft}
                             className="h-12 px-10 rounded-full bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 font-bold text-[11px] uppercase tracking-widest gap-2"
                         >
-                            <Save className="w-4 h-4" />
                             Send to Review Queue
                         </Button>
                     </div>
