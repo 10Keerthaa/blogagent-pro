@@ -7,10 +7,15 @@ import { TabNavigation } from './components/features/TabNavigation';
 import { PostPreview } from './components/features/PostPreview';
 import { ReviewList } from './components/features/ReviewList';
 import { HistoryList } from './components/features/HistoryList';
+import { Login } from './components/features/Login';
 import { X, XCircle } from 'lucide-react';
 
 const DashboardContent = () => {
-  const { activeTab, error, setError } = useDashboard();
+  const { activeTab, error, setError, user } = useDashboard();
+
+  if (!user) {
+    return <Login />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#060606] transition-colors duration-500 overflow-x-hidden">

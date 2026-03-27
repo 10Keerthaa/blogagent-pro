@@ -5,7 +5,10 @@ import { useDashboard } from '../context/DashboardContext';
 import { User } from 'lucide-react';
 
 export const TabNavigation = () => {
-    const { activeTab, setActiveTab, reviewDrafts } = useDashboard();
+    const { activeTab, setActiveTab, reviewDrafts, user, role, handleLogout } = useDashboard();
+
+    const formattedEmail = user?.email?.split('@')[0] || 'User';
+    const displayRole = role === 'admin' ? 'Elite Admin' : 'Elite Editor';
 
     const tabs = [
         { id: 'create', label: 'Editor' },
@@ -45,12 +48,16 @@ export const TabNavigation = () => {
                 ))}
             </div>
 
-            <div className="flex items-center gap-6">
-                <div className="flex flex-col items-end group cursor-default">
-                    <span className="text-xs font-bold text-slate-900 dark:text-slate-200 leading-none">Keerthana Jossy</span>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1.5 group-hover:text-indigo-600 transition-colors">Elite Editor</span>
+            <div
+                className="flex items-center gap-6 cursor-pointer group hover:bg-slate-50 dark:hover:bg-slate-900/50 p-2 rounded-2xl transition-all"
+                onClick={handleLogout}
+                title="Click to logout"
+            >
+                <div className="flex flex-col items-end">
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-200 leading-none capitalize">{formattedEmail}</span>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1.5 group-hover:text-red-500 transition-colors">{displayRole}</span>
                 </div>
-                <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 flex items-center justify-center text-indigo-500 dark:text-indigo-400 shadow-sm group hover:scale-110 transition-transform">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 flex items-center justify-center text-indigo-500 dark:text-indigo-400 shadow-sm group-hover:scale-105 group-hover:bg-red-50 dark:group-hover:bg-red-950/20 group-hover:text-red-500 group-hover:border-red-100 dark:group-hover:border-red-900/50 transition-all">
                     <User className="w-6 h-6" />
                 </div>
             </div>
