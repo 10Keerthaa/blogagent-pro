@@ -23,16 +23,16 @@ export const useBlogApi = () => {
         return {
             id: item.id,
             title: item.title,
-            content: item.content,
+            content: item.body || item.content,
             imageUrl: item.image_url || item.imageUrl,
-            infographicUrl: item.infographic_url || item.infographicUrl,
-            metaDesc: item.meta_desc || item.metaDesc,
+            infographicUrl: item.infographic_url || item.infographicUrl || item.seo_data?.infographicUrl,
+            metaDesc: item.meta_desc || item.metaDesc || item.seo_data?.metaDesc,
             status: item.status,
             createdBy: item.created_by || item.createdBy,
-            prompt: item.prompt,
-            keywords: item.keywords,
+            prompt: item.prompt || item.seo_data?.prompt,
+            keywords: item.keywords || item.seo_data?.keywords,
             createdAt: item.created_at || item.createdAt,
-            wpUrl: item.wp_url || item.wpUrl
+            wpUrl: item.wp_url || item.wpUrl || item.seo_data?.wpUrl
         };
     };
 
@@ -168,17 +168,22 @@ export const useBlogApi = () => {
             if (action === 'publish') status = 'published';
 
             const payload: any = {
-                ...(updateData || {}),
                 last_edited_at: new Date().toISOString()
             };
 
+            if (updateData?.title) payload.title = updateData.title;
+            if (updateData?.content) payload.body = updateData.content;
             if (status) payload.status = status;
-            if (wpUrl) payload.wp_url = wpUrl;
 
-            // Map UI fields back to snake_case if they exist in updateData
-            if (updateData?.imageUrl) payload.image_url = updateData.imageUrl;
-            if (updateData?.infographicUrl) payload.infographic_url = updateData.infographicUrl;
-            if (updateData?.metaDesc) payload.meta_desc = updateData.metaDesc;
+            // Map JSONB data
+            const seo_data: any = {};
+            if (updateData?.metaDesc) seo_data.metaDesc = updateData.metaDesc;
+            if (updateData?.infographicUrl) seo_data.infographicUrl = updateData.infographicUrl;
+            if (wpUrl) seo_data.wpUrl = wpUrl;
+
+            if (Object.keys(seo_data).length > 0) {
+                payload.seo_data = seo_data;
+            }
 
             const { data, error } = await supabase
                 .from('posts')
@@ -249,12 +254,27 @@ export const useBlogApi = () => {
         else setIsSavingManual(true);
 
         try {
+            const payload: any = {
+                title: data.title,
+                body: data.content || data.body, // Map content to body
+                status: data.status,
+                created_by: data.created_by || data.createdBy,
+                image_url: data.image_url || data.imageUrl,
+                seo_data: {
+                    metaDesc: data.metaDesc,
+                    prompt: data.prompt,
+                    keywords: data.keywords,
+                    infographicUrl: data.infographicUrl || data.infographic_url,
+                    wpUrl: data.wpUrl || data.wp_url
+                },
+                last_edited_at: new Date().toISOString()
+            };
+
+            if (data.id) payload.id = data.id;
+
             const { data: upsertedData, error } = await supabase
                 .from('posts')
-                .upsert({
-                    ...data,
-                    last_edited_at: new Date().toISOString()
-                })
+                .upsert(payload)
                 .select()
                 .single();
             if (error) throw error;

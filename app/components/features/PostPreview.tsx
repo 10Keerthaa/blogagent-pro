@@ -11,7 +11,8 @@ export const PostPreview = () => {
         preview, setPreview, isSavingDraft, handleSaveDraft, setActiveTab,
         feedback, setFeedback, handleApplyFeedback, isApplyingFeedback,
         isGeneratingInfographic, handleGenerateInfographic, infographicUrl,
-        user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft
+        user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft,
+        description
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
@@ -79,6 +80,7 @@ export const PostPreview = () => {
             content: updatedPreview.content,
             image_url: updatedPreview.imageUrl,
             infographic_url: updatedPreview.infographicUrl || infographicUrl,
+            metaDesc: description || updatedPreview.meta || "",
             status: 'in_progress',
             created_by: user.id,
             prompt: updatedPreview.prompt || '',
@@ -269,7 +271,8 @@ export const PostPreview = () => {
                                         title: preview.title,
                                         content: preview.content,
                                         image_url: preview.imageUrl,
-                                        infographic_url: preview.infographicUrl || infographicUrl,
+                                        infographic_url: infographicUrl,
+                                        metaDesc: description || preview.meta || "",
                                         status: 'review',
                                         created_by: user.id,
                                         prompt: preview.prompt || '',
