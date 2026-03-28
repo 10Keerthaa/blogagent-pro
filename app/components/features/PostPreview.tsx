@@ -12,7 +12,7 @@ export const PostPreview = () => {
         feedback, setFeedback, handleApplyFeedback, isApplyingFeedback,
         isGeneratingInfographic, handleGenerateInfographic, infographicUrl,
         user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft,
-        description
+        description, primaryKeyword
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
@@ -81,6 +81,7 @@ export const PostPreview = () => {
             image_url: updatedPreview.imageUrl,
             infographic_url: updatedPreview.infographicUrl || infographicUrl,
             metaDesc: description || updatedPreview.meta || "",
+            primaryKeyword: primaryKeyword,
             status: 'in_progress',
             created_by: user.id,
             prompt: updatedPreview.prompt || '',
@@ -276,7 +277,8 @@ export const PostPreview = () => {
                                         status: 'review',
                                         created_by: user.id,
                                         prompt: preview.prompt || '',
-                                        keywords: preview.keywords || []
+                                        keywords: preview.keywords || [],
+                                        primaryKeyword: primaryKeyword
                                     });
                                     if (result?.id) {
                                         setCurrentPostId(result.id);

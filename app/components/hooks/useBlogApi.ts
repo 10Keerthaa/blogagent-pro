@@ -25,14 +25,15 @@ export const useBlogApi = () => {
             title: item.title,
             content: item.body || item.content,
             imageUrl: item.image_url || item.imageUrl,
-            infographicUrl: item.infographic_url || item.infographicUrl || item.seo_data?.infographicUrl,
-            metaDesc: item.meta_desc || item.metaDesc || item.seo_data?.metaDesc,
+            infographicUrl: item.infographic_url || item.infographicUrl || item.seo_data?.infographicUrl || null,
+            metaDesc: item.meta_desc || item.metaDesc || item.seo_data?.metaDesc || '',
             status: item.status,
             createdBy: item.created_by || item.createdBy,
-            prompt: item.prompt || item.seo_data?.prompt,
-            keywords: item.keywords || item.seo_data?.keywords,
+            prompt: item.prompt || item.seo_data?.prompt || '',
+            keywords: item.keywords || item.seo_data?.keywords || [],
+            primaryKeyword: item.primary_keyword || item.primaryKeyword || item.seo_data?.primaryKeyword || null,
             createdAt: item.created_at || item.createdAt,
-            wpUrl: item.wp_url || item.wpUrl || item.seo_data?.wpUrl
+            wpUrl: item.wp_url || item.wpUrl || item.seo_data?.wpUrl || null
         };
     };
 
@@ -264,6 +265,7 @@ export const useBlogApi = () => {
                     metaDesc: data.metaDesc,
                     prompt: data.prompt,
                     keywords: data.keywords,
+                    primaryKeyword: data.primaryKeyword,
                     infographicUrl: data.infographicUrl || data.infographic_url,
                     wpUrl: data.wpUrl || data.wp_url
                 },

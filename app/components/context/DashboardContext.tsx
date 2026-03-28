@@ -569,10 +569,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 // Explicitly sync sidebar fields
                 setPrompt(draft.prompt || '');
                 setDescription(draft.metaDesc || '');
+                setInfographicUrl(draft.infographicUrl || null);
+                setPrimaryKeyword(draft.primaryKeyword || null);
 
                 if (Array.isArray(draft.keywords)) {
                     setKeywords(draft.keywords);
-                } else if (typeof draft.keywords === 'string') {
+                } else if (typeof draft.keywords === 'string' && draft.keywords.trim()) {
                     setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
                 } else {
                     setKeywords([]);
