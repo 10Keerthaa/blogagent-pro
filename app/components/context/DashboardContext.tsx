@@ -251,7 +251,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (activeTab === 'review') {
             fetchDrafts();
-            setSelectedReviewDraft(null);
         }
     }, [activeTab, fetchDrafts]);
 

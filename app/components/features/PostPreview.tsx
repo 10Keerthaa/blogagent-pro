@@ -11,7 +11,7 @@ export const PostPreview = () => {
         preview, setPreview, isSavingDraft, handleSaveDraft, setActiveTab,
         feedback, setFeedback, handleApplyFeedback, isApplyingFeedback,
         isGeneratingInfographic, handleGenerateInfographic, infographicUrl,
-        user, upsertPost, isSavingManual, isSavingReview
+        user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
@@ -275,7 +275,10 @@ export const PostPreview = () => {
                                         prompt: preview.prompt || '',
                                         keywords: preview.keywords || []
                                     });
-                                    if (result?.id) setCurrentPostId(result.id);
+                                    if (result?.id) {
+                                        setCurrentPostId(result.id);
+                                        setSelectedReviewDraft(result);
+                                    }
                                     setActiveTab('review');
                                 }}
                                 isLoading={isSavingReview}
