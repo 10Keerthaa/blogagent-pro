@@ -30,7 +30,7 @@ export const useBlogApi = () => {
             status: item.status,
             createdBy: item.created_by || item.createdBy,
             authorEmail: item.author?.email || item.profiles?.email || item.user_email,
-            prompt: item.prompt || item.seo_data?.prompt || '',
+            prompt: item.prompt || item.seo_data?.prompt || item.seo_data?.topic || '',
             keywords: item.keywords || item.seo_data?.keywords || [],
             primaryKeyword: item.primary_keyword || item.primaryKeyword || item.seo_data?.primaryKeyword || null,
             createdAt: item.created_at || item.createdAt,
@@ -264,7 +264,7 @@ export const useBlogApi = () => {
                 image_url: data.image_url || data.imageUrl,
                 seo_data: {
                     metaDesc: data.metaDesc,
-                    prompt: data.prompt,
+                    prompt: data.prompt || data.topic,
                     keywords: data.keywords,
                     primaryKeyword: data.primaryKeyword,
                     infographicUrl: data.infographicUrl || data.infographic_url,

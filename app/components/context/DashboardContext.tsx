@@ -260,9 +260,16 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         } catch (e: any) { setError(e.message); }
     };
 
-    const handleClearForm = () => {
-        handleClearForm();
-    };
+    const handleClearForm = useCallback(() => {
+        setPrompt('');
+        setKeywords([]);
+        setKeywordInput('');
+        setDescription('');
+        setPreview(null);
+        setInfographicUrl(null);
+        setError(null);
+        setPrimaryKeyword(null);
+    }, []);
 
     const handleGenerate = async () => {
         setError(null); setInfographicUrl(null); setPreview(null);
