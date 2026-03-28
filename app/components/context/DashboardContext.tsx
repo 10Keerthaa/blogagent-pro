@@ -93,57 +93,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [role, setRole] = useState<'admin' | 'editor' | null>(null);
 
-    // Auth & Role Synchronization
-    useEffect(() => {
-        // Initial session check
-        supabase.auth.getSession().then(({ data: { session } }: { data: { session: Session | null } }) => {
-            setUser(session?.user ?? null);
-            if (session?.user) fetchUserRole(session.user.id);
-        });
-
-        // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
-            setUser(session?.user ?? null);
-            if (session?.user) {
-                fetchUserRole(session.user.id);
-            } else {
-                setRole(null);
-            }
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    const fetchUserRole = async (userId: string) => {
-        try {
-            console.log('Fetching role for user:', userId);
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', userId)
-                .single();
-
-            if (error) {
-                console.error('Supabase Profile Query Error:', error.message);
-                return;
-            }
-
-            if (data) {
-                console.log('Profile found, role confirmed:', data.role);
-                setRole(data.role as 'admin' | 'editor');
-            } else {
-                console.warn('No profile row found for user ID:', userId);
-            }
-        } catch (err) {
-            console.error('Crash fetching role:', err);
-        }
-    };
-
-    const handleLogout = async () => {
-        await supabase.auth.signOut();
-        resetEditorState();
-        setActiveTab('create');
-    };
+    // --- HELPER FUNCTIONS (DEFINED BEFORE USE) ---
 
     const resetEditorState = useCallback(() => {
         setPrompt('');
@@ -155,23 +105,57 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setInfographicUrl(null);
     }, []);
 
+    const fetchUserRole = useCallback(async (userId: string) => {
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', userId)
+                .single();
+            if (data) setRole(data.role as 'admin' | 'editor');
+        } catch (err) { console.error('Error fetching role:', err); }
+    }, []);
+
     const fetchSitemap = useCallback(async () => {
-        const data = await apiFetchSitemap();
-        setSitemapData(data);
+        try {
+            const data = await apiFetchSitemap();
+            setSitemapData(data);
+        } catch (e) { console.error('Sitemap fetch failed'); }
     }, [apiFetchSitemap]);
+
+    const fetchHistory = useCallback(async () => {
+        try {
+            const data = await apiFetchHistory();
+            setHistory(data);
+        } catch (e) { console.error('History fetch failed'); }
+    }, [apiFetchHistory]);
+
+    const fetchDrafts = useCallback(async () => {
+        try {
+            const data = await apiFetchDrafts();
+            setReviewDrafts(data);
+        } catch (e) { console.error('Drafts fetch failed'); }
+    }, [apiFetchDrafts]);
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        resetEditorState();
+        setActiveTab('create');
+    };
+
+    // --- TEXT PROCESSING HELPERS ---
 
     const applySitemapLinks = useCallback((html: string) => {
         if (!sitemapData || Object.keys(sitemapData).length === 0) return html;
         const parts = html.split(/(<[^>]+>)/g);
         let inHeading = false;
 
-        // Filter out very common/short phrases or generic English patterns
         const genericPhrases = ['can help', 'doing more', 'start here', 'read more', 'businesses can', 'how businesses', 'agents are', 'more about', 'learn more'];
         const sortedKeywords = Object.keys(sitemapData)
             .filter(phrase =>
-                phrase.length > 12 && // Only link longer, more specific phrases
+                phrase.length > 12 &&
                 !genericPhrases.includes(phrase.toLowerCase()) &&
-                !/^(is|are|the|how|can|it|we)\s/i.test(phrase) // Avoid linking phrases starting with common verbs/articles
+                !/^(is|are|the|how|can|it|we)\s/i.test(phrase)
             )
             .sort((a, b) => b.length - a.length);
 
@@ -186,7 +170,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             let text = part;
             sortedKeywords.forEach(phrase => {
                 const regex = new RegExp(`(?<!<[^>]*)\\b(${phrase})\\b(?![^<]*>)`, 'gi');
-                // Limit to 1 link per unique phrase to avoid spamminess
                 if (text.match(regex)) {
                     text = text.replace(regex, `<a href="${sitemapData[phrase]}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
                 }
@@ -195,40 +178,47 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         }).join('');
     }, [sitemapData]);
 
-    // Feature 3: Styling Keywords in Content - Dim Gray-600
     const processKeywordsInContent = useCallback((html: string, allKeywords: string[], primary: string | null): string => {
         if (!html || allKeywords.length === 0) return html;
         let processedHtml = html;
-
         const sortedKws = [...allKeywords].sort((a, b) => b.length - a.length);
         const pattern = sortedKws.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
         if (!pattern) return processedHtml;
-
         const mainRegex = new RegExp(`(?<!<[^>]*)\\b(${pattern})\\b(?![^<]*>)`, 'gi');
-
         const parts = processedHtml.split(/(<[^>]+>)/g);
-        processedHtml = parts.map(part => {
+        return parts.map(part => {
             if (part.startsWith('<')) return part;
             return part.replace(mainRegex, '<span style="color: #666666; font-weight: 500;">$1</span>');
         }).join('');
-
-        return processedHtml;
     }, []);
 
-    const fetchHistory = useCallback(async () => {
-        const data = await apiFetchHistory();
-        setHistory(data);
-    }, [apiFetchHistory]);
-
-    const fetchDrafts = useCallback(async () => {
-        const data = await apiFetchDrafts();
-        setReviewDrafts(data);
-    }, [apiFetchDrafts]);
+    // --- EFFECTS ---
 
     useEffect(() => {
-        fetchHistory();
-        fetchSitemap();
-    }, [fetchHistory, fetchSitemap]);
+        // Initial session check
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null);
+            if (session?.user) {
+                fetchUserRole(session.user.id);
+                fetchHistory();
+                fetchSitemap();
+                fetchDrafts();
+            }
+        });
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+            if (session?.user) {
+                fetchUserRole(session.user.id);
+                fetchHistory();
+                fetchSitemap();
+                fetchDrafts();
+            } else {
+                setRole(null);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [fetchUserRole, fetchHistory, fetchSitemap, fetchDrafts]);
 
     useEffect(() => {
         if (activeTab === 'review') {
@@ -236,46 +226,46 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [activeTab, fetchDrafts]);
 
+    useEffect(() => {
+        if (selectedReviewDraft) {
+            setPrompt(selectedReviewDraft.prompt || '');
+            const kw = selectedReviewDraft.keywords;
+            if (Array.isArray(kw)) setKeywords(kw);
+            else if (typeof kw === 'string' && kw.trim()) setKeywords(kw.split(',').map(s => s.trim()).filter(Boolean));
+            else setKeywords([]);
+            setDescription(selectedReviewDraft.metaDesc || '');
+            setInfographicUrl(selectedReviewDraft.infographicUrl || null);
+            setPrimaryKeyword(selectedReviewDraft.primaryKeyword || null);
+        }
+    }, [selectedReviewDraft]);
+
+    // --- HANDLERS ---
+
     const handleAddKeyword = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && keywordInput.trim()) {
             e.preventDefault();
-            if (!keywords.includes(keywordInput.trim())) {
-                setKeywords([...keywords, keywordInput.trim()]);
-            }
+            if (!keywords.includes(keywordInput.trim())) setKeywords([...keywords, keywordInput.trim()]);
             setKeywordInput('');
         }
     };
 
-    const removeKeyword = (tag: string) => {
-        setKeywords(keywords.filter(k => k !== tag));
-    };
+    const removeKeyword = (tag: string) => setKeywords(keywords.filter(k => k !== tag));
 
     const handleFetchKeywords = async () => {
         if (!prompt.trim()) return;
         try {
             const keys = await api.fetchKeywords(prompt);
             setKeywords(keys);
-            if (primaryKeyword && !keys.includes(primaryKeyword)) {
-                setPrimaryKeyword(null);
-            }
+            if (primaryKeyword && !keys.includes(primaryKeyword)) setPrimaryKeyword(null);
         } catch (e: any) { setError(e.message); }
     };
 
     const handleClearForm = () => {
-        setPrompt('');
-        setKeywords([]);
-        setKeywordInput('');
-        setDescription('');
-        setPreview(null);
-        setFeedback('');
-        setInfographicUrl(null);
-        setError(null);
+        handleClearForm();
     };
 
     const handleGenerate = async () => {
-        setError(null); setInfographicUrl(null);
-        setPreview(null);
-        // We DO NOT clear the description here, so it persists until the new one is ready
+        setError(null); setInfographicUrl(null); setPreview(null);
         try {
             const fullRawText = await api.generateContent(
                 { prompt, keywords: keywords.join(', ') },
@@ -297,39 +287,20 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const finalMeta = metaMatch ? metaMatch[1].trim() : "";
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
 
-            // CLEANUP: Strip leading H1 or H2 if it duplicates the title (since we show title in overlay)
             finalContent = finalContent.replace(/^<(h1|h2)[^>]*>.*?<\/\1>/i, '').trim();
-
-            // Robust Fallback: If title tag is missing, look for bold text at the top
             if (!finalTitle) {
                 const boldMatch = finalContent.match(/^(\*\*|#+)\s*([\s\S]*?)\s*(\*\*|#*)\n/);
                 if (boldMatch) {
                     finalTitle = boldMatch[2].trim();
-                    // Clean content: remove the recovered title line from the content body
                     finalContent = finalContent.replace(boldMatch[0], "").trim();
-                } else {
-                    finalTitle = prompt; // Absolute fallback
-                }
+                } else finalTitle = prompt;
             }
-
-            // Always clean the title from any residual markdown
             finalTitle = finalTitle.replace(/\*\*|#/g, '').trim();
-
             finalContent = applySitemapLinks(finalContent);
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
 
-            setPreview({
-                title: finalTitle,
-                meta: finalMeta,
-                content: finalContent,
-                imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80'
-            });
-
-            // Only update description if a new one was actually generated
-            if (finalMeta) {
-                setDescription(finalMeta);
-            }
-
+            setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
+            if (finalMeta) setDescription(finalMeta);
             const imgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
             if (imgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: imgUrl }));
         } catch (e: any) { setError(e.message); }
@@ -339,20 +310,14 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!prompt.trim()) return;
         setError(null);
         try {
-            const body = {
-                prompt,
-                keywords: keywords.join(', '),
-                primaryKeyword: primaryKeyword
-            };
-            const d = await api.generateDescription(body);
+            const d = await api.generateDescription({ prompt, keywords: keywords.join(', '), primaryKeyword });
             setDescription(d);
         } catch (e: any) { setError(e.message); }
     };
 
     const handleApplyFeedback = async () => {
         const currentImageUrl = preview?.imageUrl;
-        setError(null);
-        setPreview(null);
+        setError(null); setPreview(null);
         try {
             const fullRawText = await api.generateContent(
                 { prompt: preview?.title || prompt, keywords: keywords.join(', '), feedback },
@@ -365,22 +330,17 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     });
                 }
             );
-
             const titleMatch = fullRawText.match(/<title>([\s\S]*?)<\/title>/i);
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
-
             const finalTitle = titleMatch ? titleMatch[1].trim() : (preview?.title || prompt);
             const finalMeta = metaMatch ? metaMatch[1].trim() : (preview?.meta || "");
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
             finalContent = applySitemapLinks(finalContent);
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
-
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: currentImageUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
-            setDescription(finalMeta);
-            setFeedback('');
-
-            const imgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
+            setDescription(finalMeta); setFeedback('');
+            const imgUrl = await api.generateFeaturedImage({ prompt: finalTitle, title: finalTitle });
             if (imgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: imgUrl }));
         } catch (e: any) { setError(e.message); }
     };
@@ -389,29 +349,16 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!selectedReviewDraft || !feedback) return;
         setError(null);
         try {
-            const fullRawText = await api.generateContent(
-                { prompt: selectedReviewDraft.title, keywords: keywords.join(', '), feedback },
-                (chunk: string) => {
-                    // Review tab update (no real-time preview yet, just keeping it consistent)
-                }
-            );
-
+            const fullRawText = await api.generateContent({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), feedback }, () => { });
             const titleMatch = fullRawText.match(/<title>([\s\S]*?)<\/title>/i);
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
-
             const finalTitle = titleMatch ? titleMatch[1].trim() : (selectedReviewDraft?.title || prompt);
             const finalMeta = metaMatch ? metaMatch[1].trim() : (selectedReviewDraft?.metaDesc || "");
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
             finalContent = applySitemapLinks(finalContent);
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
-
-            const updateData = {
-                title: finalTitle,
-                content: finalContent,
-                metaDesc: finalMeta
-            };
-
+            const updateData = { title: finalTitle, content: finalContent, metaDesc: finalMeta };
             await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData });
             setSelectedReviewDraft({ ...selectedReviewDraft, ...updateData });
             setFeedback('');
@@ -422,49 +369,17 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!selectedReviewDraft) return;
         setError(null);
         try {
-            const updateData = {
-                title: selectedReviewDraft.title,
-                content: selectedReviewDraft.content
-            };
-            await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData });
+            await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData: { title: selectedReviewDraft.title, content: selectedReviewDraft.content } });
             fetchDrafts();
         } catch (e: any) { setError(e.message); }
     };
-
-    useEffect(() => {
-        if (selectedReviewDraft) {
-            setPrompt(selectedReviewDraft.prompt || '');
-
-            // Handle keywords being either an array or a comma-separated string
-            const kw = selectedReviewDraft.keywords;
-            if (Array.isArray(kw)) {
-                setKeywords(kw);
-            } else if (typeof kw === 'string' && kw.trim()) {
-                setKeywords(kw.split(',').map(s => s.trim()).filter(Boolean));
-            } else {
-                setKeywords([]);
-            }
-
-            setDescription(selectedReviewDraft.metaDesc || '');
-        }
-    }, [selectedReviewDraft]);
 
     const handleSaveDraft = async () => {
         if (!preview) return;
         setError(null);
         try {
-            await api.saveDraft({
-                title: preview.title,
-                content: preview.content,
-                metaDesc: description || preview.meta,
-                imageUrl: preview.imageUrl,
-                infographicUrl: infographicUrl,
-                prompt: prompt,
-                keywords: keywords
-            });
-            resetEditorState();
-            setActiveTab('review');
-            fetchDrafts();
+            await api.saveDraft({ title: preview.title, content: preview.content, metaDesc: description || preview.meta, imageUrl: preview.imageUrl, infographicUrl: infographicUrl, prompt: prompt, keywords: keywords });
+            resetEditorState(); setActiveTab('review'); fetchDrafts();
         } catch (e: any) { setError(e.message); }
     };
 
@@ -472,29 +387,16 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setError(null);
         try {
             await api.updateDraft({ id, action: 'reject' });
-            setSelectedReviewDraft(null);
-            fetchDrafts();
+            setSelectedReviewDraft(null); fetchDrafts();
         } catch (e: any) { setError(e.message); }
     };
 
     const handleApproveDraft = async (draft: any) => {
         setError(null);
         try {
-            const pubData = await api.publishToWordPress({
-                title: draft.title,
-                content: draft.content,
-                metaDesc: draft.metaDesc,
-                imageUrl: draft.imageUrl,
-                infographicUrl: draft.infographicUrl,
-                slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, ''),
-            });
-
+            const pubData = await api.publishToWordPress({ title: draft.title, content: draft.content, metaDesc: draft.metaDesc, imageUrl: draft.imageUrl, infographicUrl: draft.infographicUrl, slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '') });
             await api.updateDraft({ id: draft.id, action: 'publish', wpUrl: pubData.url });
-
-            setSelectedReviewDraft(null);
-            fetchDrafts();
-            fetchHistory();
-            setActiveTab('history');
+            setSelectedReviewDraft(null); fetchDrafts(); fetchHistory(); setActiveTab('history');
         } catch (e: any) { setError(e.message); }
     };
 
@@ -509,114 +411,43 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     const handleResumeDraft = async () => {
         if (!user) return;
-        setIsResuming(true);
-        setError(null);
+        setIsResuming(true); setError(null);
         try {
             const draft = await api.fetchLastInProgressDraft(user.id);
             if (draft) {
-                setPreview({
-                    title: draft.title,
-                    content: draft.content,
-                    imageUrl: draft.imageUrl,
-                    infographicUrl: draft.infographicUrl
-                });
-                setPrompt(draft.prompt || '');
-                setDescription(draft.metaDesc || '');
-
-                if (Array.isArray(draft.keywords)) {
-                    setKeywords(draft.keywords);
-                } else if (typeof draft.keywords === 'string') {
-                    setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
-                }
-
-                setInfographicUrl(draft.infographicUrl || null);
-                setActiveTab('create'); // Ensure we are in create mode so editor shows
-            } else {
-                setError("No recent draft found to resume.");
-            }
-        } catch (err) {
-            setError("Failed to resume draft");
-        } finally {
-            setIsResuming(false);
-        }
+                setPreview({ title: draft.title, content: draft.content, imageUrl: draft.imageUrl, infographicUrl: draft.infographicUrl });
+                setPrompt(draft.prompt || ''); setDescription(draft.metaDesc || '');
+                if (Array.isArray(draft.keywords)) setKeywords(draft.keywords);
+                else if (typeof draft.keywords === 'string') setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
+                setInfographicUrl(draft.infographicUrl || null); setActiveTab('create');
+            } else setError("No recent draft found to resume.");
+        } catch (err) { setError("Failed to resume draft"); } finally { setIsResuming(false); }
     };
 
     const handleSelectReviewDraft = async (id: string) => {
-        setIsFetchingDraftDetails(true);
-        setError(null);
+        setIsFetchingDraftDetails(true); setError(null);
         try {
             const draft = await api.fetchDraftById(id);
             if (draft) {
                 setSelectedReviewDraft(draft);
-                // Explicitly sync sidebar fields
-                setPrompt(draft.prompt || '');
-                setDescription(draft.metaDesc || '');
-                setInfographicUrl(draft.infographicUrl || null);
-                setPrimaryKeyword(draft.primaryKeyword || null);
-
-                if (Array.isArray(draft.keywords)) {
-                    setKeywords(draft.keywords);
-                } else if (typeof draft.keywords === 'string' && draft.keywords.trim()) {
-                    setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
-                } else {
-                    setKeywords([]);
-                }
+                setPrompt(draft.prompt || ''); setDescription(draft.metaDesc || '');
+                setInfographicUrl(draft.infographicUrl || null); setPrimaryKeyword(draft.primaryKeyword || null);
+                if (Array.isArray(draft.keywords)) setKeywords(draft.keywords);
+                else if (typeof draft.keywords === 'string' && draft.keywords.trim()) setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
+                else setKeywords([]);
             }
-        } catch (e: any) {
-            setError("Failed to load post details");
-        } finally {
-            setIsFetchingDraftDetails(false);
-        }
+        } catch (e: any) { setError("Failed to load post details"); } finally { setIsFetchingDraftDetails(false); }
     };
 
     const value = {
-        prompt, setPrompt,
-        keywordInput, setKeywordInput,
-        keywords, setKeywords,
-        feedback, setFeedback,
-        description, setDescription,
-        activeTab, setActiveTab,
-        preview, setPreview,
-        reviewDrafts, isFetchingDrafts: api.isFetchingDrafts,
-        selectedReviewDraft, setSelectedReviewDraft,
-        history, error, setError,
-        isGenerating: api.isGenerating,
-        isApplyingFeedback: api.isApplyingFeedback,
-        isGeneratingDescription: api.isGeneratingDescription,
-        isGeneratingInfographic: api.isGeneratingInfographic,
-        infographicUrl, setInfographicUrl,
-        isSavingDraft: api.isSavingDraft,
-        isRejecting: api.isRejecting,
-        isSavingManual: api.isSavingManual,
-        isSavingReview: api.isSavingReview,
-        isPublished: api.isPublished,
-        isFetchingKeywords: api.isFetchingKeywords,
-        handleAddKeyword, removeKeyword,
-        handleFetchKeywords, handleClearForm,
-        handleGenerate, handleGenerateDescription,
-        handleApplyFeedback, handleApplyReviewFeedback,
-        handleSaveManualEdits, handleSaveDraft,
-        handleRejectDraft, handleApproveDraft,
-        handleGenerateInfographic, fetchDrafts,
-        handleSelectReviewDraft, isFetchingDraftDetails,
-        handleResumeDraft, isResuming,
-        upsertPost: api.upsertPost,
-        primaryKeyword, setPrimaryKeyword,
-        resetEditorState,
-        user, role, handleLogout
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, error, setError, isGenerating: api.isGenerating, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout
     };
 
-    return (
-        <DashboardContext.Provider value={value}>
-            {children}
-        </DashboardContext.Provider>
-    );
+    return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
 };
 
 export const useDashboard = () => {
     const context = useContext(DashboardContext);
-    if (context === undefined) {
-        throw new Error('useDashboard must be used within a DashboardProvider');
-    }
+    if (context === undefined) throw new Error('useDashboard must be used within a DashboardProvider');
     return context;
 };
