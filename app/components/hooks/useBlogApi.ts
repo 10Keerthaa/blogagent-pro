@@ -18,6 +18,24 @@ export const useBlogApi = () => {
     const [isFetchingKeywords, setIsFetchingKeywords] = useState(false);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
 
+    const mapSupabaseToDraft = (item: any) => {
+        if (!item) return null;
+        return {
+            id: item.id,
+            title: item.title,
+            content: item.content,
+            imageUrl: item.image_url || item.imageUrl,
+            infographicUrl: item.infographic_url || item.infographicUrl,
+            metaDesc: item.meta_desc || item.metaDesc,
+            status: item.status,
+            createdBy: item.created_by || item.createdBy,
+            prompt: item.prompt,
+            keywords: item.keywords,
+            createdAt: item.created_at || item.createdAt,
+            wpUrl: item.wp_url || item.wpUrl
+        };
+    };
+
     const fetchSitemap = useCallback(async () => {
         try {
             const r = await fetch('/api/sitemap-urls');
@@ -37,11 +55,15 @@ export const useBlogApi = () => {
     const fetchDrafts = useCallback(async () => {
         setIsFetchingDrafts(true);
         try {
-            const r = await fetch('/api/drafts/get');
-            const d = await r.json();
-            return d.success ? d.drafts : [];
+            const { data, error } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('status', 'review')
+                .order('last_edited_at', { ascending: false });
+            if (error) throw error;
+            return (data || []).map(mapSupabaseToDraft);
         } catch (e) {
-            console.error(e);
+            console.error('Fetch Drafts Error:', e);
             return [];
         } finally {
             setIsFetchingDrafts(false);
@@ -136,17 +158,39 @@ export const useBlogApi = () => {
     }, []);
 
     const updateDraft = useCallback(async (body: any) => {
-        if (body.action === 'reject') setIsRejecting(true);
-        if (body.action === 'edit') setIsSavingManual(true);
+        const { id, action, updateData, wpUrl } = body;
+        if (action === 'reject') setIsRejecting(true);
+        if (action === 'edit') setIsSavingManual(true);
 
         try {
-            const r = await fetch('/api/drafts/update', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
-            if (!r.ok) throw new Error('Update failed');
-            return await r.json();
+            let status = undefined;
+            if (action === 'reject') status = 'rejected';
+            if (action === 'publish') status = 'published';
+
+            const payload: any = {
+                ...(updateData || {}),
+                last_edited_at: new Date().toISOString()
+            };
+
+            if (status) payload.status = status;
+            if (wpUrl) payload.wp_url = wpUrl;
+
+            // Map UI fields back to snake_case if they exist in updateData
+            if (updateData?.imageUrl) payload.image_url = updateData.imageUrl;
+            if (updateData?.infographicUrl) payload.infographic_url = updateData.infographicUrl;
+            if (updateData?.metaDesc) payload.meta_desc = updateData.metaDesc;
+
+            const { data, error } = await supabase
+                .from('posts')
+                .update(payload)
+                .eq('id', id)
+                .select()
+                .single();
+            if (error) throw error;
+            return mapSupabaseToDraft(data);
+        } catch (e) {
+            console.error('Update Draft Error:', e);
+            throw e;
         } finally {
             setIsRejecting(false);
             setIsSavingManual(false);
@@ -155,10 +199,17 @@ export const useBlogApi = () => {
 
     const fetchDraftById = useCallback(async (id: string) => {
         try {
-            const r = await fetch(`/api/drafts/details?id=${id}`);
-            const d = await r.json();
-            return d.success ? d.draft : null;
-        } catch { return null; }
+            const { data, error } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('id', id)
+                .single();
+            if (error) throw error;
+            return mapSupabaseToDraft(data);
+        } catch (e) {
+            console.error('Fetch Draft By ID Error:', e);
+            return null;
+        }
     }, []);
 
     const publishToWordPress = useCallback(async (body: any) => {
