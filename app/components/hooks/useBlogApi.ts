@@ -28,7 +28,8 @@ export const useBlogApi = () => {
             infographicUrl: item.infographic_url || item.infographicUrl || item.seo_data?.infographicUrl || null,
             metaDesc: item.meta_desc || item.metaDesc || item.seo_data?.metaDesc || '',
             status: item.status,
-            createdBy: item.created_by || item.createdBy,
+            createdBy: item.profiles?.email || item.created_by || item.createdBy,
+            user_email: item.profiles?.email || item.user_email,
             prompt: item.prompt || item.seo_data?.prompt || '',
             keywords: item.keywords || item.seo_data?.keywords || [],
             primaryKeyword: item.primary_keyword || item.primaryKeyword || item.seo_data?.primaryKeyword || null,
@@ -58,9 +59,9 @@ export const useBlogApi = () => {
         try {
             const { data, error } = await supabase
                 .from('posts')
-                .select('*')
+                .select('*, profiles:created_by(email)')
                 .eq('status', 'review')
-                .order('last_edited_at', { ascending: false });
+                .order('created_at', { ascending: false });
             if (error) throw error;
             return (data || []).map(mapSupabaseToDraft);
         } catch (e) {
@@ -207,7 +208,7 @@ export const useBlogApi = () => {
         try {
             const { data, error } = await supabase
                 .from('posts')
-                .select('*')
+                .select('*, profiles:created_by(email)')
                 .eq('id', id)
                 .single();
             if (error) throw error;

@@ -165,9 +165,14 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         const parts = html.split(/(<[^>]+>)/g);
         let inHeading = false;
 
-        // Filter out very common/short phrases and sort by length descending
+        // Filter out very common/short phrases or generic English patterns
+        const genericPhrases = ['can help', 'doing more', 'start here', 'read more', 'businesses can', 'how businesses', 'agents are', 'more about', 'learn more'];
         const sortedKeywords = Object.keys(sitemapData)
-            .filter(phrase => phrase.length > 5 && !['doing more', 'can help', 'start here', 'read more'].includes(phrase.toLowerCase()))
+            .filter(phrase =>
+                phrase.length > 12 && // Only link longer, more specific phrases
+                !genericPhrases.includes(phrase.toLowerCase()) &&
+                !/^(is|are|the|how|can|it|we)\s/i.test(phrase) // Avoid linking phrases starting with common verbs/articles
+            )
             .sort((a, b) => b.length - a.length);
 
         return parts.map(part => {
@@ -190,45 +195,22 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         }).join('');
     }, [sitemapData]);
 
-    // Feature 2 & 3: Keyword Frequency Enforcement & Underlining
+    // Feature 3: Styling Keywords in Content - Dim Gray-600
     const processKeywordsInContent = useCallback((html: string, allKeywords: string[], primary: string | null): string => {
         if (!html || allKeywords.length === 0) return html;
         let processedHtml = html;
-        let keywordFooter = '';
 
-        // 1. Keyword Frequency Enforcement Logic (Feature 2)
-        allKeywords.forEach(kw => {
-            const isPrimary = kw === primary;
-            const targetCount = isPrimary ? 4 : 2;
-
-            // Count using regex with word boundaries
-            const regex = new RegExp(`\\b${kw}\\b`, 'gi');
-            const matches = processedHtml.match(regex) || [];
-            const currentCount = matches.length;
-
-            if (currentCount < targetCount) {
-                // Feature 2: If count is low, add them to a hidden/dim section at the bottom
-                const countToAdd = targetCount - currentCount;
-                const repeats = Array(countToAdd).fill(kw).join(' ');
-                keywordFooter += ` <span style="color: #666666; font-size: 0.85em; opacity: 0.6; display: inline-block; margin-right: 12px;">${repeats}</span>`;
-            }
-        });
-
-        // 2. Styling Keywords in Content (Feature 3) - Dim Gray-600
         const sortedKws = [...allKeywords].sort((a, b) => b.length - a.length);
         const pattern = sortedKws.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        if (!pattern) return processedHtml;
+
         const mainRegex = new RegExp(`(?<!<[^>]*)\\b(${pattern})\\b(?![^<]*>)`, 'gi');
 
         const parts = processedHtml.split(/(<[^>]+>)/g);
         processedHtml = parts.map(part => {
-            if (part.startsWith('<')) return part; // Skip HTML tags
+            if (part.startsWith('<')) return part;
             return part.replace(mainRegex, '<span style="color: #666666; font-weight: 500;">$1</span>');
         }).join('');
-
-        // Append hidden optimization footer if keywords were missing
-        if (keywordFooter) {
-            processedHtml += `<div class="mt-8 border-t border-transparent pt-4 opacity-50 select-none pointer-events-none">${keywordFooter}</div>`;
-        }
 
         return processedHtml;
     }, []);
