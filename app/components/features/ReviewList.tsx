@@ -46,9 +46,9 @@ export const ReviewList = () => {
 
     // Role-based filtering of the visual list
     const filteredDrafts = React.useMemo(() => {
-        if (!role) return [];
+        if (!role || !user) return null; // Role or User still loading
         if (role === 'admin') return reviewDrafts;
-        return reviewDrafts.filter(d => d.created_by === user?.id || d.createdBy === user?.id);
+        return reviewDrafts.filter(d => d.createdBy === user?.id);
     }, [reviewDrafts, role, user]);
 
     return (
@@ -262,11 +262,11 @@ export const ReviewList = () => {
             ) : (
                 <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-300">
                     <div className="flex items-center justify-between mb-2 px-1">
-                        <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts.length})</h2>
+                        <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
                     </div>
 
                     <div className="grid grid-cols-1 gap-6">
-                        {isFetchingDrafts ? (
+                        {isFetchingDrafts || filteredDrafts === null ? (
                             Array.from({ length: 3 }).map((_, i) => (
                                 <div key={i} className="flex gap-6 items-center p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse">
                                     <Skeleton className="w-16 h-16 rounded-2xl shrink-0" />
@@ -316,9 +316,9 @@ export const ReviewList = () => {
                                 </Card>
                             ))
                         ) : (
-                            <div className="flex flex-col items-center justify-center p-24 text-center bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/10 dark:to-purple-950/10 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800/50 shadow-sm">
-                                <div className="w-20 h-20 rounded-3xl bg-white dark:bg-slate-900 flex items-center justify-center mb-8 shadow-xl shadow-indigo-100 dark:shadow-none">
-                                    <Zap className="w-9 h-9 text-indigo-600 dark:text-indigo-400 fill-current opacity-40" />
+                            <div className="bg-white/40 dark:bg-indigo-950/5 backdrop-blur-sm border-2 border-dashed border-indigo-100 dark:border-indigo-900/40 rounded-3xl p-16 text-center shadow-sm">
+                                <div className="w-20 h-20 bg-indigo-50 dark:bg-indigo-950/30 rounded-2xl flex items-center justify-center mx-auto mb-8 ring-1 ring-indigo-100 dark:ring-indigo-900/50 shadow-inner">
+                                    <Zap className="w-10 h-10 text-indigo-500 animate-pulse" />
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Editorial Buffer Empty</h3>
                                 <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[320px] font-medium leading-relaxed">System is ready for new high-intent content generations.</p>

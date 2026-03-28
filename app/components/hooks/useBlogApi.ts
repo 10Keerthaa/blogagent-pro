@@ -29,7 +29,7 @@ export const useBlogApi = () => {
             metaDesc: item.meta_desc || item.metaDesc || item.seo_data?.metaDesc || '',
             status: item.status,
             createdBy: item.created_by || item.createdBy,
-            authorEmail: item.profiles?.email || item.user_email,
+            authorEmail: item.author?.email || item.profiles?.email || item.user_email,
             prompt: item.prompt || item.seo_data?.prompt || '',
             keywords: item.keywords || item.seo_data?.keywords || [],
             primaryKeyword: item.primary_keyword || item.primaryKeyword || item.seo_data?.primaryKeyword || null,
@@ -59,7 +59,7 @@ export const useBlogApi = () => {
         try {
             const { data, error } = await supabase
                 .from('posts')
-                .select('*, profiles:created_by(email)')
+                .select('*, author:profiles!created_by(email)')
                 .eq('status', 'review')
                 .order('created_at', { ascending: false });
             if (error) throw error;
@@ -208,7 +208,7 @@ export const useBlogApi = () => {
         try {
             const { data, error } = await supabase
                 .from('posts')
-                .select('*, profiles:created_by(email)')
+                .select('*, author:profiles!created_by(email)')
                 .eq('id', id)
                 .single();
             if (error) throw error;
@@ -278,7 +278,7 @@ export const useBlogApi = () => {
             const { data: upsertedData, error } = await supabase
                 .from('posts')
                 .upsert(payload)
-                .select()
+                .select('*, author:profiles!created_by(email)')
                 .single();
             if (error) throw error;
             return mapSupabaseToDraft(upsertedData);
