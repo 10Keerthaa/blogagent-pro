@@ -37,6 +37,13 @@ export const ReviewList = () => {
     const isReadOnly = role === 'editor';
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
 
+    // Ensure we start at the top when a draft is selected
+    React.useEffect(() => {
+        if (selectedReviewDraft) {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+    }, [selectedReviewDraft]);
+
     // Role-based filtering of the visual list
     const filteredDrafts = React.useMemo(() => {
         if (!role) return [];
