@@ -17,6 +17,7 @@ export const useBlogApi = () => {
     const [isPublished, setIsPublished] = useState(false);
     const [isFetchingKeywords, setIsFetchingKeywords] = useState(false);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
+    const [isRefiningSelection, setIsRefiningSelection] = useState(false);
 
     const mapSupabaseToDraft = (item: any) => {
         if (!item) return null;
@@ -111,6 +112,28 @@ export const useBlogApi = () => {
             const d = await r.json();
             return d.imageUrl || null;
         } catch { return null; }
+    }, []);
+
+    const refineSelection = useCallback(async (text: string, action: string, onChunk: (chunk: string) => void) => {
+        setIsRefiningSelection(true);
+        try {
+            const r = await fetch('/api/refine-selection', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, action })
+            });
+            if (!r.ok) throw new Error("Refinement failed");
+            const reader = r.body?.getReader();
+            const decoder = new TextDecoder();
+            while (true) {
+                const { done, value } = await reader!.read();
+                if (done) break;
+                onChunk(decoder.decode(value));
+            }
+        } catch (e: any) { throw e; }
+        finally {
+            setIsRefiningSelection(false);
+        }
     }, []);
 
     const generateDescription = useCallback(async (body: any) => {
@@ -326,6 +349,7 @@ export const useBlogApi = () => {
         isSavingReview,
         isPublished,
         isFetchingKeywords,
+        isRefiningSelection,
         fetchSitemap,
         fetchHistory,
         fetchDrafts,
@@ -342,6 +366,7 @@ export const useBlogApi = () => {
         fetchLastInProgressDraft,
         fetchAdminReport,
         isFetchingDraftDetails,
-        setIsFetchingDraftDetails
+        setIsFetchingDraftDetails,
+        refineSelection
     };
 };

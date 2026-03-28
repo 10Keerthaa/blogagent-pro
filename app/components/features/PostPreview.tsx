@@ -3,8 +3,10 @@ import { useDashboard } from '../context/DashboardContext';
 import { Button } from '../ui/Button';
 import {
     Bold, Italic, Link as LinkIcon, Save, ArrowRight,
-    Heading2, Heading3, List, ListOrdered, Wand2, Sparkles, Image as ImageIcon
+    Heading2, Heading3, List, ListOrdered, Wand2, Sparkles, Image as ImageIcon,
+    RotateCcw
 } from 'lucide-react';
+import { FloatingToolbar } from './FloatingToolbar';
 
 export const PostPreview = () => {
     const {
@@ -12,20 +14,23 @@ export const PostPreview = () => {
         feedback, setFeedback, handleApplyFeedback, isApplyingFeedback,
         isGeneratingInfographic, handleGenerateInfographic, infographicUrl,
         user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft,
-        description, primaryKeyword, prompt: mainTopic, keywords
+        description, primaryKeyword, prompt: mainTopic, keywords,
+        handleRefineSelection
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
 
-    // Bubble Menu State
-    const [bubbleMenu, setBubbleMenu] = useState<{ x: number, y: number, show: boolean }>({ x: 0, y: 0, show: false });
+    // Floating Toolbar State
+    const [selectionRect, setSelectionRect] = useState<DOMRect | null>(null);
+    const [isToolbarVisible, setIsToolbarVisible] = useState(false);
     const editorRef = useRef<HTMLDivElement>(null);
 
     // Handle text selection for floating menu
-    const updateBubblePosition = useCallback(() => {
+    const updateSelectionRect = useCallback(() => {
         const selection = window.getSelection();
         if (!selection || selection.rangeCount === 0 || selection.isCollapsed || !editorRef.current) {
-            setBubbleMenu(prev => ({ ...prev, show: false }));
+            setIsToolbarVisible(false);
+            setSelectionRect(null);
             return;
         }
 
@@ -33,32 +38,25 @@ export const PostPreview = () => {
 
         // Ensure selection is strictly within the editor
         if (!editorRef.current.contains(range.commonAncestorContainer)) {
-            setBubbleMenu(prev => ({ ...prev, show: false }));
+            setIsToolbarVisible(false);
+            setSelectionRect(null);
             return;
         }
 
         const rects = range.getClientRects();
         if (rects.length === 0) {
-            setBubbleMenu(prev => ({ ...prev, show: false }));
+            setIsToolbarVisible(false);
+            setSelectionRect(null);
             return;
         }
 
-        const rect = rects[0];
-        const container = editorRef.current.closest('.relative');
-        if (!container) return;
-
-        const containerRect = container.getBoundingClientRect();
-
-        setBubbleMenu({
-            x: rect.left - containerRect.left + (rect.width / 2),
-            y: rect.top - containerRect.top - 15,
-            show: true
-        });
+        setSelectionRect(rects[0]);
+        setIsToolbarVisible(true);
     }, [editorRef]);
 
     useEffect(() => {
         const handleEvents = () => {
-            requestAnimationFrame(updateBubblePosition);
+            requestAnimationFrame(updateSelectionRect);
         };
 
         document.addEventListener('selectionchange', handleEvents);
@@ -70,7 +68,7 @@ export const PostPreview = () => {
             window.removeEventListener('resize', handleEvents);
             window.removeEventListener('scroll', handleEvents, true);
         };
-    }, [updateBubblePosition]);
+    }, [updateSelectionRect]);
 
     const handleAutoSave = useCallback(async (updatedPreview: any) => {
         if (!user || !updatedPreview || isSavingManual || isSavingReview) return;
@@ -88,11 +86,11 @@ export const PostPreview = () => {
             keywords: keywords.length > 0 ? keywords : (updatedPreview.keywords || [])
         });
         if (result?.id) setCurrentPostId(result.id);
-    }, [user, currentPostId, infographicUrl, upsertPost, isSavingManual, isSavingReview]);
+    }, [user, currentPostId, infographicUrl, upsertPost, isSavingManual, isSavingReview, description, primaryKeyword, mainTopic, keywords]);
 
     if (!preview) return null;
 
-    const execCommand = (command: string, value: string = '') => {
+    const execCommand = (command: string, value: any = null) => {
         document.execCommand(command, false, value);
         if (editorRef.current) {
             const newContent = editorRef.current.innerHTML;
@@ -101,39 +99,65 @@ export const PostPreview = () => {
         }
     };
 
-    const addLink = () => {
-        const url = prompt('Enter URL:');
-        if (url) execCommand('createLink', url);
+    const handleToolbarAction = async (action: string, value?: string) => {
+        if (!editorRef.current) return;
+
+        switch (action) {
+            case 'bold':
+                execCommand('bold');
+                break;
+            case 'italic':
+                execCommand('italic');
+                break;
+            case 'link':
+                execCommand('createLink', value);
+                break;
+            case 'rephrase':
+            case 'shorten':
+            case 'expand':
+                const selection = window.getSelection();
+                if (!selection || selection.isCollapsed) return;
+                const range = selection.getRangeAt(0);
+                const selectedText = selection.toString();
+
+                // Show loading placeholder or similar? 
+                // For now, let's just stream into the selection
+                const placeholder = document.createElement('span');
+                placeholder.className = "bg-indigo-100 animate-pulse rounded px-1";
+                placeholder.innerText = "...";
+                range.deleteContents();
+                range.insertNode(placeholder);
+
+                let fullText = "";
+                await handleRefineSelection(selectedText, action, (newText: string) => {
+                    fullText = newText;
+                    placeholder.innerText = fullText;
+                });
+
+                // Replace placeholder with final text
+                const finalNode = document.createTextNode(fullText || selectedText);
+                placeholder.parentNode?.replaceChild(finalNode, placeholder);
+
+                // Sync state
+                if (editorRef.current) {
+                    const finalHtml = editorRef.current.innerHTML;
+                    setPreview({ ...preview, content: finalHtml });
+                    handleAutoSave({ ...preview, content: finalHtml });
+                }
+                break;
+        }
     };
 
     return (
         <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12">
             {/* MAIN EDITOR AREA - "BLANK PAGE" STYLE */}
             <div className="max-w-4xl mx-auto w-full px-8 pb-40 relative">
-                {/* FLOATING BUBBLE MENU */}
-                {bubbleMenu.show && (
-                    <div
-                        className="absolute z-[100] flex items-center bg-slate-900 dark:bg-slate-800 text-white rounded-full shadow-2xl border border-white/10 p-1.5 animate-in fade-in zoom-in duration-200"
-                        style={{
-                            left: `${bubbleMenu.x}px`,
-                            top: `${bubbleMenu.y}px`,
-                            transform: 'translate(-50%, -100%)'
-                        }}
-                    >
-                        <div className="flex items-center gap-1 px-1">
-                            <button onClick={() => execCommand('bold')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Bold className="w-4 h-4" /></button>
-                            <button onClick={() => execCommand('italic')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Italic className="w-4 h-4" /></button>
-                            <div className="w-px h-4 bg-white/20 mx-1" />
-                            <button onClick={() => execCommand('formatBlock', 'h2')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Heading2 className="w-4 h-4" /></button>
-                            <button onClick={() => execCommand('formatBlock', 'h3')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Heading3 className="w-4 h-4" /></button>
-                            <div className="w-px h-4 bg-white/20 mx-1" />
-                            <button onClick={() => execCommand('insertUnorderedList')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><List className="w-4 h-4" /></button>
-                            <button onClick={() => execCommand('insertOrderedList')} className="p-2 hover:bg-white/10 rounded-full transition-colors"><ListOrdered className="w-4 h-4" /></button>
-                            <div className="w-px h-4 bg-white/20 mx-1" />
-                            <button onClick={addLink} className="p-2 hover:bg-white/10 rounded-full transition-colors"><LinkIcon className="w-4 h-4" /></button>
-                        </div>
-                    </div>
-                )}
+                <FloatingToolbar
+                    isVisible={isToolbarVisible}
+                    rect={selectionRect}
+                    onAction={handleToolbarAction}
+                    onClose={() => setIsToolbarVisible(false)}
+                />
 
                 {/* EDITABLE TITLE */}
                 <h1
