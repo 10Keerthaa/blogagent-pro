@@ -535,11 +535,11 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 setPreview({
                     title: draft.title,
                     content: draft.content,
-                    imageUrl: draft.image_url || draft.imageUrl,
-                    infographicUrl: draft.infographic_url || draft.infographicUrl
+                    imageUrl: draft.imageUrl,
+                    infographicUrl: draft.infographicUrl
                 });
                 setPrompt(draft.prompt || '');
-                setDescription(draft.meta_desc || draft.metaDesc || '');
+                setDescription(draft.metaDesc || '');
 
                 if (Array.isArray(draft.keywords)) {
                     setKeywords(draft.keywords);
@@ -547,7 +547,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
                 }
 
-                setInfographicUrl(draft.infographic_url || draft.infographicUrl || null);
+                setInfographicUrl(draft.infographicUrl || null);
                 setActiveTab('create'); // Ensure we are in create mode so editor shows
             } else {
                 setError("No recent draft found to resume.");
@@ -568,7 +568,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 setSelectedReviewDraft(draft);
                 // Explicitly sync sidebar fields
                 setPrompt(draft.prompt || '');
-                setDescription(draft.metaDesc || draft.meta || draft.description || draft.seoDescription || draft.seo_description || '');
+                setDescription(draft.metaDesc || '');
 
                 if (Array.isArray(draft.keywords)) {
                     setKeywords(draft.keywords);

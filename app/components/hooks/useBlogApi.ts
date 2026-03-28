@@ -258,7 +258,7 @@ export const useBlogApi = () => {
                 .select()
                 .single();
             if (error) throw error;
-            return upsertedData;
+            return mapSupabaseToDraft(upsertedData);
         } finally {
             if (isReview) setIsSavingReview(false);
             else setIsSavingManual(false);
@@ -276,7 +276,7 @@ export const useBlogApi = () => {
                 .limit(1)
                 .single();
             if (error) return null;
-            return data;
+            return mapSupabaseToDraft(data);
         } catch { return null; }
     }, []);
 
