@@ -103,48 +103,72 @@ export const PostPreview = () => {
         if (!editorRef.current) return;
 
         switch (action) {
+            // --- Formatting: use execCommand (no async needed) ---
             case 'bold':
                 execCommand('bold');
-                break;
+                return;
             case 'italic':
                 execCommand('italic');
-                break;
-            case 'link':
-                execCommand('createLink', value);
-                break;
+                return;
+
+            // --- 3a. Hyperlink: modern Range API with pastel class ---
+            case 'link': {
+                const sel = window.getSelection();
+                if (!sel || sel.isCollapsed || !value) return;
+                const range = sel.getRangeAt(0);
+                const anchor = document.createElement('a');
+                anchor.href = value;
+                anchor.target = '_blank';
+                anchor.rel = 'noopener noreferrer';
+                anchor.className = 'text-indigo-500 underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium';
+                // Wrap the selected fragment in the <a> tag
+                anchor.appendChild(range.extractContents());
+                range.insertNode(anchor);
+                // Collapse selection after the link
+                sel.collapseToEnd();
+                // --- 4. State Sync ---
+                const linked = editorRef.current.innerHTML;
+                setPreview((prev: any) => ({ ...prev, content: linked }));
+                handleAutoSave({ ...preview, content: linked });
+                return;
+            }
+
+            // --- 3b. AI Actions: placeholder streaming, then range replacement ---
             case 'rephrase':
             case 'shorten':
-            case 'expand':
-                const selection = window.getSelection();
-                if (!selection || selection.isCollapsed) return;
-                const range = selection.getRangeAt(0);
-                const selectedText = selection.toString();
+            case 'expand': {
+                const sel = window.getSelection();
+                if (!sel || sel.isCollapsed) return;
 
-                // Show loading placeholder or similar? 
-                // For now, let's just stream into the selection
+                // Save the range BEFORE any async work
+                const range = sel.getRangeAt(0).cloneRange();
+                const selectedText = sel.toString();
+
+                // Insert a pulsing placeholder while AI is working
                 const placeholder = document.createElement('span');
-                placeholder.className = "bg-indigo-100 animate-pulse rounded px-1";
-                placeholder.innerText = "...";
-                range.deleteContents();
-                range.insertNode(placeholder);
+                placeholder.className = 'bg-indigo-100 dark:bg-indigo-900/30 animate-pulse rounded px-1 text-indigo-500';
+                placeholder.innerText = '✦';
+                const liveRange = sel.getRangeAt(0);
+                liveRange.deleteContents();
+                liveRange.insertNode(placeholder);
 
-                let fullText = "";
+                // Stream the refined text directly into the placeholder
+                let fullText = '';
                 await handleRefineSelection(selectedText, action, (newText: string) => {
                     fullText = newText;
                     placeholder.innerText = fullText;
                 });
 
-                // Replace placeholder with final text
+                // Replace the placeholder with a plain text node
                 const finalNode = document.createTextNode(fullText || selectedText);
                 placeholder.parentNode?.replaceChild(finalNode, placeholder);
 
-                // Sync state
-                if (editorRef.current) {
-                    const finalHtml = editorRef.current.innerHTML;
-                    setPreview({ ...preview, content: finalHtml });
-                    handleAutoSave({ ...preview, content: finalHtml });
-                }
-                break;
+                // --- 4. Immediate State Sync ---
+                const finalHtml = editorRef.current.innerHTML;
+                setPreview((prev: any) => ({ ...prev, content: finalHtml }));
+                handleAutoSave({ ...preview, content: finalHtml });
+                return;
+            }
         }
     };
 
