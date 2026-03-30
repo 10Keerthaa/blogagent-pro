@@ -124,14 +124,25 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: Floating
                     >
                         <LinkIcon className="w-4 h-4" />
                     </button>
-                    <button
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => onAction('unlink')}
-                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
-                        title="Remove Link"
-                    >
-                        <Link2Off className="w-4 h-4" />
-                    </button>
+                    {/* Conditional Unlink Button */}
+                    {(() => {
+                        const selection = typeof window !== 'undefined' ? window.getSelection() : null;
+                        const isLink = !!(selection && selection.rangeCount > 0 && (() => {
+                            const container = selection.getRangeAt(0).commonAncestorContainer;
+                            return !!(container.nodeType === 1 ? (container as HTMLElement).closest('a') : container.parentElement?.closest('a'));
+                        })());
+
+                        return isLink && (
+                            <button
+                                onMouseDown={(e) => e.preventDefault()}
+                                onClick={() => onAction('unlink')}
+                                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
+                                title="Remove Link"
+                            >
+                                <Link2Off className="w-4 h-4" />
+                            </button>
+                        );
+                    })()}
 
                     <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1" />
 
