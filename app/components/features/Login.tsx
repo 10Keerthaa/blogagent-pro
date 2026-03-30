@@ -3,9 +3,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
-import { Input } from '../ui/Input';
-import { Sparkles, Lock, Mail, Github, Zap } from 'lucide-react';
+import { Sparkles, Lock, Mail, Zap } from 'lucide-react';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -43,34 +41,6 @@ export const Login = () => {
                 // LOGIN FLOW
                 const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
                 if (loginError) setError(loginError.message);
-            }
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleTestSignUp = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const randomId = Math.floor(Math.random() * 10000);
-            const testEmail = `test.user.${randomId}@blogagent.pro`;
-            const testPass = 'BlogAgentTest123';
-            const { error: signUpError } = await supabase.auth.signUp({
-                email: testEmail,
-                password: testPass,
-                options: {
-                    data: {
-                        full_name: `Test User ${randomId}`,
-                    }
-                }
-            });
-            if (signUpError) {
-                setError(signUpError.message);
-            } else {
-                setSignUpSuccess(true);
             }
         } catch (err: any) {
             setError(err.message);
@@ -148,7 +118,7 @@ export const Login = () => {
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
                                     placeholder="Your Full Name"
-                                    className="w-full h-16 bg-slate-50 dark:bg-slate-900 rounded-xl px-6 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium placeholder:text-slate-400"
+                                    className="w-full h-14 bg-slate-50 dark:bg-slate-900 rounded-xl px-6 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium placeholder:text-slate-400"
                                 />
                             </div>
                         )}
@@ -163,11 +133,11 @@ export const Login = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="name@company.com"
-                                className="w-full h-16 bg-slate-50 dark:bg-slate-900 rounded-xl px-6 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium placeholder:text-slate-400"
+                                className="w-full h-14 bg-slate-50 dark:bg-slate-900 rounded-xl px-6 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium placeholder:text-slate-400"
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 mb-1">
                                 <Lock className="w-3.5 h-3.5" />
                                 Access Code
@@ -200,28 +170,17 @@ export const Login = () => {
                                     
                                     <Button
                                         type="button"
-                                        variant="ghost"
+                                        variant="primary"
                                         onClick={() => {
                                             setIsSignUp(!isSignUp);
                                             setSignUpSuccess(false);
                                             setError(null);
                                         }}
-                                        className="w-full h-14 rounded-xl border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all"
+                                        className="w-full h-14 rounded-xl bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/10 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:scale-[1.01]"
                                     >
                                         {isSignUp ? 'Back to Sign In' : 'Create Account'}
                                     </Button>
                                 </div>
-
-                                {!isSignUp && (
-                                    <button
-                                        type="button"
-                                        onClick={handleTestSignUp}
-                                        disabled={loading}
-                                        className="w-full py-2 text-[9px] font-black uppercase tracking-[0.3em] text-slate-300 hover:text-indigo-400 dark:text-slate-700 dark:hover:text-indigo-500 transition-all duration-300"
-                                    >
-                                        Login with Test Credentials
-                                    </button>
-                                )}
                             </div>
                         </div>
                     </form>
