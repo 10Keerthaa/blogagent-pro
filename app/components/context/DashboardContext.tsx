@@ -110,13 +110,27 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchUserRole = useCallback(async (userId: string) => {
         try {
+            console.log('🔍 Fetching role for user:', userId);
             const { data, error } = await supabase
                 .from('profiles')
                 .select('role')
                 .eq('id', userId)
                 .single();
-            if (data) setRole(data.role as 'admin' | 'editor');
-        } catch (err) { console.error('Error fetching role:', err); }
+            
+            if (error) {
+                console.error('❌ Role Fetch Error:', error.message);
+                return;
+            }
+
+            if (data) {
+                console.log('✅ Role Found:', data.role);
+                setRole(data.role as 'admin' | 'editor');
+            } else {
+                console.warn('⚠️ No role data returned for user');
+            }
+        } catch (err) { 
+            console.error('💥 Critical Error in fetchUserRole:', err); 
+        }
     }, []);
 
     const fetchSitemap = useCallback(async () => {
