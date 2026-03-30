@@ -87,6 +87,27 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: Floating
         }
     };
 
+    // Helper to check if the current selection is inside a link
+    const getIsLink = () => {
+        if (typeof window === 'undefined') return false;
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return false;
+
+        const range = selection.getRangeAt(0);
+        // Check the common ancestor
+        let container = range.commonAncestorContainer;
+
+        // If it's a text node, get the parent element
+        if (container.nodeType === 3) {
+            container = container.parentNode as Node;
+        }
+
+        // Check if the container or any parent is an <a> tag
+        return !!(container instanceof HTMLElement && container.closest('a'));
+    };
+
+    const isLink = getIsLink();
+
     const toolbarContent = (
         <div
             ref={toolbarRef}
@@ -125,24 +146,21 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: Floating
                         <LinkIcon className="w-4 h-4" />
                     </button>
                     {/* Conditional Unlink Button */}
-                    {(() => {
-                        const selection = typeof window !== 'undefined' ? window.getSelection() : null;
-                        const isLink = !!(selection && selection.rangeCount > 0 && (() => {
-                            const container = selection.getRangeAt(0).commonAncestorContainer;
-                            return !!(container.nodeType === 1 ? (container as HTMLElement).closest('a') : container.parentElement?.closest('a'));
-                        })());
-
-                        return isLink && (
-                            <button
-                                onMouseDown={(e) => e.preventDefault()}
-                                onClick={() => onAction('unlink')}
-                                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
-                                title="Remove Link"
-                            >
-                                <Link2Off className="w-4 h-4" />
-                            </button>
-                        );
-                    })()}
+                    {isLink && (
+                        <button
+                            onMouseDown={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }}
+                            onClick={() => {
+                                onAction('unlink');
+                            }}
+                            className="p-2 hover:bg-red-50 dark:hover:bg-red-950/20 text-red-500 transition-colors rounded-lg group"
+                            title="Remove Link"
+                        >
+                            <Link2Off className="w-4 h-4" />
+                        </button>
+                    )}
 
                     <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1" />
 
