@@ -177,12 +177,17 @@ export const PostPreview = () => {
         <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12">
             {/* MAIN EDITOR AREA - "BLANK PAGE" STYLE */}
             <div className="max-w-4xl mx-auto w-full px-8 pb-32 relative">
-                <FloatingToolbar
-                    isVisible={isToolbarVisible}
-                    rect={selectionRect}
-                    onAction={handleToolbarAction}
-                    onClose={() => setIsToolbarVisible(false)}
-                />
+                {selectionRect && (
+                    <FloatingToolbar
+                        isVisible={isToolbarVisible}
+                        rect={selectionRect}
+                        onAction={handleToolbarAction}
+                        onClose={() => {
+                            setIsToolbarVisible(false);
+                            setSelectionRect(null);
+                        }}
+                    />
+                )}
 
                 {/* EDITABLE TITLE */}
                 <h1
@@ -245,6 +250,10 @@ export const PostPreview = () => {
                         updateSelectionRect();
                     }}
                     onMouseDown={(e) => {
+                        // 1. Explicit State Sanitization: Reset toolbar if clicking away
+                        setSelectionRect(null);
+                        setIsToolbarVisible(false);
+
                         const target = (e.target as HTMLElement).closest('a');
                         if (target && target.tagName === 'A') {
                             const href = (target as HTMLAnchorElement).href;

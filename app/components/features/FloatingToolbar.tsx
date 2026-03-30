@@ -42,20 +42,29 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: Floating
         }
     }, [isVisible]);
 
+    // Debug: Trace coordinate flow
+    useEffect(() => {
+        if (isVisible && rect) {
+            console.log("Toolbar rendering at viewport coordinates:", { 
+                top: rect.top, 
+                left: rect.left, 
+                width: rect.width, 
+                height: rect.height 
+            });
+        }
+    }, [isVisible, rect]);
+
     if (!isVisible || !rect || !mounted) return null;
 
-    // --- 1. Smart Collision Detection ---
-    // If selection is too close to the top of the viewport, flip to appear BELOW
     const TOOLBAR_HEIGHT = 60;
-    const TOP_THRESHOLD = 70;
-    const flipBelow = rect.top < TOP_THRESHOLD;
+    
+    // --- 1. Bulletproof Math Strategy ---
+    // Calculate the top position relative to viewport.
+    // Fixed positioning handles the scroll naturally if we use rect coordinates directly.
+    const topPosition = rect.top - TOOLBAR_HEIGHT - 10;
+    const finalTop = topPosition < 0 ? rect.bottom + 10 : topPosition;
 
-    const position = {
-        top: flipBelow
-            ? window.scrollY + rect.bottom + 10   // below selection
-            : window.scrollY + rect.top - TOOLBAR_HEIGHT, // above selection
-        left: window.scrollX + rect.left + rect.width / 2,
-    };
+    const finalLeft = rect.left + rect.width / 2;
 
     // --- 2. Per-button loading handler ---
     const handleAiAction = async (action: string) => {
@@ -80,10 +89,10 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: Floating
     const toolbarContent = (
         <div
             ref={toolbarRef}
-            className="fixed z-[9999] -translate-x-1/2 flex items-center gap-1.5 p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-indigo-100/50 dark:border-indigo-900/50 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200 select-none"
+            className="fixed z-[9999] pointer-events-auto -translate-x-1/2 flex items-center gap-1.5 p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-indigo-100/50 dark:border-indigo-900/50 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200 select-none"
             style={{
-                top: position.top,
-                left: position.left
+                top: finalTop,
+                left: finalLeft
             }}
             onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }} // Prevent losing selection
         >
