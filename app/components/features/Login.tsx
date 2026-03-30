@@ -10,16 +10,40 @@ import { Sparkles, Lock, Mail, Github, Zap } from 'lucide-react';
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [isSignUp, setIsSignUp] = useState(false);
+    const [signUpSuccess, setSignUpSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleEmailLogin = async (e: React.FormEvent) => {
+    const handleAuthAction = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
+        setSignUpSuccess(false);
+
         try {
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) setError(error.message);
+            if (isSignUp) {
+                // SIGN UP FLOW
+                const { error: signUpError } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            full_name: fullName,
+                        }
+                    }
+                });
+                if (signUpError) {
+                    setError(signUpError.message);
+                } else {
+                    setSignUpSuccess(true);
+                }
+            } else {
+                // LOGIN FLOW
+                const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+                if (loginError) setError(loginError.message);
+            }
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -67,9 +91,22 @@ export const Login = () => {
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F9FAFB] dark:bg-slate-950 flex items-center justify-center p-6 lg:p-20 overflow-y-auto shrink-0">
                 <div className="w-full max-w-[540px] bg-white dark:bg-[#0a0a0a] rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 p-12 lg:p-14 animate-fadeIn relative z-10 transition-all">
                     <div className="mb-14 text-center lg:text-left">
-                        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">Welcome Back</h2>
-                        <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">Please enter your credentials to access the platform.</p>
+                        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">
+                            {isSignUp ? 'Create Your Profile' : 'Welcome Back'}
+                        </h2>
+                        <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
+                            {isSignUp 
+                                ? 'Join the elite editorial platform today.' 
+                                : 'Please enter your credentials to access the platform.'}
+                        </p>
                     </div>
+
+                    {signUpSuccess && (
+                        <div className="mb-10 p-5 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-xl flex items-center gap-3 animate-fadeIn uppercase tracking-wider leading-relaxed">
+                            <Zap className="w-5 h-5 shrink-0 text-emerald-500" />
+                            Success! Please check your email to confirm your account before logging in.
+                        </div>
+                    )}
 
                     {error && (
                         <div className="mb-10 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-xl flex items-center gap-3 animate-shake uppercase tracking-wider">
@@ -78,7 +115,23 @@ export const Login = () => {
                         </div>
                     )}
 
-                    <form onSubmit={handleEmailLogin} className="space-y-8">
+                    <form onSubmit={handleAuthAction} className="space-y-8">
+                        {isSignUp && (
+                            <div className="space-y-3 animate-fadeIn">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 mb-2">
+                                    <Sparkles className="w-3.5 h-3.5" />
+                                    Full Name
+                                </label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    placeholder="Your Full Name"
+                                    className="w-full h-16 bg-slate-50 dark:bg-slate-900 rounded-xl px-6 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium placeholder:text-slate-400"
+                                />
+                            </div>
+                        )}
                         <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 mb-2">
                                 <Mail className="w-3.5 h-3.5" />
@@ -115,8 +168,18 @@ export const Login = () => {
                             isLoading={loading}
                             className="w-full h-16 rounded-xl bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/10 uppercase tracking-[0.2em] text-[11px] font-black mt-6 transition-all hover:scale-[1.01]"
                         >
-                            Authenticate Profile
+                            {isSignUp ? 'Create Account' : 'Authenticate Profile'}
                         </Button>
+
+                        <div className="text-center pt-2">
+                            <button
+                                type="button"
+                                onClick={() => setIsSignUp(!isSignUp)}
+                                className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 hover:text-indigo-600 transition-colors"
+                            >
+                                {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+                            </button>
+                        </div>
                     </form>
 
                     <div className="relative my-14 flex items-center justify-center">
