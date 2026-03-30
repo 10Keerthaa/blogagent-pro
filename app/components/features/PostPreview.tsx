@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useDashboard } from '../context/DashboardContext';
 import { Button } from '../ui/Button';
 import {
@@ -23,35 +23,50 @@ export const PostPreview = () => {
     // Floating Toolbar State
     const [selectionRect, setSelectionRect] = useState<DOMRect | null>(null);
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
+    const [isEditorFocused, setIsEditorFocused] = useState(false);
     const editorRef = useRef<HTMLDivElement>(null);
 
+    // Sync preview.content into the editor DOM only when not focused
+    // This prevents React from clobbering an active selection or partial edit
+    useEffect(() => {
+        if (!isEditorFocused && editorRef.current && preview?.content !== undefined) {
+            editorRef.current.innerHTML = preview.content;
+        }
+    }, [preview?.content, isEditorFocused]);
+
     // Handle text selection for floating menu
+    // Entire body is deferred via setTimeout(0) so the browser fully paints
+    // the selection highlight before we read its bounding rect.
     const updateSelectionRect = useCallback(() => {
-        const selection = window.getSelection();
-        if (!selection || selection.rangeCount === 0 || !editorRef.current) {
-            setIsToolbarVisible(false);
-            setSelectionRect(null);
-            return;
-        }
+        setTimeout(() => {
+            const selection = window.getSelection();
+            if (!selection || selection.rangeCount === 0 || !editorRef.current) {
+                setIsToolbarVisible(false);
+                setSelectionRect(null);
+                return;
+            }
 
-        const range = selection.getRangeAt(0);
+            const range = selection.getRangeAt(0);
 
-        // Ensure selection is strictly within the editor
-        if (!editorRef.current.contains(range.commonAncestorContainer)) {
-            setIsToolbarVisible(false);
-            setSelectionRect(null);
-            return;
-        }
+            // Ensure selection is strictly within the editor
+            if (!editorRef.current.contains(range.commonAncestorContainer)) {
+                setIsToolbarVisible(false);
+                setSelectionRect(null);
+                return;
+            }
 
-        const rect = range.getBoundingClientRect();
+            const rect = range.getBoundingClientRect();
 
-        if (rect.width > 0 && !selection.isCollapsed) {
-            setSelectionRect(rect);
-            setIsToolbarVisible(true);
-        } else {
-            setIsToolbarVisible(false);
-            setSelectionRect(null);
-        }
+            // rect.height > 0 guards against Ctrl+A edge case where the rect
+            // can be zero-sized even with a valid selection
+            if (rect.width > 0 && rect.height > 0 && !selection.isCollapsed) {
+                setSelectionRect(rect);
+                setIsToolbarVisible(true);
+            } else {
+                setIsToolbarVisible(false);
+                setSelectionRect(null);
+            }
+        }, 0);
     }, [editorRef]);
 
 
@@ -214,16 +229,21 @@ export const PostPreview = () => {
                     ref={editorRef}
                     contentEditable
                     suppressContentEditableWarning
+                    onFocus={() => setIsEditorFocused(true)}
                     onBlur={(e) => {
+                        setIsEditorFocused(false);
                         const newContent = e.currentTarget.innerHTML;
                         setPreview({ ...preview, content: newContent });
                         handleAutoSave({ ...preview, content: newContent });
                     }}
-                    dangerouslySetInnerHTML={{ __html: preview.content }}
                     className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif"
                     style={{ minHeight: '50vh' }}
                     onMouseUp={updateSelectionRect}
-                    onKeyUp={updateSelectionRect}
+                    onKeyUp={(e) => {
+                        // Ignore standalone modifier keys — the user is still mid-command
+                        if (['Control', 'Meta', 'Shift', 'Alt'].includes(e.key)) return;
+                        updateSelectionRect();
+                    }}
                     onMouseDown={(e) => {
                         const target = (e.target as HTMLElement).closest('a');
                         if (target && target.tagName === 'A') {
@@ -287,50 +307,48 @@ export const PostPreview = () => {
                         </Button>
                     </div>
 
-                </div>
-            </div>
+                    {/* ACTION BAR - inline at the bottom of editor content */}
+                    <div className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800 flex gap-4">
+                        <Button
+                            variant="secondary"
+                            onClick={() => handleAutoSave(preview)}
+                            isLoading={isSavingManual}
+                            className="flex-1 h-14 rounded-none border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2 bg-white dark:bg-slate-900"
+                        >
+                            <Save className={`w-4 h-4 ${isSavingManual ? 'animate-spin' : ''}`} />
+                            Save Edits
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={async () => {
+                                if (!user) return;
+                                const result = await upsertPost({
+                                    id: currentPostId || undefined,
+                                    title: preview.title,
+                                    content: preview.content,
+                                    image_url: preview.imageUrl,
+                                    infographic_url: infographicUrl,
+                                    metaDesc: description || preview.meta || "",
+                                    status: 'review',
+                                    created_by: user.id,
+                                    prompt: mainTopic || preview.prompt || '',
+                                    keywords: keywords.length > 0 ? keywords : (preview.keywords || []),
+                                    primaryKeyword: primaryKeyword
+                                });
+                                if (result?.id) {
+                                    setCurrentPostId(result.id);
+                                    setSelectedReviewDraft(result);
+                                }
+                                setActiveTab('review');
+                            }}
+                            isLoading={isSavingReview}
+                            className="flex-1 h-14 rounded-none bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 font-bold text-[11px] uppercase tracking-widest gap-2"
+                        >
+                            <ArrowRight className={`w-4 h-4 ${isSavingReview ? 'animate-spin' : ''}`} />
+                            Send to Review Queue
+                        </Button>
+                    </div>
 
-            {/* FIXED ACTION BAR - always visible at screen bottom */}
-            <div className="fixed bottom-0 left-0 right-0 py-4 px-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800" style={{ zIndex: 100 }}>
-                <div className="max-w-4xl mx-auto flex gap-4">
-                    <Button
-                        variant="secondary"
-                        onClick={() => handleAutoSave(preview)}
-                        isLoading={isSavingManual}
-                        className="flex-1 h-14 rounded-none border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2 bg-white dark:bg-slate-900"
-                    >
-                        <Save className={`w-4 h-4 ${isSavingManual ? 'animate-spin' : ''}`} />
-                        Save Edits
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={async () => {
-                            if (!user) return;
-                            const result = await upsertPost({
-                                id: currentPostId || undefined,
-                                title: preview.title,
-                                content: preview.content,
-                                image_url: preview.imageUrl,
-                                infographic_url: infographicUrl,
-                                metaDesc: description || preview.meta || "",
-                                status: 'review',
-                                created_by: user.id,
-                                prompt: mainTopic || preview.prompt || '',
-                                keywords: keywords.length > 0 ? keywords : (preview.keywords || []),
-                                primaryKeyword: primaryKeyword
-                            });
-                            if (result?.id) {
-                                setCurrentPostId(result.id);
-                                setSelectedReviewDraft(result);
-                            }
-                            setActiveTab('review');
-                        }}
-                        isLoading={isSavingReview}
-                        className="flex-1 h-14 rounded-none bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 font-bold text-[11px] uppercase tracking-widest gap-2"
-                    >
-                        <ArrowRight className={`w-4 h-4 ${isSavingReview ? 'animate-spin' : ''}`} />
-                        Send to Review Queue
-                    </Button>
                 </div>
             </div>
         </div>
