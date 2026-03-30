@@ -80,12 +80,12 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: Floating
     const toolbarContent = (
         <div
             ref={toolbarRef}
-            className="fixed z-[9999] -translate-x-1/2 flex items-center gap-1.5 p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-indigo-100/50 dark:border-indigo-900/50 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200"
+            className="fixed z-[9999] -translate-x-1/2 flex items-center gap-1.5 p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-indigo-100/50 dark:border-indigo-900/50 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200 select-none"
             style={{
                 top: position.top,
                 left: position.left
             }}
-            onMouseDown={(e) => e.preventDefault()} // Prevent losing selection
+            onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }} // Prevent losing selection
         >
             {!showLinkInput ? (
                 <>
