@@ -4,11 +4,32 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+        // 1. Extract the Authorization header from the request
+        const authHeader = req.headers.get('Authorization');
+        const token = authHeader?.split(' ')[1];
 
-        // 1. Fetch all profiles to ensure we show everyone (even with 0 posts)
+        // If no token is provided, we cannot verify RLS for the Admin report
+        if (!token) {
+            return NextResponse.json({ error: 'Authentication token required' }, { status: 401 });
+        }
+
+        /**
+         * 2. Initialize the Supabase client with the user's JWT.
+         * This allows Supabase to apply the RLS (Row Level Security) policies
+         * we just added in the dashboard. Specifically, if the user is an admin,
+         * they will now be able to see all profiles and posts.
+         */
+        const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+            global: {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        });
+
+        // 3. Fetch all profiles (Allowed by the new "Admins can browse all profiles" policy)
         const { data: profiles, error: profileError } = await supabase
             .from('profiles')
             .select('id, email, full_name, role');
@@ -18,7 +39,7 @@ export async function GET() {
             throw profileError;
         }
 
-        // 2. Fetch all posts with their status and author ID (created_by)
+        // 4. Fetch all posts (Allowed by the new "Admins can browse all posts" policy)
         const { data: posts, error: postsError } = await supabase
             .from('posts')
             .select('status, created_by');
@@ -28,9 +49,8 @@ export async function GET() {
             throw postsError;
         }
 
-        // 3. Aggregate results in memory by matching the profile ID
+        // 5. Aggregate results in memory
         const report = profiles.map(profile => {
-            // Match posts directly by the author's internal UUID (created_by)
             const userPosts = posts?.filter((p: any) => p.created_by === profile.id) || [];
             
             return {
@@ -42,7 +62,7 @@ export async function GET() {
             };
         });
 
-        // 4. Return the formatted report for the AdminTracking component
+        // 6. Return the formatted report for the dashboard
         return NextResponse.json({ report });
 
     } catch (error: any) {

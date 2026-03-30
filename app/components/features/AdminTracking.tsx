@@ -12,10 +12,17 @@ export const AdminTracking = () => {
 
     const fetchReport = async () => {
         try {
-            const r = await fetch('/api/admin/report');
+            const { data: { session } } = await (await import('../../../lib/supabase')).supabase.auth.getSession();
+            const r = await fetch('/api/admin/report', {
+                headers: {
+                    'Authorization': `Bearer ${session?.access_token}`
+                }
+            });
             const d = await r.json();
             setReport(d.report || []);
-        } catch { } finally {
+        } catch (e) {
+            console.error('Fetch Report Error:', e);
+        } finally {
             setIsLoading(false);
         }
     };
