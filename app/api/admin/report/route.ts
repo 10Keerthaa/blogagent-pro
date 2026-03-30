@@ -11,28 +11,27 @@ export async function GET() {
         // 1. Fetch all profiles to ensure we show everyone (even with 0 posts)
         const { data: profiles, error: profileError } = await supabase
             .from('profiles')
-            .select('email, full_name, role');
+            .select('id, email, full_name, role');
 
         if (profileError) {
             console.error('Error fetching profiles:', profileError);
             throw profileError;
         }
 
-        // 2. Fetch post counts grouped by author
-        // We fetch the status and the joined profile email to map activity back to the user
+        // 2. Fetch all posts with their status and author ID (created_by)
         const { data: posts, error: postsError } = await supabase
             .from('posts')
-            .select('status, author:profiles!created_by(email)');
+            .select('status, created_by');
 
         if (postsError) {
             console.error('Error fetching posts:', postsError);
             throw postsError;
         }
 
-        // 3. Aggregate results in memory
+        // 3. Aggregate results in memory by matching the profile ID
         const report = profiles.map(profile => {
-            // Find all posts where the joined author's email matches the profile email
-            const userPosts = posts?.filter((p: any) => p.author?.email === profile.email) || [];
+            // Match posts directly by the author's internal UUID (created_by)
+            const userPosts = posts?.filter((p: any) => p.created_by === profile.id) || [];
             
             return {
                 email: profile.email,
