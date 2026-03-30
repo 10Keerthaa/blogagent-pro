@@ -28,7 +28,7 @@ export const PostPreview = () => {
     // Handle text selection for floating menu
     const updateSelectionRect = useCallback(() => {
         const selection = window.getSelection();
-        if (!selection || selection.rangeCount === 0 || selection.isCollapsed || !editorRef.current) {
+        if (!selection || selection.rangeCount === 0 || !editorRef.current) {
             setIsToolbarVisible(false);
             setSelectionRect(null);
             return;
@@ -43,15 +43,15 @@ export const PostPreview = () => {
             return;
         }
 
-        const rects = range.getClientRects();
-        if (rects.length === 0) {
+        const rect = range.getBoundingClientRect();
+
+        if (rect.width > 0 && !selection.isCollapsed) {
+            setSelectionRect(rect);
+            setIsToolbarVisible(true);
+        } else {
             setIsToolbarVisible(false);
             setSelectionRect(null);
-            return;
         }
-
-        setSelectionRect(rects[0]);
-        setIsToolbarVisible(true);
     }, [editorRef]);
 
     useEffect(() => {
@@ -236,6 +236,8 @@ export const PostPreview = () => {
                     dangerouslySetInnerHTML={{ __html: preview.content }}
                     className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif"
                     style={{ minHeight: '50vh' }}
+                    onMouseUp={updateSelectionRect}
+                    onKeyUp={updateSelectionRect}
                     onMouseDown={(e) => {
                         const target = (e.target as HTMLElement).closest('a');
                         if (target && target.tagName === 'A') {
