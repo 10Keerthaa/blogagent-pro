@@ -47,7 +47,7 @@ export const AdminTracking = () => {
                     </div>
                 </div>
 
-                <Card className="overflow-hidden border-slate-200 dark:border-slate-800 shadow-xl">
+                <Card className="overflow-hidden border-slate-200 dark:border-slate-800 shadow-xl rounded-none">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
@@ -73,7 +73,7 @@ export const AdminTracking = () => {
                                         <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors group">
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-bold text-[10px]">
+                                                    <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-bold text-[10px]">
                                                         {row.email?.charAt(0).toUpperCase()}
                                                     </div>
                                                     <span className="text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 transition-colors">
@@ -82,18 +82,18 @@ export const AdminTracking = () => {
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6 text-center">
-                                                <span className="inline-flex items-center px-4 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold rounded-full">
+                                                <span className="inline-flex items-center px-4 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold rounded-none">
                                                     {row.total_created || 0}
                                                 </span>
                                             </td>
                                             <td className="px-8 py-6 text-center">
-                                                <span className="inline-flex items-center px-4 py-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded-full">
+                                                <span className="inline-flex items-center px-4 py-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded-none">
                                                     {row.total_published || 0}
                                                 </span>
                                             </td>
                                             <td className="px-8 py-6 text-right">
                                                 <div className="flex items-center justify-end gap-1.5 text-slate-400">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                                    <span className="w-1.5 h-1.5 rounded-none bg-emerald-500 animate-pulse" />
                                                     <span className="text-[10px] font-bold uppercase tracking-widest">Active</span>
                                                 </div>
                                             </td>
