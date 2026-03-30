@@ -155,7 +155,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: Floating
                             onClick={() => {
                                 onAction('unlink');
                             }}
-                            className="p-2 hover:bg-red-50 dark:hover:bg-red-950/20 text-red-500 transition-colors rounded-lg group"
+                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
                             title="Remove Link"
                         >
                             <Link2Off className="w-4 h-4" />
