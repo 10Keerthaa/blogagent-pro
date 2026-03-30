@@ -33,6 +33,7 @@ export const ReviewList = () => {
 
     const [selectionRect, setSelectionRect] = React.useState<DOMRect | null>(null);
     const [isToolbarVisible, setIsToolbarVisible] = React.useState(false);
+    const [isLinkActive, setIsLinkActive] = React.useState(false);
     const editorRef = React.useRef<HTMLDivElement>(null);
 
     const refinementRef = React.useRef<HTMLDivElement>(null);
@@ -57,6 +58,7 @@ export const ReviewList = () => {
             const selection = window.getSelection();
             if (!selection || selection.rangeCount === 0 || !editorRef.current) {
                 setIsToolbarVisible(false);
+                setIsLinkActive(false);
                 setSelectionRect(null);
                 return;
             }
@@ -64,6 +66,7 @@ export const ReviewList = () => {
             const range = selection.getRangeAt(0);
             if (!editorRef.current.contains(range.commonAncestorContainer)) {
                 setIsToolbarVisible(false);
+                setIsLinkActive(false);
                 setSelectionRect(null);
                 return;
             }
@@ -72,8 +75,14 @@ export const ReviewList = () => {
             if (rect.width > 0 && rect.height > 0 && !selection.isCollapsed) {
                 setSelectionRect(rect);
                 setIsToolbarVisible(true);
+
+                // CHECK FOR LINK HERE
+                const container = range.commonAncestorContainer;
+                const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
+                setIsLinkActive(!!element?.closest('a'));
             } else {
                 setIsToolbarVisible(false);
+                setIsLinkActive(false);
                 setSelectionRect(null);
             }
         }, 0);
@@ -269,6 +278,7 @@ export const ReviewList = () => {
                             className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
                             onMouseUp={updateSelectionRect}
+                            onSelect={updateSelectionRect}
                             onKeyUp={(e) => {
                                 if (['Control', 'Meta', 'Shift', 'Alt'].includes(e.key)) return;
                                 updateSelectionRect();

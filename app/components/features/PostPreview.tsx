@@ -23,6 +23,7 @@ export const PostPreview = () => {
     // Floating Toolbar State
     const [selectionRect, setSelectionRect] = useState<DOMRect | null>(null);
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
+    const [isLinkActive, setIsLinkActive] = useState(false);
     const [isEditorFocused, setIsEditorFocused] = useState(false);
     const editorRef = useRef<HTMLDivElement>(null);
 
@@ -42,6 +43,7 @@ export const PostPreview = () => {
             const selection = window.getSelection();
             if (!selection || selection.rangeCount === 0 || !editorRef.current) {
                 setIsToolbarVisible(false);
+                setIsLinkActive(false);
                 setSelectionRect(null);
                 return;
             }
@@ -51,6 +53,7 @@ export const PostPreview = () => {
             // Ensure selection is strictly within the editor
             if (!editorRef.current.contains(range.commonAncestorContainer)) {
                 setIsToolbarVisible(false);
+                setIsLinkActive(false);
                 setSelectionRect(null);
                 return;
             }
@@ -62,8 +65,14 @@ export const PostPreview = () => {
             if (rect.width > 0 && rect.height > 0 && !selection.isCollapsed) {
                 setSelectionRect(rect);
                 setIsToolbarVisible(true);
+
+                // CHECK FOR LINK HERE
+                const container = range.commonAncestorContainer;
+                const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
+                setIsLinkActive(!!element?.closest('a'));
             } else {
                 setIsToolbarVisible(false);
+                setIsLinkActive(false);
                 setSelectionRect(null);
             }
         }, 0);
@@ -248,6 +257,7 @@ export const PostPreview = () => {
                     className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif"
                     style={{ minHeight: '50vh' }}
                     onMouseUp={updateSelectionRect}
+                    onSelect={updateSelectionRect}
                     onKeyUp={(e) => {
                         // Ignore standalone modifier keys — the user is still mid-command
                         if (['Control', 'Meta', 'Shift', 'Alt'].includes(e.key)) return;
