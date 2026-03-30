@@ -6,6 +6,7 @@ import {
     Bold,
     Italic,
     Link as LinkIcon,
+    Link2Off,
     Wand2,
     AlignLeft,
     AlignJustify,
@@ -100,31 +101,36 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: Floating
                 <>
                     {/* --- Formatting Buttons --- */}
                     <button
-                        onMouseDown={(e) => e.preventDefault()} // 2. Selection persistence
+                        onMouseDown={(e) => e.preventDefault()}
                         onClick={() => onAction('bold')}
-                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group"
-                        title="Bold"
-                        disabled={!!loadingAction}
+                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
+                        title="Bold (Ctrl+B)"
                     >
-                        <Bold className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-indigo-600" />
+                        <Bold className="w-4 h-4" />
                     </button>
                     <button
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => onAction('italic')}
-                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group"
-                        title="Italic"
-                        disabled={!!loadingAction}
+                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
+                        title="Italic (Ctrl+I)"
                     >
-                        <Italic className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-indigo-600" />
+                        <Italic className="w-4 h-4" />
                     </button>
                     <button
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => setShowLinkInput(true)}
-                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group"
-                        title="Hyperlink"
-                        disabled={!!loadingAction}
+                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
+                        title="Add Link"
                     >
-                        <LinkIcon className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-indigo-600" />
+                        <LinkIcon className="w-4 h-4" />
+                    </button>
+                    <button
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => onAction('unlink')}
+                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
+                        title="Remove Link"
+                    >
+                        <Link2Off className="w-4 h-4" />
                     </button>
 
                     <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1" />

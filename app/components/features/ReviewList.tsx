@@ -9,9 +9,11 @@ import { Textarea } from '../ui/Textarea';
 import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
-    FileText, Calendar, ArrowRight, X, CheckCircle, XCircle, BarChart2, Zap, Sparkles, Users
+    FileText, Calendar, ArrowRight, X, CheckCircle, XCircle, BarChart2, Zap, Sparkles, Users,
+    Bold, Italic, Link as LinkIcon, RotateCcw
 } from 'lucide-react';
 import { AdminTracking } from './AdminTracking';
+import { FloatingToolbar } from './FloatingToolbar';
 
 export const ReviewList = () => {
     const {
@@ -25,8 +27,13 @@ export const ReviewList = () => {
         isGeneratingInfographic, handleGenerateInfographic,
         infographicUrl, handleSelectReviewDraft, isFetchingDraftDetails,
         handleClearForm,
-        user, role
+        user, role,
+        handleRefineSelection
     } = useDashboard();
+
+    const [selectionRect, setSelectionRect] = React.useState<DOMRect | null>(null);
+    const [isToolbarVisible, setIsToolbarVisible] = React.useState(false);
+    const editorRef = React.useRef<HTMLDivElement>(null);
 
     const refinementRef = React.useRef<HTMLDivElement>(null);
 
@@ -43,6 +50,93 @@ export const ReviewList = () => {
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
     }, [selectedReviewDraft]);
+
+    // --- Bulletproof Toolbar Logic ---
+    const updateSelectionRect = React.useCallback(() => {
+        setTimeout(() => {
+            const selection = window.getSelection();
+            if (!selection || selection.rangeCount === 0 || !editorRef.current) {
+                setIsToolbarVisible(false);
+                setSelectionRect(null);
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            if (!editorRef.current.contains(range.commonAncestorContainer)) {
+                setIsToolbarVisible(false);
+                setSelectionRect(null);
+                return;
+            }
+
+            const rect = range.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0 && !selection.isCollapsed) {
+                setSelectionRect(rect);
+                setIsToolbarVisible(true);
+            } else {
+                setIsToolbarVisible(false);
+                setSelectionRect(null);
+            }
+        }, 0);
+    }, []);
+
+    const execCommand = (command: string, value: any = null) => {
+        document.execCommand(command, false, value);
+        if (editorRef.current) {
+            const newContent = editorRef.current.innerHTML;
+            setSelectedReviewDraft({ ...selectedReviewDraft, content: newContent });
+        }
+    };
+
+    const handleToolbarAction = async (action: string, value?: string) => {
+        if (!editorRef.current) return;
+
+        switch (action) {
+            case 'bold': execCommand('bold'); break;
+            case 'italic': execCommand('italic'); break;
+            case 'unlink': execCommand('unlink'); break;
+            case 'link': {
+                const sel = window.getSelection();
+                if (!sel || sel.isCollapsed || !value) return;
+                const range = sel.getRangeAt(0);
+                const anchor = document.createElement('a');
+                anchor.href = value;
+                anchor.target = '_blank';
+                anchor.rel = 'noopener noreferrer';
+                anchor.className = 'text-indigo-500 underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium';
+                anchor.appendChild(range.extractContents());
+                range.insertNode(anchor);
+                sel.collapseToEnd();
+                const html = editorRef.current.innerHTML;
+                setSelectedReviewDraft({ ...selectedReviewDraft, content: html });
+                break;
+            }
+            case 'rephrase':
+            case 'shorten':
+            case 'expand': {
+                const sel = window.getSelection();
+                if (!sel || sel.isCollapsed) return;
+                const selectedText = sel.toString();
+                const placeholder = document.createElement('span');
+                placeholder.className = 'bg-indigo-100 dark:bg-indigo-900/30 animate-pulse rounded px-1 text-indigo-500';
+                placeholder.innerText = '✦';
+                const liveRange = sel.getRangeAt(0);
+                liveRange.deleteContents();
+                liveRange.insertNode(placeholder);
+
+                let fullText = '';
+                await handleRefineSelection(selectedText, action, (newText: string) => {
+                    fullText = newText;
+                    placeholder.innerText = fullText;
+                });
+
+                const finalNode = document.createTextNode(fullText || selectedText);
+                placeholder.parentNode?.replaceChild(finalNode, placeholder);
+                const html = editorRef.current.innerHTML;
+                setSelectedReviewDraft({ ...selectedReviewDraft, content: html });
+                break;
+            }
+        }
+    };
 
     // Role-based filtering of the visual list
     const filteredDrafts = React.useMemo(() => {
@@ -91,12 +185,23 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="max-w-4xl mx-auto space-y-10 px-4 lg:px-0">
+                    <section className="max-w-4xl mx-auto space-y-10 px-4 lg:px-0 relative">
+                        {selectionRect && (
+                            <FloatingToolbar
+                                isVisible={isToolbarVisible}
+                                rect={selectionRect}
+                                onAction={handleToolbarAction}
+                                onClose={() => {
+                                    setIsToolbarVisible(false);
+                                    setSelectionRect(null);
+                                }}
+                            />
+                        )}
                         <Input
                             label="Editorial Title"
                             value={selectedReviewDraft.title}
                             onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                            className="text-3xl font-extrabold py-8 px-0 border-none bg-transparent focus:ring-0 focus:border-indigo-500 rounded-none border-b border-slate-100 dark:border-slate-800 tracking-tight"
+                            className="text-3xl font-extrabold py-8 px-0 border-none bg-transparent focus:ring-0 focus:border-indigo-500 rounded-none border-b border-slate-100 dark:border-slate-800 tracking-tight text-center"
                         />
 
                         {selectedReviewDraft.imageUrl && (
@@ -156,12 +261,22 @@ export const ReviewList = () => {
                         )}
 
                         <div
+                            ref={editorRef}
                             contentEditable={!isReadOnly}
                             suppressContentEditableWarning
                             onBlur={(e) => !isReadOnly && setSelectedReviewDraft({ ...selectedReviewDraft, content: e.currentTarget.innerHTML })}
                             dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
                             className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
+                            onMouseUp={updateSelectionRect}
+                            onKeyUp={(e) => {
+                                if (['Control', 'Meta', 'Shift', 'Alt'].includes(e.key)) return;
+                                updateSelectionRect();
+                            }}
+                            onMouseDown={() => {
+                                setSelectionRect(null);
+                                setIsToolbarVisible(false);
+                            }}
                         />
 
                         {/* Infographic Section */}

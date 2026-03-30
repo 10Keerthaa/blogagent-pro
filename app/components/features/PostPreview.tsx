@@ -112,6 +112,10 @@ export const PostPreview = () => {
                 execCommand('italic');
                 return;
 
+            case 'unlink':
+                execCommand('unlink');
+                return;
+
             // --- 3a. Hyperlink: modern Range API with pastel class ---
             case 'link': {
                 const sel = window.getSelection();
