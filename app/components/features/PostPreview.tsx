@@ -35,10 +35,10 @@ export const PostPreview = () => {
     }, [preview?.content, isEditorFocused]);
 
     // Handle text selection for floating menu
-    // Entire body is deferred via setTimeout(0) so the browser fully paints
-    // the selection highlight before we read its bounding rect.
+    // Uses requestAnimationFrame (rAF) to sync with the browser's refresh rate,
+    // ensuring zero-jitter positioning during scrolls and rapid edits.
     const updateSelectionRect = useCallback(() => {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             const selection = window.getSelection();
             if (!selection || selection.rangeCount === 0 || !editorRef.current) {
                 setIsToolbarVisible(false);
@@ -46,27 +46,34 @@ export const PostPreview = () => {
                 return;
             }
 
-            const range = selection.getRangeAt(0);
+            console.log('Selection length:', selection.toString().length);
 
-            // Ensure selection is strictly within the editor
-            if (!editorRef.current.contains(range.commonAncestorContainer)) {
-                setIsToolbarVisible(false);
-                setSelectionRect(null);
-                return;
-            }
+            // Explicit selection check: Ensure the selection is active and not collapsed
+            if (!selection.isCollapsed && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
 
-            const rect = range.getBoundingClientRect();
+                // Security check: Ensure selection is strictly within the editor
+                if (!editorRef.current.contains(range.commonAncestorContainer)) {
+                    setIsToolbarVisible(false);
+                    setSelectionRect(null);
+                    return;
+                }
 
-            // rect.height > 0 guards against Ctrl+A edge case where the rect
-            // can be zero-sized even with a valid selection
-            if (rect.width > 0 && rect.height > 0 && !selection.isCollapsed) {
-                setSelectionRect(rect);
-                setIsToolbarVisible(true);
+                const rect = range.getBoundingClientRect();
+                
+                // rect.width > 0 ensures we have a physical highlight to anchor to
+                if (rect.width > 0) {
+                    setSelectionRect(rect);
+                    setIsToolbarVisible(true);
+                } else {
+                    setIsToolbarVisible(false);
+                    setSelectionRect(null);
+                }
             } else {
                 setIsToolbarVisible(false);
                 setSelectionRect(null);
             }
-        }, 0);
+        });
     }, [editorRef]);
 
 
@@ -174,7 +181,10 @@ export const PostPreview = () => {
     };
 
     return (
-        <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12">
+        <div 
+            className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12"
+            onScrollCapture={updateSelectionRect}
+        >
             {/* MAIN EDITOR AREA - "BLANK PAGE" STYLE */}
             <div className="max-w-4xl mx-auto w-full px-8 pb-32 relative">
                 <FloatingToolbar
