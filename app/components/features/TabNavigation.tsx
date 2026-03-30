@@ -31,10 +31,10 @@ export const TabNavigation = () => {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as any)}
                         className={`
-                            px-6 py-2.5 text-[11px] font-bold rounded-xl transition-all duration-200 ease-in-out border
+                            px-6 py-2.5 text-[11px] font-bold rounded-full transition-all duration-300 ease-in-out border-none
                             ${activeTab === tab.id
-                                ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 border-indigo-100 dark:border-indigo-900/50 shadow-sm shadow-indigo-100/20'
-                                : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-100 dark:border-slate-800/50 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-200 dark:hover:border-slate-700'}
+                                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 scale-105'
+                                : 'bg-slate-100/50 dark:bg-slate-900/50 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'}
                         `}
                         aria-selected={activeTab === tab.id}
                         role="tab"

@@ -23,10 +23,12 @@ const DashboardContent = () => {
       <div className="max-w-[1440px] mx-auto min-h-screen flex flex-col lg:flex-row shadow-2xl shadow-slate-200/50 dark:shadow-none bg-white dark:bg-[#0a0a0a]">
 
         {/* LEFT PANEL: Sidebar Form (Refined) */}
-        <SidebarForm />
+        <div className="lg:w-[40%] xl:w-[35%] shrink-0">
+          <SidebarForm />
+        </div>
 
         {/* RIGHT PANEL: Dynamic Workspace (Refined) */}
-        <main className="flex-1 lg:w-[60%] flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900">
+        <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 ml-0 lg:ml-8 transition-all duration-300">
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
 
