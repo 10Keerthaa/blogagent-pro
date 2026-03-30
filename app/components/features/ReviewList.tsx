@@ -265,7 +265,7 @@ export const ReviewList = () => {
                         <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-5">
+                    <div className="grid grid-cols-1 gap-6">
                         {isFetchingDrafts || filteredDrafts === null ? (
                             Array.from({ length: 3 }).map((_, i) => (
                                 <div key={i} className="flex gap-6 items-center p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse">
@@ -280,30 +280,31 @@ export const ReviewList = () => {
                             filteredDrafts.map((draft) => (
                                 <Card
                                     key={draft.id}
-                                    className="cursor-pointer group border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden bg-white dark:bg-slate-900/50"
+                                    hoverable
+                                    className="p-8 cursor-pointer group border-slate-200 dark:border-slate-800"
                                 >
                                     <div
-                                        className={`flex items-center justify-between p-8 cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-indigo-50/70 dark:bg-indigo-900/20' : 'hover:bg-slate-50/50 dark:hover:bg-slate-800/20'}`}
+                                        className={`flex items-center justify-between p-4 cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-indigo-50/50 dark:bg-indigo-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                                         onClick={() => handleSelectReviewDraft(draft.id)}
-                                    >                                <div className="flex items-center gap-8">
-                                            <div className="w-16 h-16 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:shadow-lg group-hover:shadow-indigo-500/20 transition-all duration-300">
-                                                <FileText className="w-7 h-7 text-indigo-400 group-hover:text-white transition-colors" />
+                                    >                                <div className="flex items-center gap-7">
+                                            <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-all duration-300 shadow-sm">
+                                                <FileText className="w-8 h-8 text-indigo-400 group-hover:text-white transition-colors" />
                                             </div>
-                                            <div className="space-y-1.5">
-                                                <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors tracking-tight leading-tight">
+                                            <div className="space-y-2">
+                                                <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors tracking-tight">
                                                     {draft.title}
                                                 </h3>
-                                                <div className="flex items-center gap-6 opacity-60">
-                                                    <span className="flex items-center gap-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                                                <div className="flex items-center gap-6">
+                                                    <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
                                                         <Calendar className="w-3.5 h-3.5" />
                                                         {new Date(draft.createdAt || draft.created_at).toLocaleDateString()}
                                                     </span>
                                                     {(draft.authorEmail || draft.createdBy) && (
-                                                        <span className="text-[10px] font-bold text-indigo-500/80 uppercase tracking-widest">
-                                                            by {draft.authorEmail?.split('@')[0] || draft.createdBy.slice(0, 8)}
+                                                        <span className="text-[10px] font-medium text-indigo-400 lowercase italic">
+                                                            by {draft.authorEmail || draft.createdBy}
                                                         </span>
                                                     )}
-                                                    <Badge variant="pending" className="px-3 bg-indigo-50/50 text-indigo-500 border-none">DRAFT</Badge>
+                                                    <Badge variant="outline" className="px-3">Draft</Badge>
                                                 </div>
                                             </div>
                                         </div>
@@ -326,11 +327,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Admin Activity Dashboard Section */}
-                    {role === 'admin' && (
-                        <div className="mt-20 pt-16 border-t border-slate-100 dark:border-slate-800/50 animate-fadeIn transition-all">
-                            <AdminTracking />
-                        </div>
-                    )}
+                    {role === 'admin' && <AdminTracking />}
                 </div>
             )}
 
