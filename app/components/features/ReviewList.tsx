@@ -10,7 +10,7 @@ import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
     FileText, Calendar, ArrowRight, X, CheckCircle, XCircle, BarChart2, Zap, Sparkles, Users,
-    Bold, Italic, Link as LinkIcon, RotateCcw
+    Bold, Italic, Link as LinkIcon, RotateCcw, AlertCircle
 } from 'lucide-react';
 import { AdminTracking } from './AdminTracking';
 import { FloatingToolbar } from './FloatingToolbar';
@@ -28,7 +28,7 @@ export const ReviewList = () => {
         infographicUrl, handleSelectReviewDraft, isFetchingDraftDetails,
         handleClearForm,
         user, role,
-        handleRefineSelection
+        handleRefineSelection, primaryKeyword
     } = useDashboard();
 
     const [selectionRect, setSelectionRect] = React.useState<DOMRect | null>(null);
@@ -358,22 +358,30 @@ export const ReviewList = () => {
                                 <div className="max-w-4xl mx-auto w-full py-4 px-4 lg:px-0">
                                     <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
                                 </div>
-                                <Textarea
-                                    value={feedback}
-                                    onChange={(e) => setFeedback(e.target.value)}
-                                    placeholder="Inject directives..."
-                                    className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
-                                />
-                                <div className="max-w-4xl mx-auto w-full flex justify-center">
-                                    <Button
-                                        variant="secondary"
-                                        onClick={handleApplyReviewFeedback}
-                                        isLoading={isApplyingFeedback}
-                                        disabled={!feedback}
-                                        className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm"
-                                    >
-                                        Apply Refinement
-                                    </Button>
+                                {!primaryKeyword && (
+                                    <div className="max-w-4xl mx-auto w-full px-4 lg:px-0 text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2">
+                                        <AlertCircle className="w-3.5 h-3.5" />
+                                        Action Locked: Select a primary keyword to enable refinement
+                                    </div>
+                                )}
+                                <div className={!primaryKeyword ? 'opacity-50 pointer-events-none' : ''}>
+                                    <Textarea
+                                        value={feedback}
+                                        onChange={(e) => setFeedback(e.target.value)}
+                                        placeholder="Inject directives..."
+                                        className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
+                                    />
+                                    <div className="max-w-4xl mx-auto w-full flex justify-center">
+                                        <Button
+                                            variant="secondary"
+                                            onClick={handleApplyReviewFeedback}
+                                            isLoading={isApplyingFeedback}
+                                            disabled={!feedback || !primaryKeyword}
+                                            className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm"
+                                        >
+                                            Apply Refinement
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </section>

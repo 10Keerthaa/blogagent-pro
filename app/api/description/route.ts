@@ -27,8 +27,8 @@ export async function POST(req: Request) {
 
         REQUIREMENTS:
         - Must be closely related to the Topic and Keywords.
-        - MANDATORY LENGTH: EXACTLY between 150 and 160 characters. Count every character including spaces.
-        - Include the Primary Keyword ("${primaryKeyword || ""}") EXACTLY at least once.
+        - MANDATORY LENGTH: BETWEEN 150 AND 160 CHARACTERS. THIS IS A HARD LIMIT. Count every character including spaces.
+        - INCLUDE THE PRIMARY KEYWORD ("${primaryKeyword || ""}") EXACTLY ONCE.
         - Return ONLY the description text. No quotes, no intro text, no labels.
         `;
 

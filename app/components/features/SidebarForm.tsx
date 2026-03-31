@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { Zap, Loader2, X, RefreshCw, Star } from 'lucide-react';
+import { Zap, Loader2, X, RefreshCw, Star, AlertCircle, Check, AlertTriangle } from 'lucide-react';
 import { useDashboard } from '../context/DashboardContext';
 import { Textarea } from '../ui/Textarea';
 import { Button } from '../ui/Button';
@@ -127,20 +127,41 @@ export const SidebarForm = () => {
                         <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Description</label>
                         <button
                             onClick={handleGenerateDescription}
-                            disabled={isGeneratingDescription || !prompt || isReadOnly}
-                            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
+                            disabled={isGeneratingDescription || !prompt || isReadOnly || !primaryKeyword}
+                            className={`text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all ${!primaryKeyword ? 'grayscale' : ''}`}
                         >
                             {isGeneratingDescription ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
                             Refine
                         </button>
                     </div>
-                    <Textarea
-                        placeholder="SEO optimized summary..."
-                        value={displayDescription}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="min-h-[140px] shadow-sm focus:shadow-md"
-                        readOnly={isReadOnly}
-                    />
+                    {!primaryKeyword && !isReadOnly && (
+                        <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2 px-1">
+                            <AlertCircle className="w-3.5 h-3.5" />
+                            Action Locked: Select a primary keyword to enable refinement
+                        </div>
+                    )}
+                    <div className={!primaryKeyword && !isReadOnly ? 'opacity-50 pointer-events-none grayscale' : ''}>
+                        <Textarea
+                            placeholder="SEO optimized summary..."
+                            value={displayDescription}
+                            onChange={(e) => setDescription(e.target.value)}
+                            className="min-h-[140px] shadow-sm focus:shadow-md"
+                            readOnly={isReadOnly}
+                        />
+                        <div className="flex items-center justify-between mt-2 px-1">
+                            <div className="flex items-center gap-3">
+                                {primaryKeyword && (
+                                    <div className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-tight ${displayDescription.toLowerCase().includes(primaryKeyword.toLowerCase()) ? 'text-emerald-500' : 'text-slate-400'}`}>
+                                        {displayDescription.toLowerCase().includes(primaryKeyword.toLowerCase()) ? <Check className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
+                                        Keyword Presence
+                                    </div>
+                                )}
+                            </div>
+                            <div className={`text-[10px] font-bold tracking-widest uppercase ${(displayDescription.length >= 150 && displayDescription.length <= 160) ? 'text-emerald-500' : 'text-slate-400'}`}>
+                                {displayDescription.length} / 160 <span className="opacity-50 ml-1">CHARS</span>
+                            </div>
+                        </div>
+                    </div>
                 </section>
             </div>
 

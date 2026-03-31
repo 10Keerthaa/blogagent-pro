@@ -292,7 +292,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setError(null); setInfographicUrl(null); setPreview(null);
         try {
             const fullRawText = await api.generateContent(
-                { prompt, keywords: keywords.join(', ') },
+                { prompt, keywords: keywords.join(', '), primaryKeyword },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
@@ -332,6 +332,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     const handleGenerateDescription = async () => {
         if (!prompt.trim()) return;
+        if (!primaryKeyword) {
+            setError("Please select a primary keyword before refining the description.");
+            return;
+        }
         setError(null);
         try {
             const d = await api.generateDescription({ prompt, keywords: keywords.join(', '), primaryKeyword });
@@ -340,11 +344,15 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const handleApplyFeedback = async () => {
+        if (!primaryKeyword) {
+            setError("Please select a primary keyword before refining the post.");
+            return;
+        }
         const currentImageUrl = preview?.imageUrl;
         setError(null); setPreview(null);
         try {
             const fullRawText = await api.generateContent(
-                { prompt: preview?.title || prompt, keywords: keywords.join(', '), feedback },
+                { prompt: preview?.title || prompt, keywords: keywords.join(', '), primaryKeyword, feedback },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
@@ -371,9 +379,13 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     const handleApplyReviewFeedback = async () => {
         if (!selectedReviewDraft || !feedback) return;
+        if (!primaryKeyword) {
+            setError("Please select a primary keyword before refining the review.");
+            return;
+        }
         setError(null);
         try {
-            const fullRawText = await api.generateContent({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), feedback }, () => { });
+            const fullRawText = await api.generateContent({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), primaryKeyword, feedback }, () => { });
             const titleMatch = fullRawText.match(/<title>([\s\S]*?)<\/title>/i);
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);

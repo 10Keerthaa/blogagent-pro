@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 import {
     Bold, Italic, Link as LinkIcon, Save, ArrowRight,
     Heading2, Heading3, List, ListOrdered, Wand2, Sparkles, Image as ImageIcon,
-    RotateCcw
+    RotateCcw, AlertCircle
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 
@@ -95,10 +95,11 @@ export const PostPreview = () => {
 
     const execCommand = (command: string, value: any = null) => {
         document.execCommand(command, false, value);
-        if (editorRef.current) {
+        if (editorRef.current && preview) {
             const newContent = editorRef.current.innerHTML;
-            setPreview({ ...preview, content: newContent });
-            handleAutoSave({ ...preview, content: newContent });
+            const updatedPreview = { ...preview, content: newContent };
+            setPreview(updatedPreview);
+            handleAutoSave(updatedPreview);
         }
     };
 
@@ -115,12 +116,13 @@ export const PostPreview = () => {
                 return;
 
             case 'unlink':
-                if (editorRef.current) {
+                if (editorRef.current && preview) {
                     editorRef.current.focus();
                     document.execCommand('unlink');
                     const linked = editorRef.current.innerHTML;
-                    setPreview((prev: any) => ({ ...prev, content: linked }));
-                    handleAutoSave({ ...preview, content: linked });
+                    const updatedPreview = { ...preview, content: linked };
+                    setPreview(updatedPreview);
+                    handleAutoSave(updatedPreview);
                     // Closure prevents the scroll jump to top that can happen if selection is lost
                     setIsToolbarVisible(false);
                     setSelectionRect(null);
@@ -143,9 +145,12 @@ export const PostPreview = () => {
                 // Collapse selection after the link
                 sel.collapseToEnd();
                 // --- 4. State Sync ---
-                const linkedContent = editorRef.current.innerHTML;
-                setPreview((prev: any) => ({ ...prev, content: linkedContent }));
-                handleAutoSave({ ...preview, content: linkedContent });
+                if (editorRef.current && preview) {
+                    const linkedContent = editorRef.current.innerHTML;
+                    const updatedPreview = { ...preview, content: linkedContent };
+                    setPreview(updatedPreview);
+                    handleAutoSave(updatedPreview);
+                }
                 return;
             }
 
@@ -180,9 +185,12 @@ export const PostPreview = () => {
                 placeholder.parentNode?.replaceChild(finalNode, placeholder);
 
                 // --- 4. Immediate State Sync ---
-                const finalHtml = editorRef.current.innerHTML;
-                setPreview((prev: any) => ({ ...prev, content: finalHtml }));
-                handleAutoSave({ ...preview, content: finalHtml });
+                if (editorRef.current && preview) {
+                    const finalHtml = editorRef.current.innerHTML;
+                    const updatedPreview = { ...preview, content: finalHtml };
+                    setPreview(updatedPreview);
+                    handleAutoSave(updatedPreview);
+                }
                 return;
             }
         }
@@ -277,11 +285,13 @@ export const PostPreview = () => {
                         }
                     }}
                     onMouseDown={(e) => {
-                        // If we click a link, handle the special "Ctrl+Click" to open
+                        // If we click a link, handle special interactions (Ctrl+Click or Double-Click)
                         const target = (e.target as HTMLElement).closest('a');
-                        if (target && (e.ctrlKey || e.metaKey)) {
-                            e.preventDefault();
-                            window.open(target.href, '_blank');
+                        if (target) {
+                            if (e.ctrlKey || e.metaKey || e.detail === 2) {
+                                e.preventDefault();
+                                window.open(target.href, '_blank');
+                            }
                         }
 
                         // Do NOT setSelectionRect(null) here anymore. 
@@ -323,21 +333,29 @@ export const PostPreview = () => {
                                 AI Content Stream Active
                             </h4>
                         </div>
-                        <textarea
-                            value={feedback}
-                            onChange={(e) => setFeedback(e.target.value)}
-                            placeholder="Type instructions to refine this post..."
-                            className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none min-h-[120px]"
-                        />
-                        <Button
-                            variant="primary"
-                            onClick={handleApplyFeedback}
-                            isLoading={isApplyingFeedback}
-                            disabled={!feedback}
-                            className="w-full h-14 rounded-none bg-indigo-600 hover:bg-indigo-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
-                        >
-                            Apply AI Refinement
-                        </Button>
+                        {!primaryKeyword && (
+                            <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2">
+                                <AlertCircle className="w-3.5 h-3.5" />
+                                Action Locked: Select a primary keyword to enable refinement
+                            </div>
+                        )}
+                        <div className={!primaryKeyword ? 'opacity-50 pointer-events-none' : ''}>
+                            <textarea
+                                value={feedback}
+                                onChange={(e) => setFeedback(e.target.value)}
+                                placeholder="Type instructions to refine this post..."
+                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none min-h-[120px]"
+                            />
+                            <Button
+                                variant="primary"
+                                onClick={handleApplyFeedback}
+                                isLoading={isApplyingFeedback}
+                                disabled={isApplyingFeedback || !feedback || !primaryKeyword}
+                                className="w-full h-14 rounded-none bg-indigo-600 hover:bg-indigo-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
+                            >
+                                Apply AI Refinement
+                            </Button>
+                        </div>
                     </div>
 
                     {/* ACTION BAR - inline at the bottom of editor content */}

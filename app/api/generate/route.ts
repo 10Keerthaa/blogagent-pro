@@ -6,7 +6,7 @@ export const maxDuration = 60; // Set timeout for Vercel
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt, keywords, feedback } = body;
+    const { prompt, keywords, primaryKeyword, feedback } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -22,6 +22,7 @@ export async function POST(req: Request) {
         
         Topic: ${prompt}
         Keywords to include: ${keywords || "None"}
+        Primary Keyword: ${primaryKeyword || "None"}
         STRICT CONSTRAINT: Stay strictly focused on ${prompt}.
         ${feedback ? `\nSMART REFINEMENT MODE: 
         Apply these changes SURGICALLY: ${feedback}. 
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
 
         STRICT REQUIREMENTS:
         1. BLOG TITLE (Meta Title): 50-60 characters.
-        2. META DESCRIPTION: 150-160 characters.
+        2. META DESCRIPTION: STRICT ENFORCEMENT: Exactly 150-160 characters (including spaces). MUST include the primary keyword.
         3. BLOG CONTENT: 1500 to 2000 words.
         4. Use <h2> and <h3> for headings. 
         5. NEVER use Markdown headers (#) or bold markdown (**) for titles or headings.
