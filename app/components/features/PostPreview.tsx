@@ -39,41 +39,34 @@ export const PostPreview = () => {
     // Entire body is deferred via setTimeout(0) so the browser fully paints
     // the selection highlight before we read its bounding rect.
     const updateSelectionRect = useCallback(() => {
+        // The timeout is critical: it lets the browser finish the 'click' 
+        // before we ask it 'where is the cursor?'
         setTimeout(() => {
             const selection = window.getSelection();
             if (!selection || selection.rangeCount === 0 || !editorRef.current) {
                 setIsToolbarVisible(false);
-                setIsLinkActive(false);
-                setSelectionRect(null);
                 return;
             }
 
             const range = selection.getRangeAt(0);
+            if (!editorRef.current.contains(range.commonAncestorContainer)) return;
 
-            // Ensure selection is strictly within the editor
-            if (!editorRef.current.contains(range.commonAncestorContainer)) {
-                setIsToolbarVisible(false);
-                setIsLinkActive(false);
-                setSelectionRect(null);
-                return;
-            }
+            // Detection: Look up the tree for an <a> tag
+            const container = range.commonAncestorContainer;
+            const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
+            const activeLink = element?.closest('a');
+            const isInsideLink = !!activeLink;
+
+            setIsLinkActive(isInsideLink);
 
             const rect = range.getBoundingClientRect();
 
-            // rect.height > 0 guards against Ctrl+A edge case where the rect
-            // can be zero-sized even with a valid selection
-            if (rect.width > 0 && rect.height > 0 && !selection.isCollapsed) {
+            // NEW CONDITION: Show if text is selected OR if we are just clicking a link
+            if ((rect.width > 0 && !selection.isCollapsed) || isInsideLink) {
                 setSelectionRect(rect);
                 setIsToolbarVisible(true);
-
-                // CHECK FOR LINK HERE
-                const container = range.commonAncestorContainer;
-                const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
-                setIsLinkActive(!!element?.closest('a'));
             } else {
                 setIsToolbarVisible(false);
-                setIsLinkActive(false);
-                setSelectionRect(null);
             }
         }, 0);
     }, [editorRef]);
@@ -195,6 +188,7 @@ export const PostPreview = () => {
                         isVisible={isToolbarVisible}
                         rect={selectionRect}
                         onAction={handleToolbarAction}
+                        isLink={isLinkActive}
                         onClose={() => {
                             setIsToolbarVisible(false);
                             setSelectionRect(null);
@@ -263,19 +257,26 @@ export const PostPreview = () => {
                         if (['Control', 'Meta', 'Shift', 'Alt'].includes(e.key)) return;
                         updateSelectionRect();
                     }}
-                    onMouseDown={(e) => {
-                        // 1. Explicit State Sanitization: Reset toolbar if clicking away
-                        setSelectionRect(null);
-                        setIsToolbarVisible(false);
-
-                        const target = (e.target as HTMLElement).closest('a');
-                        if (target && target.tagName === 'A') {
-                            const href = (target as HTMLAnchorElement).href;
-                            if (e.ctrlKey || e.metaKey || e.detail > 1) {
-                                e.preventDefault();
-                                window.open(href, '_blank');
+                    onKeyDown={(e) => {
+                        // Check for Ctrl+K or Cmd+K
+                        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                            e.preventDefault(); // Stop browser search/address bar
+                            const url = window.prompt('Enter the URL:');
+                            if (url) {
+                                handleToolbarAction('link', url);
                             }
                         }
+                    }}
+                    onMouseDown={(e) => {
+                        // If we click a link, handle the special "Ctrl+Click" to open
+                        const target = (e.target as HTMLElement).closest('a');
+                        if (target && (e.ctrlKey || e.metaKey)) {
+                            e.preventDefault();
+                            window.open(target.href, '_blank');
+                        }
+
+                        // Do NOT setSelectionRect(null) here anymore. 
+                        // Let updateSelectionRect handle the visibility.
                     }}
                 />
 

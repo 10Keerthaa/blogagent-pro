@@ -20,9 +20,10 @@ interface FloatingToolbarProps {
     rect: DOMRect | null;
     onAction: (action: string, value?: string) => Promise<void> | void;
     onClose: () => void;
+    isLink?: boolean;
 }
 
-export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: FloatingToolbarProps) => {
+export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: isLinkProp }: FloatingToolbarProps) => {
     const [showLinkInput, setShowLinkInput] = useState(false);
     const [linkUrl, setLinkUrl] = useState('');
     const [loadingAction, setLoadingAction] = useState<string | null>(null);
@@ -106,7 +107,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose }: Floating
         return !!(container instanceof HTMLElement && container.closest('a'));
     };
 
-    const isLink = getIsLink();
+    const isLink = isLinkProp !== undefined ? isLinkProp : getIsLink();
 
     const toolbarContent = (
         <div

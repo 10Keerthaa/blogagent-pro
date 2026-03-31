@@ -54,36 +54,34 @@ export const ReviewList = () => {
 
     // --- Bulletproof Toolbar Logic ---
     const updateSelectionRect = React.useCallback(() => {
+        // The timeout is critical: it lets the browser finish the 'click' 
+        // before we ask it 'where is the cursor?'
         setTimeout(() => {
             const selection = window.getSelection();
             if (!selection || selection.rangeCount === 0 || !editorRef.current) {
                 setIsToolbarVisible(false);
-                setIsLinkActive(false);
-                setSelectionRect(null);
                 return;
             }
 
             const range = selection.getRangeAt(0);
-            if (!editorRef.current.contains(range.commonAncestorContainer)) {
-                setIsToolbarVisible(false);
-                setIsLinkActive(false);
-                setSelectionRect(null);
-                return;
-            }
+            if (!editorRef.current.contains(range.commonAncestorContainer)) return;
+
+            // Detection: Look up the tree for an <a> tag
+            const container = range.commonAncestorContainer;
+            const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
+            const activeLink = element?.closest('a');
+            const isInsideLink = !!activeLink;
+
+            setIsLinkActive(isInsideLink);
 
             const rect = range.getBoundingClientRect();
-            if (rect.width > 0 && rect.height > 0 && !selection.isCollapsed) {
+
+            // NEW CONDITION: Show if text is selected OR if we are just clicking a link
+            if ((rect.width > 0 && !selection.isCollapsed) || isInsideLink) {
                 setSelectionRect(rect);
                 setIsToolbarVisible(true);
-
-                // CHECK FOR LINK HERE
-                const container = range.commonAncestorContainer;
-                const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
-                setIsLinkActive(!!element?.closest('a'));
             } else {
                 setIsToolbarVisible(false);
-                setIsLinkActive(false);
-                setSelectionRect(null);
             }
         }, 0);
     }, []);
@@ -200,6 +198,7 @@ export const ReviewList = () => {
                                 isVisible={isToolbarVisible}
                                 rect={selectionRect}
                                 onAction={handleToolbarAction}
+                                isLink={isLinkActive}
                                 onClose={() => {
                                     setIsToolbarVisible(false);
                                     setSelectionRect(null);
@@ -283,9 +282,26 @@ export const ReviewList = () => {
                                 if (['Control', 'Meta', 'Shift', 'Alt'].includes(e.key)) return;
                                 updateSelectionRect();
                             }}
-                            onMouseDown={() => {
-                                setSelectionRect(null);
-                                setIsToolbarVisible(false);
+                            onKeyDown={(e) => {
+                                // Check for Ctrl+K or Cmd+K
+                                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                                    e.preventDefault(); // Stop browser search/address bar
+                                    const url = window.prompt('Enter the URL:');
+                                    if (url) {
+                                        handleToolbarAction('link', url);
+                                    }
+                                }
+                            }}
+                            onMouseDown={(e) => {
+                                // If we click a link, handle the special "Ctrl+Click" to open
+                                const target = (e.target as HTMLElement).closest('a');
+                                if (target && (e.ctrlKey || e.metaKey)) {
+                                    e.preventDefault();
+                                    window.open(target.href, '_blank');
+                                }
+
+                                // Do NOT setSelectionRect(null) here anymore. 
+                                // Let updateSelectionRect handle the visibility.
                             }}
                         />
 
