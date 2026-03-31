@@ -88,9 +88,11 @@ export const ReviewList = () => {
 
     const execCommand = (command: string, value: any = null) => {
         document.execCommand(command, false, value);
-        if (editorRef.current) {
+        if (editorRef.current && selectedReviewDraft) {
             const newContent = editorRef.current.innerHTML;
-            setSelectedReviewDraft({ ...selectedReviewDraft, content: newContent });
+            const updatedDraft = { ...selectedReviewDraft, content: newContent };
+            setSelectedReviewDraft(updatedDraft);
+            handleSaveManualEdits(updatedDraft);
         }
     };
 
@@ -101,11 +103,13 @@ export const ReviewList = () => {
             case 'bold': execCommand('bold'); break;
             case 'italic': execCommand('italic'); break;
             case 'unlink':
-                if (editorRef.current) {
+                if (editorRef.current && selectedReviewDraft) {
                     editorRef.current.focus();
                     document.execCommand('unlink');
-                    const html = editorRef.current.innerHTML;
-                    setSelectedReviewDraft({ ...selectedReviewDraft, content: html });
+                    const updatedHtml = editorRef.current.innerHTML;
+                    const updatedDraft = { ...selectedReviewDraft, content: updatedHtml };
+                    setSelectedReviewDraft(updatedDraft);
+                    handleSaveManualEdits(updatedDraft);
                     // Closure prevents the scroll jump to top that can happen if selection is lost
                     setIsToolbarVisible(false);
                     setSelectionRect(null);
@@ -123,8 +127,12 @@ export const ReviewList = () => {
                 anchor.appendChild(range.extractContents());
                 range.insertNode(anchor);
                 sel.collapseToEnd();
-                const html = editorRef.current.innerHTML;
-                setSelectedReviewDraft({ ...selectedReviewDraft, content: html });
+                if (editorRef.current && selectedReviewDraft) {
+                    const html = editorRef.current.innerHTML;
+                    const updatedDraft = { ...selectedReviewDraft, content: html };
+                    setSelectedReviewDraft(updatedDraft);
+                    handleSaveManualEdits(updatedDraft);
+                }
                 break;
             }
             case 'rephrase':
@@ -148,8 +156,12 @@ export const ReviewList = () => {
 
                 const finalNode = document.createTextNode(fullText || selectedText);
                 placeholder.parentNode?.replaceChild(finalNode, placeholder);
-                const html = editorRef.current.innerHTML;
-                setSelectedReviewDraft({ ...selectedReviewDraft, content: html });
+                if (editorRef.current && selectedReviewDraft) {
+                    const html = editorRef.current.innerHTML;
+                    const updatedDraft = { ...selectedReviewDraft, content: html };
+                    setSelectedReviewDraft(updatedDraft);
+                    handleSaveManualEdits(updatedDraft);
+                }
                 break;
             }
         }
@@ -282,7 +294,13 @@ export const ReviewList = () => {
                             ref={editorRef}
                             contentEditable={!isReadOnly}
                             suppressContentEditableWarning
-                            onBlur={(e) => !isReadOnly && setSelectedReviewDraft({ ...selectedReviewDraft, content: e.currentTarget.innerHTML })}
+                            onBlur={(e) => {
+                                if (isReadOnly || !selectedReviewDraft) return;
+                                const html = e.currentTarget.innerHTML;
+                                const updated = { ...selectedReviewDraft, content: html };
+                                setSelectedReviewDraft(updated);
+                                handleSaveManualEdits(updated);
+                            }}
                             dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
                             className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
@@ -303,11 +321,13 @@ export const ReviewList = () => {
                                 }
                             }}
                             onMouseDown={(e) => {
-                                // If we click a link, handle the special "Ctrl+Click" to open
+                                // If we click a link, handle special interactions (Ctrl+Click or Double-Click)
                                 const target = (e.target as HTMLElement).closest('a');
-                                if (target && (e.ctrlKey || e.metaKey)) {
-                                    e.preventDefault();
-                                    window.open(target.href, '_blank');
+                                if (target) {
+                                    if (e.ctrlKey || e.metaKey || e.detail === 2) {
+                                        e.preventDefault();
+                                        window.open(target.href, '_blank');
+                                    }
                                 }
 
                                 // Do NOT setSelectionRect(null) here anymore. 

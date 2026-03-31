@@ -54,7 +54,7 @@ interface DashboardContextType {
     handleGenerateDescription: () => Promise<void>;
     handleApplyFeedback: () => Promise<void>;
     handleApplyReviewFeedback: () => Promise<void>;
-    handleSaveManualEdits: () => Promise<void>;
+    handleSaveManualEdits: (updatedDraft?: any) => Promise<void>;
     handleSaveDraft: () => Promise<void>;
     handleRejectDraft: (id: string) => Promise<void>;
     handleApproveDraft: (draft: any) => Promise<void>;
@@ -389,11 +389,16 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         } catch (e: any) { setError(e.message); }
     };
 
-    const handleSaveManualEdits = async () => {
-        if (!selectedReviewDraft) return;
+    const handleSaveManualEdits = async (updatedDraft?: any) => {
+        const target = updatedDraft || selectedReviewDraft;
+        if (!target) return;
         setError(null);
         try {
-            await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData: { title: selectedReviewDraft.title, content: selectedReviewDraft.content } });
+            await api.updateDraft({ 
+                id: target.id, 
+                action: 'edit', 
+                updateData: { title: target.title, content: target.content } 
+            });
             fetchDrafts();
         } catch (e: any) { setError(e.message); }
     };
