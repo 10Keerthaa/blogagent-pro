@@ -20,16 +20,16 @@ export async function POST(req: Request) {
         const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:streamGenerateContent`;
 
         const aiPrompt = `
-        TASK: Generate a single, highly compelling meta description for this blog post.
+        TASK: Generate a single, highly compelling meta description for a blog post.
         Topic: ${prompt}
-        Keywords: ${keywords || "None"}
-        Primary Keyword: ${primaryKeyword || "None"}
+        Primary Keyword (REQUIRED): ${primaryKeyword || "None"}
+        Supporting Keywords: ${keywords || "None"}
 
-        REQUIREMENTS:
-        - Must be closely related to the Topic and Keywords.
-        - MANDATORY LENGTH: BETWEEN 150 AND 160 CHARACTERS. THIS IS A HARD LIMIT. Count every character including spaces.
-        - INCLUDE THE PRIMARY KEYWORD ("${primaryKeyword || ""}") EXACTLY ONCE.
-        - Return ONLY the description text. No quotes, no intro text, no labels.
+        STRICT REQUIREMENTS — VIOLATING ANY OF THESE IS A FAILURE:
+        1. MAXIMUM 160 CHARACTERS total (including spaces). Do not exceed this under any circumstance.
+        2. You MUST include the exact phrase "${primaryKeyword || ""}" naturally within the text.
+        3. Aim for 150-160 characters but NEVER go over 160.
+        4. Return ONLY the plain description text. No quotes, no labels, no intro phrases, no markdown.
         `;
 
         const response = await client.request({
@@ -54,7 +54,33 @@ export async function POST(req: Request) {
             responseText = data.candidates[0].content.parts[0].text;
         }
 
-        const cleanedDescription = responseText.replace(/[\n\r]/g, '').replace(/\*/g, '').trim();
+        let cleanedDescription = responseText.replace(/[\n\r]/g, '').replace(/\*/g, '').trim();
+
+        // ── Hard-enforce 160-character limit ──────────────────────────────────
+        // If the AI returns more than 160 chars, trim at the last word boundary
+        // that still fits within 160 characters.
+        if (cleanedDescription.length > 160) {
+            const trimmed = cleanedDescription.slice(0, 160);
+            const lastSpace = trimmed.lastIndexOf(' ');
+            cleanedDescription = lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
+            cleanedDescription = cleanedDescription.trim();
+        }
+
+        // ── Ensure primary keyword is present after trimming ──────────────────
+        // If the keyword was cut off, prepend it + a separator and re-trim to 160.
+        if (primaryKeyword && !cleanedDescription.toLowerCase().includes(primaryKeyword.toLowerCase())) {
+            const withKeyword = `${primaryKeyword}: ${cleanedDescription}`;
+            if (withKeyword.length <= 160) {
+                cleanedDescription = withKeyword;
+            } else {
+                // Re-trim the rest of the description so keyword + text = ≤ 160
+                const prefix = `${primaryKeyword}: `;
+                const remaining = cleanedDescription.slice(0, 160 - prefix.length);
+                const lastSpace = remaining.lastIndexOf(' ');
+                cleanedDescription = prefix + (lastSpace > 0 ? remaining.slice(0, lastSpace) : remaining);
+                cleanedDescription = cleanedDescription.trim();
+            }
+        }
 
         return NextResponse.json({ description: cleanedDescription });
     } catch (error: any) {
