@@ -11,7 +11,10 @@ import { Login } from './components/features/Login';
 import { X, XCircle } from 'lucide-react';
 
 const DashboardContent = () => {
-  const { activeTab, error, setError, user } = useDashboard();
+  const { activeTab, error, setError, user, selectedReviewDraft } = useDashboard();
+
+  // Full-screen review: sidebar slides away when a draft is being reviewed
+  const isFullScreenReview = activeTab === 'review' && !!selectedReviewDraft;
 
   if (!user) {
     return <Login />;
@@ -22,11 +25,16 @@ const DashboardContent = () => {
       {/* ELITE LAYOUT SHELL: Centered Max-Width Container */}
       <div className="max-w-[1440px] mx-auto min-h-screen flex flex-col lg:flex-row shadow-2xl shadow-slate-200/50 dark:shadow-none bg-white dark:bg-[#0a0a0a]">
 
-        {/* LEFT PANEL: Sidebar Form (Refined) */}
-        <SidebarForm />
+        {/* LEFT PANEL: Sidebar Form — slides out during full-screen review */}
+        <div
+          className={`transition-all duration-300 ease-in-out overflow-hidden shrink-0
+            ${isFullScreenReview ? 'w-0 opacity-0' : 'w-full lg:w-[40%] opacity-100'}`}
+        >
+          <SidebarForm />
+        </div>
 
-        {/* RIGHT PANEL: Dynamic Workspace (Refined) */}
-        <main className="flex-1 lg:w-[60%] flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900">
+        {/* RIGHT PANEL: Dynamic Workspace — expands to fill when sidebar is hidden */}
+        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-300 ease-in-out`}>
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
 
