@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         const projectId = await auth.getProjectId();
 
         const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
-        const imagePrompt = `A stunning, high-quality photograph representing ${prompt}. The image should be central to the topic, with a professional minimalist aesthetic, elegant lighting, and premium corporate color palette. No text.`;
+        const imagePrompt = `A stunning, high-quality photograph representing ${prompt}. The image MUST BE STRICTLY CLEAN without any text, letters, characters, numbers, signs, or watermarks. NO WORDS OR LABELS. Professional minimalist aesthetic, elegant lighting, and premium corporate color palette. The composition should be clear to serve as a background for text overlays.`;
 
         const response = await client.request({
             url,
