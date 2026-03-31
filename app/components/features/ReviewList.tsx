@@ -78,7 +78,12 @@ export const ReviewList = () => {
             // Detection: Look up the tree for an <a> tag
             const container = range.commonAncestorContainer;
             const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
-            const activeLink = element?.closest('a');
+            
+            // Robust Detection: Check both the container and selection nodes for an <a> tag
+            const activeLink = element?.closest('a') || 
+                             selection.anchorNode?.parentElement?.closest('a') || 
+                             selection.focusNode?.parentElement?.closest('a');
+            
             const isInsideLink = !!activeLink;
 
             setIsLinkActive(isInsideLink);
