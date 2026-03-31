@@ -34,6 +34,7 @@ export const ReviewList = () => {
     const [selectionRect, setSelectionRect] = React.useState<DOMRect | null>(null);
     const [isToolbarVisible, setIsToolbarVisible] = React.useState(false);
     const [isLinkActive, setIsLinkActive] = React.useState(false);
+    const [isEditorFocused, setIsEditorFocused] = React.useState(false);
     const editorRef = React.useRef<HTMLDivElement>(null);
 
     const refinementRef = React.useRef<HTMLDivElement>(null);
@@ -50,7 +51,15 @@ export const ReviewList = () => {
         if (selectedReviewDraft) {
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
-    }, [selectedReviewDraft]);
+    }, [selectedReviewDraft?.id]);
+
+    // Sync HTML content into the editor DOM only when NOT focused
+    // This prevents background updates from 'clobbering' active user edits.
+    React.useEffect(() => {
+        if (!isEditorFocused && editorRef.current && selectedReviewDraft?.content) {
+            editorRef.current.innerHTML = selectedReviewDraft.content;
+        }
+    }, [selectedReviewDraft?.content, isEditorFocused]);
 
     // --- Bulletproof Toolbar Logic ---
     const updateSelectionRect = React.useCallback(() => {
@@ -76,8 +85,9 @@ export const ReviewList = () => {
 
             const rect = range.getBoundingClientRect();
 
-            // NEW CONDITION: Show if text is selected OR if we are just clicking a link
-            if ((rect.width > 0 && !selection.isCollapsed) || isInsideLink) {
+            // Fix: Toolbar ONLY appearing when text is selected (highlighted)
+            // Remove logic that shows it for single clicks on links
+            if (rect.width > 0 && !selection.isCollapsed) {
                 setSelectionRect(rect);
                 setIsToolbarVisible(true);
             } else {
@@ -298,14 +308,15 @@ export const ReviewList = () => {
                             ref={editorRef}
                             contentEditable={!isReadOnly}
                             suppressContentEditableWarning
+                            onFocus={() => setIsEditorFocused(true)}
                             onBlur={(e) => {
+                                setIsEditorFocused(false);
                                 if (isReadOnly || !selectedReviewDraft) return;
                                 const html = e.currentTarget.innerHTML;
                                 const updated = { ...selectedReviewDraft, content: html };
                                 setSelectedReviewDraft(updated);
                                 handleSaveManualEdits(updated);
                             }}
-                            dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }}
                             className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
                             onMouseUp={updateSelectionRect}

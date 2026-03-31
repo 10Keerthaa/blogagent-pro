@@ -61,8 +61,9 @@ export const PostPreview = () => {
 
             const rect = range.getBoundingClientRect();
 
-            // NEW CONDITION: Show if text is selected OR if we are just clicking a link
-            if ((rect.width > 0 && !selection.isCollapsed) || isInsideLink) {
+            // Fix: Toolbar ONLY appearing when text is selected (highlighted)
+            // Remove logic that shows it for single clicks on links
+            if (rect.width > 0 && !selection.isCollapsed) {
                 setSelectionRect(rect);
                 setIsToolbarVisible(true);
             } else {

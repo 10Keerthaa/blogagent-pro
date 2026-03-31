@@ -147,17 +147,18 @@ export const SidebarForm = () => {
                             onChange={(e) => setDescription(e.target.value)}
                             className="min-h-[140px] shadow-sm focus:shadow-md"
                             readOnly={isReadOnly}
+                            maxLength={160}
                         />
                         <div className="flex items-center justify-between mt-2 px-1">
                             <div className="flex items-center gap-3">
                                 {primaryKeyword && (
-                                    <div className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-tight ${displayDescription.toLowerCase().includes(primaryKeyword.toLowerCase()) ? 'text-emerald-500' : 'text-slate-400'}`}>
+                                    <div className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-tight text-slate-400`}>
                                         {displayDescription.toLowerCase().includes(primaryKeyword.toLowerCase()) ? <Check className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
                                         Keyword Presence
                                     </div>
                                 )}
                             </div>
-                            <div className={`text-[10px] font-bold tracking-widest uppercase ${(displayDescription.length >= 150 && displayDescription.length <= 160) ? 'text-emerald-500' : 'text-slate-400'}`}>
+                            <div className={`text-[10px] font-bold tracking-widest uppercase text-slate-400`}>
                                 {displayDescription.length} / 160 <span className="opacity-50 ml-1">CHARS</span>
                             </div>
                         </div>
