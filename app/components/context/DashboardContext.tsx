@@ -209,6 +209,34 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         }).join('');
     }, []);
 
+    const sanitizeMetaDescription = useCallback((text: string, primary: string | null): string => {
+        if (!text) return '';
+        let cleaned = text.replace(/[\n\r]/g, '').replace(/\*/g, '').trim();
+
+        // 1. Hard trim to 160 at word boundary
+        if (cleaned.length > 160) {
+            const trimmed = cleaned.slice(0, 160);
+            const lastSpace = trimmed.lastIndexOf(' ');
+            cleaned = lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
+            cleaned = cleaned.trim();
+        }
+
+        // 2. Ensure primary keyword presence
+        if (primary && !cleaned.toLowerCase().includes(primary.toLowerCase())) {
+            const withKeyword = `${primary}: ${cleaned}`;
+            if (withKeyword.length <= 160) {
+                cleaned = withKeyword;
+            } else {
+                const prefix = `${primary}: `;
+                const remaining = cleaned.slice(0, 160 - prefix.length);
+                const lastSpace = remaining.lastIndexOf(' ');
+                cleaned = prefix + (lastSpace > 0 ? remaining.slice(0, lastSpace) : remaining);
+                cleaned = cleaned.trim();
+            }
+        }
+        return cleaned;
+    }, []);
+
     // --- EFFECTS ---
 
     useEffect(() => {
@@ -308,7 +336,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
 
             let finalTitle = titleMatch ? titleMatch[1].trim() : "";
-            const finalMeta = metaMatch ? metaMatch[1].trim() : "";
+            const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : "", primaryKeyword);
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
 
             finalContent = finalContent.replace(/^<(h1|h2)[^>]*>.*?<\/\1>/i, '').trim();
@@ -366,7 +394,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
             const finalTitle = titleMatch ? titleMatch[1].trim() : (preview?.title || prompt);
-            const finalMeta = metaMatch ? metaMatch[1].trim() : (preview?.meta || "");
+            const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : (preview?.meta || ""), primaryKeyword);
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
             finalContent = applySitemapLinks(finalContent);
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
@@ -390,7 +418,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
             const finalTitle = titleMatch ? titleMatch[1].trim() : (selectedReviewDraft?.title || prompt);
-            const finalMeta = metaMatch ? metaMatch[1].trim() : (selectedReviewDraft?.metaDesc || "");
+            const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : (selectedReviewDraft?.metaDesc || ""), primaryKeyword);
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
             finalContent = applySitemapLinks(finalContent);
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
