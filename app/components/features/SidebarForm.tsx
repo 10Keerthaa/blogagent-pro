@@ -29,7 +29,7 @@ export const SidebarForm = () => {
     const displayDescription = selectedReviewDraft?.metaDesc || description;
 
     return (
-        <aside className="w-full lg:w-[40%] shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
+        <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
             {/* Brand Header */}
             <div className="p-8 border-b border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center gap-3 group cursor-default">
@@ -128,36 +128,22 @@ export const SidebarForm = () => {
                         <button
                             onClick={handleGenerateDescription}
                             disabled={isGeneratingDescription || !prompt || isReadOnly || !primaryKeyword}
-                            className={`text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all ${!primaryKeyword ? 'grayscale' : ''}`}
+                            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
                         >
                             {isGeneratingDescription ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
                             Refine
                         </button>
                     </div>
-                    {!primaryKeyword && !isReadOnly && (
-                        <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2 px-1">
-                            <AlertCircle className="w-3.5 h-3.5" />
-                            Action Locked: Select a primary keyword to enable refinement
-                        </div>
-                    )}
-                    <div className={!primaryKeyword && !isReadOnly ? 'opacity-50 pointer-events-none grayscale' : ''}>
+                    <div>
                         <Textarea
                             placeholder="SEO optimized summary..."
                             value={displayDescription}
                             onChange={(e) => setDescription(e.target.value)}
                             className="min-h-[140px] shadow-sm focus:shadow-md"
                             readOnly={isReadOnly}
-                            maxLength={160}
+                            maxLength={200}
                         />
-                        <div className="flex items-center justify-between mt-2 px-1">
-                            <div className="flex items-center gap-3">
-                                {primaryKeyword && (
-                                    <div className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-tight text-slate-400`}>
-                                        {displayDescription.toLowerCase().includes(primaryKeyword.toLowerCase()) ? <Check className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
-                                        Keyword Presence
-                                    </div>
-                                )}
-                            </div>
+                        <div className="flex items-center justify-end mt-2 px-1">
                             {/* Strict 160-max guard: red only when limit is breached */}
                             <div className={`text-[10px] font-bold tracking-widest uppercase ${displayDescription.length > 160 ? 'text-red-500' : 'text-slate-400'}`}>
                                 {displayDescription.length} / 160 <span className="opacity-50 ml-1">CHARS</span>

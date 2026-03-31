@@ -199,7 +199,7 @@ export const ReviewList = () => {
                 <div className={`animate-fadeIn w-full transition-all duration-300 ${isPreviewOpen ? 'opacity-0 pointer-events-none' : 'space-y-12 pb-24'}`}>
                     {/* Header Actions */}
                     <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 border-b border-slate-100 dark:border-slate-800/50">
-                        <div className="max-w-4xl mx-auto flex items-center justify-between py-8">
+                        <div className="w-full flex items-center justify-between py-8 px-10">
                             <div className="flex items-center gap-6">
                                 <Button
                                     variant="ghost"
@@ -233,7 +233,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="max-w-4xl mx-auto space-y-10 px-4 lg:px-0 relative">
+                    <section className="w-full space-y-10 px-10 relative">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
@@ -359,7 +359,7 @@ export const ReviewList = () => {
                         {selectedReviewDraft.infographicUrl && (
                             <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
                                 <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8 text-center">Visual Insight</h4>
-                                <div className="max-w-4xl mx-auto">
+                                <div className="w-full">
                                     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
                                         <img src={selectedReviewDraft.infographicUrl} alt="Infographic" className="w-full h-auto" />
                                     </div>
@@ -375,11 +375,11 @@ export const ReviewList = () => {
                             ref={refinementRef}
                         >
                             <div className="flex flex-col">
-                                <div className="max-w-4xl mx-auto w-full py-4 px-4 lg:px-0">
+                                <div className="w-full py-4 px-10">
                                     <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-400">AI Refinement</h4>
                                 </div>
                                 {!primaryKeyword && (
-                                    <div className="max-w-4xl mx-auto w-full px-4 lg:px-0 text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2">
+                                    <div className="w-full px-10 text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2">
                                         <AlertCircle className="w-3.5 h-3.5" />
                                         Action Locked: Select a primary keyword to enable refinement
                                     </div>
@@ -391,7 +391,7 @@ export const ReviewList = () => {
                                         placeholder="Inject directives..."
                                         className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
                                     />
-                                    <div className="max-w-4xl mx-auto w-full flex justify-center">
+                                    <div className="w-full flex justify-center px-10">
                                         <Button
                                             variant="secondary"
                                             onClick={handleApplyReviewFeedback}
@@ -408,7 +408,7 @@ export const ReviewList = () => {
                     )}
 
                     {/* Standalone Bottom Actions */}
-                    <div className="max-w-4xl mx-auto pt-0 pb-10 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50">
+                    <div className="w-full pt-10 pb-20 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50 px-10">
                         {!isReadOnly && (
                             <>
                                 <Button
