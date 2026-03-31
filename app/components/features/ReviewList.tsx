@@ -100,7 +100,17 @@ export const ReviewList = () => {
         switch (action) {
             case 'bold': execCommand('bold'); break;
             case 'italic': execCommand('italic'); break;
-            case 'unlink': execCommand('unlink'); break;
+            case 'unlink':
+                if (editorRef.current) {
+                    editorRef.current.focus();
+                    document.execCommand('unlink');
+                    const html = editorRef.current.innerHTML;
+                    setSelectedReviewDraft({ ...selectedReviewDraft, content: html });
+                    // Closure prevents the scroll jump to top that can happen if selection is lost
+                    setIsToolbarVisible(false);
+                    setSelectionRect(null);
+                }
+                break;
             case 'link': {
                 const sel = window.getSelection();
                 if (!sel || sel.isCollapsed || !value) return;

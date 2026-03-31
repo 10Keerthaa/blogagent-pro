@@ -115,7 +115,16 @@ export const PostPreview = () => {
                 return;
 
             case 'unlink':
-                execCommand('unlink');
+                if (editorRef.current) {
+                    editorRef.current.focus();
+                    document.execCommand('unlink');
+                    const linked = editorRef.current.innerHTML;
+                    setPreview((prev: any) => ({ ...prev, content: linked }));
+                    handleAutoSave({ ...preview, content: linked });
+                    // Closure prevents the scroll jump to top that can happen if selection is lost
+                    setIsToolbarVisible(false);
+                    setSelectionRect(null);
+                }
                 return;
 
             // --- 3a. Hyperlink: modern Range API with pastel class ---
@@ -134,9 +143,9 @@ export const PostPreview = () => {
                 // Collapse selection after the link
                 sel.collapseToEnd();
                 // --- 4. State Sync ---
-                const linked = editorRef.current.innerHTML;
-                setPreview((prev: any) => ({ ...prev, content: linked }));
-                handleAutoSave({ ...preview, content: linked });
+                const linkedContent = editorRef.current.innerHTML;
+                setPreview((prev: any) => ({ ...prev, content: linkedContent }));
+                handleAutoSave({ ...preview, content: linkedContent });
                 return;
             }
 
