@@ -196,7 +196,7 @@ export const ReviewList = () => {
     return (
         <div className="relative">
             {selectedReviewDraft ? (
-                <div className={`animate-fadeIn w-full transition-all duration-300 ${isPreviewOpen ? 'opacity-0 pointer-events-none' : 'space-y-12 pb-24'}`}>
+                <div className={`animate-fadeIn w-full transition-all duration-500 ${isPreviewOpen ? 'opacity-0 pointer-events-none' : 'space-y-12 pb-24'}`}>
                     {/* Header Actions */}
                     <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 border-b border-slate-100 dark:border-slate-800/50">
                         <div className="w-full flex items-center justify-between py-8 px-10">
@@ -459,7 +459,7 @@ export const ReviewList = () => {
                     </div>
                 </div>
             ) : (
-                <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-300">
+                <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-500">
                     <div className="flex items-center justify-between mb-2 px-1">
                         <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
                     </div>
@@ -486,7 +486,7 @@ export const ReviewList = () => {
                                         className={`flex items-center justify-between p-4 cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-indigo-50/50 dark:bg-indigo-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                                         onClick={() => handleSelectReviewDraft(draft.id)}
                                     >                                <div className="flex items-center gap-7">
-                                            <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-all duration-300 shadow-sm">
+                                            <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-all duration-500 shadow-sm">
                                                 <FileText className="w-8 h-8 text-indigo-400 group-hover:text-white transition-colors" />
                                             </div>
                                             <div className="space-y-2">
@@ -507,7 +507,7 @@ export const ReviewList = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
+                                        <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
                                             <span className="text-[11px] font-extrabold uppercase tracking-widest text-indigo-500">Launch Review</span>
                                             <ArrowRight className="w-5 h-5 text-indigo-500" />
                                         </div>

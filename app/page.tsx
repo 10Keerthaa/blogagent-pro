@@ -30,17 +30,17 @@ const DashboardContent = () => {
       {/* ELITE LAYOUT SHELL: Centered Max-Width Container */}
       <div className="max-w-[1440px] mx-auto min-h-screen flex flex-col lg:flex-row shadow-2xl shadow-slate-200/50 dark:shadow-none bg-white dark:bg-[#0a0a0a]">
 
-        {/* LEFT PANEL: Sidebar Form — 50:50 mirror split with smooth 300ms transition */}
+        {/* LEFT PANEL: Sidebar Form — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
         <div
-          className={`transition-all duration-300 ease-in-out overflow-hidden shrink-0
-            ${showSidebar ? 'w-full lg:w-1/2 opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
+          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0
+            ${showSidebar ? 'w-full lg:w-[40%] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
         >
           <SidebarForm />
         </div>
 
-        {/* RIGHT PANEL: Dynamic Workspace — 50:50 mirror split with smooth 300ms transition */}
-        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-300 ease-in-out
-          ${showSidebar ? 'lg:w-1/2' : 'w-full'}`}>
+        {/* RIGHT PANEL: Dynamic Workspace — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
+        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-500 ease-in-out
+          ${showSidebar ? 'lg:w-[60%]' : 'w-full'}`}>
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
 

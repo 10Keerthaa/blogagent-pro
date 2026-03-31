@@ -22,7 +22,7 @@ export const HistoryList = () => {
                     </div>
                     <button 
                         onClick={() => handleSelectHistoryItem(null)}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold uppercase tracking-widest hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 transition-all duration-300 shadow-sm"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold uppercase tracking-widest hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 transition-all duration-500 shadow-sm"
                     >
                         <Globe className="w-4 h-4" />
                         Return to archives
@@ -97,7 +97,7 @@ export const HistoryList = () => {
     }
 
     return (
-        <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-300">
+        <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-500">
             <div className="flex items-center justify-between mb-2 px-1">
                 <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">
                     Production History ({history.length})
@@ -112,11 +112,11 @@ export const HistoryList = () => {
                                 key={idx}
                                 hoverable
                                 onClick={() => handleSelectHistoryItem(item)}
-                                className="p-8 group border-slate-200 dark:border-slate-800 border-l-4 border-l-transparent hover:border-l-indigo-500 transition-all duration-300 shadow-sm cursor-pointer"
+                                className="p-8 group border-slate-200 dark:border-slate-800 border-l-4 border-l-transparent hover:border-l-indigo-500 transition-all duration-500 shadow-sm cursor-pointer"
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-7">
-                                        <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 transition-all duration-300 shadow-sm">
+                                        <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 transition-all duration-500 shadow-sm">
                                             <Globe className="w-8 h-8 text-indigo-500 group-hover:text-white transition-colors" />
                                         </div>
                                         <div className="space-y-2">
@@ -137,7 +137,7 @@ export const HistoryList = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={(e) => e.stopPropagation()}
-                                        className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 transition-all text-slate-400 shadow-sm opacity-0 group-hover:opacity-100 duration-300 -translate-x-4 group-hover:translate-x-0"
+                                        className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 transition-all text-slate-400 shadow-sm opacity-0 group-hover:opacity-100 duration-500 -translate-x-4 group-hover:translate-x-0"
                                         title="View published article"
                                     >
                                         <ExternalLink className="w-5 h-5" />
