@@ -25,6 +25,9 @@ interface DashboardContextType {
     selectedReviewDraft: any | null;
     setSelectedReviewDraft: (v: any | null) => void;
     history: any[];
+    selectedHistoryItem: any | null;
+    setSelectedHistoryItem: (v: any | null) => void;
+    handleSelectHistoryItem: (item: any) => void;
     error: string | null;
     setError: (v: string | null) => void;
     isGenerating: boolean;
@@ -86,6 +89,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [reviewDrafts, setReviewDrafts] = useState<any[]>([]);
     const [selectedReviewDraft, setSelectedReviewDraft] = useState<any>(null);
     const [history, setHistory] = useState<any[]>([]);
+    const [selectedHistoryItem, setSelectedHistoryItem] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
     const [infographicUrl, setInfographicUrl] = useState<string | null>(null);
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
@@ -283,6 +287,19 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             setPrimaryKeyword(selectedReviewDraft.primaryKeyword || null);
         }
     }, [selectedReviewDraft]);
+
+    useEffect(() => {
+        if (selectedHistoryItem) {
+            setPrompt(selectedHistoryItem.prompt || '');
+            const kw = selectedHistoryItem.keywords;
+            if (Array.isArray(kw)) setKeywords(kw);
+            else if (typeof kw === 'string' && kw.trim()) setKeywords(kw.split(',').map(s => s.trim()).filter(Boolean));
+            else setKeywords([]);
+            setDescription(selectedHistoryItem.metaDesc || '');
+            setInfographicUrl(selectedHistoryItem.infographicUrl || null);
+            setPrimaryKeyword(selectedHistoryItem.primaryKeyword || null);
+        }
+    }, [selectedHistoryItem]);
 
     // --- HANDLERS ---
 
@@ -520,8 +537,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         } catch (e: any) { setError("Failed to load post details"); } finally { setIsFetchingDraftDetails(false); }
     };
 
+    const handleSelectHistoryItem = (item: any) => {
+        setSelectedHistoryItem(item);
+    };
+
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, error, setError, isGenerating: api.isGenerating, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
