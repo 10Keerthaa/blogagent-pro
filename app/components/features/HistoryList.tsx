@@ -9,47 +9,118 @@ import { Globe, Calendar, ExternalLink } from 'lucide-react';
 export const HistoryList = () => {
     const { history, handleSelectHistoryItem, selectedHistoryItem } = useDashboard();
 
-    // If an item is selected, we show a simplified "Back" experience or just keep the list?
-    // User wants the sidebar to slide in when selected.
-    
+    if (selectedHistoryItem) {
+        return (
+            <div className="animate-fadeIn max-w-5xl mx-auto w-full pb-20 space-y-10">
+                {/* Header with Return Button */}
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-6 mb-8">
+                    <div className="space-y-1">
+                        <Badge variant="success" className="mb-2">Published Archive</Badge>
+                        <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                            {selectedHistoryItem.title}
+                        </h2>
+                    </div>
+                    <button 
+                        onClick={() => handleSelectHistoryItem(null)}
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold uppercase tracking-widest hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 transition-all duration-300 shadow-sm"
+                    >
+                        <Globe className="w-4 h-4" />
+                        Return to archives
+                    </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-10">
+                    {/* Meta Info Section (Read Only) */}
+                    <section className="space-y-6">
+                        <div className="p-8 rounded-[2.5rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-6">Article Metadata</h3>
+                            <div className="space-y-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-4">
+                                    {selectedHistoryItem.primaryKeyword && (
+                                        <div>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Primary Keyword</p>
+                                            <p className="text-slate-900 dark:text-white">{selectedHistoryItem.primaryKeyword}</p>
+                                        </div>
+                                    )}
+                                    {selectedHistoryItem.date && (
+                                        <div>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Publication Date</p>
+                                            <p className="text-slate-900 dark:text-white">{new Date(selectedHistoryItem.date).toLocaleDateString()}</p>
+                                        </div>
+                                    )}
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-2">Meta Description</p>
+                                    <div className="p-4 rounded-2xl bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 text-slate-500 italic">
+                                        {selectedHistoryItem.metaDesc || "No meta description provided."}
+                                    </div>
+                                </div>
+                                {selectedHistoryItem.url && (
+                                    <div className="pt-4 border-t border-slate-100 dark:border-slate-800 mt-4">
+                                        <a 
+                                            href={selectedHistoryItem.url} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 text-indigo-500 hover:text-indigo-600 font-bold transition-colors"
+                                        >
+                                            View Live Article <ExternalLink className="w-4 h-4" />
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Featured Image Section */}
+                    {selectedHistoryItem.imageUrl && (
+                        <Card className="overflow-hidden border-none shadow-2xl">
+                             <img 
+                                src={selectedHistoryItem.imageUrl} 
+                                alt={selectedHistoryItem.title} 
+                                className="w-full aspect-[21/9] object-cover"
+                             />
+                        </Card>
+                    )}
+
+                    {/* Content Section */}
+                    <section className="prose prose-slate dark:prose-invert max-w-none">
+                        <Card className="p-12 md:p-16 border-slate-100 dark:border-slate-800 shadow-xl bg-white dark:bg-[#0d0d0d]">
+                            <div 
+                                className="blog-content-view text-slate-700 dark:text-slate-300 leading-loose"
+                                dangerouslySetInnerHTML={{ __html: selectedHistoryItem.content || '<p class="text-slate-400 italic">Historical content body not found in cache.</p>' }}
+                            />
+                        </Card>
+                    </section>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-300">
             <div className="flex items-center justify-between mb-2 px-1">
                 <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">
-                    {selectedHistoryItem ? 'Selection Protocol' : `Production History (${history.length})`}
+                    Production History ({history.length})
                 </h2>
-                {selectedHistoryItem && (
-                    <button 
-                        onClick={() => handleSelectHistoryItem(null)}
-                        className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest hover:text-indigo-600 transition-colors"
-                    >
-                        Return to Archives
-                    </button>
-                )}
             </div>
 
             <div className="grid grid-cols-1 gap-6">
                 {history.length > 0 ? (
                     history.map((item, idx) => {
-                        const isSelected = selectedHistoryItem?.id === item.id || (selectedHistoryItem?.title === item.title && selectedHistoryItem?.date === item.date);
-                        
                         return (
                             <Card
                                 key={idx}
                                 hoverable
                                 onClick={() => handleSelectHistoryItem(item)}
-                                className={`p-8 group border-slate-200 dark:border-slate-800 border-l-4 transition-all duration-300 shadow-sm cursor-pointer
-                                    ${isSelected ? 'border-l-indigo-500 bg-indigo-50/10 dark:bg-indigo-900/5' : 'border-l-transparent hover:border-l-indigo-500'}`}
+                                className="p-8 group border-slate-200 dark:border-slate-800 border-l-4 border-l-transparent hover:border-l-indigo-500 transition-all duration-300 shadow-sm cursor-pointer"
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-7">
-                                        <div className={`w-16 h-16 rounded-[1.25rem] border transition-all duration-300 shadow-sm flex items-center justify-center
-                                            ${isSelected ? 'bg-indigo-600 border-indigo-600' : 'bg-indigo-50/50 dark:bg-indigo-950/20 border-indigo-100/50 dark:border-indigo-900/50 group-hover:bg-indigo-600 group-hover:border-indigo-600'}`}>
-                                            <Globe className={`w-8 h-8 transition-colors ${isSelected ? 'text-white' : 'text-indigo-500 group-hover:text-white'}`} />
+                                        <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 transition-all duration-300 shadow-sm">
+                                            <Globe className="w-8 h-8 text-indigo-500 group-hover:text-white transition-colors" />
                                         </div>
                                         <div className="space-y-2">
-                                            <h3 className={`text-base font-bold transition-colors tracking-tight leading-tight
-                                                ${isSelected ? 'text-indigo-600' : 'text-slate-900 dark:text-white group-hover:text-indigo-600'}`}>
+                                            <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors tracking-tight leading-tight">
                                                 {item.title}
                                             </h3>
                                             <div className="flex items-center gap-6">
@@ -61,18 +132,16 @@ export const HistoryList = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    {!isSelected && (
-                                        <a
-                                            href={item.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
-                                            className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 transition-all text-slate-400 shadow-sm opacity-0 group-hover:opacity-100 duration-300 -translate-x-4 group-hover:translate-x-0"
-                                            title="View published article"
-                                        >
-                                            <ExternalLink className="w-5 h-5" />
-                                        </a>
-                                    )}
+                                    <a
+                                        href={item.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 transition-all text-slate-400 shadow-sm opacity-0 group-hover:opacity-100 duration-300 -translate-x-4 group-hover:translate-x-0"
+                                        title="View published article"
+                                    >
+                                        <ExternalLink className="w-5 h-5" />
+                                    </a>
                                 </div>
                             </Card>
                         );

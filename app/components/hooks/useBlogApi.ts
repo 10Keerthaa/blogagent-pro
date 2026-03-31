@@ -367,6 +367,7 @@ export const useBlogApi = () => {
         fetchAdminReport,
         isFetchingDraftDetails,
         setIsFetchingDraftDetails,
-        refineSelection
+        refineSelection,
+        mapSupabaseToDraft
     };
 };

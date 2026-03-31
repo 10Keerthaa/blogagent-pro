@@ -11,17 +11,15 @@ import { Login } from './components/features/Login';
 import { X, XCircle } from 'lucide-react';
 
 const DashboardContent = () => {
-  const { activeTab, error, setError, user, selectedReviewDraft, selectedHistoryItem } = useDashboard();
+  const { activeTab, error, setError, user, selectedReviewDraft } = useDashboard();
 
   // Sidebar visibility rule:
   // Show only on the 'create' tab (where the form is needed)
   // OR when a review draft is actively open
-  // OR when a history item is selected
-  // Hidden on bare review list & history tab — List-First experience
+  // Hidden on bare review list & history tab (History is always full screen) — List-First experience
   const showSidebar = 
     activeTab === 'create' || 
-    (activeTab === 'review' && !!selectedReviewDraft) || 
-    (activeTab === 'history' && !!selectedHistoryItem);
+    (activeTab === 'review' && !!selectedReviewDraft);
 
   if (!user) {
     return <Login />;
@@ -32,16 +30,16 @@ const DashboardContent = () => {
       {/* ELITE LAYOUT SHELL: Centered Max-Width Container */}
       <div className="max-w-[1440px] mx-auto min-h-screen flex flex-col lg:flex-row shadow-2xl shadow-slate-200/50 dark:shadow-none bg-white dark:bg-[#0a0a0a]">
 
-        {/* LEFT PANEL: Sidebar Form — 50:50 split with smooth 500ms transition */}
+        {/* LEFT PANEL: Sidebar Form — 50:50 split with smooth 300ms transition */}
         <div
-          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0
+          className={`transition-all duration-300 ease-in-out overflow-hidden shrink-0
             ${showSidebar ? 'w-full lg:w-[50%] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
         >
           <SidebarForm />
         </div>
 
-        {/* RIGHT PANEL: Dynamic Workspace — 50:50 split with smooth 500ms transition */}
-        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-500 ease-in-out
+        {/* RIGHT PANEL: Dynamic Workspace — 50:50 split with smooth 300ms transition */}
+        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-300 ease-in-out
           ${showSidebar ? 'lg:w-[50%]' : 'w-full'}`}>
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />

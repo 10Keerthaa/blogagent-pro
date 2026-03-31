@@ -537,8 +537,36 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         } catch (e: any) { setError("Failed to load post details"); } finally { setIsFetchingDraftDetails(false); }
     };
 
-    const handleSelectHistoryItem = (item: any) => {
-        setSelectedHistoryItem(item);
+    const handleSelectHistoryItem = async (item: any) => {
+        if (!item) {
+            setSelectedHistoryItem(null);
+            return;
+        }
+        
+        setIsFetchingDraftDetails(true);
+        try {
+            // Find the post in Supabase by title (published posts)
+            const { data, error } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('title', item.title)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+            
+            if (data) {
+                const draft = api.mapSupabaseToDraft(data);
+                setSelectedHistoryItem(draft);
+            } else {
+                // Fallback to the partial item from the list
+                setSelectedHistoryItem(item);
+            }
+        } catch (e) {
+            console.error("Failed to fetch history details:", e);
+            setSelectedHistoryItem(item);
+        } finally {
+            setIsFetchingDraftDetails(false);
+        }
     };
 
     const value = {
