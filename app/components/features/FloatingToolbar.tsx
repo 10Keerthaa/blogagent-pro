@@ -123,7 +123,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                 <>
                     {/* --- Formatting Buttons --- */}
                     <button
-                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => onAction('bold')}
                         className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
                         title="Bold (Ctrl+B)"
@@ -131,7 +131,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                         <Bold className="w-4 h-4" />
                     </button>
                     <button
-                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => onAction('italic')}
                         className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
                         title="Italic (Ctrl+I)"
@@ -139,7 +139,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                         <Italic className="w-4 h-4" />
                     </button>
                     <button
-                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => setShowLinkInput(true)}
                         className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
                         title="Add Link"
@@ -167,7 +167,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
 
                     {/* --- AI Action: Rephrase --- */}
                     <button
-                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => handleAiAction('rephrase')}
                         className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-lg transition-colors group flex items-center gap-2 disabled:opacity-50"
                         title="AI Re-phrase"
@@ -185,7 +185,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
 
                     {/* --- AI Action: Shorten --- */}
                     <button
-                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => handleAiAction('shorten')}
                         className="p-2 hover:bg-amber-50 dark:hover:bg-amber-950/20 rounded-lg transition-colors group flex items-center gap-1 disabled:opacity-50"
                         title="Shorten"
@@ -203,7 +203,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
 
                     {/* --- AI Action: Expand --- */}
                     <button
-                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => handleAiAction('expand')}
                         className="p-2 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 rounded-lg transition-colors group flex items-center gap-1 disabled:opacity-50"
                         title="Expand"
@@ -222,7 +222,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1" />
 
                     <button
-                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={onClose}
                         className="p-2 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors group"
                         title="Close"

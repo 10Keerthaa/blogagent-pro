@@ -104,13 +104,17 @@ export const ReviewList = () => {
             case 'italic': execCommand('italic'); break;
             case 'unlink':
                 if (editorRef.current && selectedReviewDraft) {
+                    // Restore focus just in case, though preventDefault should handle it
                     editorRef.current.focus();
-                    document.execCommand('unlink');
-                    const updatedHtml = editorRef.current.innerHTML;
-                    const updatedDraft = { ...selectedReviewDraft, content: updatedHtml };
+                    document.execCommand('unlink', false, undefined);
+
+                    // Capture and Sync
+                    const latestHtml = editorRef.current.innerHTML;
+                    const updatedDraft = { ...selectedReviewDraft, content: latestHtml };
                     setSelectedReviewDraft(updatedDraft);
                     handleSaveManualEdits(updatedDraft);
-                    // Closure prevents the scroll jump to top that can happen if selection is lost
+
+                    // Reset UI state to close toolbar smoothly
                     setIsToolbarVisible(false);
                     setSelectionRect(null);
                 }

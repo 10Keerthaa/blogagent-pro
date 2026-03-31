@@ -117,17 +117,21 @@ export const PostPreview = () => {
 
             case 'unlink':
                 if (editorRef.current && preview) {
+                    // Restore focus just in case, though preventDefault should handle it
                     editorRef.current.focus();
-                    document.execCommand('unlink');
-                    const linked = editorRef.current.innerHTML;
-                    const updatedPreview = { ...preview, content: linked };
-                    setPreview(updatedPreview);
-                    handleAutoSave(updatedPreview);
-                    // Closure prevents the scroll jump to top that can happen if selection is lost
+                    document.execCommand('unlink', false, undefined);
+
+                    // Capture and Sync
+                    const latestHtml = editorRef.current.innerHTML;
+                    const updatedObj = { ...preview, content: latestHtml };
+                    setPreview(updatedObj);
+                    handleAutoSave(updatedObj);
+
+                    // Reset UI state to close toolbar smoothly
                     setIsToolbarVisible(false);
                     setSelectionRect(null);
                 }
-                return;
+                break;
 
             // --- 3a. Hyperlink: modern Range API with pastel class ---
             case 'link': {
