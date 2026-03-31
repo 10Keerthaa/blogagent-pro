@@ -13,8 +13,11 @@ import { X, XCircle } from 'lucide-react';
 const DashboardContent = () => {
   const { activeTab, error, setError, user, selectedReviewDraft } = useDashboard();
 
-  // Full-screen review: sidebar slides away when a draft is being reviewed
-  const isFullScreenReview = activeTab === 'review' && !!selectedReviewDraft;
+  // Sidebar visibility rule:
+  // Show only on the 'create' tab (where the form is needed)
+  // OR when a review draft is actively open (so Topic/Keyword/Desc slide in alongside it)
+  // Hidden on bare review list & history tab — List-First experience
+  const showSidebar = activeTab === 'create' || (activeTab === 'review' && !!selectedReviewDraft);
 
   if (!user) {
     return <Login />;
@@ -25,10 +28,10 @@ const DashboardContent = () => {
       {/* ELITE LAYOUT SHELL: Centered Max-Width Container */}
       <div className="max-w-[1440px] mx-auto min-h-screen flex flex-col lg:flex-row shadow-2xl shadow-slate-200/50 dark:shadow-none bg-white dark:bg-[#0a0a0a]">
 
-        {/* LEFT PANEL: Sidebar Form — slides out during full-screen review */}
+        {/* LEFT PANEL: Sidebar Form — visible only on create tab or when reviewing a selected draft */}
         <div
           className={`transition-all duration-300 ease-in-out overflow-hidden shrink-0
-            ${isFullScreenReview ? 'w-0 opacity-0' : 'w-full lg:w-[40%] opacity-100'}`}
+            ${showSidebar ? 'w-full lg:w-[40%] opacity-100' : 'w-0 opacity-0'}`}
         >
           <SidebarForm />
         </div>
