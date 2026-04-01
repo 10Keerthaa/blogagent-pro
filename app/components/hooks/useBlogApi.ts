@@ -301,6 +301,7 @@ export const useBlogApi = () => {
                 primaryKeyword: data.primaryKeyword || null,
                 infographicUrl: data.infographicUrl || data.infographic_url || null,
                 wpUrl: data.wpUrl || data.wp_url || null,
+                user_email: data.user_email || data.authorEmail || null,
                 last_edited_at: serverTimestamp()
             };
 

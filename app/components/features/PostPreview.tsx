@@ -91,6 +91,7 @@ export const PostPreview = () => {
             primaryKeyword: primaryKeyword,
             status: 'in_progress',
             created_by: user.uid,
+            authorEmail: user.email,
             prompt: mainTopic || updatedPreview.prompt || '',
             keywords: keywords.length > 0 ? keywords : (updatedPreview.keywords || [])
         });
@@ -392,6 +393,7 @@ export const PostPreview = () => {
                                     metaDesc: description || preview.meta || "",
                                     status: 'review',
                                     created_by: user.uid,
+                                    authorEmail: user.email,
                                     prompt: mainTopic || preview.prompt || '',
                                     keywords: keywords.length > 0 ? keywords : (preview.keywords || []),
                                     primaryKeyword: primaryKeyword

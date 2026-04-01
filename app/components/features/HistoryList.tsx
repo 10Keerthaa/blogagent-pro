@@ -129,6 +129,11 @@ export const HistoryList = () => {
                                                     {new Date(item.date).toLocaleDateString()}
                                                 </span>
                                                 <Badge variant="success" className="px-3">Published</Badge>
+                                                {item.authorEmail && (
+                                                    <span className="text-[10px] font-medium text-emerald-600/70 dark:text-emerald-400/50 lowercase italic">
+                                                        by {item.authorEmail}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
