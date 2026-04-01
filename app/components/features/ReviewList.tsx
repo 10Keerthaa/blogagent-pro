@@ -399,7 +399,7 @@ export const ReviewList = () => {
                                             disabled={!feedback || !primaryKeyword}
                                             className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm"
                                         >
-                                            Apply Refinement
+                                            {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply Refinement'}
                                         </Button>
                                     </div>
                                 </div>

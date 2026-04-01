@@ -4,29 +4,32 @@ import { db } from "@/lib/firebaseAdmin";
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { title, content, metaDesc, imageUrl, infographicUrl, prompt, keywords } = body;
+        const { title, content, metaDesc, imageUrl, infographicUrl, prompt, keywords, primaryKeyword, createdBy } = body;
 
         if (!title || !content) {
             return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
         }
 
-        const draftRef = db.collection('drafts').doc();
+        // Standardized collection: blog_posts
+        const postRef = db.collection('blog_posts').doc();
         const payload = {
             title,
-            content,
+            body: content, // Standardized field name
             metaDesc: metaDesc || '',
             imageUrl: imageUrl || '',
             infographicUrl: infographicUrl || '',
             prompt: prompt || '',
             keywords: keywords || [],
-            status: 'pending',
-            createdAt: Date.now(),
-            author: 'User'
+            primaryKeyword: primaryKeyword || '',
+            status: 'review', // Default status for review tab
+            createdAt: new Date().toISOString(),
+            last_edited_at: new Date().toISOString(),
+            created_by: createdBy || 'anonymous'
         };
 
-        await draftRef.set(payload);
+        await postRef.set(payload);
 
-        return NextResponse.json({ success: true, id: draftRef.id, payload });
+        return NextResponse.json({ success: true, id: postRef.id, payload });
     } catch (error: any) {
         console.error("Save Draft Error:", error);
         return NextResponse.json({

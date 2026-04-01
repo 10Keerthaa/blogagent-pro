@@ -2,8 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useBlogApi } from '../hooks/useBlogApi';
-import { supabase } from '../../../lib/supabase';
-import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
+import { auth, db } from '../../lib/firebase';
+import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 interface DashboardContextType {
     prompt: string;
@@ -44,7 +45,7 @@ interface DashboardContextType {
     isFetchingKeywords: boolean;
     primaryKeyword: string | null;
     setPrimaryKeyword: (v: string | null) => void;
-    user: User | null;
+    user: FirebaseUser | null;
     role: 'admin' | 'editor' | null;
     handleLogout: () => Promise<void>;
 
@@ -96,11 +97,11 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
     const [isResuming, setIsResuming] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<FirebaseUser | null>(null);
     const [role, setRole] = useState<'admin' | 'editor' | null>(null);
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
 
-    // --- HELPER FUNCTIONS (DEFINED BEFORE USE) ---
+    // --- HELPER FUNCTIONS ---
 
     const resetEditorState = useCallback(() => {
         setPrompt('');
@@ -114,23 +115,17 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchUserRole = useCallback(async (userId: string) => {
         try {
-            console.log('🔍 Fetching role for user:', userId);
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', userId)
-                .single();
+            console.log('🔍 Fetching role for user from Firestore:', userId);
+            const docRef = doc(db, 'user_profiles', userId);
+            const docSnap = await getDoc(docRef);
             
-            if (error) {
-                console.error('❌ Role Fetch Error:', error.message);
-                return;
-            }
-
-            if (data) {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
                 console.log('✅ Role Found:', data.role);
                 setRole(data.role as 'admin' | 'editor');
             } else {
-                console.warn('⚠️ No role data returned for user');
+                console.warn('⚠️ No role data returned for user in user_profiles');
+                setRole('editor');
             }
         } catch (err) { 
             console.error('💥 Critical Error in fetchUserRole:', err); 
@@ -159,7 +154,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     }, [apiFetchDrafts]);
 
     const handleLogout = async () => {
-        await supabase.auth.signOut();
+        await signOut(auth);
         resetEditorState();
         setActiveTab('create');
     };
@@ -217,7 +212,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!text) return '';
         let cleaned = text.replace(/[\n\r]/g, '').replace(/\*/g, '').trim();
 
-        // 1. Hard trim to 160 at word boundary
         if (cleaned.length > 160) {
             const trimmed = cleaned.slice(0, 160);
             const lastSpace = trimmed.lastIndexOf(' ');
@@ -225,7 +219,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             cleaned = cleaned.trim();
         }
 
-        // 2. Ensure primary keyword presence
         if (primary && !cleaned.toLowerCase().includes(primary.toLowerCase())) {
             const withKeyword = `${primary}: ${cleaned}`;
             if (withKeyword.length <= 160) {
@@ -244,21 +237,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     // --- EFFECTS ---
 
     useEffect(() => {
-        // Initial session check
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null);
-            if (session?.user) {
-                fetchUserRole(session.user.id);
-                fetchHistory();
-                fetchSitemap();
-                fetchDrafts();
-            }
-        });
-
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-            if (session?.user) {
-                fetchUserRole(session.user.id);
+        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+            setUser(firebaseUser);
+            if (firebaseUser) {
+                fetchUserRole(firebaseUser.uid);
                 fetchHistory();
                 fetchSitemap();
                 fetchDrafts();
@@ -266,7 +248,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 setRole(null);
             }
         });
-        return () => subscription.unsubscribe();
+
+        return () => unsubscribe();
     }, [fetchUserRole, fetchHistory, fetchSitemap, fetchDrafts]);
 
     useEffect(() => {
@@ -480,7 +463,15 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const handleApproveDraft = async (draft: any) => {
         setError(null);
         try {
-            const pubData = await api.publishToWordPress({ title: draft.title, content: draft.content, metaDesc: draft.metaDesc, imageUrl: draft.imageUrl, infographicUrl: draft.infographicUrl, slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '') });
+            const pubData = await api.publishToWordPress({ 
+                id: draft.id, // Pass ID for status update
+                title: draft.title, 
+                content: draft.content, 
+                metaDesc: draft.metaDesc, 
+                imageUrl: draft.imageUrl, 
+                infographicUrl: draft.infographicUrl, 
+                slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '') 
+            });
             await api.updateDraft({ id: draft.id, action: 'publish', wpUrl: pubData.url });
             setSelectedReviewDraft(null); fetchDrafts(); fetchHistory(); setActiveTab('history');
         } catch (e: any) { setError(e.message); }
@@ -499,7 +490,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!user) return;
         setIsResuming(true); setError(null);
         try {
-            const draft = await api.fetchLastInProgressDraft(user.id);
+            const draft = await api.fetchLastInProgressDraft(user.uid);
             if (draft) {
                 setPreview({ title: draft.title, content: draft.content, imageUrl: draft.imageUrl, infographicUrl: draft.infographicUrl });
                 setPrompt(draft.prompt || ''); setDescription(draft.metaDesc || '');
@@ -545,20 +536,13 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         
         setIsFetchingDraftDetails(true);
         try {
-            // Find the post in Supabase by title (published posts)
-            const { data, error } = await supabase
-                .from('posts')
-                .select('*')
-                .eq('title', item.title)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .single();
+            const docRef = doc(db, 'blog_posts', item.id);
+            const docSnap = await getDoc(docRef);
             
-            if (data) {
-                const draft = api.mapSupabaseToDraft(data);
+            if (docSnap.exists()) {
+                const draft = { id: docSnap.id, ...docSnap.data() };
                 setSelectedHistoryItem(draft);
             } else {
-                // Fallback to the partial item from the list
                 setSelectedHistoryItem(item);
             }
         } catch (e) {

@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { supabase } from '../../../lib/supabase';
+import { auth, db } from '../../lib/firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { Button } from '../ui/Button';
 import { Sparkles, Lock, Mail, Zap } from 'lucide-react';
 
@@ -22,25 +24,25 @@ export const Login = () => {
 
         try {
             if (isSignUp) {
-                // SIGN UP FLOW
-                const { error: signUpError } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        data: {
-                            full_name: fullName,
-                        }
-                    }
+                // SIGN UP FLOW: Firebase
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Set Profile Data
+                await updateProfile(user, { displayName: fullName });
+                
+                // Create user profile in Firestore
+                await setDoc(doc(db, 'user_profiles', user.uid), {
+                    full_name: fullName,
+                    email: email,
+                    role: 'editor', // Default role for new signups
+                    created_at: new Date().toISOString()
                 });
-                if (signUpError) {
-                    setError(signUpError.message);
-                } else {
-                    setSignUpSuccess(true);
-                }
+
+                setSignUpSuccess(true);
             } else {
-                // LOGIN FLOW
-                const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
-                if (loginError) setError(loginError.message);
+                // LOGIN FLOW: Firebase
+                await signInWithEmailAndPassword(auth, email, password);
             }
         } catch (err: any) {
             setError(err.message);

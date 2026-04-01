@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-import fs from 'fs/promises';
-import path from 'path';
+import { db } from "@/lib/firebaseAdmin";
 
 export async function POST(req: Request) {
   try {
-    const { title, content, metaDesc, imageUrl, infographicUrl } = await req.json();
+    const { id, title, content, metaDesc, imageUrl, infographicUrl } = await req.json();
 
     let wpUrl = process.env.WORDPRESS_URL || '';
     if (wpUrl.endsWith('/')) wpUrl = wpUrl.slice(0, -1);
@@ -27,12 +26,6 @@ export async function POST(req: Request) {
       'Accept-Language': 'en-US,en;q=0.9',
     };
 
-    /**
-     * FIREWALL BYPASS STRATEGY: 
-     * We use short GCS URLs instead of massive Base64 strings.
-     * This keeps the payload lightweight and safe for Sucuri Firewall.
-     */
-
     let finalContent = "";
 
     // 1. Embed Featured Image at the top with Overlays
@@ -41,7 +34,6 @@ export async function POST(req: Request) {
       const blogTagUrl = `${origin}/Blog.png`;
       const logoUrl = `${origin}/10xDS.png`;
 
-      // Split title for overlay formatting (10xDS Brand Standard)
       const titleParts = title.split(':');
       const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
       const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
@@ -49,32 +41,21 @@ export async function POST(req: Request) {
       finalContent += `
       <div class="featured-image-wrapper" style="position: relative; margin-bottom: 40px; overflow: hidden; border-radius: 0;">
         <img src="${imageUrl}" alt="${title}" style="width: 100%; height: auto; display: block; object-fit: cover; max-height: 580px;" />
-        
-        <!-- Purple Overlay Tint (#7E57C2) -->
         <div style="position: absolute; inset: 0; background-color: rgba(126, 87, 194, 0.45); z-index: 1; pointer-events: none;"></div>
-        
-        <!-- Overlays -->
         <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none;">
-          <!-- Blog Tag (Top-Left 40px) -->
           <img src="${blogTagUrl}" alt="Blog" style="position: absolute; top: 40px; left: 40px; height: 40px; width: auto;" />
-          
-          <!-- Title Group (40px Left, 100px Top) -->
           <div style="position: absolute; top: 100px; left: 40px; color: #ffffff; max-width: 85%; font-family: sans-serif; line-height: 1.3;">
              <h1 style="font-size: 56px; font-weight: 700; margin: 0; padding: 0; line-height: 1.3; text-shadow: 0 4px 20px rgba(0,0,0,0.4);">${mainTitle}</h1>
              ${subtitle ? `<p style="font-size: 44px; font-weight: 400; margin: 0; padding: 0; line-height: 1.3; opacity: 0.95; text-shadow: 0 4px 15px rgba(0,0,0,0.3);">${subtitle}</p>` : ''}
           </div>
-          
-          <!-- Logo (Bottom-Right 40px) -->
           <img src="${logoUrl}" alt="10xDS" style="position: absolute; bottom: 40px; right: 40px; height: 56px; width: auto;" />
         </div>
       </div>
       `;
     }
 
-    // 2. Add the main content
     finalContent += content;
 
-    // 3. Embed Infographic at the bottom
     if (infographicUrl) {
       finalContent += `<hr style="margin: 40px 0;" />
       <div class="visual-summary-container" style="text-align: center; padding: 20px 0;">
@@ -107,21 +88,18 @@ export async function POST(req: Request) {
 
     const postData = await postResponse.json();
 
-    // RESTORED: Log the Publication for the History Tab
-    try {
-      const logsDir = path.resolve(process.cwd(), 'logs');
-      const logFile = path.resolve(logsDir, 'publications.json');
-      await fs.mkdir(logsDir, { recursive: true });
-      let history = [];
-      try {
-        const fileContent = await fs.readFile(logFile, 'utf8');
-        history = JSON.parse(fileContent);
-      } catch (e) { }
-      history.unshift({ title, url: postData.link, date: new Date().toISOString(), id: postData.id });
-      await fs.writeFile(logFile, JSON.stringify(history.slice(0, 100), null, 2));
-      console.log(`Publication logged successfully to ${logFile}. Total entries: ${history.length}`);
-    } catch (logErr) {
-      console.error("Failed to log publication:", logErr);
+    // UPDATE FIRESTORE: Mark as published
+    if (id) {
+        try {
+            await db.collection('blog_posts').doc(id).update({
+                status: 'published',
+                wpUrl: postData.link,
+                last_edited_at: new Date().toISOString()
+            });
+            console.log(`✅ Firestore updated: Post ${id} marked as published.`);
+        } catch (dbErr) {
+            console.error("⚠️ Failed to update Firestore status after publish:", dbErr);
+        }
     }
 
     return NextResponse.json({
@@ -132,7 +110,6 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error("WordPress Publish Error:", error.message);
-
     return NextResponse.json({
       error: "Publishing Failed",
       details: error.message || String(error)

@@ -12,6 +12,31 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
+    // --- NEW: URL Crawling Logic ---
+    let learnedContext = "";
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urls = (feedback || prompt).match(urlRegex);
+
+    if (urls && urls.length > 0) {
+      try {
+        const targetUrl = urls[0];
+        const res = await fetch(targetUrl, { signal: AbortSignal.timeout(10000) }); // 10s timeout
+        if (res.ok) {
+          const html = await res.text();
+          // Lightweight HTML-to-Text extraction
+          learnedContext = html
+            .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "")
+            .replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gim, "")
+            .replace(/<[^>]+>/g, " ")
+            .replace(/\s+/g, " ")
+            .trim()
+            .slice(0, 10000); // Limit to 10k chars for prompt safety
+        }
+      } catch (err) {
+        console.error("URL Crawling Failed:", err);
+      }
+    }
+
     // Authenticate with Vertex AI
     const auth = await getGoogleAuth(['https://www.googleapis.com/auth/cloud-platform']);
     const client = await auth.getClient();
@@ -24,8 +49,17 @@ export async function POST(req: Request) {
         Keywords to include: ${keywords || "None"}
         Primary Keyword: ${primaryKeyword || "None"}
         STRICT CONSTRAINT: Stay strictly focused on ${prompt}.
+
+        ${learnedContext ? `
+        LEARNED CONTEXT FROM EXTERNAL URL:
+        ---
+        ${learnedContext}
+        ---
+        ` : ""}
+
         ${feedback ? `\nSMART REFINEMENT MODE: 
         Apply these changes SURGICALLY: ${feedback}. 
+        ${learnedContext ? "INTELLIGENT INSERTION: Based on the LEARNED CONTEXT above, add a new professionally written section that incorporates these facts. Match the current post's tone and style perfectly." : ""}
         PRESERVE the rest of the existing article structure, headings, and detailed paragraphs exactly as they are. 
         DO NOT rewrite unrelated sections. If asked to add a heading, insert it naturally without deleting other content.` : ""}
 

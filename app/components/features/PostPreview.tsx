@@ -363,7 +363,7 @@ export const PostPreview = () => {
                                 disabled={isApplyingFeedback || !feedback || !primaryKeyword}
                                 className="w-full h-14 rounded-none bg-indigo-600 hover:bg-indigo-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
                             >
-                                Apply AI Refinement
+                                {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply AI Refinement'}
                             </Button>
                         </div>
                     </div>

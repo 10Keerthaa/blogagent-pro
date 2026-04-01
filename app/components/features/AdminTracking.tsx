@@ -12,10 +12,13 @@ export const AdminTracking = () => {
 
     const fetchReport = async () => {
         try {
-            const { data: { session } } = await (await import('../../../lib/supabase')).supabase.auth.getSession();
+            const { auth } = await import('../../lib/firebase');
+            const token = await auth.currentUser?.getIdToken();
+            if (!token) return;
+            
             const r = await fetch('/api/admin/report', {
                 headers: {
-                    'Authorization': `Bearer ${session?.access_token}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             const d = await r.json();

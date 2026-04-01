@@ -1,8 +1,21 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { supabase } from '../../../lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { db, auth } from '../../lib/firebase';
+import { 
+    collection, 
+    query, 
+    where, 
+    getDocs, 
+    getDoc, 
+    doc, 
+    addDoc, 
+    updateDoc, 
+    orderBy, 
+    limit, 
+    Timestamp,
+    serverTimestamp
+} from 'firebase/firestore';
 
 export const useBlogApi = () => {
     const [isFetchingDrafts, setIsFetchingDrafts] = useState(false);
@@ -19,23 +32,24 @@ export const useBlogApi = () => {
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
 
-    const mapSupabaseToDraft = (item: any) => {
-        if (!item) return null;
+    const mapFirestoreToDraft = (docSnap: any) => {
+        if (!docSnap.exists()) return null;
+        const data = docSnap.data();
         return {
-            id: item.id,
-            title: item.title,
-            content: item.body || item.content,
-            imageUrl: item.image_url || item.imageUrl,
-            infographicUrl: item.infographic_url || item.infographicUrl || item.seo_data?.infographicUrl || null,
-            metaDesc: item.meta_desc || item.metaDesc || item.seo_data?.metaDesc || '',
-            status: item.status,
-            createdBy: item.created_by || item.createdBy,
-            authorEmail: item.author?.email || item.profiles?.email || item.user_email,
-            prompt: item.prompt || item.seo_data?.prompt || item.seo_data?.topic || '',
-            keywords: item.keywords || item.seo_data?.keywords || [],
-            primaryKeyword: item.primary_keyword || item.primaryKeyword || item.seo_data?.primaryKeyword || null,
-            createdAt: item.created_at || item.createdAt,
-            wpUrl: item.wp_url || item.wpUrl || item.seo_data?.wpUrl || null
+            id: docSnap.id,
+            title: data.title,
+            content: data.body || data.content,
+            imageUrl: data.imageUrl || data.image_url,
+            infographicUrl: data.infographicUrl || data.infographic_url || null,
+            metaDesc: data.metaDesc || data.meta_desc || '',
+            status: data.status,
+            createdBy: data.created_by || data.createdBy,
+            authorEmail: data.authorEmail || data.user_email || '',
+            prompt: data.prompt || '',
+            keywords: data.keywords || [],
+            primaryKeyword: data.primaryKeyword || null,
+            createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : data.createdAt,
+            wpUrl: data.wpUrl || data.wp_url || null
         };
     };
 
@@ -45,6 +59,19 @@ export const useBlogApi = () => {
             const d = await r.json();
             return d.keywordMap || {};
         } catch { return {}; }
+    }, []);
+
+    const fetchAdminReport = useCallback(async () => {
+        try {
+            const user = auth.currentUser;
+            if (!user) return [];
+            const token = await user.getIdToken();
+            const r = await fetch('/api/admin/report', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const d = await r.json();
+            return d.report || [];
+        } catch { return []; }
     }, []);
 
     const fetchHistory = useCallback(async () => {
@@ -58,13 +85,17 @@ export const useBlogApi = () => {
     const fetchDrafts = useCallback(async () => {
         setIsFetchingDrafts(true);
         try {
-            const { data, error } = await supabase
-                .from('posts')
-                .select('*, author:profiles!created_by(email)')
-                .eq('status', 'review')
-                .order('created_at', { ascending: false });
-            if (error) throw error;
-            return (data || []).map(mapSupabaseToDraft);
+            const q = query(
+                collection(db, 'blog_posts'), 
+                where('status', '==', 'review'),
+                orderBy('createdAt', 'desc')
+            );
+            const snapshot = await getDocs(q);
+            return snapshot.docs.map(d => ({
+                id: d.id,
+                ...d.data(),
+                content: (d.data() as any).body || (d.data() as any).content // Ensure content mapping
+            }));
         } catch (e) {
             console.error('Fetch Drafts Error:', e);
             return [];
@@ -166,7 +197,7 @@ export const useBlogApi = () => {
         }
     }, []);
 
-    const saveDraft = useCallback(async (data: { title: string, content: string, metaDesc?: string, imageUrl?: string, infographicUrl?: string | null, prompt?: string, keywords?: string[] }) => {
+    const saveDraft = useCallback(async (data: any) => {
         setIsSavingDraft(true);
         try {
             const r = await fetch('/api/drafts/save', {
@@ -188,36 +219,23 @@ export const useBlogApi = () => {
         if (action === 'edit') setIsSavingManual(true);
 
         try {
-            let status = undefined;
-            if (action === 'reject') status = 'rejected';
-            if (action === 'publish') status = 'published';
-
+            const docRef = doc(db, 'blog_posts', id);
             const payload: any = {
-                last_edited_at: new Date().toISOString()
+                last_edited_at: serverTimestamp()
             };
+
+            if (action === 'reject') payload.status = 'rejected';
+            if (action === 'publish') payload.status = 'published';
 
             if (updateData?.title) payload.title = updateData.title;
             if (updateData?.content) payload.body = updateData.content;
-            if (status) payload.status = status;
+            if (updateData?.metaDesc) payload.metaDesc = updateData.metaDesc;
+            if (updateData?.infographicUrl) payload.infographicUrl = updateData.infographicUrl;
+            if (wpUrl) payload.wpUrl = wpUrl;
 
-            // Map JSONB data
-            const seo_data: any = {};
-            if (updateData?.metaDesc) seo_data.metaDesc = updateData.metaDesc;
-            if (updateData?.infographicUrl) seo_data.infographicUrl = updateData.infographicUrl;
-            if (wpUrl) seo_data.wpUrl = wpUrl;
-
-            if (Object.keys(seo_data).length > 0) {
-                payload.seo_data = seo_data;
-            }
-
-            const { data, error } = await supabase
-                .from('posts')
-                .update(payload)
-                .eq('id', id)
-                .select()
-                .single();
-            if (error) throw error;
-            return mapSupabaseToDraft(data);
+            await updateDoc(docRef, payload);
+            const updatedSnap = await getDoc(docRef);
+            return mapFirestoreToDraft(updatedSnap);
         } catch (e) {
             console.error('Update Draft Error:', e);
             throw e;
@@ -229,13 +247,9 @@ export const useBlogApi = () => {
 
     const fetchDraftById = useCallback(async (id: string) => {
         try {
-            const { data, error } = await supabase
-                .from('posts')
-                .select('*, author:profiles!created_by(email)')
-                .eq('id', id)
-                .single();
-            if (error) throw error;
-            return mapSupabaseToDraft(data);
+            const docRef = doc(db, 'blog_posts', id);
+            const docSnap = await getDoc(docRef);
+            return mapFirestoreToDraft(docSnap);
         } catch (e) {
             console.error('Fetch Draft By ID Error:', e);
             return null;
@@ -281,30 +295,30 @@ export const useBlogApi = () => {
         try {
             const payload: any = {
                 title: data.title,
-                body: data.content || data.body, // Map content to body
+                body: data.content || data.body,
                 status: data.status,
                 created_by: data.created_by || data.createdBy,
-                image_url: data.image_url || data.imageUrl,
-                seo_data: {
-                    metaDesc: data.metaDesc,
-                    prompt: data.prompt || data.topic,
-                    keywords: data.keywords,
-                    primaryKeyword: data.primaryKeyword,
-                    infographicUrl: data.infographicUrl || data.infographic_url,
-                    wpUrl: data.wpUrl || data.wp_url
-                },
-                last_edited_at: new Date().toISOString()
+                imageUrl: data.imageUrl || data.image_url,
+                metaDesc: data.metaDesc,
+                prompt: data.prompt || data.topic,
+                keywords: data.keywords,
+                primaryKeyword: data.primaryKeyword,
+                infographicUrl: data.infographicUrl || data.infographic_url,
+                wpUrl: data.wpUrl || data.wp_url,
+                last_edited_at: serverTimestamp()
             };
 
-            if (data.id) payload.id = data.id;
-
-            const { data: upsertedData, error } = await supabase
-                .from('posts')
-                .upsert(payload)
-                .select('*, author:profiles!created_by(email)')
-                .single();
-            if (error) throw error;
-            return mapSupabaseToDraft(upsertedData);
+            if (data.id) {
+                const docRef = doc(db, 'blog_posts', data.id);
+                await updateDoc(docRef, payload);
+                const snap = await getDoc(docRef);
+                return mapFirestoreToDraft(snap);
+            } else {
+                payload.createdAt = serverTimestamp();
+                const docRef = await addDoc(collection(db, 'blog_posts'), payload);
+                const snap = await getDoc(docRef);
+                return mapFirestoreToDraft(snap);
+            }
         } finally {
             if (isReview) setIsSavingReview(false);
             else setIsSavingManual(false);
@@ -313,27 +327,17 @@ export const useBlogApi = () => {
 
     const fetchLastInProgressDraft = useCallback(async (userId: string) => {
         try {
-            const { data, error } = await supabase
-                .from('posts')
-                .select('*')
-                .eq('created_by', userId)
-                .eq('status', 'in_progress')
-                .order('last_edited_at', { ascending: false })
-                .limit(1)
-                .single();
-            if (error) return null;
-            return mapSupabaseToDraft(data);
+            const q = query(
+                collection(db, 'blog_posts'),
+                where('created_by', '==', userId),
+                where('status', '==', 'in_progress'),
+                orderBy('last_edited_at', 'desc'),
+                limit(1)
+            );
+            const snapshot = await getDocs(q);
+            if (snapshot.empty) return null;
+            return mapFirestoreToDraft(snapshot.docs[0]);
         } catch { return null; }
-    }, []);
-
-    const fetchAdminReport = useCallback(async () => {
-        try {
-            const { data, error } = await supabase
-                .from('user_activity_report')
-                .select('*');
-            if (error) throw error;
-            return data;
-        } catch { return []; }
     }, []);
 
     return {
@@ -364,10 +368,9 @@ export const useBlogApi = () => {
         fetchDraftById,
         upsertPost,
         fetchLastInProgressDraft,
-        fetchAdminReport,
         isFetchingDraftDetails,
         setIsFetchingDraftDetails,
         refineSelection,
-        mapSupabaseToDraft
+        mapSupabaseToDraft: mapFirestoreToDraft // Alias for compatibility
     };
 };
