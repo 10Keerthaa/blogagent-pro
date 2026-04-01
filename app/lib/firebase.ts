@@ -15,7 +15,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = getFirestore(app, "blog-creation");
 const storage = getStorage(app);
 
 export { app, auth, db, storage };
