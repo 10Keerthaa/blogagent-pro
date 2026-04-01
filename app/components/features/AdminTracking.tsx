@@ -37,8 +37,8 @@ export const AdminTracking = () => {
     if (role !== 'admin') return null;
 
     return (
-        <section className="mt-20 pt-16 border-t border-slate-100 dark:border-slate-800">
-            <div className="max-w-4xl mx-auto space-y-8">
+        <section className="mt-20 pt-16 border-t border-slate-100 dark:border-slate-800 w-full">
+            <div className="space-y-8">
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">
                         <h2 className="text-[11px] font-bold tracking-[0.2em] text-indigo-500 uppercase">Team Performance</h2>

@@ -459,7 +459,7 @@ export const ReviewList = () => {
                     </div>
                 </div>
             ) : (
-                <div className="animate-fadeIn max-w-[1240px] mx-auto w-full space-y-10 pb-24 transition-all duration-500 px-6 lg:px-10">
+                <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
                     <div className="flex items-center justify-between mb-2 px-1">
                         <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
                     </div>
