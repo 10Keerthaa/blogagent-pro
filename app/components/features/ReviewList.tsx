@@ -196,7 +196,7 @@ export const ReviewList = () => {
     return (
         <div className="relative">
             {selectedReviewDraft ? (
-                <div className={`animate-fadeIn w-full transition-all duration-500 ${isPreviewOpen ? 'opacity-0 pointer-events-none' : 'space-y-12 pb-24'}`}>
+                <div className={`animate-fadeIn max-w-[1100px] mx-auto w-full transition-all duration-500 ${isPreviewOpen ? 'opacity-0 pointer-events-none' : 'space-y-12 pb-24'}`}>
                     {/* Header Actions */}
                     <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-20 border-b border-slate-100 dark:border-slate-800/50">
                         <div className="w-full flex items-center justify-between py-8 px-10">
@@ -459,7 +459,7 @@ export const ReviewList = () => {
                     </div>
                 </div>
             ) : (
-                <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-500">
+                <div className="animate-fadeIn max-w-[1240px] mx-auto w-full space-y-10 pb-24 transition-all duration-500 px-6 lg:px-10">
                     <div className="flex items-center justify-between mb-2 px-1">
                         <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
                     </div>
