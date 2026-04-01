@@ -190,7 +190,7 @@ export const ReviewList = () => {
     const filteredDrafts = React.useMemo(() => {
         if (!role || !user) return null; // Role or User still loading
         if (role === 'admin') return reviewDrafts;
-        return reviewDrafts.filter(d => d.createdBy === user?.id);
+        return reviewDrafts.filter(d => d.createdBy === user?.uid);
     }, [reviewDrafts, role, user]);
 
     return (

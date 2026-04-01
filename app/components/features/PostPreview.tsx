@@ -90,7 +90,7 @@ export const PostPreview = () => {
             metaDesc: description || updatedPreview.meta || "",
             primaryKeyword: primaryKeyword,
             status: 'in_progress',
-            created_by: user.id,
+            created_by: user.uid,
             prompt: mainTopic || updatedPreview.prompt || '',
             keywords: keywords.length > 0 ? keywords : (updatedPreview.keywords || [])
         });
@@ -391,7 +391,7 @@ export const PostPreview = () => {
                                     infographic_url: infographicUrl,
                                     metaDesc: description || preview.meta || "",
                                     status: 'review',
-                                    created_by: user.id,
+                                    created_by: user.uid,
                                     prompt: mainTopic || preview.prompt || '',
                                     keywords: keywords.length > 0 ? keywords : (preview.keywords || []),
                                     primaryKeyword: primaryKeyword
