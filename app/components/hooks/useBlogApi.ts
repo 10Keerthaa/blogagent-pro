@@ -299,12 +299,12 @@ export const useBlogApi = () => {
                 status: data.status,
                 created_by: data.created_by || data.createdBy,
                 imageUrl: data.imageUrl || data.image_url,
-                metaDesc: data.metaDesc,
-                prompt: data.prompt || data.topic,
-                keywords: data.keywords,
-                primaryKeyword: data.primaryKeyword,
-                infographicUrl: data.infographicUrl || data.infographic_url,
-                wpUrl: data.wpUrl || data.wp_url,
+                metaDesc: data.metaDesc || "",
+                prompt: data.prompt || data.topic || "",
+                keywords: data.keywords || [],
+                primaryKeyword: data.primaryKeyword || null,
+                infographicUrl: data.infographicUrl || data.infographic_url || null,
+                wpUrl: data.wpUrl || data.wp_url || null,
                 last_edited_at: serverTimestamp()
             };
 
