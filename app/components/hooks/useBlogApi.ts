@@ -11,6 +11,7 @@ import {
     doc, 
     addDoc, 
     updateDoc, 
+    arrayUnion,
     orderBy, 
     limit, 
     Timestamp,
@@ -49,7 +50,9 @@ export const useBlogApi = () => {
             keywords: data.keywords || [],
             primaryKeyword: data.primaryKeyword || null,
             createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : data.createdAt,
-            wpUrl: data.wpUrl || data.wp_url || null
+            wpUrl: data.wpUrl || data.wp_url || null,
+            auditLog: data.auditLog || data.audit_log || [],
+            publishedBy: data.publishedBy || data.published_by || null
         };
     }, []);
 
@@ -210,7 +213,7 @@ export const useBlogApi = () => {
     }, []);
 
     const updateDraft = useCallback(async (body: any) => {
-        const { id, action, updateData, wpUrl } = body;
+        const { id, action, updateData, wpUrl, publishedBy } = body;
         if (action === 'reject') setIsRejecting(true);
         if (action === 'edit') setIsSavingManual(true);
 
@@ -221,7 +224,10 @@ export const useBlogApi = () => {
             };
 
             if (action === 'reject') payload.status = 'rejected';
-            if (action === 'publish') payload.status = 'published';
+            if (action === 'publish') {
+                payload.status = 'published';
+                if (publishedBy) payload.publishedBy = publishedBy;
+            }
 
             if (updateData?.title) payload.title = updateData.title;
             if (updateData?.content) payload.body = updateData.content;
@@ -239,7 +245,25 @@ export const useBlogApi = () => {
             setIsRejecting(false);
             setIsSavingManual(false);
         }
-    }, []);
+    }, [mapFirestoreToDraft]);
+
+    const markAsReviewed = useCallback(async (postId: string, userEmail: string) => {
+        try {
+            const docRef = doc(db, 'blog_posts', postId);
+            await updateDoc(docRef, {
+                auditLog: arrayUnion({
+                    email: userEmail,
+                    timestamp: new Date().toISOString(),
+                    action: 'reviewed'
+                })
+            });
+            const updatedSnap = await getDoc(docRef);
+            return mapFirestoreToDraft(updatedSnap);
+        } catch (e) {
+            console.error('Mark As Reviewed Error:', e);
+            throw e;
+        }
+    }, [mapFirestoreToDraft]);
 
     const fetchDraftById = useCallback(async (id: string) => {
         try {
@@ -360,6 +384,7 @@ export const useBlogApi = () => {
         fetchKeywords,
         saveDraft,
         updateDraft,
+        markAsReviewed,
         publishToWordPress,
         generateInfographic,
         fetchDraftById,

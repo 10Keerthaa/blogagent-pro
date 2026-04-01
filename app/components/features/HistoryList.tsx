@@ -69,6 +69,50 @@ export const HistoryList = () => {
                                 )}
                             </div>
                         </div>
+
+                        {/* EDITORIAL JOURNEY - AUDIT LOG */}
+                        <div className="p-8 rounded-[2.5rem] bg-indigo-50/30 dark:bg-indigo-950/10 border border-indigo-100/50 dark:border-indigo-900/30">
+                            <h3 className="text-[11px] font-bold text-indigo-400 uppercase tracking-widest mb-6">Editorial Journey</h3>
+                            <div className="space-y-6 relative ml-2">
+                                {/* Vertical Line */}
+                                <div className="absolute left-[7px] top-2 bottom-2 w-[2px] bg-indigo-100 dark:bg-indigo-900/50" />
+                                
+                                {/* Initial Creation */}
+                                <div className="relative pl-8">
+                                    <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-indigo-100 dark:bg-indigo-900/50 border-4 border-white dark:border-slate-950 shadow-sm" />
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Generated & Saved</p>
+                                    <p className="text-xs text-slate-600 dark:text-slate-400 font-medium italic">
+                                        by {selectedHistoryItem.authorEmail || selectedHistoryItem.createdBy || "System Agent"}
+                                    </p>
+                                </div>
+
+                                {/* Review Logs */}
+                                {selectedHistoryItem.auditLog?.map((log: any, i: number) => (
+                                    <div key={i} className="relative pl-8">
+                                        <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-indigo-500 border-4 border-white dark:border-slate-950 shadow-sm" />
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Human Review Recorded</p>
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-xs text-slate-900 dark:text-white font-bold">{log.email}</p>
+                                            <span className="text-[9px] text-slate-400 font-medium">{new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {/* Final Publication Seal */}
+                                {selectedHistoryItem.publishedBy && (
+                                    <div className="relative pl-8">
+                                        <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-emerald-500 border-4 border-white dark:border-slate-950 shadow-sm" />
+                                        <div className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50">
+                                            <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-1">Final Approval & Launch</p>
+                                            <div className="flex items-center justify-between">
+                                                <p className="text-xs text-emerald-900 dark:text-emerald-100 font-black tracking-tight">{selectedHistoryItem.publishedBy.email}</p>
+                                                <span className="text-[9px] text-emerald-600/70 dark:text-emerald-400/50 font-bold">{new Date(selectedHistoryItem.publishedBy.timestamp).toLocaleDateString()}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </section>
 
                     {/* Featured Image Section */}

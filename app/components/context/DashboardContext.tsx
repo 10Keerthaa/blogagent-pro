@@ -61,6 +61,7 @@ interface DashboardContextType {
     handleSaveManualEdits: (updatedDraft?: any) => Promise<void>;
     handleSaveDraft: () => Promise<void>;
     handleRejectDraft: (id: string) => Promise<void>;
+    handleMarkAsReviewed: (id: string) => Promise<void>;
     handleApproveDraft: (draft: any) => Promise<void>;
     handleGenerateInfographic: () => Promise<void>;
     fetchDrafts: () => Promise<void>;
@@ -460,11 +461,24 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         } catch (e: any) { setError(e.message); }
     };
 
+    const handleMarkAsReviewed = async (id: string) => {
+        if (!user) return;
+        setError(null);
+        try {
+            const updatedDraft = await api.markAsReviewed(id, user.email || user.uid);
+            if (updatedDraft && selectedReviewDraft?.id === id) {
+                setSelectedReviewDraft(updatedDraft);
+            }
+            fetchDrafts();
+        } catch (e: any) { setError(e.message); }
+    };
+
     const handleApproveDraft = async (draft: any) => {
+        if (!user) return;
         setError(null);
         try {
             const pubData = await api.publishToWordPress({ 
-                id: draft.id, // Pass ID for status update
+                id: draft.id, 
                 title: draft.title, 
                 content: draft.content, 
                 metaDesc: draft.metaDesc, 
@@ -472,7 +486,18 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 infographicUrl: draft.infographicUrl, 
                 slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '') 
             });
-            await api.updateDraft({ id: draft.id, action: 'publish', wpUrl: pubData.url });
+            
+            const publishedBy = {
+                email: user.email || user.uid,
+                timestamp: new Date().toISOString()
+            };
+
+            await api.updateDraft({ 
+                id: draft.id, 
+                action: 'publish', 
+                wpUrl: pubData.url,
+                publishedBy
+            });
             setSelectedReviewDraft(null); fetchDrafts(); fetchHistory(); setActiveTab('history');
         } catch (e: any) { setError(e.message); }
     };
@@ -554,7 +579,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;

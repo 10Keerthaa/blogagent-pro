@@ -28,7 +28,8 @@ export const ReviewList = () => {
         infographicUrl, handleSelectReviewDraft, isFetchingDraftDetails,
         handleClearForm,
         user, role,
-        handleRefineSelection, primaryKeyword
+        handleRefineSelection, primaryKeyword,
+        handleMarkAsReviewed
     } = useDashboard();
 
     const [selectionRect, setSelectionRect] = React.useState<DOMRect | null>(null);
@@ -418,6 +419,24 @@ export const ReviewList = () => {
                                     className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-indigo-50/80 text-indigo-700 border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 transition-colors shadow-none"
                                 >
                                     Save Edits
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)}
+                                    disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)}
+                                    className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]"
+                                >
+                                    {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? (
+                                        <>
+                                            <CheckCircle className="w-4 h-4 mr-2 text-emerald-500" />
+                                            Reviewed
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Users className="w-4 h-4 mr-2" />
+                                            Mark as Reviewed
+                                        </>
+                                    )}
                                 </Button>
                                 <Button
                                     variant="danger"
