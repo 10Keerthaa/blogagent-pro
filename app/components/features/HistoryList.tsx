@@ -11,7 +11,7 @@ export const HistoryList = () => {
 
     if (selectedHistoryItem) {
         return (
-            <div className="animate-fadeIn max-w-5xl mx-auto w-full pb-20 space-y-10">
+            <div className="animate-fadeIn max-w-[1100px] mx-auto w-full pb-24 space-y-10 px-4 lg:px-8">
                 {/* Header with Return Button */}
                 <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-6 mb-8">
                     <div className="space-y-1">
@@ -97,7 +97,7 @@ export const HistoryList = () => {
     }
 
     return (
-        <div className="animate-fadeIn max-w-4xl mx-auto w-full space-y-8 pb-20 transition-all duration-500">
+        <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
             <div className="flex items-center justify-between mb-2 px-1">
                 <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">
                     Production History ({history.length})
