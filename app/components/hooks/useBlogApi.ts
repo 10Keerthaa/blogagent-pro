@@ -91,18 +91,14 @@ export const useBlogApi = () => {
                 orderBy('createdAt', 'desc')
             );
             const snapshot = await getDocs(q);
-            return snapshot.docs.map(d => ({
-                id: d.id,
-                ...d.data(),
-                content: (d.data() as any).body || (d.data() as any).content // Ensure content mapping
-            }));
+            return snapshot.docs.map(d => mapFirestoreToDraft(d));
         } catch (e) {
             console.error('Fetch Drafts Error:', e);
             return [];
         } finally {
             setIsFetchingDrafts(false);
         }
-    }, []);
+    }, [mapFirestoreToDraft]);
 
     const generateContent = useCallback(async (body: any, onChunk?: (chunk: string) => void) => {
         setIsGenerating(true);
