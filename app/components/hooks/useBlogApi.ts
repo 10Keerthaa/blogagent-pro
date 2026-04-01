@@ -32,8 +32,8 @@ export const useBlogApi = () => {
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
 
-    const mapFirestoreToDraft = (docSnap: any) => {
-        if (!docSnap.exists()) return null;
+    const mapFirestoreToDraft = useCallback((docSnap: any) => {
+        if (!docSnap || !docSnap.exists()) return null;
         const data = docSnap.data();
         return {
             id: docSnap.id,
@@ -51,7 +51,7 @@ export const useBlogApi = () => {
             createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : data.createdAt,
             wpUrl: data.wpUrl || data.wp_url || null
         };
-    };
+    }, []);
 
     const fetchSitemap = useCallback(async () => {
         try {
@@ -334,7 +334,7 @@ export const useBlogApi = () => {
             if (snapshot.empty) return null;
             return mapFirestoreToDraft(snapshot.docs[0]);
         } catch { return null; }
-    }, []);
+    }, [mapFirestoreToDraft]);
 
     return {
         isFetchingDrafts,
