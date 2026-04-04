@@ -33,24 +33,24 @@ export const HistoryList = () => {
                     {/* Meta Info Section (Read Only) */}
                     <section className="space-y-8">
                         <div className="p-10 rounded-[2.5rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
-                            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-8">Article Metadata</h3>
+                            <h3 className="text-lg font-extrabold text-slate-800 dark:text-white uppercase tracking-wide mb-8">Article Metadata</h3>
                             <div className="space-y-8 text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                     {selectedHistoryItem.primaryKeyword && (
                                         <div className="space-y-2">
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Primary Keyword</p>
+                                            <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Primary Keyword</p>
                                             <p className="text-slate-900 dark:text-white font-semibold text-base">{selectedHistoryItem.primaryKeyword}</p>
                                         </div>
                                     )}
                                     {selectedHistoryItem.date && (
                                         <div className="space-y-2">
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Publication Date</p>
+                                            <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Publication Date</p>
                                             <p className="text-slate-900 dark:text-white font-semibold text-base">{new Date(selectedHistoryItem.date).toLocaleDateString()}</p>
                                         </div>
                                     )}
                                 </div>
                                 <div className="space-y-3">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meta Description</p>
+                                    <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Meta Description</p>
                                     <div className="p-5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 text-slate-500 italic leading-relaxed">
                                         {selectedHistoryItem.metaDesc || "No meta description provided."}
                                     </div>
@@ -72,20 +72,12 @@ export const HistoryList = () => {
 
                         {/* EDITORIAL JOURNEY — clean flat layout, no circles */}
                         <div className="p-10 rounded-[2.5rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 space-y-8">
-                            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Editorial Journey</h3>
-
-                            {/* Created By */}
-                            <div className="space-y-1">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Generated & Saved by</p>
-                                <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                                    {selectedHistoryItem.authorEmail || selectedHistoryItem.createdBy || 'System Agent'}
-                                </p>
-                            </div>
+                            <h3 className="text-lg font-extrabold text-slate-800 dark:text-white uppercase tracking-wide">Editorial Journey</h3>
 
                             {/* Reviewers */}
                             {selectedHistoryItem.auditLog && selectedHistoryItem.auditLog.length > 0 && (
                                 <div className="space-y-3">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Reviewed By</p>
+                                    <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Reviewed By</p>
                                     <div className="flex flex-wrap gap-3">
                                         {selectedHistoryItem.auditLog.map((log: any, i: number) => (
                                             <div key={i} className="flex items-center justify-between gap-8 px-5 py-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 w-full">
@@ -100,7 +92,7 @@ export const HistoryList = () => {
                             {/* Publisher */}
                             {selectedHistoryItem.publishedBy && (
                                 <div className="space-y-3">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Published By</p>
+                                    <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Published By</p>
                                     <div className="flex items-center justify-between gap-8 px-5 py-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50">
                                         <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300">{selectedHistoryItem.publishedBy.email}</p>
                                         <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">{new Date(selectedHistoryItem.publishedBy.timestamp).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</span>
