@@ -179,6 +179,19 @@ export const HistoryList = () => {
                                                     </span>
                                                 )}
                                             </div>
+                                            {item.auditLog && item.auditLog.length > 0 && (
+                                                <div className="flex items-center gap-2 flex-wrap mt-1">
+                                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Reviewed by:</span>
+                                                    {item.auditLog.map((log: any, i: number) => (
+                                                        <span
+                                                            key={i}
+                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50"
+                                                        >
+                                                            {log.email}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     <a
