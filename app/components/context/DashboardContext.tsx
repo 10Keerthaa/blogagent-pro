@@ -448,7 +448,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!preview) return;
         setError(null);
         try {
-            await api.saveDraft({ title: preview.title, content: preview.content, metaDesc: description || preview.meta, imageUrl: preview.imageUrl, infographicUrl: infographicUrl, prompt: prompt, keywords: keywords });
+            await api.saveDraft({ title: preview.title, content: preview.content, metaDesc: description || preview.meta, imageUrl: preview.imageUrl, infographicUrl: infographicUrl, prompt: prompt, keywords: keywords, authorEmail: user?.email || '', createdBy: user?.uid || '' });
             resetEditorState(); setActiveTab('review'); fetchDrafts();
         } catch (e: any) { setError(e.message); }
     };
