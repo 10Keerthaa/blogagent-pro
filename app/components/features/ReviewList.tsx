@@ -409,55 +409,51 @@ export const ReviewList = () => {
                     )}
 
                     {/* Standalone Bottom Actions */}
-                    <div className="w-full pt-10 pb-20 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50 px-10">
-                        {!isReadOnly && (
-                            <>
-                                <Button
-                                    variant="secondary"
-                                    onClick={handleSaveManualEdits}
-                                    isLoading={isSavingManual}
-                                    className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-indigo-50/80 text-indigo-700 border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 transition-colors shadow-none"
-                                >
-                                    Save Edits
-                                </Button>
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)}
-                                    disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)}
-                                    className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]"
-                                >
-                                    {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? (
-                                        <>
-                                            <CheckCircle className="w-4 h-4 mr-2 text-emerald-500" />
-                                            Reviewed
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Users className="w-4 h-4 mr-2" />
-                                            Mark as Reviewed
-                                        </>
-                                    )}
-                                </Button>
-                                <Button
-                                    variant="danger"
-                                    size="sm"
-                                    onClick={() => handleRejectDraft(selectedReviewDraft.id)}
-                                    isLoading={isRejecting}
-                                    className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
-                                >
-                                    Reject
-                                </Button>
-                            </>
-                        )}
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setIsPreviewOpen(true)}
-                            className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors shadow-none font-bold"
-                        >
-                            Preview
-                        </Button>
-                        {!isReadOnly && (
+                    {!isReadOnly ? (
+                        <div className="w-full pt-10 pb-20 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50 px-10">
+                            <Button
+                                variant="secondary"
+                                onClick={handleSaveManualEdits}
+                                isLoading={isSavingManual}
+                                className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-indigo-50/80 text-indigo-700 border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 transition-colors shadow-none"
+                            >
+                                Save Edits
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)}
+                                disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)}
+                                className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]"
+                            >
+                                {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? (
+                                    <>
+                                        <CheckCircle className="w-4 h-4 mr-2 text-emerald-500" />
+                                        Reviewed
+                                    </>
+                                ) : (
+                                    <>
+                                        <Users className="w-4 h-4 mr-2" />
+                                        Mark as Reviewed
+                                    </>
+                                )}
+                            </Button>
+                            <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => handleRejectDraft(selectedReviewDraft.id)}
+                                isLoading={isRejecting}
+                                className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]"
+                            >
+                                Reject
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => setIsPreviewOpen(true)}
+                                className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors shadow-none font-bold"
+                            >
+                                Preview
+                            </Button>
                             <Button
                                 variant="primary"
                                 size="sm"
@@ -468,14 +464,27 @@ export const ReviewList = () => {
                                 <CheckCircle className="w-4 h-4 mr-2 shrink-0" />
                                 Approve & Publish
                             </Button>
-                        )}
-                        {isReadOnly && (
-                            <div className="px-10 py-4 text-slate-400 font-bold uppercase tracking-widest text-[10px] flex items-center gap-2">
-                                <FileText className="w-4 h-4" />
-                                Review Only Mode
+                        </div>
+                    ) : (
+                        /* Editor read-only: show post metadata, no action buttons */
+                        <div className="w-full pt-10 pb-20 px-10 border-t border-slate-100 dark:border-slate-800/50">
+                            <div className="p-8 rounded-[2rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 space-y-6">
+                                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Post Details</h4>
+                                {selectedReviewDraft.primaryKeyword && (
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Topic / Keyword</p>
+                                        <p className="text-slate-900 dark:text-white font-semibold">{selectedReviewDraft.primaryKeyword}</p>
+                                    </div>
+                                )}
+                                {selectedReviewDraft.metaDesc && (
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Description</p>
+                                        <p className="text-slate-600 dark:text-slate-400 leading-relaxed italic">{selectedReviewDraft.metaDesc}</p>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">

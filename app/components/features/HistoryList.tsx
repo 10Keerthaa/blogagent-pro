@@ -31,32 +31,32 @@ export const HistoryList = () => {
 
                 <div className="grid grid-cols-1 gap-10">
                     {/* Meta Info Section (Read Only) */}
-                    <section className="space-y-6">
-                        <div className="p-8 rounded-[2.5rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
-                            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-6">Article Metadata</h3>
-                            <div className="space-y-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-4">
+                    <section className="space-y-8">
+                        <div className="p-10 rounded-[2.5rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-8">Article Metadata</h3>
+                            <div className="space-y-8 text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                     {selectedHistoryItem.primaryKeyword && (
-                                        <div>
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Primary Keyword</p>
-                                            <p className="text-slate-900 dark:text-white">{selectedHistoryItem.primaryKeyword}</p>
+                                        <div className="space-y-2">
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Primary Keyword</p>
+                                            <p className="text-slate-900 dark:text-white font-semibold text-base">{selectedHistoryItem.primaryKeyword}</p>
                                         </div>
                                     )}
                                     {selectedHistoryItem.date && (
-                                        <div>
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Publication Date</p>
-                                            <p className="text-slate-900 dark:text-white">{new Date(selectedHistoryItem.date).toLocaleDateString()}</p>
+                                        <div className="space-y-2">
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Publication Date</p>
+                                            <p className="text-slate-900 dark:text-white font-semibold text-base">{new Date(selectedHistoryItem.date).toLocaleDateString()}</p>
                                         </div>
                                     )}
                                 </div>
-                                <div>
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-2">Meta Description</p>
-                                    <div className="p-4 rounded-2xl bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 text-slate-500 italic">
+                                <div className="space-y-3">
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meta Description</p>
+                                    <div className="p-5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 text-slate-500 italic leading-relaxed">
                                         {selectedHistoryItem.metaDesc || "No meta description provided."}
                                     </div>
                                 </div>
                                 {selectedHistoryItem.url && (
-                                    <div className="pt-4 border-t border-slate-100 dark:border-slate-800 mt-4">
+                                    <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
                                         <a 
                                             href={selectedHistoryItem.url} 
                                             target="_blank" 
@@ -71,17 +71,17 @@ export const HistoryList = () => {
                         </div>
 
                         {/* EDITORIAL JOURNEY - AUDIT LOG */}
-                        <div className="p-8 rounded-[2.5rem] bg-indigo-50/30 dark:bg-indigo-950/10 border border-indigo-100/50 dark:border-indigo-900/30">
-                            <h3 className="text-[11px] font-bold text-indigo-400 uppercase tracking-widest mb-6">Editorial Journey</h3>
-                            <div className="space-y-6 relative ml-2">
+                        <div className="p-10 rounded-[2.5rem] bg-indigo-50/30 dark:bg-indigo-950/10 border border-indigo-100/50 dark:border-indigo-900/30">
+                            <h3 className="text-[11px] font-bold text-indigo-400 uppercase tracking-widest mb-8">Editorial Journey</h3>
+                            <div className="space-y-8 relative ml-2">
                                 {/* Vertical Line */}
                                 <div className="absolute left-[7px] top-2 bottom-2 w-[2px] bg-indigo-100 dark:bg-indigo-900/50" />
                                 
                                 {/* Initial Creation */}
                                 <div className="relative pl-8">
                                     <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-indigo-100 dark:bg-indigo-900/50 border-4 border-white dark:border-slate-950 shadow-sm" />
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Generated & Saved</p>
-                                    <p className="text-xs text-slate-600 dark:text-slate-400 font-medium italic">
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Generated & Saved</p>
+                                    <p className="text-sm text-slate-600 dark:text-slate-400 font-medium italic">
                                         by {selectedHistoryItem.authorEmail || selectedHistoryItem.createdBy || "System Agent"}
                                     </p>
                                 </div>
@@ -90,10 +90,10 @@ export const HistoryList = () => {
                                 {selectedHistoryItem.auditLog?.map((log: any, i: number) => (
                                     <div key={i} className="relative pl-8">
                                         <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-indigo-500 border-4 border-white dark:border-slate-950 shadow-sm" />
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Human Review Recorded</p>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Human Review Recorded</p>
                                         <div className="flex items-center justify-between">
-                                            <p className="text-xs text-slate-900 dark:text-white font-bold">{log.email}</p>
-                                            <span className="text-[9px] text-slate-400 font-medium">{new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                            <p className="text-sm text-slate-900 dark:text-white font-bold">{log.email}</p>
+                                            <span className="text-[10px] text-slate-400 font-medium">{new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -102,11 +102,11 @@ export const HistoryList = () => {
                                 {selectedHistoryItem.publishedBy && (
                                     <div className="relative pl-8">
                                         <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-emerald-500 border-4 border-white dark:border-slate-950 shadow-sm" />
-                                        <div className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50">
-                                            <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-1">Final Approval & Launch</p>
+                                        <div className="p-6 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50">
+                                            <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-3">Final Approval & Launch</p>
                                             <div className="flex items-center justify-between">
-                                                <p className="text-xs text-emerald-900 dark:text-emerald-100 font-black tracking-tight">{selectedHistoryItem.publishedBy.email}</p>
-                                                <span className="text-[9px] text-emerald-600/70 dark:text-emerald-400/50 font-bold">{new Date(selectedHistoryItem.publishedBy.timestamp).toLocaleDateString()}</span>
+                                                <p className="text-sm text-emerald-900 dark:text-emerald-100 font-black tracking-tight">{selectedHistoryItem.publishedBy.email}</p>
+                                                <span className="text-[10px] text-emerald-600/70 dark:text-emerald-400/50 font-bold">{new Date(selectedHistoryItem.publishedBy.timestamp).toLocaleDateString()}</span>
                                             </div>
                                         </div>
                                     </div>
