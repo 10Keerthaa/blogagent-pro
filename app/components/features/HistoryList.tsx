@@ -11,7 +11,7 @@ export const HistoryList = () => {
 
     if (selectedHistoryItem) {
         return (
-            <div className="animate-fadeIn max-w-[1100px] mx-auto w-full pb-24 space-y-10 px-4 lg:px-8">
+            <div className="animate-fadeIn w-full pb-24 space-y-10 px-4 lg:px-8">
                 {/* Header with Return Button */}
                 <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-6 mb-8">
                     <div className="space-y-1">
@@ -70,48 +70,43 @@ export const HistoryList = () => {
                             </div>
                         </div>
 
-                        {/* EDITORIAL JOURNEY - AUDIT LOG */}
-                        <div className="p-10 rounded-[2.5rem] bg-indigo-50/30 dark:bg-indigo-950/10 border border-indigo-100/50 dark:border-indigo-900/30">
-                            <h3 className="text-[11px] font-bold text-indigo-400 uppercase tracking-widest mb-8">Editorial Journey</h3>
-                            <div className="space-y-8 relative ml-2">
-                                {/* Vertical Line */}
-                                <div className="absolute left-[7px] top-2 bottom-2 w-[2px] bg-indigo-100 dark:bg-indigo-900/50" />
-                                
-                                {/* Initial Creation */}
-                                <div className="relative pl-8">
-                                    <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-indigo-100 dark:bg-indigo-900/50 border-4 border-white dark:border-slate-950 shadow-sm" />
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Generated & Saved</p>
-                                    <p className="text-sm text-slate-600 dark:text-slate-400 font-medium italic">
-                                        by {selectedHistoryItem.authorEmail || selectedHistoryItem.createdBy || "System Agent"}
-                                    </p>
-                                </div>
+                        {/* EDITORIAL JOURNEY — clean flat layout, no circles */}
+                        <div className="p-10 rounded-[2.5rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 space-y-8">
+                            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Editorial Journey</h3>
 
-                                {/* Review Logs */}
-                                {selectedHistoryItem.auditLog?.map((log: any, i: number) => (
-                                    <div key={i} className="relative pl-8">
-                                        <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-indigo-500 border-4 border-white dark:border-slate-950 shadow-sm" />
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Human Review Recorded</p>
-                                        <div className="flex items-center justify-between">
-                                            <p className="text-sm text-slate-900 dark:text-white font-bold">{log.email}</p>
-                                            <span className="text-[10px] text-slate-400 font-medium">{new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {/* Final Publication Seal */}
-                                {selectedHistoryItem.publishedBy && (
-                                    <div className="relative pl-8">
-                                        <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-emerald-500 border-4 border-white dark:border-slate-950 shadow-sm" />
-                                        <div className="p-6 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50">
-                                            <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-3">Final Approval & Launch</p>
-                                            <div className="flex items-center justify-between">
-                                                <p className="text-sm text-emerald-900 dark:text-emerald-100 font-black tracking-tight">{selectedHistoryItem.publishedBy.email}</p>
-                                                <span className="text-[10px] text-emerald-600/70 dark:text-emerald-400/50 font-bold">{new Date(selectedHistoryItem.publishedBy.timestamp).toLocaleDateString()}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                            {/* Created By */}
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Generated & Saved by</p>
+                                <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                                    {selectedHistoryItem.authorEmail || selectedHistoryItem.createdBy || 'System Agent'}
+                                </p>
                             </div>
+
+                            {/* Reviewers */}
+                            {selectedHistoryItem.auditLog && selectedHistoryItem.auditLog.length > 0 && (
+                                <div className="space-y-3">
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Reviewed By</p>
+                                    <div className="flex flex-wrap gap-3">
+                                        {selectedHistoryItem.auditLog.map((log: any, i: number) => (
+                                            <div key={i} className="flex items-center justify-between gap-8 px-5 py-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 w-full">
+                                                <p className="text-sm font-bold text-indigo-700 dark:text-indigo-300">{log.email}</p>
+                                                <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">{new Date(log.timestamp).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Publisher */}
+                            {selectedHistoryItem.publishedBy && (
+                                <div className="space-y-3">
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Published By</p>
+                                    <div className="flex items-center justify-between gap-8 px-5 py-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50">
+                                        <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300">{selectedHistoryItem.publishedBy.email}</p>
+                                        <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">{new Date(selectedHistoryItem.publishedBy.timestamp).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </section>
 
@@ -190,6 +185,14 @@ export const HistoryList = () => {
                                                             {log.email}
                                                         </span>
                                                     ))}
+                                                </div>
+                                            )}
+                                            {item.publishedBy && (
+                                                <div className="flex items-center gap-2 flex-wrap mt-1">
+                                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Published by:</span>
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
+                                                        {item.publishedBy.email}
+                                                    </span>
                                                 </div>
                                             )}
                                         </div>

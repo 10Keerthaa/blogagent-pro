@@ -526,9 +526,9 @@ export const ReviewList = () => {
                                                         <Calendar className="w-3.5 h-3.5" />
                                                         {new Date(draft.createdAt || draft.created_at).toLocaleDateString()}
                                                     </span>
-                                                    {(draft.authorEmail || draft.createdBy) && (
+                                                    {draft.authorEmail && (
                                                         <span className="text-[10px] font-medium text-indigo-400 lowercase italic">
-                                                            by {draft.authorEmail || draft.createdBy}
+                                                            by {draft.authorEmail}
                                                         </span>
                                                     )}
                                                     <Badge variant="outline" className="px-3">Draft</Badge>
