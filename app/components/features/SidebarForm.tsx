@@ -134,6 +134,15 @@ export const SidebarForm = () => {
                             Refine
                         </button>
                     </div>
+                    {/* Mandatory primary keyword notification */}
+                    {!isReadOnly && displayKeywords.length > 0 && !primaryKeyword && (
+                        <div className="flex items-start gap-2 px-3 py-2.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-none">
+                            <Star className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
+                            <p className="text-[10px] font-bold text-amber-700 dark:text-amber-400 leading-relaxed">
+                                Select a <span className="underline decoration-amber-500/60">primary keyword</span> by clicking the ★ icon on a keyword above to enable description generation.
+                            </p>
+                        </div>
+                    )}
                     <div>
                         <Textarea
                             placeholder="SEO optimized summary..."
