@@ -36,6 +36,7 @@ export async function POST(req: Request) {
         - COLORS: Strictly use a palette of **Purple, White, Silver, and Black**. (NO other colors are allowed).
         - Focus: Illustrate the specific key takeaways and data points from the blog text.
         - Aspect Ratio: Square (1:1).
+        - **IMPORTANT: NO TEXT, NO LETTERS, AND NO NUMBERS SHOULD APPEAR ON THE IMAGE.** The output should be a pure visual illustration/graphic.
         
         Return ONLY the prompt text. No quotes, no markdown.
       `;
@@ -72,7 +73,7 @@ export async function POST(req: Request) {
         data: {
           instances: [
             {
-              prompt: visualPrompt.substring(0, 500),
+              prompt: `${visualPrompt.substring(0, 500)}, no text, no letters, no numbers, pure graphic illustration`,
             },
           ],
           parameters: {

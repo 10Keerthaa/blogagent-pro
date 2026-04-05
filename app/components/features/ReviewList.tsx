@@ -554,7 +554,7 @@ export const ReviewList = () => {
                         {/* Scrollable Content */}
                         <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-20">
                             <div className="max-w-4xl mx-auto space-y-12">
-                                <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif">
+                                <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif text-center">
                                     {selectedReviewDraft.title}
                                 </h1>
 

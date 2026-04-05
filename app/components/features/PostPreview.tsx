@@ -315,12 +315,6 @@ export const PostPreview = () => {
 
                     {/* 1. Generate Infographic Button */}
                     <div className="flex flex-col gap-6">
-                        <div className="flex items-center justify-between">
-                            <h4 className="text-[11px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                                <ImageIcon className="w-3.5 h-3.5" />
-                                Visual Content Generation
-                            </h4>
-                        </div>
                         <Button
                             variant="primary"
                             onClick={handleGenerateInfographic}
@@ -337,20 +331,20 @@ export const PostPreview = () => {
                     </div>
 
                     {/* 2. AI Refinement Section */}
-                    <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between">
-                            <h4 className="text-[11px] font-bold uppercase tracking-widest text-indigo-500 flex items-center gap-2">
+                            <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
                                 <Wand2 className="w-3.5 h-3.5" />
-                                AI Content Stream Active
+                                REFINE WITH AI
                             </h4>
                         </div>
                         {!primaryKeyword && (
-                            <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2">
+                            <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mt-2">
                                 <AlertCircle className="w-3.5 h-3.5" />
                                 Action Locked: Select a primary keyword to enable refinement
                             </div>
                         )}
-                        <div className={!primaryKeyword ? 'opacity-50 pointer-events-none' : ''}>
+                        <div className={!primaryKeyword ? 'opacity-50 pointer-events-none mt-2' : 'mt-2'}>
                             <textarea
                                 value={feedback}
                                 onChange={(e) => setFeedback(e.target.value)}
@@ -370,7 +364,7 @@ export const PostPreview = () => {
                     </div>
 
                     {/* ACTION BAR - inline at the bottom of editor content */}
-                    <div className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800 flex gap-4">
+                    <div className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800 flex gap-0">
                         <Button
                             variant="secondary"
                             onClick={() => handleAutoSave(preview)}
