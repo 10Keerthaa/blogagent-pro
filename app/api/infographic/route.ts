@@ -34,7 +34,8 @@ export async function POST(req: Request) {
         - Must be a high-resolution, professional data visualization centered ENTIRELY on the provided blog content.
         - STYLE: Modern, clean, professional corporate graphics.
         - COLORS: Strictly use a palette of **Purple, White, Silver, and Black**. (NO other colors are allowed).
-        - Focus: Illustrate the specific key takeaways and data points from the blog text.
+        - Focus: Illustrate the specific key takeaways and data points from the blog text VISUALLY only.
+        - **MANDATORY**: THE IMAGE MUST BE 100% CLEAN. NO TEXT, NO LABELS, NO LETTERS, NO NUMBERS, NO CHARACTERS. Focus on icons, shapes, and abstract data flow.
         - Aspect Ratio: Square (1:1).
         
         Return ONLY the prompt text. No quotes, no markdown.
