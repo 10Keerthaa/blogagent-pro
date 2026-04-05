@@ -256,13 +256,57 @@ export const ReviewList = () => {
 
                         {selectedReviewDraft.imageUrl && (
                             <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl">
-                                 {/* Base Image */}
+                                {/* Base Image */}
                                 <img
                                     src={selectedReviewDraft.imageUrl}
                                     alt={selectedReviewDraft.title}
                                     className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
                                     style={{ aspectRatio: '4/3' }}
                                 />
+
+                                {/* Solid Purple Overlay (#7E57C2 at 0.45 opacity) */}
+                                <div
+                                    className="absolute inset-0 z-10 pointer-events-none"
+                                    style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }}
+                                />
+
+                                {/* Overlays Container */}
+                                <div className="absolute inset-0 z-20 pointer-events-none">
+                                    {/* Blog Tag Overlay (Top-Left: 40px) */}
+                                    <img
+                                        src="/Blog.png"
+                                        alt="Blog Tag"
+                                        className="absolute top-[40px] left-[40px] w-auto h-10 object-contain"
+                                    />
+
+                                    {/* Title Overlay (20px below blog tag, 40px from left) */}
+                                    <div
+                                        className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
+                                        style={{ top: '100px', lineHeight: '1.3' }}
+                                    >
+                                        {selectedReviewDraft.title.includes(':') ? (
+                                            <>
+                                                <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                    {selectedReviewDraft.title.split(':')[0]}:
+                                                </h1>
+                                                <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
+                                                    {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                {selectedReviewDraft.title}
+                                            </h1>
+                                        )}
+                                    </div>
+
+                                    {/* Logo Overlay (Bottom-Right: 40px) */}
+                                    <img
+                                        src="/10xDS.png"
+                                        alt="Brand Logo"
+                                        className="absolute bottom-[40px] right-[40px] w-auto h-14 object-contain"
+                                    />
+                                </div>
                             </div>
                         )}
 
@@ -364,8 +408,8 @@ export const ReviewList = () => {
                         </section>
                     )}
 
-                    {/* Standalone Bottom Actions */}
-                    {!isReadOnly ? (
+                    {/* Standalone Bottom Actions - Only for Admins/Creators, not for read-only Editors */}
+                    {!isReadOnly && (
                         <div className="w-full pt-10 pb-20 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50 px-10">
                             <Button
                                 variant="secondary"
@@ -421,9 +465,6 @@ export const ReviewList = () => {
                                 Approve & Publish
                             </Button>
                         </div>
-                    ) : (
-                        /* Editor read-only: show post metadata, no action buttons */
-                        <div className="w-full pb-20 px-10 border-t border-slate-100 dark:border-slate-800/50" />
                     )}
                 </div>
             ) : (
@@ -519,12 +560,41 @@ export const ReviewList = () => {
 
                                 {selectedReviewDraft.imageUrl && (
                                     <div className="relative group overflow-hidden rounded-none shadow-xl border border-slate-100 dark:border-slate-800">
-                                         <img
+                                        <img
                                             src={selectedReviewDraft.imageUrl}
                                             alt={selectedReviewDraft.title}
                                             className="w-full h-auto object-cover"
                                             style={{ aspectRatio: '4/3' }}
                                         />
+                                        <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }} />
+                                        <div className="absolute inset-0 pointer-events-none">
+                                            {/* Blog Tag Overlay (Top-Left: 40px) */}
+                                            <img src="/Blog.png" className="absolute top-[40px] left-[40px] h-10 w-auto" alt="blog" />
+
+                                            {/* Title Group Overlay */}
+                                            <div
+                                                className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
+                                                style={{ top: '100px', lineHeight: '1.3' }}
+                                            >
+                                                {selectedReviewDraft.title.includes(':') ? (
+                                                    <>
+                                                        <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                            {selectedReviewDraft.title.split(':')[0]}:
+                                                        </h1>
+                                                        <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
+                                                            {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                        </p>
+                                                    </>
+                                                ) : (
+                                                    <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                        {selectedReviewDraft.title}
+                                                    </h1>
+                                                )}
+                                            </div>
+
+                                            {/* Logo Overlay (Bottom-Right: 40px) */}
+                                            <img src="/10xDS.png" className="absolute bottom-[40px] right-[40px] h-14 w-auto" alt="logo" />
+                                        </div>
                                     </div>
                                 )}
 
