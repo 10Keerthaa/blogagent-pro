@@ -197,11 +197,15 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
         const genericPhrases = ['can help', 'doing more', 'start here', 'read more', 'businesses can', 'how businesses', 'agents are', 'more about', 'learn more'];
         const sortedKeywords = Object.keys(sitemapData)
-            .filter(phrase =>
-                phrase.length > 12 &&
-                !genericPhrases.includes(phrase.toLowerCase()) &&
-                !/^(is|are|the|how|can|it|we)\s/i.test(phrase)
-            )
+            .filter(phrase => {
+                const words = phrase.split(/\s+/).filter(Boolean);
+                return (
+                    words.length >= 2 && words.length <= 3 && // Only link 2-3 word phrases
+                    phrase.length > 12 &&
+                    !genericPhrases.includes(phrase.toLowerCase()) &&
+                    !/^(is|are|the|how|can|it|we)\s/i.test(phrase)
+                );
+            })
             .sort((a, b) => b.length - a.length);
 
         return parts.map(part => {
@@ -213,12 +217,17 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             }
             if (inHeading) return part;
             let text = part;
-            sortedKeywords.forEach(phrase => {
+            let linkCount = 0;
+            
+            for (const phrase of sortedKeywords) {
+                if (linkCount >= 3) break; // Limit to 3 links per text block
+                
                 const regex = new RegExp(`(?<!<[^>]*)\\b(${phrase})\\b(?![^<]*>)`, 'gi');
                 if (text.match(regex)) {
                     text = text.replace(regex, `<a href="${sitemapData[phrase]}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                    linkCount++;
                 }
-            });
+            }
             return text;
         }).join('');
     }, [sitemapData]);

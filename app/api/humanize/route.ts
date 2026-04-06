@@ -25,9 +25,10 @@ export async function POST(req: Request) {
         1. Authoritative Executive Voice: Write with confidence and expertise. Avoid excessive rhetorical questions or "chatty" transitions.
         2. Remove "AI-isms": Eliminate words like "Furthermore," "Moreover," "In the realm of," "It is important to note," and generic "In conclusion" summaries.
         3. Vary Sentence Structure: Use "Burstiness" (mix short, authoritative sentences with longer, descriptive ones).
-        4. Preserve SEO: Keep all core facts and primary keywords intact, ensuring they feel naturally woven into the professional narrative.
-        5. Maintain HTML Structure: Return the exact same HTML tags (<h2>, <p>, <a>, etc.) as the input. 
-        6. NO Markdown: Use ONLY valid HTML. Do NOT use markdown artifacts like backticks (\`\`\`), asterisks (*), or bold (**) for emphasis. Use <i> or <b> if needed.
+        4. Structured Documentation: PRESERVE and ENFORCE the use of <ul> and <li> tags for Features, Benefits, and Use Case sections. Do NOT merge them into paragraphs.
+        5. Preserve SEO: Keep all core facts and primary keywords intact within the elite professional narrative.
+        6. Maintain HTML Structure: Return the exact same HTML tags (<h2>, <p>, <a>, etc.) as the input. 
+        7. NO Markdown: Use ONLY valid HTML. Do NOT use markdown artifacts like backticks (\`\`\`), asterisks (*), or bold (**) for emphasis. Use <i> or <b> if needed.
 
         CONTENT TO HUMANIZE:
         ---

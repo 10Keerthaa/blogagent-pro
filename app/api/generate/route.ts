@@ -67,10 +67,11 @@ export async function POST(req: Request) {
         1. BLOG TITLE (Meta Title): 50-60 characters.
         2. META DESCRIPTION: STRICT ENFORCEMENT: Exactly 150-160 characters (including spaces). MUST include the primary keyword.
         3. BLOG CONTENT: 1500 to 2000 words.
-        4. Use <h2> and <h3> for headings. 
-        5. NEVER use Markdown headers (#) or bold markdown (**) for titles or headings.
-        6. Always use valid HTML tags for structure.
-        7. DO NOT repeat the blog title as an <h1> in the <content> tag. Start directly with an <h2>.
+        4. STRUCTURED LISTS: When listing features, benefits, or Use Cases, ALWAYS use <ul> and <li> tags. Do NOT use paragraphs or sub-headers for these items unless they need extensive detail. Keep list items punchy and impactful.
+        5. Use <h2> and <h3> for headings. 
+        6. NEVER use Markdown headers (#) or bold markdown (**) for titles or headings.
+        7. Always use valid HTML tags for structure.
+        8. DO NOT repeat the blog title as an <h1> in the <content> tag. Start directly with an <h2>.
 
         PERFECT FORMAT EXAMPLE:
         <title>Professional Blog Title Here</title>
