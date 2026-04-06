@@ -275,12 +275,12 @@ export const ReviewList = () => {
                                     <img
                                         src="/Blog.png"
                                         alt="Blog Tag"
-                                        className="absolute top-[40px] left-[40px] w-auto h-10 object-contain"
+                                        className="absolute top-[40px] left-1/2 -translate-x-1/2 w-auto h-10 object-contain"
                                     />
 
-                                    {/* Title Overlay (20px below blog tag, 40px from left) */}
+                                    {/* Title Overlay (Centered) */}
                                     <div
-                                        className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
+                                        className="absolute inset-x-0 text-white flex flex-col items-center text-center px-10 drop-shadow-2xl"
                                         style={{ top: '100px', lineHeight: '1.3' }}
                                     >
                                         {selectedReviewDraft.title.includes(':') ? (
@@ -537,8 +537,8 @@ export const ReviewList = () => {
 
             {/* Preview Modal - Sibling to all content, truly fixed */}
             {isPreviewOpen && selectedReviewDraft && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn">
-                    <div className="bg-white dark:bg-slate-950 w-[96%] h-[94vh] flex flex-col rounded-lg shadow-2xl relative animate-scaleIn overflow-hidden border border-slate-200 dark:border-slate-800">
+                <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-md animate-fadeIn p-4 lg:p-8">
+                    <div className="bg-white dark:bg-slate-950 w-full max-w-6xl h-full lg:h-[94vh] flex flex-col rounded-2xl shadow-2xl relative animate-scaleIn overflow-hidden border border-slate-200 dark:border-slate-800">
                         {/* Close Button */}
                         <button
                             onClick={() => setIsPreviewOpen(false)}
@@ -565,11 +565,11 @@ export const ReviewList = () => {
                                         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }} />
                                         <div className="absolute inset-0 pointer-events-none">
                                             {/* Blog Tag Overlay (Top-Left: 40px) */}
-                                            <img src="/Blog.png" className="absolute top-[40px] left-[40px] h-10 w-auto" alt="blog" />
+                                            <img src="/Blog.png" className="absolute top-[40px] left-1/2 -translate-x-1/2 h-10 w-auto" alt="blog" />
 
-                                            {/* Title Group Overlay */}
+                                            {/* Title Group Overlay (Centered) */}
                                             <div
-                                                className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
+                                                className="absolute inset-x-0 text-white flex flex-col items-center text-center px-10 drop-shadow-2xl"
                                                 style={{ top: '100px', lineHeight: '1.3' }}
                                             >
                                                 {selectedReviewDraft.title.includes(':') ? (
