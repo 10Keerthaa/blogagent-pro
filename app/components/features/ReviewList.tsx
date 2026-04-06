@@ -12,7 +12,6 @@ import {
     FileText, Calendar, ArrowRight, X, CheckCircle, XCircle, BarChart2, Zap, Sparkles, Users,
     Bold, Italic, Link as LinkIcon, RotateCcw, AlertCircle
 } from 'lucide-react';
-import { AdminTracking } from './AdminTracking';
 import { FloatingToolbar } from './FloatingToolbar';
 
 export const ReviewList = () => {
@@ -533,9 +532,6 @@ export const ReviewList = () => {
                             </div>
                         )}
                     </div>
-
-                    {/* Admin Activity Dashboard Section */}
-                    {role === 'admin' && <AdminTracking />}
                 </div>
             )}
 

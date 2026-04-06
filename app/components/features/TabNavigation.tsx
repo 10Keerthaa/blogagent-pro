@@ -4,6 +4,7 @@ import React from 'react';
 import { useDashboard } from '../context/DashboardContext';
 import { User, Shield, BarChart3, Users, ChevronDown } from 'lucide-react';
 import { TeamManagement } from './TeamManagement';
+import { PerformanceManagement } from './PerformanceManagement';
 
 export const TabNavigation = () => {
     const { 
@@ -13,7 +14,8 @@ export const TabNavigation = () => {
         user, 
         role, 
         handleLogout,
-        setIsTeamManagementOpen 
+        setIsTeamManagementOpen,
+        setIsPerformanceOpen
     } = useDashboard();
 
     const [isProfileOpen, setIsProfileOpen] = React.useState(false);
@@ -85,19 +87,15 @@ export const TabNavigation = () => {
                                 </div>
                                 <button 
                                     onClick={() => {
-                                        setActiveTab('review');
+                                        setIsPerformanceOpen(true);
                                         setIsAdminMenuOpen(false);
-                                        // Optional: Scroll to bottom admin section
-                                        setTimeout(() => {
-                                            document.querySelector('h2:contains("Team Performance")')?.scrollIntoView({ behavior: 'smooth' });
-                                        }, 100);
                                     }}
                                     className="w-full flex items-center gap-3 p-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all group/item"
                                 >
                                     <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center group-hover/item:bg-indigo-100 transition-colors">
                                         <BarChart3 className="w-4 h-4 text-indigo-600" />
                                     </div>
-                                    <span className="text-[10px] font-bold uppercase tracking-widest">Performance</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-600">Performance</span>
                                 </button>
                                 <button 
                                     onClick={() => {
@@ -155,6 +153,7 @@ export const TabNavigation = () => {
             
             {/* Global Overlays */}
             <TeamManagement />
+            <PerformanceManagement />
         </nav>
     );
 };
