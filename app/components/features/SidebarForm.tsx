@@ -18,7 +18,7 @@ export const SidebarForm = () => {
         isGeneratingDescription, handleGenerateDescription,
         selectedReviewDraft,
         primaryKeyword, setPrimaryKeyword,
-        handleResumeDraft, isResuming, user
+        handleResumeDraft, isResuming, user, isHumanizing
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -173,11 +173,11 @@ export const SidebarForm = () => {
 
                 <Button
                     onClick={handleGenerate}
-                    isLoading={isGenerating}
+                    isLoading={isGenerating || isHumanizing}
                     disabled={!prompt}
                     className="w-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-indigo-600/10 dark:shadow-none"
                 >
-                    {isGenerating ? 'Synthesizing...' : 'Generate Elite post'}
+                    {isGenerating ? 'Synthesizing...' : isHumanizing ? 'Refining Tone...' : 'Generate Elite post'}
                 </Button>
             </div>
         </aside>

@@ -31,6 +31,7 @@ export const useBlogApi = () => {
     const [isPublished, setIsPublished] = useState(false);
     const [isFetchingKeywords, setIsFetchingKeywords] = useState(false);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
+    const [isHumanizing, setIsHumanizing] = useState(false);
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
 
     const mapFirestoreToDraft = useCallback((docSnap: any) => {
@@ -129,6 +130,35 @@ export const useBlogApi = () => {
             return fullText;
         } finally {
             setIsGenerating(false);
+        }
+    }, []);
+
+    const humanizeContent = useCallback(async (body: any, onChunk?: (chunk: string) => void) => {
+        setIsHumanizing(true);
+        try {
+            const r = await fetch('/api/humanize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!r.ok) throw new Error('Humanization failed');
+
+            const reader = r.body?.getReader();
+            const decoder = new TextDecoder();
+            let fullText = '';
+
+            if (reader) {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value);
+                    fullText += chunk;
+                    if (onChunk) onChunk(chunk);
+                }
+            }
+            return fullText;
+        } finally {
+            setIsHumanizing(false);
         }
     }, []);
 
@@ -364,6 +394,7 @@ export const useBlogApi = () => {
     return {
         isFetchingDrafts,
         isGenerating,
+        isHumanizing,
         isApplyingFeedback,
         setIsApplyingFeedback,
         isGeneratingDescription,
@@ -379,6 +410,7 @@ export const useBlogApi = () => {
         fetchHistory,
         fetchDrafts,
         generateContent,
+        humanizeContent,
         generateFeaturedImage,
         generateDescription,
         fetchKeywords,

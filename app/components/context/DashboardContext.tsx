@@ -33,6 +33,7 @@ interface DashboardContextType {
     setError: (v: string | null) => void;
     isGenerating: boolean;
     isApplyingFeedback: boolean;
+    isHumanizing: boolean;
     isGeneratingDescription: boolean;
     isGeneratingInfographic: boolean;
     infographicUrl: string | null;
@@ -354,6 +355,25 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
             if (finalMeta) setDescription(finalMeta);
+
+            // --- STAGE 2: Automated Humanization Pass ---
+            try {
+                const humanizedText = await api.humanizeContent(
+                    { content: finalContent, title: finalTitle },
+                    (chunk: string) => {
+                        setPreview((prev: any) => ({
+                            ...prev,
+                            content: (prev?.content || '') + chunk // This will append but we want to replace eventually or show streaming
+                        }));
+                    }
+                );
+                
+                // Final sync with humanized content
+                setPreview((prev: any) => ({ ...prev, content: humanizedText, isHumanized: true }));
+            } catch (humanizeErr) {
+                console.error("Humanization failed, falling back to raw content:", humanizeErr);
+            }
+
             const imgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
             if (imgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: imgUrl }));
         } catch (e: any) { setError(e.message); }
@@ -448,7 +468,18 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!preview) return;
         setError(null);
         try {
-            await api.saveDraft({ title: preview.title, content: preview.content, metaDesc: description || preview.meta, imageUrl: preview.imageUrl, infographicUrl: infographicUrl, prompt: prompt, keywords: keywords, authorEmail: user?.email || '', createdBy: user?.uid || '' });
+            await api.saveDraft({ 
+                title: preview.title, 
+                content: preview.content, 
+                metaDesc: description || preview.meta, 
+                imageUrl: preview.imageUrl, 
+                infographicUrl: infographicUrl, 
+                prompt: prompt, 
+                keywords: keywords, 
+                authorEmail: user?.email || '', 
+                createdBy: user?.uid || '',
+                isHumanized: !!preview.isHumanized
+            });
             resetEditorState(); setActiveTab('review'); fetchDrafts();
         } catch (e: any) { setError(e.message); }
     };
@@ -579,7 +610,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
