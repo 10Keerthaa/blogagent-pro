@@ -2,12 +2,22 @@
 
 import React from 'react';
 import { useDashboard } from '../context/DashboardContext';
-import { User } from 'lucide-react';
+import { User, Shield, BarChart3, Users, ChevronDown } from 'lucide-react';
+import { TeamManagement } from './TeamManagement';
 
 export const TabNavigation = () => {
-    const { activeTab, setActiveTab, reviewDrafts, user, role, handleLogout } = useDashboard();
+    const { 
+        activeTab, 
+        setActiveTab, 
+        reviewDrafts, 
+        user, 
+        role, 
+        handleLogout,
+        setIsTeamManagementOpen 
+    } = useDashboard();
 
     const [isProfileOpen, setIsProfileOpen] = React.useState(false);
+    const [isAdminMenuOpen, setIsAdminMenuOpen] = React.useState(false);
 
     const formattedEmail = user?.email?.split('@')[0] || 'User';
 
@@ -52,7 +62,61 @@ export const TabNavigation = () => {
                 ))}
             </div>
 
-            <div className="relative">
+            <div className="flex items-center gap-6">
+                {/* Admin Mode Toggle (Relocated from Admin tab) */}
+                {role === 'admin' && (
+                    <div className="relative">
+                        <button 
+                            onClick={() => setIsAdminMenuOpen(!isAdminMenuOpen)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 group
+                                ${isAdminMenuOpen 
+                                    ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-200/50' 
+                                    : 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100'}`}
+                        >
+                            <Shield className={`w-3.5 h-3.5 transition-transform ${isAdminMenuOpen ? 'rotate-12' : 'group-hover:rotate-12'}`} />
+                            <span className="text-[10px] font-black uppercase tracking-widest">Command Center</span>
+                            <ChevronDown className={`w-3 h-3 transition-transform ${isAdminMenuOpen ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {isAdminMenuOpen && (
+                            <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] border border-slate-100 dark:border-slate-800 p-1.5 animate-fadeIn z-[100]">
+                                <div className="px-3 py-2 border-b border-slate-50 dark:border-slate-800 mb-1">
+                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Administrative Actions</span>
+                                </div>
+                                <button 
+                                    onClick={() => {
+                                        setActiveTab('review');
+                                        setIsAdminMenuOpen(false);
+                                        // Optional: Scroll to bottom admin section
+                                        setTimeout(() => {
+                                            document.querySelector('h2:contains("Team Performance")')?.scrollIntoView({ behavior: 'smooth' });
+                                        }, 100);
+                                    }}
+                                    className="w-full flex items-center gap-3 p-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all group/item"
+                                >
+                                    <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center group-hover/item:bg-indigo-100 transition-colors">
+                                        <BarChart3 className="w-4 h-4 text-indigo-600" />
+                                    </div>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest">Performance</span>
+                                </button>
+                                <button 
+                                    onClick={() => {
+                                        setIsTeamManagementOpen(true);
+                                        setIsAdminMenuOpen(false);
+                                    }}
+                                    className="w-full flex items-center gap-3 p-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all group/item"
+                                >
+                                    <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center group-hover/item:bg-indigo-100 transition-colors">
+                                        <Users className="w-4 h-4 text-indigo-600" />
+                                    </div>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-600">Manage Team</span>
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                <div className="relative">
                 <div
                     className="flex items-center gap-6 cursor-pointer group hover:bg-slate-50 dark:hover:bg-slate-900/50 p-2 rounded-2xl transition-all"
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -86,7 +150,11 @@ export const TabNavigation = () => {
                         </button>
                     </div>
                 )}
+                </div>
             </div>
+            
+            {/* Global Overlays */}
+            <TeamManagement />
         </nav>
     );
 };

@@ -48,7 +48,6 @@ export const AdminTracking = () => {
                         <h2 className="text-[11px] font-bold tracking-[0.2em] text-indigo-500 uppercase">Team Performance</h2>
                         <h3 className="text-2xl font-bold text-slate-900 dark:text-white leading-tight font-serif">User Activity Tracking</h3>
                     </div>
-                    <div className="flex items-center gap-4">
                         <div className="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-none border border-slate-200 dark:border-slate-800">
                             <button 
                                 onClick={() => setActiveView('performance')}
@@ -63,12 +62,7 @@ export const AdminTracking = () => {
                                 Team Management
                             </button>
                         </div>
-                        <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-widest border border-indigo-100 dark:border-indigo-800/30">
-                            <Users className="w-3.5 h-3.5" />
-                            Admin View Mode
-                        </div>
                     </div>
-                </div>
 
                 <Card className="overflow-hidden border-slate-200 dark:border-slate-800 shadow-xl rounded-none">
                     <div className="overflow-x-auto">

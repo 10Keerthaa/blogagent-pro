@@ -35,6 +35,10 @@ interface DashboardContextType {
     isApplyingFeedback: boolean;
     isHumanizing: boolean;
     isFetchingUsers: boolean;
+    isUpdatingRole: boolean;
+    isTeamManagementOpen: boolean;
+    setIsTeamManagementOpen: (v: boolean) => void;
+    handleUpdateUserRole: (uid: string, newRole: string) => Promise<void>;
     isGeneratingDescription: boolean;
     isGeneratingInfographic: boolean;
     infographicUrl: string | null;
@@ -99,6 +103,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [error, setError] = useState<string | null>(null);
     const [infographicUrl, setInfographicUrl] = useState<string | null>(null);
     const [users, setUsers] = useState<any[]>([]);
+    const [isTeamManagementOpen, setIsTeamManagementOpen] = useState(false);
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
     const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
@@ -578,6 +583,21 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setUsers(u);
     };
 
+    const handleUpdateUserRole = async (userId: string, newRole: string) => {
+        const success = await api.updateUserRole(userId, newRole);
+        if (success) {
+            // Refresh local list
+            await handleFetchUsers();
+            if (userId === user?.uid) {
+                // If I updated my own role (e.g. for testing), we should refresh the whole app or logout
+                // For safety, let's just log it or refresh
+                console.log("Self role updated");
+            }
+        } else {
+            setError("Failed to update user role.");
+        }
+    };
+
     const handleSelectReviewDraft = async (id: string) => {
         setIsFetchingDraftDetails(true); setError(null);
         try {
@@ -619,7 +639,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, users, handleFetchUsers, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, handleUpdateUserRole, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;

@@ -33,6 +33,7 @@ export const useBlogApi = () => {
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
     const [isHumanizing, setIsHumanizing] = useState(false);
     const [isFetchingUsers, setIsFetchingUsers] = useState(false);
+    const [isUpdatingRole, setIsUpdatingRole] = useState(false);
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
 
     const mapFirestoreToDraft = useCallback((docSnap: any) => {
@@ -103,6 +104,30 @@ export const useBlogApi = () => {
             return [];
         } finally {
             setIsFetchingUsers(false);
+        }
+    }, []);
+
+    const updateUserRole = useCallback(async (userId: string, newRole: string) => {
+        setIsUpdatingRole(true);
+        try {
+            const user = auth.currentUser;
+            if (!user) return false;
+            const token = await user.getIdToken();
+            const r = await fetch('/api/admin/users/update', {
+                method: 'POST',
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId, newRole })
+            });
+            const d = await r.json();
+            return d.success || false;
+        } catch (e) {
+            console.error('Update Role Error:', e);
+            return false;
+        } finally {
+            setIsUpdatingRole(false);
         }
     }, []);
 
@@ -426,6 +451,7 @@ export const useBlogApi = () => {
         isPublished,
         isFetchingKeywords,
         isFetchingUsers,
+        isUpdatingRole,
         isRefiningSelection,
         fetchSitemap,
         fetchHistory,
@@ -433,6 +459,7 @@ export const useBlogApi = () => {
         generateContent,
         humanizeContent,
         fetchUsers,
+        updateUserRole,
         generateFeaturedImage,
         generateDescription,
         fetchKeywords,
