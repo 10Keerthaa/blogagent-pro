@@ -76,7 +76,7 @@ export const TabNavigation = () => {
                                     : 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100'}`}
                         >
                             <Shield className={`w-3.5 h-3.5 transition-transform ${isAdminMenuOpen ? 'rotate-12' : 'group-hover:rotate-12'}`} />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400">Admin View Mode</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400">Admin Console</span>
                             <ChevronDown className={`w-3 h-3 transition-transform ${isAdminMenuOpen ? 'rotate-180' : ''}`} />
                         </button>
 
