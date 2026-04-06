@@ -40,7 +40,7 @@ export async function GET(req: Request) {
         }));
 
         // 3. Aggregate results
-        const report = profiles.map((profile: any) => {
+        const report = profiles.filter((p: any) => p.email).map((profile: any) => {
             const userPosts = posts.filter(p => p.created_by === profile.id);
             
             return {
