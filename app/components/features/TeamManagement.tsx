@@ -165,7 +165,7 @@ export const TeamManagement = () => {
                                                 <select 
                                                     value={u.role || 'editor'}
                                                     onChange={(e) => onRoleChange(u.id, e.target.value)}
-                                                    disabled={(isUpdatingRole && updatingUserId === u.id) || u.id === currentUser?.uid}
+                                                    disabled={(isUpdatingRole && updatingUserId === u.id)}
                                                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:opacity-50 transition-all uppercase tracking-widest"
                                                 >
                                                     {ROLES.map(r => (
