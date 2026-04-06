@@ -433,7 +433,10 @@ export const useBlogApi = () => {
             const snapshot = await getDocs(q);
             if (snapshot.empty) return null;
             return mapFirestoreToDraft(snapshot.docs[0]);
-        } catch { return null; }
+        } catch (err: any) { 
+            console.error('Fetch Last In-Progress Draft Error:', err);
+            return null; 
+        }
     }, [mapFirestoreToDraft]);
 
     const addUser = useCallback(async (email: string, role: string) => {

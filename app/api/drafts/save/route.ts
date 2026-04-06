@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/firebaseAdmin";
+import * as admin from 'firebase-admin';
 
 export async function POST(req: Request) {
     try {
@@ -22,8 +23,8 @@ export async function POST(req: Request) {
             keywords: keywords || [],
             primaryKeyword: primaryKeyword || '',
             status: status || 'review', // Default status for review tab
-            createdAt: new Date().toISOString(),
-            last_edited_at: new Date().toISOString(),
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            last_edited_at: admin.firestore.FieldValue.serverTimestamp(),
             created_by: createdBy || 'anonymous',
             authorEmail: authorEmail || ''
         };
