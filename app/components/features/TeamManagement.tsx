@@ -13,7 +13,9 @@ export const TeamManagement = () => {
         isFetchingUsers, 
         handleUpdateUserRole, 
         isUpdatingRole,
-        handleFetchUsers
+        handleFetchUsers,
+        reportData,
+        handleFetchReport
     } = useDashboard();
 
     const [updatingUserId, setUpdatingUserId] = React.useState<string | null>(null);
@@ -21,6 +23,7 @@ export const TeamManagement = () => {
     React.useEffect(() => {
         if (isTeamManagementOpen) {
             handleFetchUsers();
+            handleFetchReport();
         }
     }, [isTeamManagementOpen]);
 
@@ -96,35 +99,44 @@ export const TeamManagement = () => {
                                     <div className="flex items-center gap-4 lg:gap-10">
                                         {/* Performance Mini-Stats */}
                                         <div className="hidden sm:flex items-center gap-6">
-                                            <div className="text-center px-4 border-r border-slate-100 dark:border-slate-800">
-                                                <div className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Created</div>
-                                                <div className="text-sm font-black text-slate-700 dark:text-slate-300">0</div>
-                                            </div>
-                                            <div className="text-center px-4">
-                                                <div className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Approved</div>
-                                                <div className="text-sm font-black text-emerald-500">0</div>
-                                            </div>
+                                            {(() => {
+                                                const stats = reportData.find(r => r.email === u.email);
+                                                return (
+                                                    <>
+                                                        <div className="text-center px-4 border-r border-slate-100 dark:border-slate-800">
+                                                            <div className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Created</div>
+                                                            <div className="text-sm font-black text-slate-700 dark:text-slate-300">{stats?.total_created || 0}</div>
+                                                        </div>
+                                                        <div className="text-center px-4">
+                                                            <div className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Approved</div>
+                                                            <div className="text-sm font-black text-emerald-500">{stats?.total_published || 0}</div>
+                                                        </div>
+                                                    </>
+                                                );
+                                            })()}
                                         </div>
 
                                         {/* Role Switcher */}
-                                        <div className="relative group/role min-w-[140px]">
+                                        <div className="flex flex-col min-w-[140px]">
                                             <div className="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-bold mb-2">Authority Level</div>
-                                            <select 
-                                                value={u.role || 'editor'}
-                                                onChange={(e) => onRoleChange(u.id, e.target.value)}
-                                                disabled={isUpdatingRole && updatingUserId === u.id}
-                                                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:opacity-50 transition-all uppercase tracking-widest"
-                                            >
-                                                {ROLES.map(r => (
-                                                    <option key={r} value={r}>{r}</option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute bottom-3 right-3 pointer-events-none text-slate-400">
-                                                {isUpdatingRole && updatingUserId === u.id ? (
-                                                    <Loader2 className="w-3 h-3 animate-spin" />
-                                                ) : (
-                                                    <ChevronDown className="w-3 h-3" />
-                                                )}
+                                            <div className="relative">
+                                                <select 
+                                                    value={u.role || 'editor'}
+                                                    onChange={(e) => onRoleChange(u.id, e.target.value)}
+                                                    disabled={isUpdatingRole && updatingUserId === u.id}
+                                                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:opacity-50 transition-all uppercase tracking-widest"
+                                                >
+                                                    {ROLES.map(r => (
+                                                        <option key={r} value={r}>{r}</option>
+                                                    ))}
+                                                </select>
+                                                <div className="absolute top-1/2 -translate-y-1/2 right-3 pointer-events-none text-slate-400">
+                                                    {isUpdatingRole && updatingUserId === u.id ? (
+                                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                                    ) : (
+                                                        <ChevronDown className="w-3 h-3" />
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

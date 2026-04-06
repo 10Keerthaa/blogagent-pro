@@ -41,6 +41,8 @@ interface DashboardContextType {
     isPerformanceOpen: boolean;
     setIsPerformanceOpen: (v: boolean) => void;
     handleUpdateUserRole: (uid: string, newRole: string) => Promise<void>;
+    reportData: any[];
+    handleFetchReport: () => Promise<void>;
     isGeneratingDescription: boolean;
     isGeneratingInfographic: boolean;
     infographicUrl: string | null;
@@ -107,6 +109,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [users, setUsers] = useState<any[]>([]);
     const [isTeamManagementOpen, setIsTeamManagementOpen] = useState(false);
     const [isPerformanceOpen, setIsPerformanceOpen] = useState(false);
+    const [reportData, setReportData] = useState<any[]>([]);
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
     const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
@@ -586,6 +589,18 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setUsers(u);
     };
 
+    const handleFetchReport = async () => {
+        try {
+            const token = await auth.currentUser?.getIdToken();
+            if (!token) return;
+            const r = await fetch('/api/admin/report', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const d = await r.json();
+            setReportData(d.report || []);
+        } catch (e) { console.error('Fetch Report Error:', e); }
+    };
+
     const handleUpdateUserRole = async (userId: string, newRole: string) => {
         const success = await api.updateUserRole(userId, newRole);
         if (success) {
@@ -642,7 +657,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;

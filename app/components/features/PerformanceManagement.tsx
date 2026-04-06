@@ -12,36 +12,18 @@ export const PerformanceManagement = () => {
         role, 
         users, 
         handleFetchUsers, 
-        isFetchingUsers 
+        isFetchingUsers,
+        reportData,
+        handleFetchReport
     } = useDashboard();
     
-    const [report, setReport] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    // Use reportData from context instead of local state
+    const isLoading = isFetchingUsers; // Simplified loading state proxy or add isFetchingReport to context if needed
 
-    const fetchReport = async () => {
-        setIsLoading(true);
-        try {
-            const { auth } = await import('../../lib/firebase');
-            const token = await auth.currentUser?.getIdToken();
-            if (!token) return;
-            
-            const r = await fetch('/api/admin/report', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const d = await r.json();
-            setReport(d.report || []);
-        } catch (e) {
-            console.error('Fetch Report Error:', e);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     useEffect(() => {
         if (isPerformanceOpen && role === 'admin') {
-            fetchReport();
+            handleFetchReport();
             handleFetchUsers();
         }
     }, [isPerformanceOpen, role]);
@@ -78,12 +60,12 @@ export const PerformanceManagement = () => {
                 {/* Main Content */}
                 <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
                     <div className="grid grid-cols-1 gap-6">
-                        {isLoading ? (
+                        {reportData.length === 0 && isLoading ? (
                             Array.from({ length: 4 }).map((_, i) => (
                                 <div key={i} className="h-28 bg-slate-50 dark:bg-slate-900 animate-pulse border border-slate-100 dark:border-slate-800" />
                             ))
-                        ) : report.length > 0 ? (
-                            report.map((row, idx) => (
+                        ) : reportData.length > 0 ? (
+                            reportData.map((row, idx) => (
                                 <div 
                                     key={idx}
                                     className="group p-8 bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-8"
