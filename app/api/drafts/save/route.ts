@@ -4,7 +4,7 @@ import { db } from "@/lib/firebaseAdmin";
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { title, content, metaDesc, imageUrl, infographicUrl, prompt, keywords, primaryKeyword, createdBy, authorEmail } = body;
+        const { title, content, metaDesc, imageUrl, infographicUrl, prompt, keywords, primaryKeyword, createdBy, authorEmail, status } = body;
 
         if (!title || !content) {
             return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
             prompt: prompt || '',
             keywords: keywords || [],
             primaryKeyword: primaryKeyword || '',
-            status: 'review', // Default status for review tab
+            status: status || 'review', // Default status for review tab
             createdAt: new Date().toISOString(),
             last_edited_at: new Date().toISOString(),
             created_by: createdBy || 'anonymous',

@@ -179,6 +179,16 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     // --- TEXT PROCESSING HELPERS ---
+    
+    const cleanAiHtml = useCallback((html: string) => {
+        if (!html) return '';
+        // 1. Strip markdown backtick wrappers
+        let clean = html.replace(/^```html\s*/i, '').replace(/```$/i, '').trim();
+        // 2. Convert markdown bold/italics (limited) if AI ignored instructions
+        clean = clean.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        clean = clean.replace(/\*(.*?)\*/g, '<i>$1</i>');
+        return clean;
+    }, []);
 
     const applySitemapLinks = useCallback((html: string) => {
         if (!sitemapData || Object.keys(sitemapData).length === 0) return html;
@@ -375,24 +385,50 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
             // --- STAGE 2: Automated Humanization Pass ---
             try {
-                const humanizedText = await api.humanizeContent(
+                const rawHumanized = await api.humanizeContent(
                     { content: finalContent, title: finalTitle },
                     (chunk: string) => {
+                        // For streaming, we can't easily clean partial backticks, so we'll just show it
                         setPreview((prev: any) => ({
                             ...prev,
-                            content: (prev?.content || '') + chunk // This will append but we want to replace eventually or show streaming
+                            content: (prev?.content || '') + chunk
                         }));
                     }
                 );
                 
+                const cleanHumanized = cleanAiHtml(rawHumanized);
+                
                 // Final sync with humanized content
-                setPreview((prev: any) => ({ ...prev, content: humanizedText, isHumanized: true }));
+                setPreview((prev: any) => ({ ...prev, content: cleanHumanized, isHumanized: true }));
+
+                // --- STAGE 3: Image Generation & Final Humanized Sync ---
+                const finalImgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
+                if (finalImgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: finalImgUrl }));
+
+                // Final sync with humanized content and image
+                setPreview((prev: any) => ({ ...prev, content: cleanHumanized, imageUrl: finalImgUrl || prev?.imageUrl, isHumanized: true }));
+
+                // --- STAGE 4: Auto-Save for Resumption ---
+                try {
+                    await api.saveDraft({
+                        title: finalTitle,
+                        content: cleanHumanized,
+                        metaDesc: finalMeta,
+                        imageUrl: finalImgUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80',
+                        prompt,
+                        keywords,
+                        primaryKeyword,
+                        createdBy: user?.uid || 'anonymous',
+                        authorEmail: user?.email || '',
+                        status: 'in_progress',
+                        isHumanized: true
+                    });
+                } catch (saveErr) {
+                    console.warn("Auto-save failed:", saveErr);
+                }
             } catch (humanizeErr) {
                 console.error("Humanization failed, falling back to raw content:", humanizeErr);
             }
-
-            const imgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
-            if (imgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: imgUrl }));
         } catch (e: any) { setError(e.message); }
     };
 

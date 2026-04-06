@@ -22,12 +22,12 @@ export async function POST(req: Request) {
         Original Title: ${title || "Untitled Post"}
         
         STRICT OBJECTIVES:
-        1. Remove "AI-isms": Avoid words like "Furthermore," "Moreover," "In the realm of," "It is important to note," and generic "In conclusion" summaries.
-        2. Vary Sentence Structure: Use "Burstiness" (mix short, punchy sentences with longer, descriptive ones).
-        3. Natural Flow: Add rhetorical questions, minor anecdotes, or conversational transitions that a real human expert would use.
-        4. Preserve SEO: Keep the core facts and keywords intact, but make them feel naturally integrated rather than forced.
+        1. Authoritative Executive Voice: Write with confidence and expertise. Avoid excessive rhetorical questions or "chatty" transitions.
+        2. Remove "AI-isms": Eliminate words like "Furthermore," "Moreover," "In the realm of," "It is important to note," and generic "In conclusion" summaries.
+        3. Vary Sentence Structure: Use "Burstiness" (mix short, authoritative sentences with longer, descriptive ones).
+        4. Preserve SEO: Keep all core facts and primary keywords intact, ensuring they feel naturally woven into the professional narrative.
         5. Maintain HTML Structure: Return the exact same HTML tags (<h2>, <p>, <a>, etc.) as the input. 
-        6. DO NOT add any markdown formatting like **. Use ONLY valid HTML.
+        6. NO Markdown: Use ONLY valid HTML. Do NOT use markdown artifacts like backticks (\`\`\`), asterisks (*), or bold (**) for emphasis. Use <i> or <b> if needed.
 
         CONTENT TO HUMANIZE:
         ---
