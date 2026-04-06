@@ -25,10 +25,12 @@ export async function POST(req: Request) {
         1. Authoritative Executive Voice: Write with confidence and expertise. Avoid excessive rhetorical questions or "chatty" transitions.
         2. Remove "AI-isms": Eliminate words like "Furthermore," "Moreover," "In the realm of," "It is important to note," and generic "In conclusion" summaries.
         3. Vary Sentence Structure: Use "Burstiness" (mix short, authoritative sentences with longer, descriptive ones).
-        4. Structured Documentation: PRESERVE and ENFORCE the use of <ul> and <li> tags for Features, Benefits, and Use Case sections. Do NOT merge them into paragraphs.
-        5. Preserve SEO: Keep all core facts and primary keywords intact within the elite professional narrative.
-        6. Maintain HTML Structure: Return the exact same HTML tags (<h2>, <p>, <a>, etc.) as the input. 
-        7. NO Markdown: Use ONLY valid HTML. Do NOT use markdown artifacts like backticks (\`\`\`), asterisks (*), or bold (**) for emphasis. Use <i> or <b> if needed.
+        4. Structured Documentation: PRESERVE and ENFORCE the use of <ul> and <li> tags for Features, Benefits, and Use Case sections. Transition DIRECTLY from lead-in sentences (e.g. "Consider these factors:") to the <ul>.
+        5. ZERO REDUNDANCY: Do NOT add sub-headers that repeat the lead-in sentence (e.g., don't add "**Factors to Consider:**" if the previous sentence already says it).
+        6. TIGHT SPACING: Ensure no empty <p> tags or unnecessary <br> breaks are added between text and lists.
+        7. Preserve SEO: Keep all core facts and primary keywords intact within the elite professional narrative.
+        8. Maintain HTML Structure: Return the exact same HTML tags (<h2>, <p>, <a>, etc.) as the input. 
+        9. NO Markdown: Use ONLY valid HTML. Do NOT use markdown artifacts like backticks (\`\`\`), asterisks (*), or bold (**) for emphasis. Use <i> or <b> if needed.
 
         CONTENT TO HUMANIZE:
         ---
