@@ -152,12 +152,7 @@ export const SidebarForm = () => {
                             readOnly={isReadOnly}
                             maxLength={200}
                         />
-                        <div className="flex items-center justify-end mt-2 px-1">
-                            {/* Strict 160-max guard: red only when limit is breached */}
-                            <div className={`text-[10px] font-bold tracking-widest uppercase ${displayDescription.length > 160 ? 'text-red-500' : 'text-slate-400'}`}>
-                                {displayDescription.length} / 160 <span className="opacity-50 ml-1">CHARS</span>
-                            </div>
-                        </div>
+
                     </div>
                 </section>
             </div>
