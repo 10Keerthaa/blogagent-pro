@@ -41,6 +41,8 @@ interface DashboardContextType {
     isPerformanceOpen: boolean;
     setIsPerformanceOpen: (v: boolean) => void;
     handleUpdateUserRole: (uid: string, newRole: string) => Promise<void>;
+    handleAddUser: (email: string, role: string) => Promise<boolean>;
+    handleDeleteUser: (userId: string) => Promise<boolean>;
     reportData: any[];
     handleFetchReport: () => Promise<void>;
     isGeneratingDescription: boolean;
@@ -616,6 +618,28 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const handleAddUser = async (email: string, role: string) => {
+        const success = await api.addUser(email, role);
+        if (success) {
+            await handleFetchUsers();
+            return true;
+        } else {
+            setError("Failed to add new user. They may already exist.");
+            return false;
+        }
+    };
+
+    const handleDeleteUser = async (userId: string) => {
+        const success = await api.deleteUser(userId);
+        if (success) {
+            await handleFetchUsers();
+            return true;
+        } else {
+            setError("Failed to delete user.");
+            return false;
+        }
+    };
+
     const handleSelectReviewDraft = async (id: string) => {
         setIsFetchingDraftDetails(true); setError(null);
         try {
@@ -657,7 +681,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;

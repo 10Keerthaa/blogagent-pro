@@ -436,6 +436,60 @@ export const useBlogApi = () => {
         } catch { return null; }
     }, [mapFirestoreToDraft]);
 
+    const addUser = useCallback(async (email: string, role: string) => {
+        const user = auth.currentUser;
+        if (!user) return false;
+        try {
+            const token = await user.getIdToken();
+            const response = await fetch('/api/admin/users/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ email, role })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to add user');
+            }
+
+            const data = await response.json();
+            console.log('User added:', data);
+            return true;
+        } catch (err: any) {
+            console.error('Add User Error:', err);
+            return false;
+        }
+    }, []);
+
+    const deleteUser = useCallback(async (userId: string) => {
+        const user = auth.currentUser;
+        if (!user) return false;
+        try {
+            const token = await user.getIdToken();
+            const response = await fetch('/api/admin/users/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ userId })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to delete user');
+            }
+
+            return true;
+        } catch (err: any) {
+            console.error('Delete User Error:', err);
+            return false;
+        }
+    }, []);
+
     return {
         isFetchingDrafts,
         isGenerating,
@@ -474,6 +528,8 @@ export const useBlogApi = () => {
         isFetchingDraftDetails,
         setIsFetchingDraftDetails,
         refineSelection,
+        addUser,
+        deleteUser,
         mapSupabaseToDraft: mapFirestoreToDraft // Alias for compatibility
     };
 };
