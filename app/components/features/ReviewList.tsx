@@ -13,6 +13,7 @@ import {
     AlertCircle
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
+import { Portal } from '../ui/Portal';
 
 export const ReviewList = () => {
     const {
@@ -409,52 +410,54 @@ export const ReviewList = () => {
                 </div>
             )}
 
-            {/* PREVIEW MODAL - Strictly outside animated blocks for zero-stacking-context centering */}
+            {/* PREVIEW MODAL - Wrapped in Portal for absolute viewport centering */}
             {isPreviewOpen && selectedReviewDraft && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn">
-                    {/* The White Modal Box: Centered relative to the viewport */}
-                    <div className="bg-white dark:bg-slate-950 w-[96%] max-w-[1440px] h-[94vh] flex flex-col rounded-lg shadow-[0_0_100px_rgba(0,0,0,0.5)] relative animate-scaleIn overflow-hidden border border-slate-200 dark:border-slate-800">
-                        {/* Close Button */}
-                        <button onClick={() => setIsPreviewOpen(false)} className="absolute top-8 right-8 p-3 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-all z-30 shadow-sm">
-                            <X className="w-6 h-6 text-slate-500" />
-                        </button>
-                        {/* Scrollable Content */}
-                        <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-20">
-                            <div className="max-w-4xl mx-auto space-y-12">
-                                <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif text-center">{selectedReviewDraft.title}</h1>
-                                {selectedReviewDraft.imageUrl && (
-                                    <div className="relative group overflow-hidden rounded-none shadow-xl border border-slate-100 dark:border-slate-800">
-                                        <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '4/3' }} />
-                                        <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }} />
-                                        <div className="absolute inset-0 pointer-events-none">
-                                            <img src="/Blog.png" className="absolute top-[40px] left-[40px] h-10 w-auto" alt="blog" />
-                                            <div className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl" style={{ top: '100px', lineHeight: '1.3' }}>
-                                                {selectedReviewDraft.title.includes(':') ? (
-                                                    <><h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">{selectedReviewDraft.title.split(':')[0]}:</h1><p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">{selectedReviewDraft.title.split(':').slice(1).join(':').trim()}</p></>
-                                                ) : <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">{selectedReviewDraft.title}</h1>}
+                <Portal>
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn">
+                        {/* The White Modal Box: Centered relative to the viewport */}
+                        <div className="bg-white dark:bg-slate-950 w-[96%] max-w-[1440px] h-[94vh] flex flex-col rounded-lg shadow-[0_0_100px_rgba(0,0,0,0.5)] relative animate-scaleIn overflow-hidden border border-slate-200 dark:border-slate-800">
+                            {/* Close Button */}
+                            <button onClick={() => setIsPreviewOpen(false)} className="absolute top-8 right-8 p-3 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-all z-30 shadow-sm">
+                                <X className="w-6 h-6 text-slate-500" />
+                            </button>
+                            {/* Scrollable Content */}
+                            <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-20">
+                                <div className="max-w-4xl mx-auto space-y-12">
+                                    <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif text-center">{selectedReviewDraft.title}</h1>
+                                    {selectedReviewDraft.imageUrl && (
+                                        <div className="relative group overflow-hidden rounded-none shadow-xl border border-slate-100 dark:border-slate-800">
+                                            <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '4/3' }} />
+                                            <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }} />
+                                            <div className="absolute inset-0 pointer-events-none">
+                                                <img src="/Blog.png" className="absolute top-[40px] left-[40px] h-10 w-auto" alt="blog" />
+                                                <div className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl" style={{ top: '100px', lineHeight: '1.3' }}>
+                                                    {selectedReviewDraft.title.includes(':') ? (
+                                                        <><h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">{selectedReviewDraft.title.split(':')[0]}:</h1><p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">{selectedReviewDraft.title.split(':').slice(1).join(':').trim()}</p></>
+                                                    ) : <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">{selectedReviewDraft.title}</h1>}
+                                                </div>
+                                                <img src="/10xDS.png" className="absolute bottom-[40px] right-[40px] h-14 w-auto" alt="logo" />
                                             </div>
-                                            <img src="/10xDS.png" className="absolute bottom-[40px] right-[40px] h-14 w-auto" alt="logo" />
                                         </div>
-                                    </div>
-                                )}
-                                <article dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }} className="text-black dark:text-white text-lg leading-relaxed prose prose-stone dark:prose-invert max-w-none prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold" />
-                                {selectedReviewDraft.infographicUrl && (
-                                    <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
-                                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8 text-center">Visual Summary</h4>
-                                        <div className="border border-slate-200 dark:border-slate-800 shadow-xl"><img src={selectedReviewDraft.infographicUrl} alt="Infographic" className="w-full h-auto" /></div>
-                                    </div>
-                                )}
+                                    )}
+                                    <article dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }} className="text-black dark:text-white text-lg leading-relaxed prose prose-stone dark:prose-invert max-w-none prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold" />
+                                    {selectedReviewDraft.infographicUrl && (
+                                        <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
+                                            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8 text-center">Visual Summary</h4>
+                                            <div className="border border-slate-200 dark:border-slate-800 shadow-xl"><img src={selectedReviewDraft.infographicUrl} alt="Infographic" className="w-full h-auto" /></div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            {/* Modal Footer Actions */}
+                            <div className="p-8 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4 bg-slate-50/50 dark:bg-slate-900/50">
+                                <Button variant="secondary" onClick={() => setIsPreviewOpen(false)} className="px-8 h-14 rounded-none border border-slate-200 dark:border-slate-800">Continue Editing</Button>
+                                <Button variant="primary" onClick={() => { handleApproveDraft(selectedReviewDraft); setIsPreviewOpen(false); }} isLoading={isPublished} className="px-8 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-none shadow-lg shadow-emerald-600/10">
+                                    <CheckCircle className="w-4 h-4 mr-2" />Approve & Publish Now
+                                </Button>
                             </div>
                         </div>
-                        {/* Modal Footer Actions */}
-                        <div className="p-8 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4 bg-slate-50/50 dark:bg-slate-900/50">
-                            <Button variant="secondary" onClick={() => setIsPreviewOpen(false)} className="px-8 h-14 rounded-none border border-slate-200 dark:border-slate-800">Continue Editing</Button>
-                            <Button variant="primary" onClick={() => { handleApproveDraft(selectedReviewDraft); setIsPreviewOpen(false); }} isLoading={isPublished} className="px-8 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-none shadow-lg shadow-emerald-600/10">
-                                <CheckCircle className="w-4 h-4 mr-2" />Approve & Publish Now
-                            </Button>
-                        </div>
                     </div>
-                </div>
+                </Portal>
             )}
         </div>
     );
