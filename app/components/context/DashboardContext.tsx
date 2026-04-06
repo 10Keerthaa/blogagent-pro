@@ -34,10 +34,13 @@ interface DashboardContextType {
     isGenerating: boolean;
     isApplyingFeedback: boolean;
     isHumanizing: boolean;
+    isFetchingUsers: boolean;
     isGeneratingDescription: boolean;
     isGeneratingInfographic: boolean;
     infographicUrl: string | null;
     setInfographicUrl: (v: string | null) => void;
+    users: any[];
+    handleFetchUsers: () => Promise<void>;
     isSavingDraft: boolean;
     isRejecting: boolean;
     isSavingManual: boolean;
@@ -95,6 +98,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [selectedHistoryItem, setSelectedHistoryItem] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
     const [infographicUrl, setInfographicUrl] = useState<string | null>(null);
+    const [users, setUsers] = useState<any[]>([]);
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
     const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
@@ -568,6 +572,11 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             setError(e.message);
         }
     };
+    
+    const handleFetchUsers = async () => {
+        const u = await api.fetchUsers();
+        setUsers(u);
+    };
 
     const handleSelectReviewDraft = async (id: string) => {
         setIsFetchingDraftDetails(true); setError(null);
@@ -610,7 +619,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, users, handleFetchUsers, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;

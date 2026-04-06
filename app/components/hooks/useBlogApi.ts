@@ -32,6 +32,7 @@ export const useBlogApi = () => {
     const [isFetchingKeywords, setIsFetchingKeywords] = useState(false);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
     const [isHumanizing, setIsHumanizing] = useState(false);
+    const [isFetchingUsers, setIsFetchingUsers] = useState(false);
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
 
     const mapFirestoreToDraft = useCallback((docSnap: any) => {
@@ -84,6 +85,25 @@ export const useBlogApi = () => {
             const d = await r.json();
             return d.history || [];
         } catch { return []; }
+    }, []);
+
+    const fetchUsers = useCallback(async () => {
+        setIsFetchingUsers(true);
+        try {
+            const user = auth.currentUser;
+            if (!user) return [];
+            const token = await user.getIdToken();
+            const r = await fetch('/api/admin/users', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const d = await r.json();
+            return d.users || [];
+        } catch (e) {
+            console.error('Fetch Users Error:', e);
+            return [];
+        } finally {
+            setIsFetchingUsers(false);
+        }
     }, []);
 
     const fetchDrafts = useCallback(async () => {
@@ -405,12 +425,14 @@ export const useBlogApi = () => {
         isSavingReview,
         isPublished,
         isFetchingKeywords,
+        isFetchingUsers,
         isRefiningSelection,
         fetchSitemap,
         fetchHistory,
         fetchDrafts,
         generateContent,
         humanizeContent,
+        fetchUsers,
         generateFeaturedImage,
         generateDescription,
         fetchKeywords,
