@@ -18,7 +18,8 @@ export const SidebarForm = () => {
         isGeneratingDescription, handleGenerateDescription,
         selectedReviewDraft,
         primaryKeyword, setPrimaryKeyword,
-        handleResumeDraft, isResuming, user, isHumanizing
+        handleResumeDraft, isResuming, user, isHumanizing,
+        humanizationError, handleRetryHumanization
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -169,6 +170,28 @@ export const SidebarForm = () => {
                         <RefreshCw className={`w-3.5 h-3.5 ${isResuming ? 'animate-spin' : ''}`} />
                         Resume Last Draft
                     </Button>
+                )}
+
+                {humanizationError && !isGenerating && (
+                    <div className="p-4 bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 rounded-none space-y-3 animate-fadeIn">
+                        <div className="flex items-start gap-2">
+                            <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
+                            <div className="space-y-1">
+                                <p className="text-[11px] font-bold text-red-700 dark:text-red-400 uppercase tracking-wide">Refinement Interrupted</p>
+                                <p className="text-[10px] text-red-600 dark:text-red-500 font-medium leading-relaxed">
+                                    The automated humanization pass encountered a hiccup. You can proceed with the current draft or attempt to refine the tone again.
+                                </p>
+                            </div>
+                        </div>
+                        <Button 
+                            variant="secondary" 
+                            onClick={handleRetryHumanization}
+                            className="w-full h-10 text-[10px] bg-white hover:bg-red-50 text-red-600 border-red-200 dark:bg-red-900/10 dark:border-red-800"
+                        >
+                            <RefreshCw className={`w-3 h-3 mr-2 ${isHumanizing ? 'animate-spin' : ''}`} />
+                            Retry Tone Refinement
+                        </Button>
+                    </div>
                 )}
 
                 <Button

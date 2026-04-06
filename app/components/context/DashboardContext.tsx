@@ -64,6 +64,9 @@ interface DashboardContextType {
     handleLogout: () => Promise<void>;
     isPreviewOpen: boolean;
     setIsPreviewOpen: (v: boolean) => void;
+    humanizationError: boolean;
+    setHumanizationError: (v: boolean) => void;
+    handleRetryHumanization: () => Promise<void>;
 
     // Handlers
     handleAddKeyword: (e: React.KeyboardEvent) => void;
@@ -122,6 +125,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [role, setRole] = useState<'admin' | 'editor' | null>(null);
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [humanizationError, setHumanizationError] = useState(false);
 
     // --- HELPER FUNCTIONS ---
 
@@ -395,12 +399,13 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
             if (finalMeta) setDescription(finalMeta);
 
+            setHumanizationError(false);
+            
             // --- STAGE 2: Automated Humanization Pass ---
             try {
                 const rawHumanized = await api.humanizeContent(
                     { content: finalContent, title: finalTitle },
                     (chunk: string) => {
-                        // For streaming, we can't easily clean partial backticks, so we'll just show it
                         setPreview((prev: any) => ({
                             ...prev,
                             content: (prev?.content || '') + chunk
@@ -409,22 +414,18 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 );
                 
                 const cleanHumanized = cleanAiHtml(rawHumanized);
-                
-                // Final sync with humanized content
                 setPreview((prev: any) => ({ ...prev, content: cleanHumanized, isHumanized: true }));
 
                 // --- STAGE 3: Image Generation & Final Humanized Sync ---
                 const finalImgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
                 if (finalImgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: finalImgUrl }));
 
-                // Final sync with humanized content and image
-                setPreview((prev: any) => ({ ...prev, content: cleanHumanized, imageUrl: finalImgUrl || prev?.imageUrl, isHumanized: true }));
-
-                // --- STAGE 4: Auto-Save for Resumption ---
+                // --- STAGE 4: Auto-Save for Resumption (Draft Buffer) ---
                 try {
                     await api.saveDraft({
                         title: finalTitle,
                         content: cleanHumanized,
+                        rawContent: finalContent, // ELITE: Save the original AI facts
                         metaDesc: finalMeta,
                         imageUrl: finalImgUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80',
                         prompt,
@@ -433,15 +434,87 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                         createdBy: user?.uid || 'anonymous',
                         authorEmail: user?.email || '',
                         status: 'in_progress',
-                        isHumanized: true
+                        isHumanized: true,
+                        humanizationStatus: 'success'
                     });
                 } catch (saveErr) {
                     console.warn("Auto-save failed:", saveErr);
                 }
             } catch (humanizeErr) {
-                console.error("Humanization failed, falling back to raw content:", humanizeErr);
+                console.error("Humanization failed:", humanizeErr);
+                setHumanizationError(true);
+                // Fallback: Save as in_progress but with failed status so editor can retry
+                try {
+                    await api.saveDraft({
+                        title: finalTitle,
+                        content: finalContent, // Fallback to raw
+                        rawContent: finalContent,
+                        metaDesc: finalMeta,
+                        imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80',
+                        prompt,
+                        keywords,
+                        primaryKeyword,
+                        createdBy: user?.uid || 'anonymous',
+                        authorEmail: user?.email || '',
+                        status: 'in_progress',
+                        isHumanized: false,
+                        humanizationStatus: 'failed'
+                    });
+                } catch (saveErr) { console.warn("Fallback auto-save failed"); }
             }
         } catch (e: any) { setError(e.message); }
+    };
+
+    const handleRetryHumanization = async () => {
+        if (!preview || !preview.content) return;
+        setHumanizationError(false);
+        setError(null);
+        
+        try {
+            const rawHumanized = await api.humanizeContent(
+                { content: preview.content, title: preview.title },
+                (chunk: string) => {
+                    setPreview((prev: any) => ({
+                        ...prev,
+                        content: (prev?.content || '') + chunk
+                    }));
+                }
+            );
+            
+            const cleanHumanized = cleanAiHtml(rawHumanized);
+            const finalImgUrl = await api.generateFeaturedImage({ prompt, title: preview.title });
+            
+            setPreview((prev: any) => ({ 
+                ...prev, 
+                content: cleanHumanized, 
+                imageUrl: finalImgUrl || prev?.imageUrl,
+                isHumanized: true 
+            }));
+
+            // Sync update to the draft
+            try {
+                // Find the existing draft for this prompt/user to update
+                const drafts = await api.fetchDrafts();
+                const latest = drafts.find((d: any) => d.prompt === prompt && d.status === 'in_progress');
+                if (latest) {
+                    await api.updateDraft({
+                        id: latest.id,
+                        action: 'edit',
+                        updateData: {
+                            content: cleanHumanized,
+                            isHumanized: true,
+                            humanizationStatus: 'success',
+                            imageUrl: finalImgUrl || latest.imageUrl
+                        }
+                    });
+                }
+            } catch (saveErr) { console.warn("Retry sync failed", saveErr); }
+            
+        } catch (err) {
+            console.error("Retry humanization failed:", err);
+            setHumanizationError(true);
+            setError("Tone refinement failed again. You can continue with the current version or try once more.");
+        }
     };
 
     const handleGenerateDescription = async () => {
@@ -729,7 +802,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
