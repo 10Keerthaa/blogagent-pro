@@ -258,9 +258,9 @@ export const PostPreview = () => {
                     />
                     <div className="absolute inset-0 bg-indigo-900/40 pointer-events-none" />
 
-                    <div className="absolute inset-x-0 pointer-events-none">
-                        <img src="/Blog.png" alt="Blog" className="absolute top-[40px] left-1/2 -translate-x-1/2 h-10 w-auto" />
-                        <div className="absolute inset-x-0 text-white p-10 font-sans drop-shadow-2xl flex flex-col items-center text-center" style={{ top: '100px', lineHeight: '1.3' }}>
+                    <div className="absolute inset-0 pointer-events-none">
+                        <img src="/Blog.png" alt="Blog" className="absolute top-[40px] left-[40px] h-10 w-auto" />
+                        <div className="absolute top-[100px] left-[40px] text-white max-w-[85%] font-sans drop-shadow-2xl" style={{ lineHeight: '1.3' }}>
                             {preview.title.includes(':') ? (
                                 <>
                                     <h1 className="text-[56px] font-bold m-0 p-0 leading-[1.3]">{preview.title.split(':')[0]}:</h1>

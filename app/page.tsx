@@ -11,7 +11,7 @@ import { Login } from './components/features/Login';
 import { X, XCircle } from 'lucide-react';
 
 const DashboardContent = () => {
-  const { activeTab, error, setError, user, selectedReviewDraft } = useDashboard();
+  const { activeTab, error, setError, user, selectedReviewDraft, isPreviewOpen } = useDashboard();
 
   // Sidebar visibility rule:
   // Show only on the 'create' tab (where the form is needed)
@@ -33,14 +33,14 @@ const DashboardContent = () => {
         {/* LEFT PANEL: Sidebar Form — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
         <div
           className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0
-            ${showSidebar ? 'w-full lg:w-[350px] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
+            ${showSidebar ? 'w-full lg:w-[40%] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
         >
           <SidebarForm />
         </div>
 
         {/* RIGHT PANEL: Dynamic Workspace — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
         <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-500 ease-in-out
-          ${showSidebar ? 'w-full' : 'w-full'}`}>
+          ${showSidebar ? 'lg:w-[60%]' : 'w-full'}`}>
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
 
