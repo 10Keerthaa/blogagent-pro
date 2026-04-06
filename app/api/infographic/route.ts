@@ -35,12 +35,13 @@ export async function POST(req: Request) {
         - STYLE: Modern, clean, professional corporate graphics.
         - COLORS: Strictly use a palette of **Purple, White, Silver, and Black**. (NO other colors are allowed).
         - Focus: Illustrate the specific key takeaways and data points from the blog text.
-        - Aspect Ratio: Square (1:1).
-        - **CRITICAL: ABSOLUTELY ZERO TEXT, NO LETTERS, NO SIGNS, NO WORDS, AND NO NUMBERS SHOULD APPEAR.** 
-        - The output should be a pure visual illustration/graphic ONLY. 
-        - DO NOT include labels, titles, speech bubbles, or any typographic elements. Focus on metaphors and icons.
+        - **CRITICAL / STOP: YOU MUST NEVER DESCRIBE OR INCLUDE ANY TEXT, LETTERS, SIGNS, OR WORDS.** 
+        - IF YOU DESCRIBE A LABEL OR TITLE, THE GENERATION WILL FAIL.
+        - FOCUS ONLY ON VISUAL METAPHORS: icons, connecting lines, 3D shapes, abstract patterns, and professional corporate graphics.
+        - PURE VISUALS ONLY: No typographic elements of any kind. 
+        - STYLE: 10xDS Premium Corporate (Purple, White, Silver, Black).
         
-        Return ONLY the prompt text. No quotes, no markdown.
+        Return ONLY the visual description prompt text. No quotes, no markdown.
       `;
 
       const response = await client.request({

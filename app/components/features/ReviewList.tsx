@@ -421,19 +421,35 @@ export const ReviewList = () => {
                                 <X className="w-6 h-6 text-slate-500" />
                             </button>
                             {/* Scrollable Content */}
-                            <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-20">
-                                <div className="max-w-4xl mx-auto space-y-12">
-                                    <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif text-center">{selectedReviewDraft.title}</h1>
+                            <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-24 flex flex-col items-center">
+                                <div className="max-w-[850px] w-full space-y-16">
+                                    <h1 className="text-4xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif text-center whitespace-normal">
+                                        {selectedReviewDraft.title}
+                                    </h1>
+
                                     {selectedReviewDraft.imageUrl && (
-                                        <div className="relative group overflow-hidden rounded-none shadow-xl border border-slate-100 dark:border-slate-800">
+                                        <div className="relative group overflow-hidden rounded-none shadow-2xl border border-slate-100 dark:border-slate-800 w-full">
                                             <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '4/3' }} />
                                             <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(126, 87, 194, 0.45)' }} />
                                             <div className="absolute inset-0 pointer-events-none">
                                                 <img src="/Blog.png" className="absolute top-[40px] left-[40px] h-10 w-auto" alt="blog" />
-                                                <div className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl" style={{ top: '100px', lineHeight: '1.3' }}>
+                                                
+                                                {/* Centered Title Group Overlay */}
+                                                <div className="absolute inset-x-10 text-white flex flex-col items-center text-center gap-0 drop-shadow-2xl" style={{ top: '120px', lineHeight: '1.2' }}>
                                                     {selectedReviewDraft.title.includes(':') ? (
-                                                        <><h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">{selectedReviewDraft.title.split(':')[0]}:</h1><p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">{selectedReviewDraft.title.split(':').slice(1).join(':').trim()}</p></>
-                                                    ) : <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">{selectedReviewDraft.title}</h1>}
+                                                        <>
+                                                            <h1 className="text-[48px] lg:text-[56px] font-bold tracking-tight m-0 p-0">
+                                                                {selectedReviewDraft.title.split(':')[0]}:
+                                                            </h1>
+                                                            <p className="text-[34px] lg:text-[40px] font-normal opacity-95 m-0 p-0">
+                                                                {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                            </p>
+                                                        </>
+                                                    ) : (
+                                                        <h1 className="text-[48px] lg:text-[56px] font-bold tracking-tight m-0 p-0 text-center">
+                                                            {selectedReviewDraft.title}
+                                                        </h1>
+                                                    )}
                                                 </div>
                                                 <img src="/10xDS.png" className="absolute bottom-[40px] right-[40px] h-14 w-auto" alt="logo" />
                                             </div>
