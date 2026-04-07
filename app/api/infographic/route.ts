@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { uploadToGCS } from '@/lib/gcs';
 import { getGoogleAuth } from '@/lib/googleAuth';
+import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
+
 
 export const maxDuration = 60; // Set timeout for Vercel
 
@@ -29,7 +33,7 @@ export async function POST(req: Request) {
         You are a graphic designer specializing in data visualization.
         Draft: ${content.substring(0, 3000)}
         
-        TASK: Create a highly detailed image generation prompt for a square infographic.
+        TASK: Create a highly detailed image generation prompt for a vertical portrait infographic (4:3 aspect ratio, taller than wide).
         REQUIREMENTS:
         - Must be a high-resolution, professional data visualization centered ENTIRELY on the provided blog content.
         - STYLE: Modern, clean, professional corporate graphics.
@@ -81,15 +85,43 @@ export async function POST(req: Request) {
           ],
           parameters: {
             sampleCount: 1,
-            aspectRatio: "1:1",
+            aspectRatio: "3:4",
           },
+
         },
       });
 
       const data = response.data as any;
       if (data.predictions && data.predictions[0] && data.predictions[0].bytesBase64Encoded) {
         const base64Data = data.predictions[0].bytesBase64Encoded;
-        const buffer = Buffer.from(base64Data, 'base64');
+        const rawBuffer = Buffer.from(base64Data, 'base64');
+
+        // --- POST-PROCESSING: Resize to 800x1000 and composite 10xDS logo ---
+        const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
+        const logoBuffer = fs.readFileSync(logoPath);
+
+        // Resize logo to 130px wide for the overlay
+        const resizedLogo = await sharp(logoBuffer)
+          .resize({ width: 130 })
+          .toBuffer();
+        const logoMeta = await sharp(resizedLogo).metadata();
+        const logoH = logoMeta.height || 50;
+
+        // Resize infographic to exactly 800x1000 and overlay logo at bottom-right
+        const MARGIN = 24;
+        const buffer = await sharp(rawBuffer)
+          .resize(800, 1000, { fit: 'cover', position: 'center', kernel: 'cubic' })
+          .composite([
+            {
+              input: resizedLogo,
+              left: 800 - 130 - MARGIN,
+              top: 1000 - logoH - MARGIN,
+            }
+          ])
+          .png()
+          .toBuffer();
+        // --- END POST-PROCESSING ---
+
         const fileName = `info-${Date.now()}.png`;
 
         console.log("Uploading Infographic to GCS...");
