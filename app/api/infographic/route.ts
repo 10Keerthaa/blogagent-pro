@@ -30,22 +30,27 @@ export async function POST(req: Request) {
       const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
       const aiPrompt = `
-        You are a graphic designer specializing in data visualization.
-        Draft: ${content.substring(0, 3000)}
-        
-        TASK: Create a highly detailed image generation prompt for a vertical portrait infographic (4:3 aspect ratio, taller than wide).
-        REQUIREMENTS:
-        - Must be a high-resolution, professional data visualization centered ENTIRELY on the provided blog content.
-        - STYLE: Modern, clean, professional corporate graphics.
-        - COLORS: Strictly use a palette of **Purple, White, Silver, and Black**. (NO other colors are allowed).
-        - Focus: Illustrate the specific key takeaways and data points from the blog text.
-        - **CRITICAL / STOP: YOU MUST NEVER DESCRIBE OR INCLUDE ANY TEXT, LETTERS, SIGNS, OR WORDS.** 
-        - IF YOU DESCRIBE A LABEL OR TITLE, THE GENERATION WILL FAIL.
-        - FOCUS ONLY ON VISUAL METAPHORS: icons, connecting lines, 3D shapes, abstract patterns, and professional corporate graphics.
-        - PURE VISUALS ONLY: No typographic elements of any kind. 
-        - STYLE: 10xDS Premium Corporate (Purple, White, Silver, Black).
-        
-        Return ONLY the visual description prompt text. No quotes, no markdown.
+        You are a Technical Infographic Designer for a premium enterprise AI company.
+        Blog Content: ${content.substring(0, 3000)}
+
+        TASK: Do two things in sequence:
+
+        STEP A — Content Analysis:
+        Read the blog content carefully and identify exactly 4 main pillars, steps, or themes. Each pillar must be represented by a SINGLE WORD (e.g. "Automate", "Scale", "Integrate", "Monitor"). These words must come directly from the blog content.
+
+        STEP B — Image Prompt Generation:
+        Using those 4 pillars, write a detailed image generation prompt for a vertical infographic (3:4 portrait ratio).
+
+        The prompt MUST specify:
+        - LAYOUT: A 3D Isometric Hub-and-Spoke diagram OR a Sequential Process Flow with 4 nodes — one node per pillar.
+        - LABELS: Each node must have its single-word pillar label rendered in clean, professional, sans-serif typography.
+        - STYLE: Technical Schematic. Precision engineering aesthetic. High-resolution, crisp lines.
+        - PRIMARY COLORS: Deep Purple, Silver, and White.
+        - ACCENT COLOR: Muted Dark Gray (#666666) for ALL connecting lines, arrows, secondary borders, and background grid details.
+        - BRANDING: 10xDS Premium Corporate feel. No decorative elements unrelated to the blog topic.
+        - The infographic must look like a meaningful visual summary of THIS specific blog post, not a generic illustration.
+
+        Return ONLY the final image generation prompt text for Step B. No explanations, no markdown, no quotes.
       `;
 
       const response = await client.request({
@@ -69,31 +74,36 @@ export async function POST(req: Request) {
       visualPrompt = `A clean, professional 10XDS style infographic for: ${prompt}. Square aspect ratio, premium corporate colors.`;
     }
 
-    // TASK 2: Generate the Infographic via Vertex AI (Imagen)
+    // TASK 2: Generate the Infographic via Gemini 2.5 Flash Image
     let infographicUrl = '';
     try {
-      const imagenUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
+      const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash-preview-image-generation:generateContent`;
 
       const response = await client.request({
-        url: imagenUrl,
+        url: geminiImageUrl,
         method: 'POST',
         data: {
-          instances: [
+          contents: [
             {
-              prompt: `${visualPrompt.substring(0, 500)}, absolutely zero text, zero letters, zero words, zero numbers, NO TYPOGRAPHY, pure symbolic graphic illustration, high-fidelity metadata-free visual`,
-            },
+              role: 'user',
+              parts: [
+                {
+                  text: `${visualPrompt.substring(0, 800)}. Render single-word pillar labels in clean, professional sans-serif font. Use Deep Purple, Silver, White as primary colors. Use #666666 (Muted Dark Gray) exclusively for all connecting lines, arrows, and secondary details. Technical Schematic style. Portrait format 3:4. High fidelity, enterprise-grade visual.`
+                }
+              ]
+            }
           ],
-          parameters: {
-            sampleCount: 1,
-            aspectRatio: "3:4",
-          },
-
-        },
+          generationConfig: {
+            responseModalities: ['IMAGE'],
+          }
+        }
       });
 
       const data = response.data as any;
-      if (data.predictions && data.predictions[0] && data.predictions[0].bytesBase64Encoded) {
-        const base64Data = data.predictions[0].bytesBase64Encoded;
+      const imagePart = data?.candidates?.[0]?.content?.parts?.find((p: any) => p.inlineData?.mimeType?.startsWith('image/'));
+
+      if (imagePart?.inlineData?.data) {
+        const base64Data = imagePart.inlineData.data;
         const rawBuffer = Buffer.from(base64Data, 'base64');
 
         // --- POST-PROCESSING: Resize to 800x1000 and composite 10xDS logo ---
@@ -128,7 +138,7 @@ export async function POST(req: Request) {
         infographicUrl = await uploadToGCS(buffer, fileName, 'image/png');
         console.log("GCS Upload Success:", infographicUrl);
       } else {
-        throw new Error("Invalid response from Vertex AI Imagen");
+        throw new Error("Invalid response from Gemini Flash Image");
       }
     } catch (vertexError: any) {
       console.error("Vertex Infographic Error:", vertexError);
