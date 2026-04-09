@@ -63,8 +63,8 @@ export const useBlogApi = () => {
         try {
             const r = await fetch('/api/sitemap-urls');
             const d = await r.json();
-            return d.keywordMap || {};
-        } catch { return {}; }
+            return { keywordMap: d.keywordMap || {}, anchorMap: d.anchorMap || {} };
+        } catch { return { keywordMap: {}, anchorMap: {} }; }
     }, []);
 
     const fetchAdminReport = useCallback(async () => {

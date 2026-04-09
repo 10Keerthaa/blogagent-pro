@@ -118,6 +118,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [isPerformanceOpen, setIsPerformanceOpen] = useState(false);
     const [reportData, setReportData] = useState<any[]>([]);
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
+    const [anchorMap, setAnchorMap] = useState<Record<string, string[]>>({});
     const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
     const [isResuming, setIsResuming] = useState(false);
@@ -161,7 +162,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const fetchSitemap = useCallback(async () => {
         try {
             const data = await apiFetchSitemap();
-            setSitemapData(data);
+            setSitemapData(data.keywordMap || {});
+            setAnchorMap(data.anchorMap || {});
         } catch (e) { console.error('Sitemap fetch failed'); }
     }, [apiFetchSitemap]);
 
@@ -198,17 +200,28 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const applySitemapLinks = useCallback((html: string) => {
-        if (!sitemapData || Object.keys(sitemapData).length === 0) return html;
+        if (!html) return html;
+
+        // Build phrase → URL map: AI anchorMap takes priority over legacy slug map
+        const phraseLookup: Record<string, string> = { ...sitemapData };
+        for (const [url, anchors] of Object.entries(anchorMap)) {
+            for (const anchor of anchors) {
+                if (anchor) phraseLookup[anchor.toLowerCase()] = url;
+            }
+        }
+
+        if (Object.keys(phraseLookup).length === 0) return html;
+
         const parts = html.split(/(<[^>]+>)/g);
         let inHeading = false;
 
         const genericPhrases = ['can help', 'doing more', 'start here', 'read more', 'businesses can', 'how businesses', 'agents are', 'more about', 'learn more'];
-        const sortedKeywords = Object.keys(sitemapData)
+        const sortedKeywords = Object.keys(phraseLookup)
             .filter(phrase => {
                 const words = phrase.split(/\s+/).filter(Boolean);
                 return (
-                    words.length >= 2 && words.length <= 3 && // Only link 2-3 word phrases
-                    phrase.length > 12 &&
+                    words.length >= 1 && words.length <= 4 &&
+                    phrase.length > 2 &&
                     !genericPhrases.includes(phrase.toLowerCase()) &&
                     !/^(is|are|the|how|can|it|we)\s/i.test(phrase)
                 );
@@ -225,19 +238,19 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             if (inHeading) return part;
             let text = part;
             let linkCount = 0;
-            
+
             for (const phrase of sortedKeywords) {
-                if (linkCount >= 3) break; // Limit to 3 links per text block
-                
-                const regex = new RegExp(`(?<!<[^>]*)\\b(${phrase})\\b(?![^<]*>)`, 'gi');
+                if (linkCount >= 3) break;
+                const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'gi');
                 if (text.match(regex)) {
-                    text = text.replace(regex, `<a href="${sitemapData[phrase]}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                    text = text.replace(regex, `<a href="${phraseLookup[phrase.toLowerCase()]}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
                     linkCount++;
                 }
             }
             return text;
         }).join('');
-    }, [sitemapData]);
+    }, [sitemapData, anchorMap]);
 
     const processKeywordsInContent = useCallback((html: string, allKeywords: string[], primary: string | null): string => {
         if (!html || allKeywords.length === 0) return html;
