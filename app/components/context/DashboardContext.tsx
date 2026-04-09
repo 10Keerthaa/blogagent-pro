@@ -193,7 +193,21 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!html) return '';
         // 1. Strip markdown backtick wrappers
         let clean = html.replace(/^```html\s*/i, '').replace(/```$/i, '').trim();
-        // 2. Convert markdown bold/italics (limited) if AI ignored instructions
+        
+        // 2. Convert markdown bullet points (*) to <li> items if not already in <ul>
+        // This handles "Clean Formatting" requirement
+        if (clean.includes('\n* ')) {
+             clean = clean.split('\n').map(line => {
+                if (line.trim().startsWith('* ')) {
+                    return `<li>${line.trim().substring(2)}</li>`;
+                }
+                return line;
+            }).join('\n');
+            // Wrap contiguous <li> blocks in <ul>
+            clean = clean.replace(/(<li>[\s\S]*?<\/li>)+/g, (match) => `<ul>${match}</ul>`);
+        }
+
+        // 3. Convert markdown bold/italics (limited) if AI ignored instructions
         clean = clean.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
         clean = clean.replace(/\*(.*?)\*/g, '<i>$1</i>');
         return clean;
@@ -214,8 +228,14 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
         const parts = html.split(/(<[^>]+>)/g);
         let inHeading = false;
+        const usedUrls = new Set<string>(); // Requirement 2: Unique Link Constraint
 
-        const genericPhrases = ['can help', 'doing more', 'start here', 'read more', 'businesses can', 'how businesses', 'agents are', 'more about', 'learn more'];
+        const genericPhrases = [
+            'can help', 'doing more', 'start here', 'read more', 'businesses can', 
+            'how businesses', 'agents are', 'more about', 'learn more', 'click here',
+            'our services', 'customers', 'get started', 'contact us', 'here are'
+        ];
+        
         const sortedKeywords = Object.keys(phraseLookup)
             .filter(phrase => {
                 const words = phrase.split(/\s+/).filter(Boolean);
@@ -241,10 +261,16 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
             for (const phrase of sortedKeywords) {
                 if (linkCount >= 3) break;
+                
+                const targetUrl = phraseLookup[phrase.toLowerCase()];
+                if (usedUrls.has(targetUrl)) continue; // Only link first occurrence of a URL
+
                 const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'gi');
+                
                 if (text.match(regex)) {
-                    text = text.replace(regex, `<a href="${phraseLookup[phrase.toLowerCase()]}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                    text = text.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                    usedUrls.add(targetUrl);
                     linkCount++;
                 }
             }

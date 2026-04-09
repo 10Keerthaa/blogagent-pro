@@ -67,12 +67,12 @@ export async function POST(req: Request) {
         1. BLOG TITLE (Meta Title): 50-60 characters.
         2. META DESCRIPTION: STRICT ENFORCEMENT: Exactly 150-160 characters (including spaces). MUST include the primary keyword.
         3. BLOG CONTENT: 1500 to 2000 words.
-        4. STRUCTURED LISTS: When listing features, benefits, or Use Cases, ALWAYS use <ul> and <li> tags.
-        5. ZERO REDUNDANCY: If a sentence says "Consider these factors:", do NOT add a redundant <b>Factors to Consider:</b> header immediately after. Transition directly to the <ul>.
-        6. TIGHT SPACING: Avoid empty <p>&nbsp;</p> tags or unnecessary <br> breaks between headings/text and lists. 
-        7. Use <h2> and <h3> for headings. 
-        8. NEVER use Markdown headers (#) or bold markdown (**) for titles or headings.
-        9. Always use valid HTML tags for structure.
+        4. CLEAN FORMATTING (SCANNABLE BLOCKS): When listing benefits, use-cases, or steps, ALWAYS use standard Markdown bullet points (*). 
+        5. NO LIST STUFFING: Do not mix bold headers with long paragraphs for simple lists. Transition directly from a context sentence to a clean list of scannable points.
+        6. ZERO REDUNDANCY: If a sentence says "Consider these factors:", do NOT add a redundant <b>Factors to Consider:</b> header immediately after. Transition directly to the bulleted list.
+        7. TIGHT SPACING: Avoid empty <p>&nbsp;</p> tags or unnecessary <br> breaks between headings/text and lists. 
+        8. Use <h2> and <h3> for headings. 
+        9. NEVER use Markdown headers (#) for titles or headings. Use valid HTML for headings.
         10. DO NOT repeat the blog title as an <h1> in the <content> tag. Start directly with an <h2>.
 
         PERFECT FORMAT EXAMPLE:
@@ -81,6 +81,8 @@ export async function POST(req: Request) {
         <content>
           <h2>Primary Section Heading</h2>
           <p>Introductory paragraph content...</p>
+          * Key Scannable Point 1
+          * Key Scannable Point 2
         </content>
       `;
 

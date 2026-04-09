@@ -42,13 +42,13 @@ export async function POST(req: Request) {
         Using those 4 pillars, write a detailed image generation prompt for a vertical infographic (3:4 portrait ratio).
 
         The prompt MUST specify:
-        - LAYOUT: A 3D Isometric Hub-and-Spoke diagram OR a Sequential Process Flow with 4 nodes — one node per pillar.
+        - LAYOUT: A 3D Isometric Technical Schematic with 4 nodes — use a hub-and-spoke or sequential process flow diagram to visually explain the architecture.
         - LABELS: Each node must have its single-word pillar label rendered in clean, professional, sans-serif typography.
-        - STYLE: Technical Schematic. Precision engineering aesthetic. High-resolution, crisp lines.
+        - STYLE: 3D Isometric Technical Schematic. Precision engineering aesthetic. High-resolution, crisp lines.
         - PRIMARY COLORS: Deep Purple, Silver, and White.
         - ACCENT COLOR: Muted Dark Gray (#666666) for ALL connecting lines, arrows, secondary borders, and background grid details.
         - BRANDING: 10xDS Premium Corporate feel. No decorative elements unrelated to the blog topic.
-        - The infographic must look like a meaningful visual summary of THIS specific blog post, not a generic illustration.
+        - The infographic must be a meaningful technical architecture schematic of THIS specific blog post.
 
         Return ONLY the final image generation prompt text for Step B. No explanations, no markdown, no quotes.
       `;
@@ -118,7 +118,7 @@ export async function POST(req: Request) {
         const logoH = logoMeta.height || 50;
 
         // Resize infographic to exactly 800x1000 and overlay logo at bottom-right
-        const MARGIN = 24;
+        const MARGIN = 40; // Requirement: Match visual proportions of featured image
         const buffer = await sharp(rawBuffer)
           .resize(800, 1000, { fit: 'cover', position: 'center', kernel: 'cubic' })
           .composite([
