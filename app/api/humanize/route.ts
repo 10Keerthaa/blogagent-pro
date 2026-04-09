@@ -17,20 +17,24 @@ export async function POST(req: Request) {
     const projectId = await auth.getProjectId();
 
     const humanizePrompt = `
-        You are a Human Tone Specialist. Your goal is to "humanize" the following AI-generated blog post content.
-        
+        Act as a Senior Human Editor.
+        Goal: Rewrite the text below to sound like it was written by an expert human, not an AI.
+
         Original Title: ${title || "Untitled Post"}
-        
-        STRICT OBJECTIVES:
-        1. Authoritative Executive Voice: Write with confidence and expertise. Avoid excessive rhetorical questions or "chatty" transitions.
-        2. Remove "AI-isms": Eliminate words like "Furthermore," "Moreover," "In the realm of," "It is important to note," and generic "In conclusion" summaries.
-        3. Vary Sentence Structure: Use "Burstiness" (mix short, authoritative sentences with longer, descriptive ones).
-        4. Structured Documentation: PRESERVE and ENFORCE the use of <ul> and <li> tags for Features, Benefits, and Use Case sections. Transition DIRECTLY from lead-in sentences (e.g. "Consider these factors:") to the <ul>.
-        5. ZERO REDUNDANCY: Do NOT add sub-headers that repeat the lead-in sentence (e.g., don't add "**Factors to Consider:**" if the previous sentence already says it).
-        6. TIGHT SPACING: Ensure no empty <p> tags or unnecessary <br> breaks are added between text and lists.
-        7. Preserve SEO: Keep all core facts and primary keywords intact within the elite professional narrative.
-        8. Maintain HTML Structure: Return the exact same HTML tags (<h2>, <p>, <a>, etc.) as the input. 
-        9. NO Markdown: Use ONLY valid HTML. Do NOT use markdown artifacts like backticks (\`\`\`), asterisks (*), or bold (**) for emphasis. Use <i> or <b> if needed.
+
+        STRICT TECHNICAL CONSTRAINTS:
+        1. Structural Integrity: Return the EXACT same HTML tags (<h2>, <p>, <ul>, <li>). Do not add or remove any sections.
+        2. Keyword Protection: Do NOT change any text inside <span style='color: #666666;'>. These are protected SEO keywords — leave them completely untouched, including the surrounding <span> tag.
+        3. Link Protection: Do NOT change any text inside <a> tags. The anchor text must remain exactly as it is, including href attributes and class names.
+        4. NO Markdown: Use ONLY valid HTML. Do NOT use backticks (\`\`\`), asterisks (*), or (**) for headings or emphasis. Use <i> or <b> if needed.
+        5. ZERO REDUNDANCY: If a lead-in sentence already introduces a list (e.g. "Consider these factors:"), do NOT add a redundant bold header before the <ul>.
+        6. TIGHT SPACING: Do not add empty <p> tags or unnecessary <br> breaks between headings, text, and lists.
+
+        HUMANIZING STYLE RULES:
+        1. Rhythm: Mix short, punchy sentences with longer, more descriptive ones. Avoid uniform sentence length.
+        2. Voice: Use an 'Authoritative Executive' tone. Use 'We' or 'I' where appropriate to show ownership and expertise.
+        3. Vocabulary: Delete AI buzzwords such as 'Unleash', 'Dive deep', 'Landscape', 'Furthermore', 'Moreover', 'In the realm of', 'It is important to note', 'In conclusion'. Replace them with plain, direct, professional English.
+        4. Transitions: Use natural, human transitions like 'Moving on to...', 'The reality is...', 'Simply put', 'Here is the thing:', instead of robotic connectors.
 
         CONTENT TO HUMANIZE:
         ---
