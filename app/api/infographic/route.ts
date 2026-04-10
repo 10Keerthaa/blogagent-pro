@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     // TASK 2: Generate the Infographic via Gemini 2.5 Flash Image
     let infographicUrl = '';
     try {
-      const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash-preview-image-generation:generateContent`;
+      const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const response = await client.request({
         url: geminiImageUrl,
