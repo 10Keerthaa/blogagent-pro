@@ -94,7 +94,6 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                {
                   text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. NO DASHBOARDS. NO TELEMETRY. NO DATA SCREENS. Flat-design Step-by-Step Cycle Diagram only. Render labels in clean sans-serif font. Portrait format 4:5. High fidelity.`
                 }
               ]
