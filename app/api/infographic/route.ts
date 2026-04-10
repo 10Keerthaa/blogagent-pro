@@ -31,34 +31,28 @@ export async function POST(req: Request) {
 
       const aiPrompt = `
         You are a Technical Infographic Designer for a premium enterprise AI company.
+      const systemInstruction = `
+        You are an Expert Information Designer. Your task is to design a professional 'Industry Roadmap' infographic for a blog post.
         Blog Title: ${prompt}
         Blog Content: ${content.substring(0, 3000)}
-
-        TASK: Do two things in sequence:
-
-        STEP A — Structural & Contextual Analysis:
-        Read the blog content carefully.
-        1. Identify the Industry Context (e.g. Hospitality, Finance, Cybersecurity).
-        2. Identify the logical process: Is it a cycle, a linear sequence, or an expert model?
-        3. Extract 3-5 'Key Takeaways' that provide the most value to an expert reader.
+        
+        STEP A — Analysis:
+        1. Identify the specific Industry (e.g., Boutique Hotels, Cybersecurity, AI Automation).
+        2. Identify the core 'Expert Journey' or 'Maturity Path' described in the text.
+        3. Extract 4-6 'Key Insights' from the CONTENT SUMMARY that represent specific actions or human-tech interactions.
 
         STEP B — Image Prompt Generation:
-        Write a detailed image generation prompt for a technical schematic (exactly 4:5 portrait ratio).
+        Write a hyper-detailed image generation prompt for a technical 'Industry Roadmap' (strictly 4:5 portrait ratio).
 
-        THE MOST IMPORTANT RULES: 
-        - DO NOT generate a dashboard, telemetry, or data visualization screen. 
-        - DO NOT include charts, graphs, or UI elements.
-        - LAYOUT REQUIREMENT: Use a **Vertical Stack** or **Zig-Zag Pipeline** layout (Top-to-Bottom flow). DO NOT use a wide horizontal layout as it will be cropped.
-        - SAFE ZONES: Ensure all text, labels, and icons are centered and keep **at least 15% clear WHITE SPACE on the extreme left and right sides** of the canvas.
-        - INSTEAD: Generate a clean, flat-design Vertical Process Diagram or Step-by-Step Cycle.
-        
-        The prompt MUST specify:
-        - COMPOSITION: Vertical-centered, portrait orientation.
-        - ICONS: Use professional icons specific to the ${prompt} industry.
-        - COMPONENTS: Clear labels using the Key Takeaways from Step A.
-        - STYLE: Clean, minimal flat-design. Precision lines. High-resolution.
-        - PALETTE: Vibrant Colorful Pastel palette (Soft Lavender, Mint, Sky Blue, and Coral).
-        - BRANDING: 10xDS Elite Corporate aesthetic.
+        THE MANDATORY RULES: 
+        - LAYOUT: Use a **Winding Roadmap** or **S-Curve Path** layout. A central digital 'road' must flow through the canvas connecting 4-6 nodes.
+        - ORIENTATION: Portrait (Vertical).
+        - NODES: Each node must feature a **Circular Illustrative Vignette** (a small, detailed scene showing people interacting with technology relevant to the industry).
+        - LABELS: Use **Floating Text Bubbles** or minimalist call-outs for Takeaways.
+        - STYLE: Isometric Flat Design. Clean, professional, and sophisticated.
+        - NEGATIVE CONSTRAINTS: DO NOT generate a dashboard, telemetry, or data visualization screen. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles.
+        - PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral).
+        - BRANDING: High-end corporate schematic feel, 10xDS Elite standard.
       `;
 
       const response = await client.request({
@@ -96,7 +90,7 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. NO DASHBOARDS. NO TELEMETRY. NO DATA SCREENS. USE VERTICAL-CENTERED COMPOSITION ONLY. KEEP LABELS AWAY FROM LEFT/RIGHT EDGES. Flat-design Vertical Step-by-Step Diagram only. Render labels in clean sans-serif font. Portrait format 4:5. High fidelity.`
+                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. DO NOT GENERATE DASHBOARDS OR TELEMETRY. NO VERTICAL BOXES. ISOMETRIC S-CURVE ROADMAP ONLY. CIRCULAR VIGNETTES WITH PEOPLE AND TECH. FLOATING TEXT BUBBLES. Portrait format 4:5. High fidelity.`
                 }
               ]
             }
