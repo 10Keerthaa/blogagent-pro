@@ -122,7 +122,11 @@ export async function POST(req: Request) {
         // Resize infographic to exactly 800x1000 and overlay logo at bottom-right
         const MARGIN = 40; // Match Hero Banner margin
         const buffer = await sharp(rawBuffer)
-          .resize(800, 1000, { fit: 'cover', position: 'center', kernel: 'cubic' })
+          .resize(800, 1000, { 
+            fit: 'contain', 
+            background: { r: 255, g: 255, b: 255, alpha: 1 },
+            kernel: 'cubic' 
+          })
           .composite([
             {
               input: resizedLogo,

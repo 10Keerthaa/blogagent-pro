@@ -221,6 +221,17 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
         // Build phrase → URL map: AI anchorMap takes priority over legacy slug map
         const phraseLookup: Record<string, string> = { ...sitemapData };
+        
+        // Baseline Fallback: extract terms from slugs themselves if AI crawl is missing
+        for (const url of Object.keys(anchorMap)) {
+            try {
+                const slugPart = new URL(url).pathname.replace(/\/$/, '').split('/').pop()?.replace(/-/g, ' ');
+                if (slugPart && slugPart.length > 5 && !phraseLookup[slugPart.toLowerCase()]) {
+                    phraseLookup[slugPart.toLowerCase()] = url;
+                }
+            } catch (e) {}
+        }
+
         for (const [url, anchors] of Object.entries(anchorMap)) {
             for (const anchor of anchors) {
                 if (anchor) phraseLookup[anchor.toLowerCase()] = url;
@@ -681,9 +692,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 status: 'pending',
                 isHumanized: !!preview.isHumanized
             });
+            await fetchDrafts(); // Await the fetch to ensure list is ready
             resetEditorState(); 
             setActiveTab('review'); 
-            fetchDrafts();
             checkForResumeDraft(); // Sync Resume button
         } catch (e: any) { setError(e.message); }
     };
