@@ -30,8 +30,6 @@ export async function POST(req: Request) {
       const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
       const aiPrompt = `
-        You are a Technical Infographic Designer for a premium enterprise AI company.
-      const systemInstruction = `
         You are an Expert Information Designer. Your task is to design a professional 'Industry Roadmap' infographic for a blog post.
         Blog Title: ${prompt}
         Blog Content: ${content.substring(0, 3000)}
