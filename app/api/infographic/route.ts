@@ -43,15 +43,17 @@ export async function POST(req: Request) {
         3. Extract 3-5 'Key Takeaways' that provide the most value to an expert reader.
 
         STEP B — Image Prompt Generation:
-        Write a detailed image generation prompt for a technical schematic (4:5 portrait ratio).
+        Write a detailed image generation prompt for a technical schematic (exactly 4:5 portrait ratio).
 
-        THE MOST IMPORTANT RULE: 
+        THE MOST IMPORTANT RULES: 
         - DO NOT generate a dashboard, telemetry, or data visualization screen. 
         - DO NOT include charts, graphs, or UI elements.
-        - INSTEAD: Generate a clean, flat-design Step-by-Step Cycle or Process Diagram.
+        - LAYOUT REQUIREMENT: Use a **Vertical Stack** or **Zig-Zag Pipeline** layout (Top-to-Bottom flow). DO NOT use a wide horizontal layout as it will be cropped.
+        - SAFE ZONES: Ensure all text, labels, and icons are centered and keep **at least 15% clear WHITE SPACE on the extreme left and right sides** of the canvas.
+        - INSTEAD: Generate a clean, flat-design Vertical Process Diagram or Step-by-Step Cycle.
         
         The prompt MUST specify:
-        - LAYOUT: Modern flat-design diagram based on Step A.
+        - COMPOSITION: Vertical-centered, portrait orientation.
         - ICONS: Use professional icons specific to the ${prompt} industry.
         - COMPONENTS: Clear labels using the Key Takeaways from Step A.
         - STYLE: Clean, minimal flat-design. Precision lines. High-resolution.
@@ -94,7 +96,7 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. NO DASHBOARDS. NO TELEMETRY. NO DATA SCREENS. Flat-design Step-by-Step Cycle Diagram only. Render labels in clean sans-serif font. Portrait format 4:5. High fidelity.`
+                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. NO DASHBOARDS. NO TELEMETRY. NO DATA SCREENS. USE VERTICAL-CENTERED COMPOSITION ONLY. KEEP LABELS AWAY FROM LEFT/RIGHT EDGES. Flat-design Vertical Step-by-Step Diagram only. Render labels in clean sans-serif font. Portrait format 4:5. High fidelity.`
                 }
               ]
             }
