@@ -324,7 +324,7 @@ export const ReviewList = () => {
                                 <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8 text-center">Visual Insight</h4>
                                 <div className="w-full">
                                     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-                                        <img src={selectedReviewDraft.infographicUrl} alt="Infographic" className="w-full h-auto" />
+                                        <img src={selectedReviewDraft.infographicUrl} alt={selectedReviewDraft.title} className="w-full h-auto" />
                                     </div>
                                 </div>
                             </div>

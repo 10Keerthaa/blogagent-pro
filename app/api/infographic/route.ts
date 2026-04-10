@@ -31,31 +31,32 @@ export async function POST(req: Request) {
 
       const aiPrompt = `
         You are a Technical Infographic Designer for a premium enterprise AI company.
+        Blog Title: ${prompt}
         Blog Content: ${content.substring(0, 3000)}
 
         TASK: Do two things in sequence:
 
-        STEP A — Structural Content Analysis:
-        Read the blog content carefully. Determine its primarily logical structure:
-        - Is it a linear sequence or timeline?
-        - Is it a hierarchical stack or architecture?
-        - Is it a hub-and-spoke relationship or ecosystem?
-        - Is it a circular lifecycle or flywheel?
-        Identify the 3-6 core technical technical components, steps, or layers.
+        STEP A — Structural & Contextual Analysis:
+        Read the blog content carefully.
+        1. Identify the Industry Context (e.g. Hospitality, Finance, Cybersecurity).
+        2. Identify the logical process: Is it a cycle, a linear sequence, or an expert model?
+        3. Extract 3-5 'Key Takeaways' that provide the most value to an expert reader.
 
         STEP B — Image Prompt Generation:
-        Write a detailed image generation prompt for a technical schematic infographic (4:5 portrait ratio).
+        Write a detailed image generation prompt for a technical schematic (4:5 portrait ratio).
 
+        THE MOST IMPORTANT RULE: 
+        - DO NOT generate a dashboard, telemetry, or data visualization screen. 
+        - DO NOT include charts, graphs, or UI elements.
+        - INSTEAD: Generate a clean, flat-design Step-by-Step Cycle or Process Diagram.
+        
         The prompt MUST specify:
-        - LAYOUT: Choose the structural layout identified in Step A (Sequence, Stack, Hub-and-Spoke, or Circle).
-        - COMPONENTS: List the 3-6 specific labels identified in Step A.
-        - STYLE: 3D Isometric Technical Schematic. Precision engineering aesthetic. High-resolution, crisp lines.
-        - PRIMARY COLORS: Deep Purple, Silver, and White.
-        - ACCENT COLOR: Muted Dark Gray (#666666) for ALL connecting lines, arrows, secondary borders, and background grid details.
-        - BRANDING: 10xDS Elite Corporate feel. No decorative elements unrelated to the blog topic.
-        - The infographic must be a meaningful technical architecture visual of THIS specific blog post.
-
-        Return ONLY the final image generation prompt text for Step B. No explanations, no markdown, no quotes.
+        - LAYOUT: Modern flat-design diagram based on Step A.
+        - ICONS: Use professional icons specific to the ${prompt} industry.
+        - COMPONENTS: Clear labels using the Key Takeaways from Step A.
+        - STYLE: Clean, minimal flat-design. Precision lines. High-resolution.
+        - PALETTE: Vibrant Colorful Pastel palette (Soft Lavender, Mint, Sky Blue, and Coral).
+        - BRANDING: 10xDS Elite Corporate aesthetic.
       `;
 
       const response = await client.request({
@@ -93,7 +94,8 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `${visualPrompt.substring(0, 800)}. Render technical labels in clean, professional sans-serif font. Use Deep Purple, Silver, White as primary colors. Use #666666 (Muted Dark Gray) for all connecting lines. Technical Schematic style. Portrait format 4:5. High fidelity, enterprise-grade visual.`
+                {
+                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. NO DASHBOARDS. NO TELEMETRY. NO DATA SCREENS. Flat-design Step-by-Step Cycle Diagram only. Render labels in clean sans-serif font. Portrait format 4:5. High fidelity.`
                 }
               ]
             }
@@ -139,7 +141,9 @@ export async function POST(req: Request) {
           .toBuffer();
         // --- END POST-PROCESSING ---
 
-        const fileName = `info-${Date.now()}.png`;
+        // SEO optimized filename
+        const slug = prompt.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '');
+        const fileName = `${slug}-infographic-${Date.now()}.png`;
 
         console.log("Uploading Infographic to GCS...");
         infographicUrl = await uploadToGCS(buffer, fileName, 'image/png');
