@@ -740,7 +740,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const handleGenerateInfographic = async () => {
         const target = preview || selectedReviewDraft;
         if (!target) return;
-        setIsGeneratingInfographic(true); setError(null);
+        api.setIsGeneratingInfographic(true); setError(null);
         try {
             const url = await api.generateInfographic({ content: target.content, title: target.title });
             if (url) {
@@ -758,7 +758,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     }
                 }
             }
-        } catch (e: any) { setError(e.message); } finally { setIsGeneratingInfographic(false); }
+        } catch (e: any) { setError(e.message); } finally { api.setIsGeneratingInfographic(false); }
     };
 
     const handleResumeDraft = async () => {

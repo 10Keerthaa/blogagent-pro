@@ -501,6 +501,7 @@ export const useBlogApi = () => {
         setIsApplyingFeedback,
         isGeneratingDescription,
         isGeneratingInfographic,
+        setIsGeneratingInfographic,
         isSavingDraft,
         isRejecting,
         isSavingManual,
