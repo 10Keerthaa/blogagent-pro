@@ -740,10 +740,25 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const handleGenerateInfographic = async () => {
         const target = preview || selectedReviewDraft;
         if (!target) return;
+        setIsGeneratingInfographic(true); setError(null);
         try {
             const url = await api.generateInfographic({ content: target.content, title: target.title });
-            if (url) setInfographicUrl(url);
-        } catch (e: any) { setError(e.message); }
+            if (url) {
+                setInfographicUrl(url);
+                
+                // Persistence: Sync to database immediately so it survives a resume/refresh
+                if (selectedReviewDraft?.id) {
+                    await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData: { infographic_url: url, infographicUrl: url } });
+                } else if (preview && user) {
+                    // Find the in_progress draft for this work to update
+                    const drafts = await api.fetchDrafts();
+                    const latest = drafts.find((d: any) => d.status === 'in_progress' && d.createdBy === user.uid);
+                    if (latest) {
+                        await api.updateDraft({ id: latest.id, action: 'edit', updateData: { infographic_url: url, infographicUrl: url } });
+                    }
+                }
+            }
+        } catch (e: any) { setError(e.message); } finally { setIsGeneratingInfographic(false); }
     };
 
     const handleResumeDraft = async () => {
