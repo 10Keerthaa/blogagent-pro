@@ -22,7 +22,7 @@ export async function POST(req: Request) {
             prompt: prompt || '',
             keywords: keywords || [],
             primaryKeyword: primaryKeyword || '',
-            status: status || 'review', // Default status for review tab
+            status: status || 'pending', // Standardized status for editorial review
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             last_edited_at: admin.firestore.FieldValue.serverTimestamp(),
             created_by: createdBy || 'anonymous',

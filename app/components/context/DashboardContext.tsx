@@ -86,6 +86,8 @@ interface DashboardContextType {
     fetchDrafts: () => Promise<void>;
     handleSelectReviewDraft: (id: string) => Promise<void>;
     handleResumeDraft: () => Promise<void>;
+    checkForResumeDraft: () => Promise<void>;
+    hasResumeDraft: boolean;
     upsertPost: (data: any) => Promise<any>;
     isResuming: boolean;
     isFetchingDraftDetails: boolean;
@@ -127,6 +129,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [humanizationError, setHumanizationError] = useState(false);
+    const [hasResumeDraft, setHasResumeDraft] = useState(false);
 
     // --- HELPER FUNCTIONS ---
 
@@ -335,6 +338,26 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
         return () => unsubscribe();
     }, [fetchUserRole, fetchHistory, fetchSitemap, fetchDrafts]);
+
+    const checkForResumeDraft = useCallback(async () => {
+        if (!user) {
+            setHasResumeDraft(false);
+            return;
+        }
+        try {
+            const draft = await api.fetchLastInProgressDraft(user.uid);
+            setHasResumeDraft(!!draft);
+        } catch (err) {
+            console.error("Check Resume Status Error:", err);
+            setHasResumeDraft(false);
+        }
+    }, [user, api]);
+
+    useEffect(() => {
+        if (user) {
+            checkForResumeDraft();
+        }
+    }, [user, checkForResumeDraft]);
 
     useEffect(() => {
         if (activeTab === 'review') {
@@ -655,9 +678,13 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 keywords: keywords, 
                 authorEmail: user?.email || '', 
                 createdBy: user?.uid || '',
+                status: 'pending',
                 isHumanized: !!preview.isHumanized
             });
-            resetEditorState(); setActiveTab('review'); fetchDrafts();
+            resetEditorState(); 
+            setActiveTab('review'); 
+            fetchDrafts();
+            checkForResumeDraft(); // Sync Resume button
         } catch (e: any) { setError(e.message); }
     };
 
@@ -841,7 +868,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;

@@ -19,7 +19,8 @@ export const SidebarForm = () => {
         selectedReviewDraft,
         primaryKeyword, setPrimaryKeyword,
         handleResumeDraft, isResuming, user, isHumanizing,
-        humanizationError, handleRetryHumanization
+        humanizationError, handleRetryHumanization,
+        hasResumeDraft
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -161,15 +162,24 @@ export const SidebarForm = () => {
             {/* Action Bar */}
             <div className={`p-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent ${isReadOnly ? 'hidden' : ''} space-y-4`}>
                 {user && (
-                    <Button
-                        variant="secondary"
-                        onClick={handleResumeDraft}
-                        isLoading={isResuming}
-                        className="w-full text-xs font-bold uppercase tracking-widest border-slate-200 dark:border-slate-800 gap-2"
-                    >
-                        <RefreshCw className={`w-3.5 h-3.5 ${isResuming ? 'animate-spin' : ''}`} />
-                        Resume Last Draft
-                    </Button>
+                    <div className="space-y-2">
+                        <Button
+                            variant="secondary"
+                            onClick={handleResumeDraft}
+                            isLoading={isResuming}
+                            disabled={!hasResumeDraft}
+                            title={!hasResumeDraft ? "No unsaved drafts to recover." : "Recover your last interrupted work"}
+                            className={`w-full text-xs font-bold uppercase tracking-widest border-slate-200 dark:border-slate-800 gap-2 transition-all duration-500 ${!hasResumeDraft ? 'grayscale opacity-40 bg-slate-100/50 cursor-not-allowed shadow-none' : 'hover:shadow-md'}`}
+                        >
+                            <RefreshCw className={`w-3.5 h-3.5 ${isResuming ? 'animate-spin' : ''}`} />
+                            Resume Last Draft
+                        </Button>
+                        {!hasResumeDraft && (
+                            <p className="text-[10px] text-center text-slate-400 font-medium italic animate-fadeIn">
+                                No unsaved drafts to recover.
+                            </p>
+                        )}
+                    </div>
                 )}
 
                 {humanizationError && !isGenerating && (
