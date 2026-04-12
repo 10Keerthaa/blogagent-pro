@@ -108,7 +108,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                                         autoFocus
                                         type="text"
                                         placeholder="Search categories..."
-                                        className="w-full pl-8 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border-none outline-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-indigo-500 transition-all text-xs font-bold"
+                                        className="w-full pl-10 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border-none outline-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-indigo-500 transition-all text-xs font-bold"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
