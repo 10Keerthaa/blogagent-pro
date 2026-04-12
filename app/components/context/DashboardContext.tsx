@@ -5,7 +5,7 @@ import { useBlogApi } from '../hooks/useBlogApi';
 import { auth, db } from '../../lib/firebase';
 import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { LOCKED_CATEGORY_ID } from '../../lib/constants/categories';
+import { LOCKED_CATEGORY_ID } from '@/lib/constants/categories';
 
 interface DashboardContextType {
     prompt: string;
