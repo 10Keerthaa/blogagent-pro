@@ -136,7 +136,7 @@ export const useBlogApi = () => {
         try {
             const q = query(
                 collection(db, 'blog_posts'), 
-                where('status', '==', 'pending'),
+                where('status', '==', 'review'),
                 orderBy('createdAt', 'desc')
             );
             const snapshot = await getDocs(q);

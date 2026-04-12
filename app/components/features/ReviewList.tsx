@@ -25,6 +25,8 @@ export const ReviewList = () => {
         feedback, setFeedback,
         isApplyingFeedback, handleApplyReviewFeedback,
         infographicUrl, handleSelectReviewDraft,
+        infographicFeedback, setInfographicFeedback, isInfographicRefining,
+        handleGenerateInfographic,
         handleClearForm,
         user, role,
         handleRefineSelection, primaryKeyword,
@@ -35,6 +37,7 @@ export const ReviewList = () => {
     const [isToolbarVisible, setIsToolbarVisible] = React.useState(false);
     const [isLinkActive, setIsLinkActive] = React.useState(false);
     const [isEditorFocused, setIsEditorFocused] = React.useState(false);
+    const [isRefiningVisual, setIsRefiningVisual] = React.useState(false);
     const editorRef = React.useRef<HTMLDivElement>(null);
 
     const refinementRef = React.useRef<HTMLDivElement>(null);
@@ -321,8 +324,42 @@ export const ReviewList = () => {
 
                         {selectedReviewDraft.infographicUrl && (
                             <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
-                                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8 text-center">Visual Insight</h4>
-                                <div className="w-full">
+                                <div className="flex items-center justify-between mb-8">
+                                    <div className="flex-1" />
+                                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Visual Insight</h4>
+                                    <div className="flex-1 flex justify-end">
+                                        <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            onClick={() => setIsRefiningVisual(!isRefiningVisual)}
+                                            className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 hover:text-indigo-600 flex items-center gap-2"
+                                        >
+                                            {isRefiningVisual ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
+                                            {isRefiningVisual ? 'Close' : 'Refine'}
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div className="w-full space-y-6">
+                                    <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isRefiningVisual ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-inner mb-6">
+                                            <Textarea
+                                                value={infographicFeedback}
+                                                onChange={(e) => setInfographicFeedback(e.target.value)}
+                                                placeholder="Describe visual corrections..."
+                                                className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 min-h-[100px] text-sm focus:ring-1 focus:ring-indigo-500 p-4"
+                                            />
+                                            <Button
+                                                variant="primary"
+                                                size="sm"
+                                                onClick={() => handleGenerateInfographic(infographicFeedback)}
+                                                isLoading={isInfographicRefining}
+                                                disabled={!infographicFeedback.trim()}
+                                                className="w-full h-12 rounded-none bg-indigo-600 hover:bg-indigo-700 uppercase tracking-widest text-[10px] font-bold"
+                                            >
+                                                Regenerate Visual
+                                            </Button>
+                                        </div>
+                                    </div>
                                     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
                                         <img src={selectedReviewDraft.infographicUrl} alt={selectedReviewDraft.title} className="w-full h-auto" />
                                     </div>

@@ -15,10 +15,11 @@ export const PostPreview = () => {
         isGeneratingInfographic, handleGenerateInfographic, infographicUrl,
         user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft,
         description, primaryKeyword, prompt: mainTopic, keywords,
-        handleRefineSelection
+        handleRefineSelection, infographicFeedback, setInfographicFeedback, isInfographicRefining
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
+    const [isRefining, setIsRefining] = useState(false); // Local toggle for the refinement box
 
     // Floating Toolbar State
     const [selectionRect, setSelectionRect] = useState<DOMRect | null>(null);
@@ -334,8 +335,45 @@ export const PostPreview = () => {
                             Generate Visual Infographic
                         </Button>
                         {infographicUrl && (
-                            <div className="mt-6 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden shadow-2xl">
-                                <img src={infographicUrl} alt="Infographic" className="w-full h-auto" />
+                            <div className="mt-6 flex flex-col gap-4">
+                                <div className="bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden shadow-2xl">
+                                    <img src={infographicUrl} alt="Infographic" className="w-full h-auto" />
+                                </div>
+                                
+                                {/* REFINEMENT TOGGLE */}
+                                <div className="flex justify-center">
+                                    <Button 
+                                        variant="ghost" 
+                                        size="sm" 
+                                        onClick={() => setIsRefining(!isRefining)}
+                                        className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 hover:text-indigo-600 transition-all flex items-center gap-2"
+                                    >
+                                        {isRefining ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5 text-indigo-400" />}
+                                        {isRefining ? 'Cancel Refinement' : 'Refine Visual'}
+                                    </Button>
+                                </div>
+
+                                {/* REFINEMENT INPUT (Hidden until needed) */}
+                                <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isRefining ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                    <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-inner">
+                                        <textarea
+                                            value={infographicFeedback}
+                                            onChange={(e) => setInfographicFeedback(e.target.value)}
+                                            placeholder="Describe visual changes (e.g., 'Use more blue tones' or 'Add a cloud icon')..."
+                                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none p-4 text-sm focus:ring-1 focus:ring-indigo-500 outline-none min-h-[100px] resize-none"
+                                        />
+                                        <Button
+                                            variant="primary"
+                                            size="sm"
+                                            onClick={() => handleGenerateInfographic(infographicFeedback)}
+                                            isLoading={isInfographicRefining}
+                                            disabled={!infographicFeedback.trim()}
+                                            className="w-full h-12 rounded-none bg-indigo-600 hover:bg-indigo-700 uppercase tracking-widest text-[10px] font-bold"
+                                        >
+                                            Update Graphic
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>

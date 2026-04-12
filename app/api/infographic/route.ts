@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const prompt = body.prompt || body.title;
     const content = body.content;
+    const refinement = body.refinement; // New: User-provided visual feedback
 
     if (!prompt || !content) {
       return NextResponse.json({ error: "Prompt and Content are required" }, { status: 400 });
@@ -38,6 +39,10 @@ export async function POST(req: Request) {
         1. Identify the specific Industry (e.g., Boutique Hotels, Cybersecurity, AI Automation).
         2. Identify the core 'Expert Journey' or 'Maturity Path' described in the text.
         3. Extract 4-6 'Key Insights' from the CONTENT SUMMARY that represent specific actions or human-tech interactions.
+        
+        ${refinement ? `USER REFINEMENT INSTRUCTIONS (PRIORITY):
+        Strictly incorporate the following changes requested by the user: "${refinement}"
+        Ensure these adjustments override default stylistic choices if they conflict.` : ''}
 
         STEP B — Image Prompt Generation:
         Write a hyper-detailed image generation prompt for a technical 'Industry Roadmap' (strictly 4:5 portrait ratio).
@@ -46,9 +51,9 @@ export async function POST(req: Request) {
         - LAYOUT: Use a **Winding Roadmap** or **S-Curve Path** layout. A central digital 'road' must flow through the canvas connecting 4-6 nodes.
         - ORIENTATION: Portrait (Vertical).
         - NODES: Each node must feature a **Circular Illustrative Vignette** (a small, detailed scene showing people interacting with technology relevant to the industry).
-        - LABELS: Use **Floating Text Bubbles** or minimalist call-outs for Takeaways.
+        - LABELS: Use **Floating Text Bubbles** or minimalist call-outs for Takeaways. **CRITICAL: Ensure all text in labels is spelled perfectly and matches the technical industry terms exactly.**
         - STYLE: Isometric Flat Design. Clean, professional, and sophisticated.
-        - NEGATIVE CONSTRAINTS: DO NOT generate a dashboard, telemetry, or data visualization screen. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles.
+        - NEGATIVE CONSTRAINTS: DO NOT generate a dashboard, telemetry, or data visualization screen. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles. **NO spelling errors in text labels.**
         - PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral).
         - BRANDING: High-end corporate schematic feel, 10xDS Elite standard.
       `;
@@ -88,7 +93,7 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. DO NOT GENERATE DASHBOARDS OR TELEMETRY. NO VERTICAL BOXES. ISOMETRIC S-CURVE ROADMAP ONLY. CIRCULAR VIGNETTES WITH PEOPLE AND TECH. FLOATING TEXT BUBBLES. Portrait format 4:5. High fidelity.`
+                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. DO NOT GENERATE DASHBOARDS OR TELEMETRY. NO VERTICAL BOXES. ISOMETRIC S-CURVE ROADMAP ONLY. CIRCULAR VIGNETTES WITH PEOPLE AND TECH. FLOATING TEXT BUBBLES. Portrait format 4:5. High fidelity. **MANDATORY: All text in the image must be perfectly spelled and highly legible.**`
                 }
               ]
             }

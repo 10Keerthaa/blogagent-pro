@@ -49,6 +49,9 @@ interface DashboardContextType {
     isGeneratingInfographic: boolean;
     infographicUrl: string | null;
     setInfographicUrl: (v: string | null) => void;
+    infographicFeedback: string;
+    setInfographicFeedback: (v: string) => void;
+    isInfographicRefining: boolean;
     users: any[];
     handleFetchUsers: () => Promise<void>;
     isSavingDraft: boolean;
@@ -82,7 +85,7 @@ interface DashboardContextType {
     handleRejectDraft: (id: string) => Promise<void>;
     handleMarkAsReviewed: (id: string) => Promise<void>;
     handleApproveDraft: (draft: any) => Promise<void>;
-    handleGenerateInfographic: () => Promise<void>;
+    handleGenerateInfographic: (refinement?: string) => Promise<void>;
     fetchDrafts: () => Promise<void>;
     handleSelectReviewDraft: (id: string) => Promise<void>;
     handleResumeDraft: () => Promise<void>;
@@ -130,6 +133,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [humanizationError, setHumanizationError] = useState(false);
     const [hasResumeDraft, setHasResumeDraft] = useState(false);
+    const [infographicFeedback, setInfographicFeedback] = useState('');
+    const [isInfographicRefining, setIsInfographicRefining] = useState(false);
 
     // --- HELPER FUNCTIONS ---
 
@@ -216,80 +221,83 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         return clean;
     }, []);
 
-    const applySitemapLinks = useCallback((html: string) => {
+    const applySitemapLinks = useCallback(async (html: string) => {
         if (!html) return html;
 
-        // Build phrase → URL map: AI anchorMap takes priority over legacy slug map
-        const phraseLookup: Record<string, string> = { ...sitemapData };
-        
-        // Baseline Fallback: extract terms from slugs themselves if AI crawl is missing
-        for (const url of Object.keys(anchorMap)) {
-            try {
-                const slugPart = new URL(url).pathname.replace(/\/$/, '').split('/').pop()?.replace(/-/g, ' ');
-                if (slugPart && slugPart.length > 5 && !phraseLookup[slugPart.toLowerCase()]) {
-                    phraseLookup[slugPart.toLowerCase()] = url;
-                }
-            } catch (e) {}
-        }
+        const totalWords = html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+        const maxLinksLimit = Math.max(1, Math.ceil(totalWords / 200)); // ~5 links per 1000 words
+        let currentLinkCount = 0;
 
+        const phraseLookup: Record<string, string> = { ...sitemapData };
         for (const [url, anchors] of Object.entries(anchorMap)) {
-            for (const anchor of anchors) {
-                if (anchor) phraseLookup[anchor.toLowerCase()] = url;
-            }
+            for (const anchor of anchors) if (anchor) phraseLookup[anchor.toLowerCase()] = url;
         }
 
         if (Object.keys(phraseLookup).length === 0) return html;
 
-        const parts = html.split(/(<[^>]+>)/g);
-        let inHeading = false;
-        const usedUrls = new Set<string>(); // Requirement 2: Unique Link Constraint
-
-        const genericPhrases = [
-            'can help', 'doing more', 'start here', 'read more', 'businesses can', 
-            'how businesses', 'agents are', 'more about', 'learn more', 'click here',
-            'our services', 'customers', 'get started', 'contact us', 'here are'
-        ];
-        
         const sortedKeywords = Object.keys(phraseLookup)
-            .filter(phrase => {
-                const words = phrase.split(/\s+/).filter(Boolean);
-                return (
-                    words.length >= 1 && words.length <= 4 &&
-                    phrase.length > 2 &&
-                    !genericPhrases.includes(phrase.toLowerCase()) &&
-                    !/^(is|are|the|how|can|it|we)\s/i.test(phrase)
-                );
-            })
+            .filter(phrase => phrase.length >= 3 && !/^(is|are|the|how|can|it|we)\s/i.test(phrase))
             .sort((a, b) => b.length - a.length);
 
-        return parts.map(part => {
-            if (part.startsWith('<')) {
-                const tag = part.toLowerCase();
-                if (tag.startsWith('<h1') || tag.startsWith('<h2') || tag.startsWith('<h3')) inHeading = true;
-                if (tag.startsWith('</h1') || tag.startsWith('</h2') || tag.startsWith('</h3')) inHeading = false;
-                return part;
-            }
-            if (inHeading) return part;
-            let text = part;
-            let linkCount = 0;
+        // Split by paragraph to contextualize
+        const paragraphs = html.split(/<\/p>/i);
+        const usedUrls = new Set<string>();
 
-            for (const phrase of sortedKeywords) {
-                if (linkCount >= 3) break;
-                
-                const targetUrl = phraseLookup[phrase.toLowerCase()];
-                if (usedUrls.has(targetUrl)) continue; // Only link first occurrence of a URL
+        const processedParagraphs = await Promise.all(paragraphs.map(async (paragraph) => {
+            if (!paragraph.trim() || currentLinkCount >= maxLinksLimit) return paragraph;
 
-                const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'gi');
-                
-                if (text.match(regex)) {
-                    text = text.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
-                    usedUrls.add(targetUrl);
-                    linkCount++;
+            // Tier 1: Semantic Intent Matching (Primary)
+            const candidatesInPara = sortedKeywords.filter(k => {
+                const regex = new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                return regex.test(paragraph);
+            }).slice(0, 5); // Limit candidates to avoid payload bloat
+
+            if (candidatesInPara.length > 0) {
+                try {
+                    const resp = await fetch('/api/internal-links/contextualize', {
+                        method: 'POST',
+                        body: JSON.stringify({ paragraph: paragraph.replace(/<[^>]+>/g, ' '), candidates: candidatesInPara })
+                    });
+                    const data = await resp.json();
+                    
+                    if (data.match && !usedUrls.has(data.match.url)) {
+                        const targetUrl = data.match.url;
+                        const matchText = candidatesInPara.find(c => paragraph.toLowerCase().includes(c.toLowerCase()));
+                        if (matchText) {
+                            const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
+                            paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                            usedUrls.add(targetUrl);
+                            currentLinkCount++;
+                            return paragraph;
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Semantic matching failed, falling back to Tier 2...");
                 }
             }
-            return text;
-        }).join('');
+
+            // Tier 2: Legacy Fallback
+            if (currentLinkCount < maxLinksLimit) {
+                for (const phrase of sortedKeywords) {
+                    const targetUrl = phraseLookup[phrase.toLowerCase()];
+                    if (usedUrls.has(targetUrl) || currentLinkCount >= maxLinksLimit) continue;
+
+                    const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'i');
+                    if (regex.test(paragraph)) {
+                        paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                        usedUrls.add(targetUrl);
+                        currentLinkCount++;
+                        break; // One link per paragraph for fallback
+                    }
+                }
+            }
+
+            return paragraph;
+        }));
+
+        return processedParagraphs.join('</p>');
     }, [sitemapData, anchorMap]);
 
     const processKeywordsInContent = useCallback((html: string, allKeywords: string[], primary: string | null): string => {
@@ -466,7 +474,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 } else finalTitle = prompt;
             }
             finalTitle = finalTitle.replace(/\*\*|#/g, '').trim();
-            finalContent = applySitemapLinks(finalContent);
+            finalContent = await applySitemapLinks(finalContent);
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
 
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
@@ -628,7 +636,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const finalTitle = titleMatch ? titleMatch[1].trim() : (preview?.title || prompt);
             const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : (preview?.meta || ""), primaryKeyword);
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
-            finalContent = applySitemapLinks(finalContent);
+            finalContent = await applySitemapLinks(finalContent);
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: currentImageUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
             setDescription(finalMeta); setFeedback('');
@@ -652,7 +660,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const finalTitle = titleMatch ? titleMatch[1].trim() : (selectedReviewDraft?.title || prompt);
             const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : (selectedReviewDraft?.metaDesc || ""), primaryKeyword);
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
-            finalContent = applySitemapLinks(finalContent);
+            finalContent = await applySitemapLinks(finalContent);
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
             const updateData = { title: finalTitle, content: finalContent, metaDesc: finalMeta };
             await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData });
@@ -689,7 +697,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 keywords: keywords, 
                 authorEmail: user?.email || '', 
                 createdBy: user?.uid || '',
-                status: 'pending',
+                status: 'review',
                 isHumanized: !!preview.isHumanized
             });
             await fetchDrafts(); // Await the fetch to ensure list is ready
@@ -748,28 +756,44 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         } catch (e: any) { setError(e.message); }
     };
 
-    const handleGenerateInfographic = async () => {
+    const handleGenerateInfographic = async (refinement?: string) => {
         const target = preview || selectedReviewDraft;
         if (!target) return;
-        api.setIsGeneratingInfographic(true); setError(null);
+        
+        if (refinement) setIsInfographicRefining(true);
+        else api.setIsGeneratingInfographic(true); 
+        
+        setError(null);
         try {
-            const url = await api.generateInfographic({ content: target.content, title: target.title });
+            const url = await api.generateInfographic({ 
+                content: target.content, 
+                title: target.title,
+                refinement: refinement || ''
+            });
             if (url) {
                 setInfographicUrl(url);
+                setPreview((prev: any) => prev ? { ...prev, infographicUrl: url } : prev);
                 
-                // Persistence: Sync to database immediately so it survives a resume/refresh
+                // Persistence: Sync to database immediately
                 if (selectedReviewDraft?.id) {
                     await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData: { infographic_url: url, infographicUrl: url } });
+                    setSelectedReviewDraft((prev: any) => ({ ...prev, infographicUrl: url }));
                 } else if (preview && user) {
-                    // Find the in_progress draft for this work to update
                     const drafts = await api.fetchDrafts();
                     const latest = drafts.find((d: any) => d.status === 'in_progress' && d.createdBy === user.uid);
                     if (latest) {
                         await api.updateDraft({ id: latest.id, action: 'edit', updateData: { infographic_url: url, infographicUrl: url } });
                     }
                 }
+                setInfographicFeedback('');
+                setIsInfographicRefining(false);
             }
-        } catch (e: any) { setError(e.message); } finally { api.setIsGeneratingInfographic(false); }
+        } catch (e: any) { 
+            setError(e.message); 
+        } finally { 
+            api.setIsGeneratingInfographic(false);
+            setIsInfographicRefining(false);
+        }
     };
 
     const handleResumeDraft = async () => {
@@ -894,7 +918,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, infographicFeedback, setInfographicFeedback, isInfographicRefining, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
