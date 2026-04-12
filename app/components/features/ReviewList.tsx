@@ -28,6 +28,9 @@ export const ReviewList = () => {
         infographicUrl, handleSelectReviewDraft,
         infographicFeedback, setInfographicFeedback, isInfographicRefining,
         handleGenerateInfographic,
+        handleClearForm,
+        user, role,
+        handleRefineSelection, primaryKeyword,
         handleMarkAsReviewed, isPreviewOpen, setIsPreviewOpen,
         selectedCategories, setSelectedCategories
     } = useDashboard();
