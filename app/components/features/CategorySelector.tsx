@@ -96,10 +96,10 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                 {isOpen && !readOnly && (
                     <>
                         <div 
-                            className="fixed inset-0 z-10" 
+                            className="fixed inset-0 z-40" 
                             onClick={() => setIsOpen(false)}
                         />
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-20 animate-fadeIn min-w-[240px]">
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 animate-fadeIn min-w-[240px]">
                             {/* Search Header */}
                             <div className="p-3 border-b border-slate-100 dark:border-slate-800 sticky top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
                                 <div className="relative">
