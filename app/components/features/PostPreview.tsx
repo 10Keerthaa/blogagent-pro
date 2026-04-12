@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 import {
     Bold, Italic, Link as LinkIcon, Save, ArrowRight,
     Heading2, Heading3, List, ListOrdered, Wand2, Sparkles, Image as ImageIcon,
-    RotateCcw, AlertCircle
+    RotateCcw, AlertCircle, X
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 
