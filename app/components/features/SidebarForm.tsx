@@ -5,7 +5,6 @@ import { Zap, Loader2, X, RefreshCw, Star, AlertCircle, Check, AlertTriangle } f
 import { useDashboard } from '../context/DashboardContext';
 import { Textarea } from '../ui/Textarea';
 import { Button } from '../ui/Button';
-import { CategorySelector } from './CategorySelector';
 
 export const SidebarForm = () => {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -21,8 +20,7 @@ export const SidebarForm = () => {
         primaryKeyword, setPrimaryKeyword,
         handleResumeDraft, isResuming, user, isHumanizing,
         humanizationError, handleRetryHumanization,
-        hasResumeDraft,
-        selectedCategories, setSelectedCategories
+        hasResumeDraft
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -123,15 +121,6 @@ export const SidebarForm = () => {
                             />
                         )}
                     </div>
-                </section>
-
-                {/* WordPress Categories */}
-                <section className="space-y-4">
-                    <CategorySelector 
-                        selectedIds={selectedCategories}
-                        onChange={setSelectedCategories}
-                        readOnly={isReadOnly}
-                    />
                 </section>
 
                 {/* Meta Description */}

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 import { Portal } from '../ui/Portal';
+import { CategorySelector } from './CategorySelector';
 
 export const ReviewList = () => {
     const {
@@ -27,10 +28,8 @@ export const ReviewList = () => {
         infographicUrl, handleSelectReviewDraft,
         infographicFeedback, setInfographicFeedback, isInfographicRefining,
         handleGenerateInfographic,
-        handleClearForm,
-        user, role,
-        handleRefineSelection, primaryKeyword,
-        handleMarkAsReviewed, isPreviewOpen, setIsPreviewOpen
+        handleMarkAsReviewed, isPreviewOpen, setIsPreviewOpen,
+        selectedCategories, setSelectedCategories
     } = useDashboard();
 
     const [selectionRect, setSelectionRect] = React.useState<DOMRect | null>(null);
@@ -201,6 +200,15 @@ export const ReviewList = () => {
                                 </Button>
                                 <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
                                 <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
+                                
+                                {/* ELITE CATEGORY SELECTOR INTEGRATION */}
+                                <div className="ml-4 min-w-[200px]">
+                                    <CategorySelector 
+                                        selectedIds={selectedCategories}
+                                        onChange={setSelectedCategories}
+                                        readOnly={isReadOnly}
+                                    />
+                                </div>
                             </div>
                             <div className="flex items-center gap-3">
                                 {role === 'admin' && (
