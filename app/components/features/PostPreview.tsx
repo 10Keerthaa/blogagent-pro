@@ -328,7 +328,7 @@ export const PostPreview = () => {
                     <div className="flex flex-col gap-6">
                         <Button
                             variant="primary"
-                            onClick={handleGenerateInfographic}
+                            onClick={() => handleGenerateInfographic()}
                             isLoading={isGeneratingInfographic}
                             className="w-full h-14 rounded-none bg-indigo-500 hover:bg-indigo-600 uppercase tracking-widest text-[11px] font-bold"
                         >
