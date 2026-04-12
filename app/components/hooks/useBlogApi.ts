@@ -55,7 +55,8 @@ export const useBlogApi = () => {
             createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : data.createdAt,
             wpUrl: data.wpUrl || data.wp_url || null,
             auditLog: data.auditLog || data.audit_log || [],
-            publishedBy: data.publishedBy || data.published_by || null
+            publishedBy: data.publishedBy || data.published_by || null,
+            categories: data.categories || []
         };
     }, []);
 
@@ -308,6 +309,7 @@ export const useBlogApi = () => {
             if (updateData?.content) payload.body = updateData.content;
             if (updateData?.metaDesc) payload.metaDesc = updateData.metaDesc;
             if (updateData?.infographicUrl) payload.infographicUrl = updateData.infographicUrl;
+            if (updateData?.categories) payload.categories = updateData.categories;
             if (wpUrl) payload.wpUrl = wpUrl;
 
             await updateDoc(docRef, payload);
@@ -401,6 +403,7 @@ export const useBlogApi = () => {
                 infographicUrl: data.infographicUrl || data.infographic_url || null,
                 wpUrl: data.wpUrl || data.wp_url || null,
                 user_email: data.user_email || data.authorEmail || null,
+                categories: data.categories || [],
                 last_edited_at: serverTimestamp()
             };
 

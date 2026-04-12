@@ -9,7 +9,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Draft ID and action are required" }, { status: 400 });
         }
 
-        const draftRef = db.collection('drafts').doc(id);
+        const draftRef = db.collection('blog_posts').doc(id);
         const draft = await draftRef.get();
 
         if (!draft.exists) {

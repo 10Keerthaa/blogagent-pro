@@ -3,7 +3,7 @@ import { db } from "@/lib/firebaseAdmin";
 
 export async function POST(req: Request) {
   try {
-    const { id, title, content, metaDesc, imageUrl, infographicUrl } = await req.json();
+    const { id, title, content, metaDesc, imageUrl, infographicUrl, categories } = await req.json();
 
     let wpUrl = process.env.WORDPRESS_URL || '';
     if (wpUrl.endsWith('/')) wpUrl = wpUrl.slice(0, -1);
@@ -77,6 +77,7 @@ export async function POST(req: Request) {
         excerpt: metaDesc,
         status: 'publish',
         rank_math_description: metaDesc,
+        categories: categories || [253] // Default to Blog if missing
       })
     });
 

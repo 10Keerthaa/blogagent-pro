@@ -5,6 +5,7 @@ import { useBlogApi } from '../hooks/useBlogApi';
 import { auth, db } from '../../lib/firebase';
 import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
+import { LOCKED_CATEGORY_ID } from '../../lib/constants/categories';
 
 interface DashboardContextType {
     prompt: string;
@@ -70,6 +71,8 @@ interface DashboardContextType {
     humanizationError: boolean;
     setHumanizationError: (v: boolean) => void;
     handleRetryHumanization: () => Promise<void>;
+    selectedCategories: number[];
+    setSelectedCategories: (v: number[]) => void;
 
     // Handlers
     handleAddKeyword: (e: React.KeyboardEvent) => void;
@@ -135,6 +138,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [hasResumeDraft, setHasResumeDraft] = useState(false);
     const [infographicFeedback, setInfographicFeedback] = useState('');
     const [isInfographicRefining, setIsInfographicRefining] = useState(false);
+    const [selectedCategories, setSelectedCategories] = useState<number[]>([LOCKED_CATEGORY_ID]);
 
     // --- HELPER FUNCTIONS ---
 
@@ -146,6 +150,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setDescription('');
         setPreview(null);
         setInfographicUrl(null);
+        setSelectedCategories([LOCKED_CATEGORY_ID]);
     }, []);
 
     const fetchUserRole = useCallback(async (userId: string) => {
@@ -394,6 +399,16 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             setDescription(selectedReviewDraft.metaDesc || '');
             setInfographicUrl(selectedReviewDraft.infographicUrl || null);
             setPrimaryKeyword(selectedReviewDraft.primaryKeyword || null);
+            
+            // Handle categories persistence
+            const cats = selectedReviewDraft.categories;
+            if (Array.isArray(cats)) {
+                // Ensure Blog is always included even if missing from DB for legacy posts
+                const uniqueCats = Array.from(new Set([...cats.map(Number), LOCKED_CATEGORY_ID]));
+                setSelectedCategories(uniqueCats);
+            } else {
+                setSelectedCategories([LOCKED_CATEGORY_ID]);
+            }
         }
     }, [selectedReviewDraft]);
 
@@ -407,6 +422,15 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             setDescription(selectedHistoryItem.metaDesc || '');
             setInfographicUrl(selectedHistoryItem.infographicUrl || null);
             setPrimaryKeyword(selectedHistoryItem.primaryKeyword || null);
+
+            // Handle categories persistence
+            const cats = selectedHistoryItem.categories;
+            if (Array.isArray(cats)) {
+                const uniqueCats = Array.from(new Set([...cats.map(Number), LOCKED_CATEGORY_ID]));
+                setSelectedCategories(uniqueCats);
+            } else {
+                setSelectedCategories([LOCKED_CATEGORY_ID]);
+            }
         }
     }, [selectedHistoryItem]);
 
@@ -516,7 +540,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                         authorEmail: user?.email || '',
                         status: 'in_progress',
                         isHumanized: true,
-                        humanizationStatus: 'success'
+                        humanizationStatus: 'success',
+                        categories: selectedCategories
                     });
                 } catch (saveErr) {
                     console.warn("Auto-save failed:", saveErr);
@@ -539,7 +564,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                         authorEmail: user?.email || '',
                         status: 'in_progress',
                         isHumanized: false,
-                        humanizationStatus: 'failed'
+                        humanizationStatus: 'failed',
+                        categories: selectedCategories
                     });
                 } catch (saveErr) { console.warn("Fallback auto-save failed"); }
             }
@@ -585,7 +611,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                             content: cleanHumanized,
                             isHumanized: true,
                             humanizationStatus: 'success',
-                            imageUrl: finalImgUrl || latest.imageUrl
+                            imageUrl: finalImgUrl || latest.imageUrl,
+                            categories: latest.categories || selectedCategories
                         }
                     });
                 }
@@ -698,7 +725,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 authorEmail: user?.email || '', 
                 createdBy: user?.uid || '',
                 status: 'review',
-                isHumanized: !!preview.isHumanized
+                isHumanized: !!preview.isHumanized,
+                categories: selectedCategories
             });
             await fetchDrafts(); // Await the fetch to ensure list is ready
             resetEditorState(); 
@@ -738,7 +766,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 metaDesc: draft.metaDesc, 
                 imageUrl: draft.imageUrl, 
                 infographicUrl: draft.infographicUrl, 
-                slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '') 
+                slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, ''),
+                categories: draft.categories || selectedCategories
             });
             
             const publishedBy = {
@@ -807,6 +836,15 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 if (Array.isArray(draft.keywords)) setKeywords(draft.keywords);
                 else if (typeof draft.keywords === 'string') setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
                 setInfographicUrl(draft.infographicUrl || null); setActiveTab('create');
+                
+                // Load categories
+                const cats = draft.categories;
+                if (Array.isArray(cats)) {
+                    const uniqueCats = Array.from(new Set([...cats.map(Number), LOCKED_CATEGORY_ID]));
+                    setSelectedCategories(uniqueCats);
+                } else {
+                    setSelectedCategories([LOCKED_CATEGORY_ID]);
+                }
             } else setError("No recent draft found to resume.");
         } catch (err) { setError("Failed to resume draft"); } finally { setIsResuming(false); }
     };
@@ -918,7 +956,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, infographicFeedback, setInfographicFeedback, isInfographicRefining, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, infographicFeedback, setInfographicFeedback, isInfographicRefining, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft, selectedCategories, setSelectedCategories
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
