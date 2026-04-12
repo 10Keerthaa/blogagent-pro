@@ -5,7 +5,12 @@ import { getGoogleAuth } from '@/lib/googleAuth';
 import { db } from '@/lib/firebaseAdmin';
 
 const CACHE_FILE = path.join(process.cwd(), 'logs', 'sitemap-cache.json');
-const STOP_WORDS = new Set(['and', 'the', 'into', 'of', 'in', 'to', 'a', 'for', 'with', 'is', 'on', 'at', 'by', 'an', 'be', 'as', 'about', 'from', 'this', 'that', 'we', 'our', 'it', 'its', 'their', 'they', 'you', 'your']);
+const STOP_WORDS = new Set([
+    // Basic fillers
+    'and', 'the', 'into', 'of', 'in', 'to', 'a', 'for', 'with', 'is', 'on', 'at', 'by', 'an', 'be', 'as', 'about', 'from', 'this', 'that', 'we', 'our', 'it', 'its', 'their', 'they', 'you', 'your',
+    // Generic action/filler words to ignore in slugs
+    'successfully', 'implementing', 'implementation', 'guide', 'essential', 'ways', 'tips', 'best', 'practices', 'top', 'complete', 'overview', 'explaining', 'understanding', 'using', 'towards', 'highly', 'actually', 'really', 'getting', 'started', 'assessing', 'challenges', 'benefits', 'importance', 'role', 'impact', 'future', 'expert', 'professional', 'leading', 'modern', 'new', 'latest', 'how', 'why', 'can', 'will', 'must', 'should', 'could', 'would', 'shall', 'may', 'might', 'must', 'done', 'doing', 'does', 'did', 'being', 'been', 'having', 'had', 'has', 'have', 'very', 'quite', 'just', 'only'
+]);
 
 export async function GET() {
     const startTime = Date.now();
