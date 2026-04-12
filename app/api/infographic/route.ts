@@ -51,9 +51,9 @@ export async function POST(req: Request) {
         - LAYOUT: Use a **Winding Roadmap** or **S-Curve Path** layout. A central digital 'road' must flow through the canvas connecting 4-6 nodes.
         - ORIENTATION: Portrait (Vertical).
         - NODES: Each node must feature a **Circular Illustrative Vignette** (a small, detailed scene showing people interacting with technology relevant to the industry).
-        - LABELS: Use **Floating Text Bubbles** or minimalist call-outs for Takeaways. **CRITICAL: Ensure all text in labels is spelled perfectly and matches the technical industry terms exactly.**
+        - LABELS: Use **Floating Text Bubbles** for takeaways. **CRITICAL SPARK RULE: All labels must be spelled with 100% accuracy. You must use standard technical spelling: 'ACQUISITION' (NOT QUISISTION), 'IMPLEMENTATION', 'GOVERNANCE', 'CYBERSECURITY'. Double-check every letter.**
         - STYLE: Isometric Flat Design. Clean, professional, and sophisticated.
-        - NEGATIVE CONSTRAINTS: DO NOT generate a dashboard, telemetry, or data visualization screen. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles. **NO spelling errors in text labels.**
+        - NEGATIVE CONSTRAINTS: DO NOT generate a dashboard, telemetry, or data visualization screen. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles. **ZERO SPELLING ERRORS ALLOWED.**
         - PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral).
         - BRANDING: High-end corporate schematic feel, 10xDS Elite standard.
       `;

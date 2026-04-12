@@ -128,12 +128,17 @@ export async function GET() {
                     const titleMatch = html.match(/<title>([\s\S]*?)<\/title>/i);
                     const descMatch = html.match(/<meta\s+name=["']description["']\s+content=["']([\s\S]*?)["']/i);
                     const combined = `${titleMatch ? titleMatch[1] : ''} ${descMatch ? descMatch[1] : ''}`.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
-                    const segments = combined.split(/\s+/).filter(s => s.length >= 3 && !STOP_WORDS.has(s));
+                    const segments = combined.split(/\s+/).filter(s => s.length >= 3);
                     for (let i = 0; i < segments.length; i++) {
                         for (let len = 2; len <= 4; len++) {
                             if (i + len <= segments.length) {
-                                const phrase = segments.slice(i, i + len).join(" ");
-                                if (phrase.length >= 6) metadataMatches[phrase] = url;
+                                const words = segments.slice(i, i + len);
+                                // CRITICAL: If any word in the phrase is a stop word, discard the whole phrase
+                                const hasStopWord = words.some(w => STOP_WORDS.has(w));
+                                if (!hasStopWord) {
+                                    const phrase = words.join(" ");
+                                    if (phrase.length >= 6) metadataMatches[phrase] = url;
+                                }
                             }
                         }
                     }
