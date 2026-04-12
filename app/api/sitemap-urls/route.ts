@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import fs from 'fs';
 import path from 'path';
 import { getGoogleAuth } from '@/lib/googleAuth';
+import { db } from '@/lib/firebaseAdmin';
 
 const CACHE_FILE = path.join(process.cwd(), 'logs', 'sitemap-cache.json');
-
 const STOP_WORDS = new Set(['and', 'the', 'into', 'of', 'in', 'to', 'a', 'for', 'with', 'is', 'on', 'at', 'by', 'an', 'be', 'as', 'about', 'from', 'this', 'that', 'we', 'our', 'it', 'its', 'their', 'they', 'you', 'your']);
 
 export async function GET() {
@@ -58,14 +58,9 @@ export async function GET() {
 
         const urls = [...new Set(allLocs)].filter(l => l.includes("10xds.com") && !l.endsWith(".xml"));
 
-        // 3. Load Cache
-        let cachedData: {
-            timestamp: number;
-            keywordMap: Record<string, string>;
-            crawledUrls?: string[];
-            anchorMap?: Record<string, string[]>;
-            aiCrawledUrls?: string[];
-        } = {
+        // 3. Load Cache from Firestore (or Local fallback for migration)
+        const docRef = db.collection('config').doc('sitemap-cache');
+        let cachedData: any = {
             timestamp: 0,
             keywordMap: {},
             crawledUrls: [],
@@ -73,8 +68,23 @@ export async function GET() {
             aiCrawledUrls: []
         };
 
-        if (fs.existsSync(CACHE_FILE)) {
-            try { cachedData = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8')); } catch (e) { }
+        try {
+            const doc = await docRef.get();
+            if (doc.exists) {
+                cachedData = doc.data();
+            } else {
+                // One-time Migration Bridge: If Firestore is empty, check for local file
+                if (fs.existsSync(CACHE_FILE)) {
+                    try {
+                        const localData = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
+                        cachedData = { ...cachedData, ...localData };
+                        console.log("Migrating local sitemap cache to Firestore...");
+                        await docRef.set(cachedData);
+                    } catch (e) { }
+                }
+            }
+        } catch (dbErr: any) {
+            console.error("Firestore cache load failed:", dbErr.message);
         }
 
         // Start with the Fast Slug Map as baseline fallback
@@ -204,23 +214,22 @@ EXAMPLE OUTPUT:
             }
         }
 
-        // 6. Save updated cache
+        // 6. Save updated cache to Firestore
         const newKeywordMap = { ...cachedData.keywordMap, ...metadataMatches };
-        const newCrawledUrls = [...alreadyCrawled, ...toCrawl];
-        const newAiCrawledUrls = [...aiCrawledUrls, ...toAiCrawl];
+        const newCrawledUrls = [...(cachedData.crawledUrls || []), ...toCrawl];
+        const newAiCrawledUrls = [...(Array.from(aiCrawledUrls) || []), ...toAiCrawl];
 
         try {
-            if (!fs.existsSync(path.dirname(CACHE_FILE))) fs.mkdirSync(path.dirname(CACHE_FILE), { recursive: true });
-            fs.writeFileSync(CACHE_FILE, JSON.stringify({
+            await docRef.set({
                 timestamp: Date.now(),
                 keywordMap: newKeywordMap,
                 crawledUrls: newCrawledUrls,
                 anchorMap: newAnchorMap,
                 aiCrawledUrls: newAiCrawledUrls
-            }, null, 2));
-            console.log(`Cache updated. Legacy: ${newCrawledUrls.length}/${urls.length}, AI-anchored: ${newAiCrawledUrls.length}/${urls.length} URLs.`);
+            });
+            console.log(`Firestore cache updated. Legacy: ${newCrawledUrls.length}/${urls.length}, AI-anchored: ${newAiCrawledUrls.length}/${urls.length} URLs.`);
         } catch (cacheErr: any) {
-            console.error("Failed to write sitemap cache:", cacheErr.message);
+            console.error("Failed to update Firestore sitemap cache:", cacheErr.message);
         }
 
         // 7. Build flat anchor phrase → URL map from anchorMap for the response
