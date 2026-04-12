@@ -102,13 +102,15 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                         <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 animate-fadeIn min-w-[240px]">
                             {/* Search Header */}
                             <div className="p-3 border-b border-slate-100 dark:border-slate-800 sticky top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
-                                <div className="relative">
-                                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                                <div className="flex items-center bg-slate-50 dark:bg-slate-950 ring-1 ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:ring-indigo-500 transition-all rounded-none">
+                                    <div className="pl-3 py-2">
+                                        <Search className="w-3.5 h-3.5 text-slate-400" />
+                                    </div>
                                     <input 
                                         autoFocus
                                         type="text"
                                         placeholder="Search categories..."
-                                        className="w-full pl-12 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border-none outline-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-indigo-500 transition-all text-xs font-bold"
+                                        className="w-full pl-2 pr-3 py-2 bg-transparent border-none outline-none transition-all text-xs font-bold"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
