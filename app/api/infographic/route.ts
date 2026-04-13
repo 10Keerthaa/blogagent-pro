@@ -89,16 +89,16 @@ export async function POST(req: Request) {
               parts: [
                 {
                   text: `
-                    PRIMARY STYLE: ISOMETRIC GLASS-BUBBLE ROADMAP. 
+                    ISOMETRIC 3D GLASS ROADMAP with glowing winding path and glass spheres. 
                     Visual Blueprint: ${visualPrompt.substring(0, 1000)}.
                     
                     THE ARTIST MANDATES:
-                    1. THE LIGHT MANDATE: Strictly use a soft Pearl Gray, light Pastel, or PURE WHITE background. NO DARK THEMES. NO BLACK OR CHARCOAL.
+                    1. THE LIGHT MANDATE: STRICTLY PURE WHITE or Light Pearl Gray background. NO DARK THEMES. NO BLACK OR CHARCOAL.
                     2. THE NO-SCREEN RULE: ABSOLUTELY DO NOT draw a computer, a laptop, a monitor, a tablet, or a UI dashboard. Represent the data as a physical journey through 3D glass spheres on a winding path.
                     3. TEXTURE: Translucent glass, soft light refraction, vibrant colorful pastel palette (Lavender, Mint, Coral, Sky Blue).
                     4. LAYOUT: Winding S-Curve Path, portrait 4:5 ratio. High-end Executive 3D Illustration.
                     
-                    NEGATIVE REINFORCEMENT: [dashboard, analytics, UI, screen, monitor, browser window, telemetry, dark mode, black background, software interface, mouse cursor, scrollbar].
+                    NEGATIVE REINFORCEMENT: [laptop, computer, monitor, screen, dashboard, analytics, UI, browser window, telemetry, dark mode, black background, software interface, mouse cursor, scrollbar].
                     
                     MANDATORY: All text must be perfectly spelled and highly legible.
                   `
@@ -123,8 +123,6 @@ export async function POST(req: Request) {
         const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
         const logoBuffer = fs.readFileSync(logoPath);
 
-        // Standardize logo scaling to match Hero Banner (h-14 feel)
-        // On a 1000px height, a 75px height logo fits the visual weight of the 960x720 hero logo
         const TARGET_LOGO_HEIGHT = 75;
         const resizedLogo = await sharp(logoBuffer)
           .resize({ height: TARGET_LOGO_HEIGHT })
@@ -132,8 +130,7 @@ export async function POST(req: Request) {
         const logoMeta = await sharp(resizedLogo).metadata();
         const logoW = logoMeta.width || 130;
 
-        // Resize infographic to exactly 800x1000 and overlay logo at bottom-right
-        const MARGIN = 60; // Increased margin for better branding breathing room
+        const MARGIN = 60; 
         const buffer = await sharp(rawBuffer)
           .resize(800, 1000, { 
             fit: 'contain', 
@@ -151,7 +148,6 @@ export async function POST(req: Request) {
           .toBuffer();
         // --- END POST-PROCESSING ---
 
-        // SEO optimized filename
         const slug = prompt.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '');
         const fileName = `${slug}-infographic-${Date.now()}.png`;
 
@@ -163,8 +159,8 @@ export async function POST(req: Request) {
       }
     } catch (vertexError: any) {
       console.error("Vertex Infographic Error:", vertexError);
-      // Fallback to a neutral infographic-style illustration
-      infographicUrl = `https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80`;
+      // Fallback to a neutral infographic illustration (no dashboards)
+      infographicUrl = `https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80`;
     }
 
     return NextResponse.json({ imageUrl: infographicUrl });
