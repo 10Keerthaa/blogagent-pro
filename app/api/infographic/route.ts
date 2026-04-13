@@ -25,10 +25,10 @@ export async function POST(req: Request) {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    // TASK 1: Generate Visual Design Blueprint via Vertex AI Gemini 1.5 Flash (Proven Stable)
+    // TASK 1: Generate Visual Design Blueprint via Vertex AI Gemini 2.5 Pro (Solid JSON)
     let visualPrompt = '';
     try {
-      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash:streamGenerateContent`;
+      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent`;
 
       const aiPrompt = `
         You are an Expert Strategic Information Designer. Your task is to design a high-fidelity 'Logic Flow' blueprint for a professional Infographic.
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
       });
 
       const data = response.data as any;
-      if (data.candidates) {
+      if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
         visualPrompt = data.candidates[0].content.parts[0].text;
       }
       visualPrompt = visualPrompt.trim();
@@ -72,10 +72,10 @@ export async function POST(req: Request) {
       visualPrompt = `A clean, professional 10XDS style infographic for: ${prompt}. Isometric glass-bubble roadmap.`;
     }
 
-    // TASK 2: Restored High-Fidelity Generation via Imagen 3 (Proven Artist)
+    // TASK 2: Restored High-Fidelity Generation via Gemini 2.5 Flash Image (Solid JSON Artist)
     let infographicUrl = '';
     try {
-      const imagenUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
+      const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const imagePrompt = `
         ISOMETRIC 3D GLASS-BUBBLE ROADMAP with glowing winding path and glass spheres. Portrait 4:5 ratio. High-end Executive 3D Illustration.
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
         
         THE ARTIST MANDATES:
         1. THE LIGHT MANDATE: STRICTLY PURE WHITE or Light Pearl Gray background. NO DARK THEMES. NO BLACK OR CHARCOAL.
-        2. NO-OFFICE RULE: ABSOLUTELY DO NOT draw a real office, do not draw real people in a real room, no stock photography of people. 
+        2. NO-OFFICE RULE: ABSOLUTELY DO NOT draw a real office, do not draw real people in a real room, no stock photography. 
         3. THE NO-SCREEN RULE: ABSOLUTELY DO NOT draw a computer, a laptop, a monitor, a tablet, or a UI dashboard. Represent the data as a physical journey through 3D glass spheres on a winding path.
         4. TEXTURE: Translucent glass, soft light refraction, vibrant colorful pastel palette (Lavender, Mint, Coral, Sky Blue).
         
@@ -93,17 +93,26 @@ export async function POST(req: Request) {
       `;
 
       const response = await client.request({
-        url: imagenUrl,
+        url: geminiImageUrl,
         method: 'POST',
         data: {
-          instances: [{ prompt: imagePrompt }],
-          parameters: { sampleCount: 1, aspectRatio: "4:5" },
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: imagePrompt }]
+            }
+          ],
+          generationConfig: {
+            responseModalities: ['IMAGE'],
+          }
         }
       });
 
       const data = response.data as any;
-      if (data.predictions?.[0]?.bytesBase64Encoded) {
-        const base64Data = data.predictions[0].bytesBase64Encoded;
+      const imagePart = data?.candidates?.[0]?.content?.parts?.find((p: any) => p.inlineData?.mimeType?.startsWith('image/'));
+
+      if (imagePart?.inlineData?.data) {
+        const base64Data = imagePart.inlineData.data;
         const rawBuffer = Buffer.from(base64Data, 'base64');
 
         // --- POST-PROCESSING: Resize to 800x1000 and composite 10xDS logo ---
@@ -142,7 +151,7 @@ export async function POST(req: Request) {
         infographicUrl = await uploadToGCS(buffer, fileName, 'image/png');
         console.log("GCS Upload Success:", infographicUrl);
       } else {
-        throw new Error("Invalid response from Imagen 3");
+        throw new Error("Invalid response from Gemini Flash Image");
       }
     } catch (vertexError: any) {
       console.error("Vertex Infographic Error:", vertexError);
