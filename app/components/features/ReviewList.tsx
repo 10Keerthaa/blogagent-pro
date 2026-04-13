@@ -15,6 +15,7 @@ import {
 import { FloatingToolbar } from './FloatingToolbar';
 import { Portal } from '../ui/Portal';
 import { CategorySelector } from './CategorySelector';
+import { CATEGORIES } from '@/lib/constants/categories';
 
 export const ReviewList = () => {
     const {
@@ -337,13 +338,13 @@ export const ReviewList = () => {
                             <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
                                 <div className="flex items-center justify-between mb-8">
                                     <div className="flex-1" />
-                                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Visual Insight</h4>
+                                    <h4 className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest text-center">Visual Insight</h4>
                                     <div className="flex-1 flex justify-end">
                                         <Button 
                                             variant="ghost" 
                                             size="sm" 
                                             onClick={() => setIsRefiningVisual(!isRefiningVisual)}
-                                            className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 hover:text-indigo-600 flex items-center gap-2"
+                                            className="text-[10px] font-bold uppercase tracking-widest text-indigo-700 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-white flex items-center gap-2"
                                         >
                                             {isRefiningVisual ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
                                             {isRefiningVisual ? 'Close' : 'Refine'}
@@ -471,6 +472,17 @@ export const ReviewList = () => {
                             {/* Scrollable Content */}
                             <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-24 flex flex-col items-center">
                                 <div className="max-w-[850px] w-full space-y-16">
+                                    {/* Categories Verification Header */}
+                                    {selectedCategories.length > 0 && (
+                                        <div className="flex flex-wrap justify-center gap-3 mb-[-2rem]">
+                                            {CATEGORIES.filter(c => selectedCategories.includes(c.id)).map(cat => (
+                                                <span key={cat.id} className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 border border-indigo-100 dark:border-indigo-800">
+                                                    {cat.name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+
                                     <h1 className="text-4xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif text-center whitespace-normal">
                                         {selectedReviewDraft.title}
                                     </h1>

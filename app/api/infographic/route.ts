@@ -125,7 +125,7 @@ export async function POST(req: Request) {
         const logoW = logoMeta.width || 130;
 
         // Resize infographic to exactly 800x1000 and overlay logo at bottom-right
-        const MARGIN = 40; // Match Hero Banner margin
+        const MARGIN = 60; // Increased margin for better branding breathing room
         const buffer = await sharp(rawBuffer)
           .resize(800, 1000, { 
             fit: 'contain', 
