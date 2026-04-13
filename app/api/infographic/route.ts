@@ -25,38 +25,32 @@ export async function POST(req: Request) {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    // TASK 1: Generate Visual Summary Prompt via Vertex AI Gemini 2.5 Pro
+    // TASK 1: Generate Visual Design Blueprint via Vertex AI Gemini 2.5 Pro
     let visualPrompt = '';
     try {
       const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
       const aiPrompt = `
-        You are an Expert Information Designer. Your task is to design a professional 'Industry Roadmap' infographic for a blog post.
+        You are an Expert Strategic Information Designer. Your task is to design a high-fidelity 'Logic Flow' blueprint for a professional Infographic.
         Blog Title: ${prompt}
         Blog Content: ${content.substring(0, 3000)}
         
-        STEP A — Analysis:
-        1. Identify the specific Industry (e.g., Boutique Hotels, Cybersecurity, AI Automation).
-        2. Identify the core 'Expert Journey' or 'Maturity Path' described in the text.
-        3. Extract 4-6 'Key Insights' from the CONTENT SUMMARY that represent specific actions or human-tech interactions.
+        STEP 1 — The Design Blueprint (The "Brain"):
+        1. Logic Flow Analysis: Read the content and identify the 4-6 "Key Milestones" or "Strategic Phases" (e.g., Data Acquisition → Processing → Security → Insights).
+        2. Identify the Industry context (e.g., Cybersecurity, Manufacturing, AI Finance).
+        3. Extraction: List exactly 4-6 concise takeaways (under 5 words each).
         
         ${refinement ? `USER REFINEMENT INSTRUCTIONS (PRIORITY):
         Strictly incorporate the following changes requested by the user: "${refinement}"
         Ensure these adjustments override default stylistic choices if they conflict.` : ''}
 
-        STEP B — Image Prompt Generation:
-        Write a hyper-detailed image generation prompt for a technical 'Industry Roadmap' (strictly 4:5 portrait ratio).
-
-        THE MANDATORY VISUAL RULES:
-        1. NO DASHBOARD ELEMENTS: ABSOLUTELY NO black or dark backgrounds. NO UI widgets, NO scrollbars, NO browser windows, NO buttons, NO sidebars, NO mouse cursors, NO telemetry screens.
-        2. NO DATA VISUALIZATION: NO bar charts, NO histograms, NO line graphs, NO 3D bubbles. This is NOT a dashboard.
-        3. LAYOUT: Use a **Winding Roadmap** or **Ismetric S-Curve Path** layout. A central digital 'road' must flow through the canvas connecting 4-6 nodes.
-        4. ART STYLE: High-end **Executive Hand-Drawn Schematic** or **Paper Illustration**. Clean, professional, and minimalist.
-        5. BACKGROUND: STRICTLY PURE WHITE (#FFFFFF) or light Pearl Gray (#F9FAFB).
-        6. NODES: Each node must feature a **Circular Illustrative Vignette** (a small, detailed scene showing people interacting with technology relevant to the industry).
-        7. LABELS: Use **Floating Text Bubbles** for takeaways. **CRITICAL SPARK RULE: All labels must be spelled with 100% accuracy.**
-        8. PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral).
-        9. BRANDING: High-end corporate schematic feel, 10xDS Elite standard. Avoid any "App" or "Software" interface look.
+        STEP 2 — Professional Description:
+        Write a hyper-detailed architectural description for an 'Isometric Glass-Bubble Roadmap'.
+        RULES:
+        - The milestones must be represented as **3D Physical Scenes (Vignettes)** showing human-tech interaction.
+        - Each vignette must be contained inside a **Translucent Isometric Glass Sphere/Bubble**.
+        - All spheres must be connected by a **Winding Glowing S-Curve Roadmap** that flows through the vertical canvas.
+        - SPELLING: List the technical terms that must be 100% accurate (e.g., 'IMPLEMENTATION', 'GOVERNANCE', 'SECURITY').
       `;
 
       const response = await client.request({
@@ -77,16 +71,17 @@ export async function POST(req: Request) {
       visualPrompt = visualPrompt.trim();
     } catch (designerError: any) {
       console.error("Vertex AI Designer Error:", designerError);
-      visualPrompt = `A clean, professional 10XDS style infographic for: ${prompt}. Square aspect ratio, premium corporate colors.`;
+      visualPrompt = `A clean, professional 10XDS style infographic for: ${prompt}. Isometric glass-bubble roadmap.`;
     }
 
-    // TASK 2: Generate the Infographic via Gemini 2.5 Flash Image
+    // TASK 2: High-Fidelity Generation via Gemini 2.5 Flash Image (The "Artist")
     let infographicUrl = '';
     try {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const response = await client.request({
-        url: geminiImageUrl,
+        url,
+        geminiImageUrl,
         method: 'POST',
         data: {
           contents: [
@@ -94,7 +89,20 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. STRICTLY PURE WHITE BACKGROUND. NO DARK THEMES. NO DASHBOARDS, NO TELEMETRY, NO UI WIDGETS. ISOMETRIC S-CURVE ROADMAP ONLY. CIRCULAR VIGNETTES WITH PEOPLE AND TECH. FLOATING TEXT BUBBLES. Portrait format 4:5. High fidelity. **MANDATORY: All text in the image must be perfectly spelled and highly legible.**`
+                  text: `
+                    PRIMARY STYLE: ISOMETRIC GLASS-BUBBLE ROADMAP. 
+                    Visual Blueprint: ${visualPrompt.substring(0, 1000)}.
+                    
+                    THE ARTIST MANDATES:
+                    1. THE LIGHT MANDATE: Strictly use a soft Pearl Gray, light Pastel, or PURE WHITE background. NO DARK THEMES. NO BLACK OR CHARCOAL.
+                    2. THE NO-SCREEN RULE: ABSOLUTELY DO NOT draw a computer, a laptop, a monitor, a tablet, or a UI dashboard. Represent the data as a physical journey through 3D glass spheres on a winding path.
+                    3. TEXTURE: Translucent glass, soft light refraction, vibrant colorful pastel palette (Lavender, Mint, Coral, Sky Blue).
+                    4. LAYOUT: Winding S-Curve Path, portrait 4:5 ratio. High-end Executive 3D Illustration.
+                    
+                    NEGATIVE REINFORCEMENT: [dashboard, analytics, UI, screen, monitor, browser window, telemetry, dark mode, black background, software interface, mouse cursor, scrollbar].
+                    
+                    MANDATORY: All text must be perfectly spelled and highly legible.
+                  `
                 }
               ]
             }
