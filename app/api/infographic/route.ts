@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 
-export const maxDuration = 60; // Set timeout for Vercel
+export const maxDuration = 120; // Extended for two sequential AI calls + GCS upload
 
 export async function POST(req: Request) {
   try {
@@ -124,10 +124,10 @@ export async function POST(req: Request) {
 
         const MARGIN = 40; // Match Hero Banner margin
         const buffer = await sharp(rawBuffer)
-          .resize(800, 1000, { 
-            fit: 'contain', 
+          .resize(800, 1000, {
+            fit: 'contain',
             background: { r: 255, g: 255, b: 255, alpha: 1 },
-            kernel: 'cubic' 
+            kernel: 'cubic'
           })
           .composite([
             {
