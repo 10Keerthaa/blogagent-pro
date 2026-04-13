@@ -52,10 +52,11 @@ export async function POST(req: Request) {
         - ORIENTATION: Portrait (Vertical).
         - NODES: Each node must feature a **Circular Illustrative Vignette** (a small, detailed scene showing people interacting with technology relevant to the industry).
         - LABELS: Use **Floating Text Bubbles** for takeaways. **CRITICAL SPARK RULE: All labels must be spelled with 100% accuracy. You must use standard technical spelling: 'ACQUISITION' (NOT QUISISTION), 'IMPLEMENTATION', 'GOVERNANCE', 'CYBERSECURITY'. Double-check every letter.**
-        - STYLE: Isometric Flat Design. Clean, professional, and sophisticated.
-        - NEGATIVE CONSTRAINTS: DO NOT generate a dashboard, telemetry, or data visualization screen. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles. **ZERO SPELLING ERRORS ALLOWED.**
-        - PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral).
-        - BRANDING: High-end corporate schematic feel, 10xDS Elite standard.
+        - STYLE: High-end Executive Whitepaper Illustration. Clean, professional, and minimalist.
+        - BACKGROUND: STRICTLY PURE WHITE (#FFFFFF) or light Pearl Gray (#F9FAFB). No gradients, no dark overlays.
+        - NEGATIVE CONSTRAINTS: ABSOLUTELY NO DARK THEMES. NO BLACK OR CHARCOAL BACKGROUNDS. NO glassmorphism, NO blur effects. NO dashboard UI, NO buttons, NO scrollbars, NO browser windows. NO telemetry, NO data visualization screens. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles. **ZERO SPELLING ERRORS ALLOWED.**
+        - PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral). Must be highly legible against the white background.
+        - BRANDING: High-end corporate schematic feel, 10xDS Elite standard. Avoid any "App" or "Software" interface look.
       `;
 
       const response = await client.request({
@@ -93,7 +94,7 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. DO NOT GENERATE DASHBOARDS OR TELEMETRY. NO VERTICAL BOXES. ISOMETRIC S-CURVE ROADMAP ONLY. CIRCULAR VIGNETTES WITH PEOPLE AND TECH. FLOATING TEXT BUBBLES. Portrait format 4:5. High fidelity. **MANDATORY: All text in the image must be perfectly spelled and highly legible.**`
+                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. STRICTLY PURE WHITE BACKGROUND. NO DARK THEMES. NO DASHBOARDS, NO TELEMETRY, NO UI WIDGETS. ISOMETRIC S-CURVE ROADMAP ONLY. CIRCULAR VIGNETTES WITH PEOPLE AND TECH. FLOATING TEXT BUBBLES. Portrait format 4:5. High fidelity. **MANDATORY: All text in the image must be perfectly spelled and highly legible.**`
                 }
               ]
             }
