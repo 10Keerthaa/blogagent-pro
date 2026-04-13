@@ -25,35 +25,40 @@ export async function POST(req: Request) {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    // TASK 1: Generate Visual Design Blueprint via Vertex AI Gemini 2.5 Pro (Solid JSON)
+    // TASK 1: Generate Visual Summary Prompt via Vertex AI Gemini 2.5 Pro
     let visualPrompt = '';
     try {
-      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent`;
+      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
       const aiPrompt = `
-        You are an Expert Strategic Information Designer. Your task is to design a high-fidelity 'Logic Flow' blueprint for a professional Infographic.
+        You are an Expert Information Designer. Your task is to design a professional 'Industry Roadmap' infographic for a blog post.
         Blog Title: ${prompt}
         Blog Content: ${content.substring(0, 3000)}
         
-        STEP 1 — The Design Blueprint (The "Brain"):
-        1. Logic Flow Analysis: Read the content and identify the 4-6 "Key Milestones" or "Strategic Phases" (e.g., Data Acquisition → Processing → Security → Insights).
-        2. Identify the Industry context (e.g., Cybersecurity, Manufacturing, AI Finance).
-        3. Extraction: List exactly 4-6 concise takeaways (under 5 words each).
-        
+        STEP A — Analysis:
+        1. Identify the specific Industry (e.g., Boutique Hotels, Cybersecurity, AI Automation).
+        2. Identify the core 'Expert Journey' or 'Maturity Path' described in the text.
+        3. Extract 4-6 'Key Insights' from the CONTENT SUMMARY that represent specific actions or human-tech interactions.
+
         ${refinement ? `USER REFINEMENT INSTRUCTIONS (PRIORITY):
         Strictly incorporate the following changes requested by the user: "${refinement}"
         Ensure these adjustments override default stylistic choices if they conflict.` : ''}
 
-        STEP 2 — Professional Description:
-        Write a hyper-detailed architectural description for an 'Isometric Glass-Bubble Roadmap'.
-        RULES:
-        - The milestones must be represented as **3D Physical Scenes (Vignettes)** showing human-tech interaction.
-        - Each vignette must be contained inside a **Translucent Isometric Glass Sphere/Bubble**.
-        - All spheres must be connected by a **Winding Glowing S-Curve Roadmap** that flows through the vertical canvas.
-        - SPELLING: List the technical terms that must be 100% accurate (e.g., 'IMPLEMENTATION', 'GOVERNANCE', 'SECURITY').
+        STEP B — Image Prompt Generation:
+        Write a hyper-detailed image generation prompt for a technical 'Industry Roadmap' (strictly 4:5 portrait ratio).
+
+        THE MANDATORY RULES: 
+        - LAYOUT: Use a **Winding Roadmap** or **S-Curve Path** layout. A central digital 'road' must flow through the canvas connecting 4-6 nodes.
+        - ORIENTATION: Portrait (Vertical).
+        - NODES: Each node must feature a **Circular Illustrative Vignette** (a small, detailed scene showing people interacting with technology relevant to the industry).
+        - LABELS: Use **Floating Text Bubbles** or minimalist call-outs for Takeaways.
+        - STYLE: Isometric Flat Design. Clean, professional, and sophisticated.
+        - NEGATIVE CONSTRAINTS: DO NOT generate a dashboard, telemetry, or data visualization screen. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles.
+        - PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral).
+        - BRANDING: High-end corporate schematic feel, 10xDS Elite standard.
       `;
 
-      const response = await client.request({
+      const resp = await client.request({
         url,
         method: 'POST',
         data: {
@@ -62,35 +67,22 @@ export async function POST(req: Request) {
         }
       });
 
-      const data = response.data as any;
-      if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+      const data = resp.data as any;
+      if (Array.isArray(data)) {
+        visualPrompt = data.map(chunk => (chunk.candidates && chunk.candidates[0] && chunk.candidates[0].content.parts[0].text) || '').join('');
+      } else if (data.candidates) {
         visualPrompt = data.candidates[0].content.parts[0].text;
       }
       visualPrompt = visualPrompt.trim();
     } catch (designerError: any) {
       console.error("Vertex AI Designer Error:", designerError);
-      visualPrompt = `A clean, professional 10XDS style infographic for: ${prompt}. Isometric glass-bubble roadmap.`;
+      visualPrompt = `A clean, professional 10XDS style infographic for: ${prompt}. Industry Roadmap style.`;
     }
 
-    // TASK 2: Restored High-Fidelity Generation via Gemini 2.5 Flash Image (Solid JSON Artist)
+    // TASK 2: Restored High-Fidelity Generation via Gemini 2.5 Flash Image
     let infographicUrl = '';
     try {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
-
-      const imagePrompt = `
-        ISOMETRIC 3D GLASS-BUBBLE ROADMAP with glowing winding path and glass spheres. Portrait 4:5 ratio. High-end Executive 3D Illustration.
-        Visual Blueprint: ${visualPrompt.substring(0, 1000)}.
-        
-        THE ARTIST MANDATES:
-        1. THE LIGHT MANDATE: STRICTLY PURE WHITE or Light Pearl Gray background. NO DARK THEMES. NO BLACK OR CHARCOAL.
-        2. NO-OFFICE RULE: ABSOLUTELY DO NOT draw a real office, do not draw real people in a real room, no stock photography. 
-        3. THE NO-SCREEN RULE: ABSOLUTELY DO NOT draw a computer, a laptop, a monitor, a tablet, or a UI dashboard. Represent the data as a physical journey through 3D glass spheres on a winding path.
-        4. TEXTURE: Translucent glass, soft light refraction, vibrant colorful pastel palette (Lavender, Mint, Coral, Sky Blue).
-        
-        NEGATIVE REINFORCEMENT: [office, laptop, computer, monitor, screen, dashboard, analytics, UI, browser window, telemetry, dark mode, black background, software interface, mouse cursor, scrollbar].
-        
-        MANDATORY: All text must be perfectly spelled and highly legible.
-      `;
 
       const response = await client.request({
         url: geminiImageUrl,
@@ -99,7 +91,11 @@ export async function POST(req: Request) {
           contents: [
             {
               role: 'user',
-              parts: [{ text: imagePrompt }]
+              parts: [
+                {
+                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. DO NOT GENERATE DASHBOARDS OR TELEMETRY. NO VERTICAL BOXES. ISOMETRIC S-CURVE ROADMAP ONLY. CIRCULAR VIGNETTES WITH PEOPLE AND TECH. FLOATING TEXT BUBBLES. Portrait format 4:5. High fidelity.`
+                }
+              ]
             }
           ],
           generationConfig: {
@@ -126,7 +122,7 @@ export async function POST(req: Request) {
         const logoMeta = await sharp(resizedLogo).metadata();
         const logoW = logoMeta.width || 130;
 
-        const MARGIN = 60; 
+        const MARGIN = 40; // Match Hero Banner margin
         const buffer = await sharp(rawBuffer)
           .resize(800, 1000, { 
             fit: 'contain', 
@@ -155,8 +151,8 @@ export async function POST(req: Request) {
       }
     } catch (vertexError: any) {
       console.error("Vertex Infographic Error:", vertexError);
-      // Fallback to a neutral infographic illustration (No Fallback Photos)
-      infographicUrl = `https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80`;
+      // Fallback to a neutral infographic-style illustration
+      infographicUrl = `https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80`;
     }
 
     return NextResponse.json({ imageUrl: infographicUrl });
