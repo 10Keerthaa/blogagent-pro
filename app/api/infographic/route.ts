@@ -77,46 +77,35 @@ export async function POST(req: Request) {
     // TASK 2: High-Fidelity Generation via Gemini 2.5 Flash Image (The "Artist")
     let infographicUrl = '';
     try {
-      const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
+      const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:predict`;
+
+      const imagePrompt = `
+        ISOMETRIC 3D GLASS ROADMAP with glowing winding path and glass spheres. 
+        Visual Blueprint: ${visualPrompt.substring(0, 1000)}.
+        
+        THE ARTIST MANDATES:
+        1. THE LIGHT MANDATE: STRICTLY PURE WHITE or Light Pearl Gray background. NO DARK THEMES. NO BLACK OR CHARCOAL.
+        2. THE NO-SCREEN RULE: ABSOLUTELY DO NOT draw a computer, a laptop, a monitor, a tablet, or a UI dashboard. Represent the data as a physical journey through 3D glass spheres on a winding path.
+        3. TEXTURE: Translucent glass, soft light refraction, vibrant colorful pastel palette (Lavender, Mint, Coral, Sky Blue).
+        4. LAYOUT: Winding S-Curve Path, portrait 4:5 ratio. High-end Executive 3D Illustration.
+        
+        NEGATIVE REINFORCEMENT: [laptop, computer, monitor, screen, dashboard, analytics, UI, browser window, telemetry, dark mode, black background, software interface, mouse cursor, scrollbar].
+        
+        MANDATORY: All text must be perfectly spelled and highly legible.
+      `;
 
       const response = await client.request({
         url: geminiImageUrl,
         method: 'POST',
         data: {
-          contents: [
-            {
-              role: 'user',
-              parts: [
-                {
-                  text: `
-                    ISOMETRIC 3D GLASS ROADMAP with glowing winding path and glass spheres. 
-                    Visual Blueprint: ${visualPrompt.substring(0, 1000)}.
-                    
-                    THE ARTIST MANDATES:
-                    1. THE LIGHT MANDATE: STRICTLY PURE WHITE or Light Pearl Gray background. NO DARK THEMES. NO BLACK OR CHARCOAL.
-                    2. THE NO-SCREEN RULE: ABSOLUTELY DO NOT draw a computer, a laptop, a monitor, a tablet, or a UI dashboard. Represent the data as a physical journey through 3D glass spheres on a winding path.
-                    3. TEXTURE: Translucent glass, soft light refraction, vibrant colorful pastel palette (Lavender, Mint, Coral, Sky Blue).
-                    4. LAYOUT: Winding S-Curve Path, portrait 4:5 ratio. High-end Executive 3D Illustration.
-                    
-                    NEGATIVE REINFORCEMENT: [laptop, computer, monitor, screen, dashboard, analytics, UI, browser window, telemetry, dark mode, black background, software interface, mouse cursor, scrollbar].
-                    
-                    MANDATORY: All text must be perfectly spelled and highly legible.
-                  `
-                }
-              ]
-            }
-          ],
-          generationConfig: {
-            responseModalities: ['IMAGE'],
-          }
+          instances: [{ prompt: imagePrompt }],
+          parameters: { sampleCount: 1, aspectRatio: "4:5" },
         }
       });
 
       const data = response.data as any;
-      const imagePart = data?.candidates?.[0]?.content?.parts?.find((p: any) => p.inlineData?.mimeType?.startsWith('image/'));
-
-      if (imagePart?.inlineData?.data) {
-        const base64Data = imagePart.inlineData.data;
+      if (data.predictions?.[0]?.bytesBase64Encoded) {
+        const base64Data = data.predictions[0].bytesBase64Encoded;
         const rawBuffer = Buffer.from(base64Data, 'base64');
 
         // --- POST-PROCESSING: Resize to 800x1000 and composite 10xDS logo ---
@@ -159,8 +148,8 @@ export async function POST(req: Request) {
       }
     } catch (vertexError: any) {
       console.error("Vertex Infographic Error:", vertexError);
-      // Fallback to a neutral infographic illustration (no dashboards)
-      infographicUrl = `https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80`;
+      // Fallback to a neutral infographic illustration (No Dashboards)
+      infographicUrl = `https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80`;
     }
 
     return NextResponse.json({ imageUrl: infographicUrl });
