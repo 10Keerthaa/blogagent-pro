@@ -15,7 +15,7 @@ import {
 import { FloatingToolbar } from './FloatingToolbar';
 import { Portal } from '../ui/Portal';
 import { CategorySelector } from './CategorySelector';
-import { CATEGORIES } from '@/lib/constants/categories';
+import { CATEGORIES, LOCKED_CATEGORY_ID } from '@/lib/constants/categories';
 
 export const ReviewList = () => {
     const {
@@ -474,12 +474,19 @@ export const ReviewList = () => {
                                 <div className="max-w-[850px] w-full space-y-16">
                                     {/* Categories Verification Header */}
                                     {selectedCategories.length > 0 && (
-                                        <div className="flex flex-wrap justify-center gap-3 mb-[-2rem]">
-                                            {CATEGORIES.filter(c => selectedCategories.includes(c.id)).map(cat => (
-                                                <span key={cat.id} className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 border border-indigo-100 dark:border-indigo-800">
-                                                    {cat.name}
-                                                </span>
-                                            ))}
+                                        <div className="flex justify-center mb-[-2rem]">
+                                            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-6 py-1.5 border border-indigo-100 dark:border-indigo-800">
+                                                {(() => {
+                                                    const sortedCats = CATEGORIES.filter(c => selectedCategories.includes(c.id))
+                                                        .sort((a, b) => a.id === LOCKED_CATEGORY_ID ? -1 : 1);
+                                                    const blogPart = sortedCats.find(c => c.id === LOCKED_CATEGORY_ID)?.name.toUpperCase() || 'BLOG';
+                                                    const otherParts = sortedCats
+                                                        .filter(c => c.id !== LOCKED_CATEGORY_ID)
+                                                        .map(c => c.name.toUpperCase())
+                                                        .join(', ');
+                                                    return otherParts ? `${blogPart}: ${otherParts}` : blogPart;
+                                                })()}
+                                            </div>
                                         </div>
                                     )}
 
