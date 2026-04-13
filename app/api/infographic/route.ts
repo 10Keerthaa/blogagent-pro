@@ -47,16 +47,16 @@ export async function POST(req: Request) {
         STEP B — Image Prompt Generation:
         Write a hyper-detailed image generation prompt for a technical 'Industry Roadmap' (strictly 4:5 portrait ratio).
 
-        THE MANDATORY RULES: 
-        - LAYOUT: Use a **Winding Roadmap** or **S-Curve Path** layout. A central digital 'road' must flow through the canvas connecting 4-6 nodes.
-        - ORIENTATION: Portrait (Vertical).
-        - NODES: Each node must feature a **Circular Illustrative Vignette** (a small, detailed scene showing people interacting with technology relevant to the industry).
-        - LABELS: Use **Floating Text Bubbles** for takeaways. **CRITICAL SPARK RULE: All labels must be spelled with 100% accuracy. You must use standard technical spelling: 'ACQUISITION' (NOT QUISISTION), 'IMPLEMENTATION', 'GOVERNANCE', 'CYBERSECURITY'. Double-check every letter.**
-        - STYLE: High-end Executive Whitepaper Illustration. Clean, professional, and minimalist.
-        - BACKGROUND: STRICTLY PURE WHITE (#FFFFFF) or light Pearl Gray (#F9FAFB). No gradients, no dark overlays.
-        - NEGATIVE CONSTRAINTS: ABSOLUTELY NO DARK THEMES. NO BLACK OR CHARCOAL BACKGROUNDS. NO glassmorphism, NO blur effects. NO dashboard UI, NO buttons, NO scrollbars, NO browser windows. NO telemetry, NO data visualization screens. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles. **ZERO SPELLING ERRORS ALLOWED.**
-        - PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral). Must be highly legible against the white background.
-        - BRANDING: High-end corporate schematic feel, 10xDS Elite standard. Avoid any "App" or "Software" interface look.
+        THE MANDATORY VISUAL RULES:
+        1. NO DASHBOARD ELEMENTS: ABSOLUTELY NO black or dark backgrounds. NO UI widgets, NO scrollbars, NO browser windows, NO buttons, NO sidebars, NO mouse cursors, NO telemetry screens.
+        2. NO DATA VISUALIZATION: NO bar charts, NO histograms, NO line graphs, NO 3D bubbles. This is NOT a dashboard.
+        3. LAYOUT: Use a **Winding Roadmap** or **Ismetric S-Curve Path** layout. A central digital 'road' must flow through the canvas connecting 4-6 nodes.
+        4. ART STYLE: High-end **Executive Hand-Drawn Schematic** or **Paper Illustration**. Clean, professional, and minimalist.
+        5. BACKGROUND: STRICTLY PURE WHITE (#FFFFFF) or light Pearl Gray (#F9FAFB).
+        6. NODES: Each node must feature a **Circular Illustrative Vignette** (a small, detailed scene showing people interacting with technology relevant to the industry).
+        7. LABELS: Use **Floating Text Bubbles** for takeaways. **CRITICAL SPARK RULE: All labels must be spelled with 100% accuracy.**
+        8. PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral).
+        9. BRANDING: High-end corporate schematic feel, 10xDS Elite standard. Avoid any "App" or "Software" interface look.
       `;
 
       const response = await client.request({

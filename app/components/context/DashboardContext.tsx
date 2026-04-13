@@ -317,14 +317,28 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const processKeywordsInContent = useCallback((html: string, allKeywords: string[], primary: string | null): string => {
         if (!html || allKeywords.length === 0) return html;
         let processedHtml = html;
+        
+        // Elite Unique Highlighting: Only highlight the FIRST instance of each keyword
         const sortedKws = [...allKeywords].sort((a, b) => b.length - a.length);
-        const pattern = sortedKws.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-        if (!pattern) return processedHtml;
-        const mainRegex = new RegExp(`(?<!<[^>]*)\\b(${pattern})\\b(?![^<]*>)`, 'gi');
+        const usedKws = new Set<string>();
+
         const parts = processedHtml.split(/(<[^>]+>)/g);
         return parts.map(part => {
             if (part.startsWith('<')) return part;
-            return part.replace(mainRegex, '<span style="color: #666666; font-weight: 500;">$1</span>');
+            
+            let text = part;
+            for (const kw of sortedKws) {
+                if (!kw.trim() || usedKws.has(kw.toLowerCase())) continue;
+                
+                const escapedKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedKw})\\b(?![^<]*>)`, 'i');
+                
+                if (regex.test(text)) {
+                    text = text.replace(regex, '<span style="color: #666666; font-weight: 500;">$1</span>');
+                    usedKws.add(kw.toLowerCase());
+                }
+            }
+            return text;
         }).join('');
     }, []);
 
