@@ -230,7 +230,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!html) return html;
 
         const totalWords = html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
-        const maxLinksLimit = Math.max(1, Math.ceil(totalWords / 200)); // ~5 links per 1000 words
+        // Increased density: 1 link per 120 words (~15 links per 1800 words)
+        const maxLinksLimit = Math.max(1, Math.ceil(totalWords / 120)); 
         let currentLinkCount = 0;
 
         const phraseLookup: Record<string, string> = { ...sitemapData };
@@ -240,22 +241,29 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
         if (Object.keys(phraseLookup).length === 0) return html;
 
+        // Prioritize technical phrases by length and depth
         const sortedKeywords = Object.keys(phraseLookup)
             .filter(phrase => phrase.length >= 3 && !/^(is|are|the|how|can|it|we)\s/i.test(phrase))
             .sort((a, b) => b.length - a.length);
 
-        // Split by paragraph to contextualize
         const paragraphs = html.split(/<\/p>/i);
         const usedUrls = new Set<string>();
+        const processedParagraphs: string[] = [];
 
-        const processedParagraphs = await Promise.all(paragraphs.map(async (paragraph) => {
-            if (!paragraph.trim() || currentLinkCount >= maxLinksLimit) return paragraph;
+        // STRICT SEQUENTIAL PROCESSING to prevent duplicate URLs (Race Condition Fix)
+        for (let paragraph of paragraphs) {
+            if (!paragraph.trim() || currentLinkCount >= maxLinksLimit) {
+                processedParagraphs.push(paragraph);
+                continue;
+            }
+
+            let paragraphLinked = false;
 
             // Tier 1: Semantic Intent Matching (Primary)
             const candidatesInPara = sortedKeywords.filter(k => {
                 const regex = new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
                 return regex.test(paragraph);
-            }).slice(0, 5); // Limit candidates to avoid payload bloat
+            }).slice(0, 5);
 
             if (candidatesInPara.length > 0) {
                 try {
@@ -274,7 +282,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                             paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
                             usedUrls.add(targetUrl);
                             currentLinkCount++;
-                            return paragraph;
+                            paragraphLinked = true;
                         }
                     }
                 } catch (e) {
@@ -282,8 +290,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 }
             }
 
-            // Tier 2: Legacy Fallback
-            if (currentLinkCount < maxLinksLimit) {
+            // Tier 2: Legacy Fallback (if Tier 1 didn't link)
+            if (!paragraphLinked && currentLinkCount < maxLinksLimit) {
                 for (const phrase of sortedKeywords) {
                     const targetUrl = phraseLookup[phrase.toLowerCase()];
                     if (usedUrls.has(targetUrl) || currentLinkCount >= maxLinksLimit) continue;
@@ -294,13 +302,14 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                         paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
                         usedUrls.add(targetUrl);
                         currentLinkCount++;
-                        break; // One link per paragraph for fallback
+                        paragraphLinked = true;
+                        break; 
                     }
                 }
             }
 
-            return paragraph;
-        }));
+            processedParagraphs.push(paragraph);
+        }
 
         return processedParagraphs.join('</p>');
     }, [sitemapData, anchorMap]);
