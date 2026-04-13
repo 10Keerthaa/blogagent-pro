@@ -5,16 +5,21 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
-        const draftsSnapshot = await db.collection('drafts')
-            .where('status', '==', 'pending')
+        const draftsSnapshot = await db.collection('blog_posts')
+            .where('status', '==', 'review')
             .get();
 
-        console.log(`Found ${draftsSnapshot.size} pending drafts in database`);
+        console.log(`Found ${draftsSnapshot.size} review-ready drafts in database`);
 
-        const drafts = draftsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        })).sort((a: any, b: any) => b.createdAt - a.createdAt);
+        const drafts = draftsSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+                // Ensure dates are parsed cleanly for the frontend logic
+                createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt || new Date().toISOString()
+            };
+        }).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
         return NextResponse.json({ success: true, drafts });
     } catch (error: any) {

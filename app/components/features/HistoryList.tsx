@@ -6,6 +6,32 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Globe, Calendar, ExternalLink } from 'lucide-react';
 
+const formatDate = (date: any) => {
+    if (!date) return 'N/A';
+    try {
+        // Handle Firestore Timestamp objects
+        if (date && typeof date === 'object' && 'seconds' in date) {
+            return new Date(date.seconds * 1000).toLocaleDateString();
+        }
+        // Handle ISO strings or Date objects
+        return new Date(date).toLocaleDateString();
+    } catch (e) {
+        return 'N/A';
+    }
+};
+
+const formatDateTime = (date: any) => {
+    if (!date) return 'N/A';
+    try {
+        if (date && typeof date === 'object' && 'seconds' in date) {
+            return new Date(date.seconds * 1000).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+        }
+        return new Date(date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+    } catch (e) {
+        return 'N/A';
+    }
+};
+
 export const HistoryList = () => {
     const { history, handleSelectHistoryItem, selectedHistoryItem } = useDashboard();
 
@@ -45,7 +71,7 @@ export const HistoryList = () => {
                                     {selectedHistoryItem.date && (
                                         <div className="space-y-2">
                                             <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Publication Date</p>
-                                            <p className="text-slate-900 dark:text-white font-semibold text-base">{new Date(selectedHistoryItem.date).toLocaleDateString()}</p>
+                                            <p className="text-slate-900 dark:text-white font-semibold text-base">{formatDate(selectedHistoryItem.date)}</p>
                                         </div>
                                     )}
                                 </div>
@@ -82,7 +108,7 @@ export const HistoryList = () => {
                                         {selectedHistoryItem.auditLog.map((log: any, i: number) => (
                                             <div key={i} className="flex items-center justify-between gap-8 px-5 py-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 w-full">
                                                 <p className="text-sm font-bold text-indigo-700 dark:text-indigo-300">{log.email}</p>
-                                                <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">{new Date(log.timestamp).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                                                <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">{formatDateTime(log.timestamp)}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -95,7 +121,7 @@ export const HistoryList = () => {
                                     <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Published By</p>
                                     <div className="flex items-center justify-between gap-8 px-5 py-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50">
                                         <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300">{selectedHistoryItem.publishedBy.email}</p>
-                                        <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">{new Date(selectedHistoryItem.publishedBy.timestamp).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                                        <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">{formatDateTime(selectedHistoryItem.publishedBy.timestamp)}</span>
                                     </div>
                                 </div>
                             )}
@@ -157,7 +183,7 @@ export const HistoryList = () => {
                                             <div className="flex items-center gap-6">
                                                 <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
                                                     <Calendar className="w-3.5 h-3.5" />
-                                                    {new Date(item.date).toLocaleDateString()}
+                                                    {formatDate(item.date)}
                                                 </span>
                                                 <Badge variant="success" className="px-3">Published</Badge>
                                                 {item.authorEmail && (

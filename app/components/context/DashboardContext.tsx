@@ -767,7 +767,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 imageUrl: draft.imageUrl, 
                 infographicUrl: draft.infographicUrl, 
                 slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, ''),
-                categories: draft.categories || selectedCategories
+                categories: selectedCategories.length > 0 ? selectedCategories : (draft.categories || [LOCKED_CATEGORY_ID])
             });
             
             const publishedBy = {
