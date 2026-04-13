@@ -80,8 +80,7 @@ export async function POST(req: Request) {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const response = await client.request({
-        url,
-        geminiImageUrl,
+        url: geminiImageUrl,
         method: 'POST',
         data: {
           contents: [
