@@ -31,31 +31,16 @@ export async function POST(req: Request) {
       const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
       const aiPrompt = `
-        You are an Expert Information Designer. Your task is to design a professional 'Industry Roadmap' infographic for a blog post.
-        Blog Title: ${prompt}
+        Analyze this blog post and extract exactly 5 sequential milestones that represent a 'Technical Journey' for an infographic.
+
+        Output ONLY a JSON array with exactly these fields for each milestone:
+        - "header": A 3-word title for the milestone.
+        - "visual_vignette": A description of a 3D character interacting with a specific tech element from the text.
+        - "industry": The primary industry of the post.
+
+        CRITICAL: Output valid JSON only. No explanation text. No markdown backticks.
+
         Blog Content: ${content.substring(0, 3000)}
-        
-        STEP A — Analysis:
-        1. Identify the specific Industry (e.g., Boutique Hotels, Cybersecurity, AI Automation).
-        2. Identify the core 'Expert Journey' or 'Maturity Path' described in the text.
-        3. Extract 4-6 'Key Insights' from the CONTENT SUMMARY that represent specific actions or human-tech interactions.
-
-        ${refinement ? `USER REFINEMENT INSTRUCTIONS (PRIORITY):
-        Strictly incorporate the following changes requested by the user: "${refinement}"
-        Ensure these adjustments override default stylistic choices if they conflict.` : ''}
-
-        STEP B — Image Prompt Generation:
-        Write a hyper-detailed image generation prompt for a technical 'Industry Roadmap' (strictly 4:5 portrait ratio).
-
-        THE MANDATORY RULES: 
-        - LAYOUT: Use a **Winding Roadmap** or **S-Curve Path** layout. A central digital 'road' must flow through the canvas connecting 4-6 nodes.
-        - ORIENTATION: Portrait (Vertical).
-        - NODES: Each node must feature a **Circular Illustrative Vignette** (a small, detailed scene showing people interacting with technology relevant to the industry).
-        - LABELS: Use **Floating Text Bubbles** or minimalist call-outs for Takeaways.
-        - STYLE: Isometric Flat Design. Clean, professional, and sophisticated.
-        - NEGATIVE CONSTRAINTS: DO NOT generate a dashboard, telemetry, or data visualization screen. NO generic vertical boxes, NO bars, NO histograms. NO 3D bubbles.
-        - PALETTE: Vibrant Colorful Pastel palette (Lavender, Mint, Sky Blue, and Coral).
-        - BRANDING: High-end corporate schematic feel, 10xDS Elite standard.
       `;
 
       const resp = await client.request({
@@ -68,10 +53,23 @@ export async function POST(req: Request) {
       });
 
       const data = resp.data as any;
+      let rawText = '';
       if (Array.isArray(data)) {
-        visualPrompt = data.map(chunk => (chunk.candidates && chunk.candidates[0] && chunk.candidates[0].content.parts[0].text) || '').join('');
+        rawText = data.map(chunk => (chunk.candidates && chunk.candidates[0] && chunk.candidates[0].content.parts[0].text) || '').join('');
       } else if (data.candidates) {
-        visualPrompt = data.candidates[0].content.parts[0].text;
+        rawText = data.candidates[0].content.parts[0].text;
+      }
+      
+      // Surgical JSON Extraction
+      const jsonClean = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+      const parsed = JSON.parse(jsonClean);
+      
+      if (Array.isArray(parsed)) {
+        const industry = parsed[0]?.industry || 'Technical';
+        const milestones = parsed.map(m => `Header: ${m.header} - Vignette: ${m.visual_vignette}`).join('; ');
+        visualPrompt = `A Pastel Isometric S-Curve Roadmap for ${industry}. Path includes these milestones inside translucent glass bubbles: ${milestones}.`;
+      } else {
+        visualPrompt = jsonClean;
       }
       visualPrompt = visualPrompt.trim();
     } catch (designerError: any) {
@@ -93,7 +91,7 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `${visualPrompt.substring(0, 800)}. USE VIBRANT COLORFUL PASTEL COLORS. DO NOT GENERATE DASHBOARDS OR TELEMETRY. NO VERTICAL BOXES. ISOMETRIC S-CURVE ROADMAP ONLY. CIRCULAR VIGNETTES WITH PEOPLE AND TECH. FLOATING TEXT BUBBLES. Portrait format 4:5. High fidelity.`
+                  text: `ISOMETRIC 3D GLASS-BUBBLE ROADMAP. S-Curve winding path on a soft pearl-gray background. Use a professional Pastel Palette (Muted Sage, Rose, Sky Blue). ${visualPrompt.substring(0, 1000)}. NO DASHBOARDS, NO SCREENS, NO BLACK BACKGROUNDS. 4:5 Portrait. High Fidelity Rendering.`
                 }
               ]
             }
@@ -122,7 +120,7 @@ export async function POST(req: Request) {
         const logoMeta = await sharp(resizedLogo).metadata();
         const logoW = logoMeta.width || 130;
 
-        const MARGIN = 40; // Match Hero Banner margin
+        const MARGIN = 60; // Elite Calibration Margin
         const buffer = await sharp(rawBuffer)
           .resize(800, 1000, {
             fit: 'contain',
@@ -151,8 +149,8 @@ export async function POST(req: Request) {
       }
     } catch (vertexError: any) {
       console.error("Vertex Infographic Error:", vertexError?.message || vertexError?.response?.data || vertexError);
-      // Fallback to a neutral infographic-style illustration
-      infographicUrl = `https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80`;
+      // Fallback to the local branded elite placeholder created for this project
+      infographicUrl = `/10xds-placeholder.png`;
     }
 
     return NextResponse.json({ imageUrl: infographicUrl });
