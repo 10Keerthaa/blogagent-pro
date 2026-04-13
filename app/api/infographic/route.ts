@@ -76,7 +76,7 @@ export async function POST(req: Request) {
       visualPrompt = visualPrompt.trim();
     } catch (designerError: any) {
       console.error("Vertex AI Designer Error:", designerError);
-      visualPrompt = `A clean, professional 10XDS style infographic for: ${prompt}. Industry Roadmap style.`;
+      visualPrompt = `Professional 'Industry Roadmap' infographic for: ${prompt}. LAYOUT: Isometric S-Curve Winding Roadmap with 4-5 circular illustrative vignettes connected by a glowing digital road. Each vignette shows people interacting with technology specific to the topic. STYLE: Isometric Flat Design. PALETTE: Pastel (Lavender, Mint, Sky Blue, Coral). Floating text bubble labels. Portrait 4:5 ratio. 10xDS Elite corporate standard.`;
     }
 
     // TASK 2: Restored High-Fidelity Generation via Gemini 2.5 Flash Image
@@ -99,7 +99,7 @@ export async function POST(req: Request) {
             }
           ],
           generationConfig: {
-            responseModalities: ['IMAGE'],
+            responseModalities: ['TEXT', 'IMAGE'],
           }
         }
       });
@@ -150,7 +150,7 @@ export async function POST(req: Request) {
         throw new Error("Invalid response from Gemini Flash Image");
       }
     } catch (vertexError: any) {
-      console.error("Vertex Infographic Error:", vertexError);
+      console.error("Vertex Infographic Error:", vertexError?.message || vertexError?.response?.data || vertexError);
       // Fallback to a neutral infographic-style illustration
       infographicUrl = `https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80`;
     }
