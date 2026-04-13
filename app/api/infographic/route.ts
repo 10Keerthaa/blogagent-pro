@@ -25,10 +25,10 @@ export async function POST(req: Request) {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    // TASK 1: Generate Visual Design Blueprint via Vertex AI Gemini 2.5 Pro
+    // TASK 1: Generate Visual Design Blueprint via Vertex AI Gemini 1.5 Flash (Proven Stable)
     let visualPrompt = '';
     try {
-      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
+      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-1.5-flash:streamGenerateContent`;
 
       const aiPrompt = `
         You are an Expert Strategic Information Designer. Your task is to design a high-fidelity 'Logic Flow' blueprint for a professional Infographic.
@@ -63,9 +63,7 @@ export async function POST(req: Request) {
       });
 
       const data = response.data as any;
-      if (Array.isArray(data)) {
-        visualPrompt = data.map(chunk => (chunk.candidates && chunk.candidates[0] && chunk.candidates[0].content.parts[0].text) || '').join('');
-      } else if (data.candidates) {
+      if (data.candidates) {
         visualPrompt = data.candidates[0].content.parts[0].text;
       }
       visualPrompt = visualPrompt.trim();
@@ -74,28 +72,28 @@ export async function POST(req: Request) {
       visualPrompt = `A clean, professional 10XDS style infographic for: ${prompt}. Isometric glass-bubble roadmap.`;
     }
 
-    // TASK 2: High-Fidelity Generation via Gemini 2.5 Flash Image (The "Artist")
+    // TASK 2: Restored High-Fidelity Generation via Imagen 3 (Proven Artist)
     let infographicUrl = '';
     try {
-      const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:predict`;
+      const imagenUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
 
       const imagePrompt = `
-        ISOMETRIC 3D GLASS ROADMAP with glowing winding path and glass spheres. 
+        ISOMETRIC 3D GLASS-BUBBLE ROADMAP with glowing winding path and glass spheres. Portrait 4:5 ratio. High-end Executive 3D Illustration.
         Visual Blueprint: ${visualPrompt.substring(0, 1000)}.
         
         THE ARTIST MANDATES:
         1. THE LIGHT MANDATE: STRICTLY PURE WHITE or Light Pearl Gray background. NO DARK THEMES. NO BLACK OR CHARCOAL.
-        2. THE NO-SCREEN RULE: ABSOLUTELY DO NOT draw a computer, a laptop, a monitor, a tablet, or a UI dashboard. Represent the data as a physical journey through 3D glass spheres on a winding path.
-        3. TEXTURE: Translucent glass, soft light refraction, vibrant colorful pastel palette (Lavender, Mint, Coral, Sky Blue).
-        4. LAYOUT: Winding S-Curve Path, portrait 4:5 ratio. High-end Executive 3D Illustration.
+        2. NO-OFFICE RULE: ABSOLUTELY DO NOT draw a real office, do not draw real people in a real room, no stock photography of people. 
+        3. THE NO-SCREEN RULE: ABSOLUTELY DO NOT draw a computer, a laptop, a monitor, a tablet, or a UI dashboard. Represent the data as a physical journey through 3D glass spheres on a winding path.
+        4. TEXTURE: Translucent glass, soft light refraction, vibrant colorful pastel palette (Lavender, Mint, Coral, Sky Blue).
         
-        NEGATIVE REINFORCEMENT: [laptop, computer, monitor, screen, dashboard, analytics, UI, browser window, telemetry, dark mode, black background, software interface, mouse cursor, scrollbar].
+        NEGATIVE REINFORCEMENT: [office, laptop, computer, monitor, screen, dashboard, analytics, UI, browser window, telemetry, dark mode, black background, software interface, mouse cursor, scrollbar].
         
         MANDATORY: All text must be perfectly spelled and highly legible.
       `;
 
       const response = await client.request({
-        url: geminiImageUrl,
+        url: imagenUrl,
         method: 'POST',
         data: {
           instances: [{ prompt: imagePrompt }],
@@ -144,11 +142,11 @@ export async function POST(req: Request) {
         infographicUrl = await uploadToGCS(buffer, fileName, 'image/png');
         console.log("GCS Upload Success:", infographicUrl);
       } else {
-        throw new Error("Invalid response from Gemini Flash Image");
+        throw new Error("Invalid response from Imagen 3");
       }
     } catch (vertexError: any) {
       console.error("Vertex Infographic Error:", vertexError);
-      // Fallback to a neutral infographic illustration (No Dashboards)
+      // Fallback to a neutral infographic illustration (No Fallback Photos)
       infographicUrl = `https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80`;
     }
 
