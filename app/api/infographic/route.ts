@@ -170,8 +170,13 @@ export async function POST(req: Request) {
         throw new Error("Invalid response from Gemini Flash Image");
       }
     } catch (vertexError: any) {
-      console.error("Vertex Infographic Error:", vertexError?.message || vertexError?.response?.data || vertexError);
-      // Fallback to the local branded elite placeholder created for this project
+      // THE SMOKE SIGNAL: This will tell you EXACTLY why the image failed in your logs
+      console.error("DETAILED ARTIST ERROR:", {
+        message: vertexError?.message,
+        status: vertexError?.response?.status,
+        data: vertexError?.response?.data
+      });
+      
       infographicUrl = `/10xds-placeholder.png`;
     }
 
