@@ -68,8 +68,8 @@ export async function POST(req: Request) {
 
         if (Array.isArray(parsed)) {
           const industry = parsed[0]?.industry || 'Technical';
-          const milestones = parsed.map(m => `(Label: "${m.header}", Scene: ${m.visual_vignette})`).join(', ');
-          visualPrompt = `Isometric Roadmap for ${industry}. Milestones: ${milestones}.`;
+          const milestones = parsed.map(m => `Header: ${m.header} - Vignette: ${m.visual_vignette}`).join('; ');
+          visualPrompt = `A Pastel Isometric S-Curve Roadmap for ${industry}. Path includes these milestones inside translucent glass bubbles: ${milestones}.`;
         } else {
           visualPrompt = rawText;
         }
@@ -83,9 +83,9 @@ export async function POST(req: Request) {
            const milestones = headerMatches.map((m, i) => {
              const h = m[1];
              const v = vignetteMatches[i] ? vignetteMatches[i][1] : "Professional 3D technical scene";
-             return `(Label: "${h}", Scene: ${v})`;
-           }).join(', ');
-           visualPrompt = `Professional Isometric Roadmap. Milestones: ${milestones}.`;
+             return `Header: ${h} - Vignette: ${v}`;
+           }).join('; ');
+           visualPrompt = `A Pastel Isometric S-Curve Roadmap. Path includes these milestones inside translucent glass bubbles: ${milestones}.`;
         } else {
           visualPrompt = rawText.substring(0, 500); // Massive fallback to raw text snippets
         }
