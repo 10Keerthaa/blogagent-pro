@@ -40,7 +40,7 @@ export async function POST(req: Request) {
 
         CRITICAL: Output valid JSON only. No explanation text. No markdown backticks.
 
-        Blog Content: ${content.substring(0, 3000)}
+        Blog Content: ${content.substring(0, 2000)}
       `;
 
       const resp = await client.request({
@@ -60,16 +60,35 @@ export async function POST(req: Request) {
         rawText = data.candidates[0].content.parts[0].text;
       }
 
-      // Surgical JSON Extraction
-      const jsonClean = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-      const parsed = JSON.parse(jsonClean);
+      // ELITE RESILIENT EXTRACTION: Look for the JSON array specifically
+      try {
+        const jsonMatch = rawText.match(/\[[\s\S]*\]/);
+        const jsonContent = jsonMatch ? jsonMatch[0] : rawText;
+        const parsed = JSON.parse(jsonContent);
 
-      if (Array.isArray(parsed)) {
-        const industry = parsed[0]?.industry || 'Technical';
-        const milestones = parsed.map(m => `Header: ${m.header} - Vignette: ${m.visual_vignette}`).join('; ');
-        visualPrompt = `A Pastel Isometric S-Curve Roadmap for ${industry}. Path includes these milestones inside translucent glass bubbles: ${milestones}.`;
-      } else {
-        visualPrompt = jsonClean;
+        if (Array.isArray(parsed)) {
+          const industry = parsed[0]?.industry || 'Technical';
+          const milestones = parsed.map(m => `Header: ${m.header} - Vignette: ${m.visual_vignette}`).join('; ');
+          visualPrompt = `A Pastel Isometric S-Curve Roadmap for ${industry}. Path includes these milestones inside translucent glass bubbles: ${milestones}.`;
+        } else {
+          visualPrompt = rawText;
+        }
+      } catch (parseError) {
+        console.warn("JSON Parse failed, attempting Regex Recovery...");
+        // EMERGENCY REGEX RECOVERY: Manually extract headers and vignettes from raw text
+        const headerMatches = Array.from(rawText.matchAll(/"header":\s*"([^"]+)"/g));
+        const vignetteMatches = Array.from(rawText.matchAll(/"visual_vignette":\s*"([^"]+)"/g));
+        
+        if (headerMatches.length >= 3) {
+           const milestones = headerMatches.map((m, i) => {
+             const h = m[1];
+             const v = vignetteMatches[i] ? vignetteMatches[i][1] : "Professional 3D technical scene";
+             return `Header: ${h} - Vignette: ${v}`;
+           }).join('; ');
+           visualPrompt = `Professional Isometric Roadmap. Path includes: ${milestones}.`;
+        } else {
+          visualPrompt = rawText.substring(0, 500); // Massive fallback to raw text snippets
+        }
       }
       visualPrompt = visualPrompt.trim();
     } catch (designerError: any) {
