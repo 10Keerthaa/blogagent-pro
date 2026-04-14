@@ -223,6 +223,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         // 3. Convert markdown bold/italics (limited) if AI ignored instructions
         clean = clean.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
         clean = clean.replace(/\*(.*?)\*/g, '<i>$1</i>');
+
+        // 4. SANITIZE ENCODING: Fix "Smart Characters" that cause  errors
+        clean = clean.replace(/[\u2013\u2014]/g, '-') // en-dash and em-dash
+                     .replace(/[\u2018\u2019]/g, "'") // smart single quotes
+                     .replace(/[\u201C\u201D]/g, '"'); // smart double quotes
+
         return clean;
     }, []);
 
@@ -290,12 +296,20 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                         const data = await resp.json();
                         
                         if (data.match) {
-                            const targetUrl = data.match.url;
+                            let targetUrl = data.match.url;
+                            
+                            // ELITE: Ensure Absolute URLs to prevent "App Opening" issues
+                            if (targetUrl.startsWith('/') && !targetUrl.startsWith('//')) {
+                                targetUrl = `https://10xds.com${targetUrl}`;
+                            } else if (!targetUrl.startsWith('http')) {
+                                targetUrl = `https://10xds.com/${targetUrl}`;
+                            }
+
                             const matchText = candidatesInPara.find(c => paragraph.toLowerCase().includes(c.toLowerCase()));
                             if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
                                 const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                                 const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
-                                paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                                paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
                                 usedAnchors.add(matchText.toLowerCase());
                                 currentLinkCount++;
                                 lastLinkWordIndex = globalWordCounter;

@@ -43,7 +43,7 @@ export async function GET() {
             return map;
         }
 
-        // 2. Load Firestore Cache first (to see if we can skip sitemap discovery)
+        // 2. Load Firestore Cache first
         const docRef = db.collection('config').doc('sitemap-cache');
         let cachedData: any = {
             timestamp: 0,
@@ -63,7 +63,6 @@ export async function GET() {
                 try {
                     const localData = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
                     cachedData = { ...cachedData, ...localData };
-                    console.log("Migrating local sitemap cache to Firestore...");
                 } catch (e) { }
             }
         } catch (dbErr: any) {
@@ -75,9 +74,8 @@ export async function GET() {
         const isDiscoveryStale = (Date.now() - (cachedData.lastDiscovery || 0)) > 24 * 60 * 60 * 1000;
 
         if (urls.length === 0 || isDiscoveryStale) {
-            console.log("Refreshing sitemap discovery list...");
             async function getLocs(url: string, depth = 0): Promise<string[]> {
-                if (depth > 5) return []; // Safety guard
+                if (depth > 5) return []; 
                 try {
                     const resp = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(4000) });
                     if (!resp.ok) return [];
@@ -105,11 +103,9 @@ export async function GET() {
 
         // 4. Processing logic (Early exit if timeout approaching)
         if (Date.now() - startTime > MAX_DURATION - 2000) {
-            console.log("Skipping incremental crawl: timeout approaching.");
             return NextResponse.json({ keywordMap: { ...generateSlugMap(urls), ...cachedData.keywordMap }, anchorMap: cachedData.anchorMap || {} });
         }
 
-        // Start with the Fast Slug Map as baseline fallback
         const slugMap = generateSlugMap(urls);
         const finalMap = { ...slugMap, ...cachedData.keywordMap };
 
@@ -133,7 +129,6 @@ export async function GET() {
                         for (let len = 2; len <= 4; len++) {
                             if (i + len <= segments.length) {
                                 const words = segments.slice(i, i + len);
-                                // CRITICAL: If any word in the phrase is a stop word, discard the whole phrase
                                 const hasStopWord = words.some(w => STOP_WORDS.has(w));
                                 if (!hasStopWord) {
                                     const phrase = words.join(" ");
