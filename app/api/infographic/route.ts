@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         Analyze this blog post and extract sequential milestones that represent a 'Technical Journey' for an infographic.
         
         CRITICAL INSTRUCTIONS:
-        1. Title Detection: Look at the Blog Title: "${prompt}". If it mentions a specific number of phases, steps, or pillars (between 5 and 8), extract EXACTLY that number. Otherwise, default to 5 milestones.
+        1. Title Detection: Look at the Blog Title: "${prompt}". If it contains a number between 5 and 10 (e.g., '7 Steps', '8 Phases'), you must extract exactly that many milestones. If no number is found, default to 5.
         2. Container Theme: Identify a 'Container Theme' based on the industry (e.g., 'translucent glass cubes' for Tech, 'translucent glass pillars' for Architecture, 'translucent glass crates' for Logistics, 'translucent glass spheres' for General).
 
         Output ONLY a JSON object with these fields:
