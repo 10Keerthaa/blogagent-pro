@@ -6,10 +6,10 @@ import { db } from '@/lib/firebaseAdmin';
 
 const CACHE_FILE = path.join(process.cwd(), 'logs', 'sitemap-cache.json');
 const STOP_WORDS = new Set([
-    // Basic fillers
-    'and', 'the', 'into', 'of', 'in', 'to', 'a', 'for', 'with', 'is', 'on', 'at', 'by', 'an', 'be', 'as', 'about', 'from', 'this', 'that', 'we', 'our', 'it', 'its', 'their', 'they', 'you', 'your',
+    // Basic fillers & Pronouns
+    'and', 'the', 'into', 'of', 'in', 'to', 'a', 'for', 'with', 'is', 'on', 'at', 'by', 'an', 'be', 'as', 'about', 'from', 'this', 'that', 'we', 'our', 'it', 'its', 'their', 'they', 'you', 'your', 'them', 'these', 'those', 'where', 'when', 'who', 'how', 'which', 'wherever', 'whenever', 'whereas', 'while', 'instead', 'some', 'many', 'all', 'any', 'each', 'every', 'there', 'here', 'since', 'because', 'though', 'although',
     // Generic action/filler words to ignore in slugs
-    'successfully', 'implementing', 'implementation', 'guide', 'essential', 'ways', 'tips', 'best', 'practices', 'top', 'complete', 'overview', 'explaining', 'understanding', 'using', 'towards', 'highly', 'actually', 'really', 'getting', 'started', 'assessing', 'challenges', 'benefits', 'importance', 'role', 'impact', 'future', 'expert', 'professional', 'leading', 'modern', 'new', 'latest', 'how', 'why', 'can', 'will', 'must', 'should', 'could', 'would', 'shall', 'may', 'might', 'must', 'done', 'doing', 'does', 'did', 'being', 'been', 'having', 'had', 'has', 'have', 'very', 'quite', 'just', 'only'
+    'successfully', 'implementing', 'implementation', 'guide', 'essential', 'ways', 'tips', 'best', 'practices', 'top', 'complete', 'overview', 'explaining', 'understanding', 'using', 'towards', 'highly', 'actually', 'really', 'getting', 'started', 'assessing', 'challenges', 'benefits', 'importance', 'role', 'impact', 'future', 'expert', 'professional', 'leading', 'modern', 'new', 'latest', 'can', 'will', 'must', 'should', 'could', 'would', 'shall', 'may', 'might', 'done', 'doing', 'does', 'did', 'being', 'been', 'having', 'had', 'has', 'have', 'very', 'quite', 'just', 'only'
 ]);
 
 export async function GET() {
@@ -34,7 +34,7 @@ export async function GET() {
                         for (let len = 2; len <= 4; len++) {
                             if (i + len <= segments.length) {
                                 const phrase = segments.slice(i, i + len).join(" ");
-                                if (phrase.length >= 6 && !map[phrase]) map[phrase] = url;
+                                if (phrase.length >= 8 && !map[phrase]) map[phrase] = url;
                             }
                         }
                     }
@@ -137,7 +137,7 @@ export async function GET() {
                                 const hasStopWord = words.some(w => STOP_WORDS.has(w));
                                 if (!hasStopWord) {
                                     const phrase = words.join(" ");
-                                    if (phrase.length >= 6) metadataMatches[phrase] = url;
+                                    if (phrase.length >= 8) metadataMatches[phrase] = url;
                                 }
                             }
                         }
@@ -172,7 +172,7 @@ export async function GET() {
 
                         if (bodyText.length < 100) return;
 
-                        const aiPrompt = `You are an SEO specialist. Extract exactly 3 technical phrases (2-4 words) and 2 abbreviations from this content for internal linking. URL: ${url}. Content: ${bodyText}. Return ONLY JSON: {"phrases": [], "abbreviations": []}`;
+                        const aiPrompt = `You are a Technical SEO Specialist. Extract exactly 3 professional nouns or technical phrases (2-4 words) and 2 industry abbreviations. STRICTLY IGNORE all pronouns, common verbs, and prepositions. Only extract entities like 'AI Orchestration', 'ERP Integration', or 'Cloud Infrastructure'. URL: ${url}. Content: ${bodyText}. Return ONLY JSON: {"phrases": [], "abbreviations": []}`;
 
                         const geminiResp = await client.request({
                             url: geminiUrl,
