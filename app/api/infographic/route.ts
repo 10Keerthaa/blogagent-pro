@@ -83,7 +83,7 @@ export async function POST(req: Request) {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       // Clean visualPrompt of trailing semi-colons to prevent ghost nodes
-      const cleanedPrompt = visualPrompt.trim().replace(/;\s*$/, '');
+      const cleanedPrompt = visualPrompt.replace(/[;,. ]+$/, '');
       
       const response = await client.request({
         url: geminiImageUrl,
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `ISOMETRIC 3D GLASS-BUBBLE ROADMAP. Strictly render EXACTLY 5 glass bubbles. S-Curve winding path on a soft pearl-gray background. Each of the 5 bubbles must contain one specific vignette and text label from the list: ${cleanedPrompt.substring(0, 1000)}. DO NOT add empty bubbles or extra nodes. 4:5 Portrait. High Fidelity Rendering.`
+                  text: `Strictly render EXACTLY 5 glass bubbles. DO NOT add empty bubbles or decorative nodes. ISOMETRIC 3D GLASS-BUBBLE ROADMAP. S-Curve winding path on a soft pearl-gray background. Each of the 5 bubbles must contain one specific vignette and text label from the list: ${cleanedPrompt.substring(0, 1000)}. 4:5 Portrait. High Fidelity Rendering.`
                 }
               ]
             }
@@ -142,7 +142,7 @@ export async function POST(req: Request) {
         // --- END POST-PROCESSING ---
 
         const slug = prompt.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '');
-        const fileName = `${ slug } - infographic - ${ Date.now() }.png`;
+        const fileName = `${slug}-infographic-${Date.now()}.png`;
 
         console.log("Uploading Infographic to GCS...");
         infographicUrl = await uploadToGCS(buffer, fileName, 'image/png');
@@ -153,7 +153,7 @@ export async function POST(req: Request) {
     } catch (vertexError: any) {
       console.error("Vertex Infographic Error:", vertexError?.message || vertexError?.response?.data || vertexError);
       // Fallback to the local branded elite placeholder created for this project
-      infographicUrl = `/ 10xds - placeholder.png`;
+      infographicUrl = `/10xds-placeholder.png`;
     }
 
     return NextResponse.json({ imageUrl: infographicUrl });

@@ -230,8 +230,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!html) return html;
 
         const totalWords = html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
-        // Increased density: 1 link per 120 words (~15 links per 1800 words)
-        const maxLinksLimit = Math.max(1, Math.ceil(totalWords / 120)); 
+        // Elite Link Density: 1 per 80 words with a FLOOR of 10 links for high-quality technical posts
+        const maxLinksLimit = Math.max(10, Math.ceil(totalWords / 80)); 
         let currentLinkCount = 0;
 
         const phraseLookup: Record<string, string> = { ...sitemapData };
@@ -248,9 +248,18 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
         const paragraphs = html.split(/<\/p>/i);
         const usedUrls = new Set<string>();
+        const usedAnchors = new Set<string>();
         const processedParagraphs: string[] = [];
 
-        // STRICT SEQUENTIAL PROCESSING to prevent duplicate URLs (Race Condition Fix)
+        // ELITE PRE-CHECK: Scan for existing AI-generated links to avoid double-wrapping
+        const existingLinks = html.matchAll(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi);
+        for (const match of existingLinks) {
+            usedUrls.add(match[1]);
+            usedAnchors.add(match[2].toLowerCase().trim());
+            currentLinkCount++;
+        }
+
+        // STRICT SEQUENTIAL PROCESSING to prevent duplicate URLs
         for (let paragraph of paragraphs) {
             if (!paragraph.trim() || currentLinkCount >= maxLinksLimit) {
                 processedParagraphs.push(paragraph);
@@ -261,6 +270,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
             // Tier 1: Semantic Intent Matching (Primary)
             const candidatesInPara = sortedKeywords.filter(k => {
+                if (usedAnchors.has(k.toLowerCase())) return false; // Skip already linked anchors
                 const regex = new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
                 return regex.test(paragraph);
             }).slice(0, 5);
@@ -276,11 +286,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     if (data.match && !usedUrls.has(data.match.url)) {
                         const targetUrl = data.match.url;
                         const matchText = candidatesInPara.find(c => paragraph.toLowerCase().includes(c.toLowerCase()));
-                        if (matchText) {
+                        if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
                             const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                             const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
                             paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
                             usedUrls.add(targetUrl);
+                            usedAnchors.add(matchText.toLowerCase());
                             currentLinkCount++;
                             paragraphLinked = true;
                         }
@@ -294,13 +305,14 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             if (!paragraphLinked && currentLinkCount < maxLinksLimit) {
                 for (const phrase of sortedKeywords) {
                     const targetUrl = phraseLookup[phrase.toLowerCase()];
-                    if (usedUrls.has(targetUrl) || currentLinkCount >= maxLinksLimit) continue;
+                    if (usedUrls.has(targetUrl) || usedAnchors.has(phrase.toLowerCase()) || currentLinkCount >= maxLinksLimit) continue;
 
                     const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                     const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'i');
                     if (regex.test(paragraph)) {
                         paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
                         usedUrls.add(targetUrl);
+                        usedAnchors.add(phrase.toLowerCase());
                         currentLinkCount++;
                         paragraphLinked = true;
                         break; 
