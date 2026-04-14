@@ -31,16 +31,22 @@ export async function POST(req: Request) {
       const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
       const aiPrompt = `
-        Analyze this blog post and extract exactly 5 sequential milestones that represent a 'Technical Journey' for an infographic.
+        Analyze this blog post and extract sequential milestones that represent a 'Technical Journey' for an infographic.
+        
+        CRITICAL INSTRUCTIONS:
+        1. Title Detection: Look at the Blog Title: "${prompt}". If it mentions a specific number of phases, steps, or pillars (between 5 and 8), extract EXACTLY that number. Otherwise, default to 5 milestones.
+        2. Container Theme: Identify a 'Container Theme' based on the industry (e.g., 'translucent glass cubes' for Tech, 'translucent glass pillars' for Architecture, 'translucent glass crates' for Logistics, 'translucent glass spheres' for General).
 
-        Output ONLY a JSON array with exactly these fields for each milestone:
-        - "header": A 3-word title for the milestone.
-        - "visual_vignette": A description of a 3D character interacting with a specific tech element from the text.
-        - "industry": The primary industry of the post.
+        Output ONLY a JSON object with these fields:
+        - "container_theme": The identified 3D container theme.
+        - "milestones": A JSON array where each milestone has:
+            - "header": A 3-word title for the milestone.
+            - "visual_vignette": A description of a 3D character interacting with a specific tech element from the text.
+            - "industry": The primary industry of the post.
 
         CRITICAL: Output valid JSON only. No explanation text. No markdown backticks.
 
-        Blog Content: ${content.substring(0, 2000)}
+        Blog Content: ${content.substring(0, 3500)}
       `;
 
       const resp = await client.request({
@@ -62,14 +68,19 @@ export async function POST(req: Request) {
 
       // ELITE RESILIENT EXTRACTION: Look for the JSON array specifically
       try {
-        const jsonMatch = rawText.match(/\[[\s\S]*\]/);
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
         const jsonContent = jsonMatch ? jsonMatch[0] : rawText;
-        const parsed = JSON.parse(jsonContent);
+        const parsedData = JSON.parse(jsonContent);
+        const parsed = Array.isArray(parsedData) ? parsedData : (parsedData.milestones || []);
+        const theme = parsedData.container_theme || 'translucent glass spheres';
 
-        if (Array.isArray(parsed)) {
+        if (Array.isArray(parsed) && parsed.length > 0) {
           const industry = parsed[0]?.industry || 'Technical';
+          const milestoneCount = parsed.length;
           const milestones = parsed.map(m => `Header: ${m.header} - Vignette: ${m.visual_vignette}`).join('; ');
-          visualPrompt = `A Pastel Isometric S-Curve Roadmap for ${industry}. Path includes these milestones inside translucent glass bubbles: ${milestones}.`;
+          
+          // Store theme and count in a way that Task 2 can easily read (via a simple formatted string)
+          visualPrompt = `THEME: ${theme} | COUNT: ${milestoneCount} | INDUSTRY: ${industry} | MILESTONES: ${milestones}`;
         } else {
           visualPrompt = rawText;
         }
@@ -113,7 +124,17 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `Strictly render EXACTLY 5 glass bubbles. DO NOT add empty bubbles or decorative nodes. ISOMETRIC 3D GLASS-BUBBLE ROADMAP. S-Curve winding path on a soft pearl-gray background. Render the 3-word "header" clearly as a floating label above each bubble, and use the "vignette" description to illustrate the scene inside the bubble. Use this list: ${cleanedPrompt.substring(0, 1000)}. 4:5 Portrait. High Fidelity Rendering.`
+                  text: (() => {
+                    const themeMatch = cleanedPrompt.match(/THEME: (.*?) \|/);
+                    const countMatch = cleanedPrompt.match(/COUNT: (.*?) \|/);
+                    const milestonesMatch = cleanedPrompt.match(/MILESTONES: (.*)/);
+                    
+                    const theme = themeMatch ? themeMatch[1] : 'translucent glass spheres';
+                    const count = countMatch ? countMatch[1] : '5';
+                    const milestones = milestonesMatch ? milestonesMatch[1] : cleanedPrompt;
+
+                    return `ISOMETRIC 3D INFOGRAPHIC ROADMAP. Strictly render EXACTLY ${count} ${theme} containers. A vertical S-curve winding through a pearl-gray space. Render the 3-word "header" clearly as a floating label above each ${theme}, and use the "vignette" description to illustrate the scene inside the ${theme}. High-Fidelity, 10xDS Elite standard. Milestones: ${milestones.substring(0, 1000)}`;
+                  })()
                 }
               ]
             }

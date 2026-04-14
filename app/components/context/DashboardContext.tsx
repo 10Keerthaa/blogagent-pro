@@ -233,6 +233,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         // Elite Link Density: 1 per 80 words with a FLOOR of 10 links for high-quality technical posts
         const maxLinksLimit = Math.max(10, Math.ceil(totalWords / 80)); 
         let currentLinkCount = 0;
+        let globalWordCounter = 0;
+        let lastLinkWordIndex = -100; // Start with a safe buffer
 
         const phraseLookup: Record<string, string> = { ...sitemapData };
         for (const [url, anchors] of Object.entries(anchorMap)) {
@@ -247,80 +249,86 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             .sort((a, b) => b.length - a.length);
 
         const paragraphs = html.split(/<\/p>/i);
-        const usedUrls = new Set<string>();
         const usedAnchors = new Set<string>();
         const processedParagraphs: string[] = [];
 
         // ELITE PRE-CHECK: Scan for existing AI-generated links to avoid double-wrapping
         const existingLinks = html.matchAll(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi);
         for (const match of existingLinks) {
-            usedUrls.add(match[1]);
             usedAnchors.add(match[2].toLowerCase().trim());
             currentLinkCount++;
+            // Estimate position for existing links if possible, or just treat as word 0
         }
 
-        // STRICT SEQUENTIAL PROCESSING to prevent duplicate URLs
+        // STRICT SEQUENTIAL PROCESSING to prevent clumping
         for (let paragraph of paragraphs) {
+            const wordCountInPara = paragraph.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+            
             if (!paragraph.trim() || currentLinkCount >= maxLinksLimit) {
                 processedParagraphs.push(paragraph);
+                globalWordCounter += wordCountInPara;
                 continue;
             }
 
             let paragraphLinked = false;
 
-            // Tier 1: Semantic Intent Matching (Primary)
-            const candidatesInPara = sortedKeywords.filter(k => {
-                if (usedAnchors.has(k.toLowerCase())) return false; // Skip already linked anchors
-                const regex = new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-                return regex.test(paragraph);
-            }).slice(0, 5);
+            // 100-WORD COOL-DOWN: Only try linking if enough distance has passed
+            if (globalWordCounter - lastLinkWordIndex >= 100) {
+                // Tier 1: Semantic Intent Matching (Primary)
+                const candidatesInPara = sortedKeywords.filter(k => {
+                    if (usedAnchors.has(k.toLowerCase())) return false; // Skip already linked anchors
+                    const regex = new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                    return regex.test(paragraph);
+                }).slice(0, 5);
 
-            if (candidatesInPara.length > 0) {
-                try {
-                    const resp = await fetch('/api/internal-links/contextualize', {
-                        method: 'POST',
-                        body: JSON.stringify({ paragraph: paragraph.replace(/<[^>]+>/g, ' '), candidates: candidatesInPara })
-                    });
-                    const data = await resp.json();
-                    
-                    if (data.match && !usedUrls.has(data.match.url)) {
-                        const targetUrl = data.match.url;
-                        const matchText = candidatesInPara.find(c => paragraph.toLowerCase().includes(c.toLowerCase()));
-                        if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
-                            const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                            const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
-                            paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
-                            usedUrls.add(targetUrl);
-                            usedAnchors.add(matchText.toLowerCase());
-                            currentLinkCount++;
-                            paragraphLinked = true;
+                if (candidatesInPara.length > 0) {
+                    try {
+                        const resp = await fetch('/api/internal-links/contextualize', {
+                            method: 'POST',
+                            body: JSON.stringify({ paragraph: paragraph.replace(/<[^>]+>/g, ' '), candidates: candidatesInPara })
+                        });
+                        const data = await resp.json();
+                        
+                        if (data.match) {
+                            const targetUrl = data.match.url;
+                            const matchText = candidatesInPara.find(c => paragraph.toLowerCase().includes(c.toLowerCase()));
+                            if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
+                                const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                                const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
+                                paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                                usedAnchors.add(matchText.toLowerCase());
+                                currentLinkCount++;
+                                lastLinkWordIndex = globalWordCounter;
+                                paragraphLinked = true;
+                            }
                         }
+                    } catch (e) {
+                        console.warn("Semantic matching failed, falling back to Tier 2...");
                     }
-                } catch (e) {
-                    console.warn("Semantic matching failed, falling back to Tier 2...");
                 }
-            }
 
-            // Tier 2: Legacy Fallback (if Tier 1 didn't link)
-            if (!paragraphLinked && currentLinkCount < maxLinksLimit) {
-                for (const phrase of sortedKeywords) {
-                    const targetUrl = phraseLookup[phrase.toLowerCase()];
-                    if (usedUrls.has(targetUrl) || usedAnchors.has(phrase.toLowerCase()) || currentLinkCount >= maxLinksLimit) continue;
+                // Tier 2: Legacy Fallback (if Tier 1 didn't link)
+                if (!paragraphLinked && currentLinkCount < maxLinksLimit) {
+                    for (const phrase of sortedKeywords) {
+                        const targetUrl = phraseLookup[phrase.toLowerCase()];
+                        if (usedAnchors.has(phrase.toLowerCase()) || currentLinkCount >= maxLinksLimit) continue;
 
-                    const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                    const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'i');
-                    if (regex.test(paragraph)) {
-                        paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
-                        usedUrls.add(targetUrl);
-                        usedAnchors.add(phrase.toLowerCase());
-                        currentLinkCount++;
-                        paragraphLinked = true;
-                        break; 
+                        const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'i');
+                        if (regex.test(paragraph)) {
+                            paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                            usedAnchors.add(phrase.toLowerCase());
+                            currentLinkCount++;
+                            lastLinkWordIndex = globalWordCounter;
+                            paragraphLinked = true;
+                            break; 
+                        }
                     }
                 }
             }
 
             processedParagraphs.push(paragraph);
+            globalWordCounter += wordCountInPara;
         }
 
         return processedParagraphs.join('</p>');

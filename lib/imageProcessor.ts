@@ -28,13 +28,23 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
     const metadata = await sharp(imageBuffer).metadata();
     const width = metadata.width || 1024;
 
-    // Enforce strictly 960x720 Elite dimensions with high-quality cubic interpolation
-    return await sharp(imageBuffer)
+    // Enforce strictly 960x720 Elite dimensions and apply signature brand purple overlay
+    const resizedImage = await sharp(imageBuffer)
       .resize(960, 720, {
         fit: 'cover',
         position: 'center',
         kernel: 'cubic'
       })
+      .toBuffer();
+
+    const overlay = Buffer.from(
+      `<svg width="960" height="720">
+        <rect width="100%" height="100%" fill="#2e1065" fill-opacity="0.30" />
+      </svg>`
+    );
+
+    return await sharp(resizedImage)
+      .composite([{ input: overlay, blend: 'over' }])
       .toBuffer();
 
   } catch (error) {
