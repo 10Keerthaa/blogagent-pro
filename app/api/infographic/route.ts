@@ -68,8 +68,8 @@ export async function POST(req: Request) {
 
         if (Array.isArray(parsed)) {
           const industry = parsed[0]?.industry || 'Technical';
-          const milestones = parsed.map(m => `Header: ${m.header} - Vignette: ${m.visual_vignette}`).join('; ');
-          visualPrompt = `A Pastel Isometric S-Curve Roadmap for ${industry}. Path includes these milestones inside translucent glass bubbles: ${milestones}.`;
+          const milestones = parsed.map(m => `(Label: "${m.header}", Scene: ${m.visual_vignette})`).join(', ');
+          visualPrompt = `Isometric Roadmap for ${industry}. Milestones: ${milestones}.`;
         } else {
           visualPrompt = rawText;
         }
@@ -83,9 +83,9 @@ export async function POST(req: Request) {
            const milestones = headerMatches.map((m, i) => {
              const h = m[1];
              const v = vignetteMatches[i] ? vignetteMatches[i][1] : "Professional 3D technical scene";
-             return `Header: ${h} - Vignette: ${v}`;
-           }).join('; ');
-           visualPrompt = `Professional Isometric Roadmap. Path includes: ${milestones}.`;
+             return `(Label: "${h}", Scene: ${v})`;
+           }).join(', ');
+           visualPrompt = `Professional Isometric Roadmap. Milestones: ${milestones}.`;
         } else {
           visualPrompt = rawText.substring(0, 500); // Massive fallback to raw text snippets
         }
@@ -113,7 +113,7 @@ export async function POST(req: Request) {
               role: 'user',
               parts: [
                 {
-                  text: `Strictly render EXACTLY 5 glass bubbles. DO NOT add empty bubbles or decorative nodes. ISOMETRIC 3D GLASS-BUBBLE ROADMAP. S-Curve winding path on a soft pearl-gray background. Each of the 5 bubbles must contain one specific vignette and text label from the list: ${cleanedPrompt.substring(0, 1000)}. 4:5 Portrait. High Fidelity Rendering.`
+                  text: `Strictly render EXACTLY 5 glass bubbles. DO NOT add empty bubbles or decorative nodes. ISOMETRIC 3D GLASS-BUBBLE ROADMAP. S-Curve winding path on a soft pearl-gray background. Render the 3-word "header" clearly as a floating label above each bubble, and use the "vignette" description to illustrate the scene inside the bubble. Use this list: ${cleanedPrompt.substring(0, 1000)}. 4:5 Portrait. High Fidelity Rendering.`
                 }
               ]
             }
