@@ -95,7 +95,9 @@ export async function POST(req: Request) {
             await db.collection('blog_posts').doc(id).update({
                 status: 'published',
                 wpUrl: postData.link,
-                last_edited_at: new Date().toISOString()
+                last_edited_at: new Date().toISOString(),
+                date: new Date().toISOString(),
+                published_at: new Date().toISOString()
             });
             console.log(`✅ Firestore updated: Post ${id} marked as published.`);
         } catch (dbErr) {

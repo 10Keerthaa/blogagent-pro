@@ -816,6 +816,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!user) return;
         setError(null);
         try {
+            const rawCategories = selectedCategories.length > 0 ? selectedCategories : (draft.categories || [LOCKED_CATEGORY_ID]);
+            const finalCategories = [LOCKED_CATEGORY_ID, ...rawCategories.filter((id: number) => Number(id) !== LOCKED_CATEGORY_ID)];
+
             const pubData = await api.publishToWordPress({ 
                 id: draft.id, 
                 title: draft.title, 
@@ -824,7 +827,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 imageUrl: draft.imageUrl, 
                 infographicUrl: draft.infographicUrl, 
                 slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, ''),
-                categories: selectedCategories.length > 0 ? selectedCategories : (draft.categories || [LOCKED_CATEGORY_ID])
+                categories: finalCategories
             });
             
             const publishedBy = {

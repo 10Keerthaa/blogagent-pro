@@ -68,10 +68,10 @@ export const HistoryList = () => {
                                             <p className="text-slate-900 dark:text-white font-semibold text-base">{selectedHistoryItem.primaryKeyword}</p>
                                         </div>
                                     )}
-                                    {selectedHistoryItem.date && (
+                                    { (selectedHistoryItem.date || selectedHistoryItem.published_at || selectedHistoryItem.last_edited_at || selectedHistoryItem.createdAt) && (
                                         <div className="space-y-2">
                                             <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Publication Date</p>
-                                            <p className="text-slate-900 dark:text-white font-semibold text-base">{formatDate(selectedHistoryItem.date)}</p>
+                                            <p className="text-slate-900 dark:text-white font-semibold text-base">{formatDate(selectedHistoryItem.date || selectedHistoryItem.published_at || selectedHistoryItem.last_edited_at || selectedHistoryItem.createdAt)}</p>
                                         </div>
                                     )}
                                 </div>
@@ -183,7 +183,7 @@ export const HistoryList = () => {
                                             <div className="flex items-center gap-6">
                                                 <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
                                                     <Calendar className="w-3.5 h-3.5" />
-                                                    {formatDate(item.date)}
+                                                    {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
                                                 </span>
                                                 <Badge variant="success" className="px-3">Published</Badge>
                                                 {item.authorEmail && (

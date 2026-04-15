@@ -106,16 +106,22 @@ export async function POST(req: Request) {
                     return `MASTER TECHNICAL DASHBOARD. 
 Layout: Central hexagonal thematic core connected to four peripheral quadrants.
 Data: ${cleanedPrompt.substring(0, 1000)}.
+${refinement ? `USER VISUAL DIRECTIVE: ${refinement}` : ''}
+
+TEXT & BRANDING HARDENING MANDATE:
+- BAN LOREM IPSUM: STRICTLY FORBIDDEN: Do not use any placeholder or non-English text. Every sidebar and trend summary must contain short, meaningful English technical phrases derived from the blog data.
+- FIX SPELLING: Verify the spelling of the header "MILESTONES". It must be spelled correctly, not as "MILESONES".
+- REMOVE WATERMARK TEXT: Do not render the text "10xDS ELITE" anywhere in the image. The bottom-right corner must remain clean to accommodate the post-processed logo.
+- TYPOGRAPHY: All headers and labels must be rendered in high-contrast, bold English characters only.
 
 VIBRANT FULL-SPECTRUM COLORFUL VISUALS:
 1. Quadrant Modules: Use vibrant colors (Sage, Rose, Cerulean, Amber).
 2. Bottom Ribbon: Sequential milestone chevron steps.
 3. Sidebar Icons: Challenges and Trend summaries.
 
-STYLE: Flat 2.5D Vector Illustration. High-fidelity 10xDS Elite standard.
+STYLE: Flat 2.5D Vector Illustration. 
 PALETTE: Dark Navy background ({r: 10, g: 25, b: 47}). 
-SPELLING MANDATE: All headers perfectly spelled.
-Portrait 4:5 (800x1000). 10xDS Elite.`;
+Portrait 4:5 (800x1000).`;
                   })()
                 }
               ]
