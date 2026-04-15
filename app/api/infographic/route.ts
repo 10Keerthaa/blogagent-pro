@@ -133,7 +133,7 @@ export async function POST(req: Request) {
                     const count = countMatch ? countMatch[1] : '5';
                     const milestones = milestonesMatch ? milestonesMatch[1] : cleanedPrompt;
 
-                    return `ISOMETRIC 3D INFOGRAPHIC ROADMAP. Render EXACTLY ${count} ${theme} containers. Portrait layout. Winding path. NO-OFFICE, NO-HARDWARE. Milestones: ${milestones.substring(0, 1000)}`;
+                    return `ISOMETRIC 3D INFOGRAPHIC ROADMAP. Render exactly ${count} ${theme} containers. Portrait layout. A winding path of soft pastels (Sage, Dusty Rose, Cerulean) winding through a pearl-gray space. Mandatory: Render the single-word milestone headers clearly above each ${theme} in clean typography. Include professional, technical vignettes illustrating each header. STRICTLY PROHIBIT dashboards, computer screens, or office environments. High-fidelity 10xDS Elite standard.`;
                   })()
                 }
               ]
@@ -168,13 +168,15 @@ export async function POST(req: Request) {
         const logoMeta = await sharp(resizedLogo).metadata();
         const logoW = logoMeta.width || 130;
 
-        const MARGIN = 60; // Elite Calibration Margin
+        // --- ELITE CALIBRATION: Resize to 800x1000 ---
         const buffer = await sharp(rawBuffer)
+          // 1. Force exact pixel dimension
           .resize(800, 1000, {
-            fit: 'contain',
-            background: { r: 255, g: 255, b: 255, alpha: 1 },
-            kernel: 'cubic'
+            fit: 'contain', // Keep the roadmap's perspective
+            background: { r: 242, g: 242, b: 242, alpha: 1 }, // Elite Pearl-Gray background fill
+            kernel: 'cubic' // Clean resample
           })
+          // 2. Composite the logo with precise 60px margin
           .composite([
             {
               input: resizedLogo,
