@@ -168,6 +168,7 @@ export async function POST(req: Request) {
         const logoMeta = await sharp(resizedLogo).metadata();
         const logoW = logoMeta.width || 130;
 
+        const MARGIN = 60; // Elite Calibration Margin
         // --- ELITE CALIBRATION: Resize to 800x1000 ---
         const buffer = await sharp(rawBuffer)
           // 1. Force exact pixel dimension
