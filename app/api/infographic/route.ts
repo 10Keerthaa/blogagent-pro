@@ -133,7 +133,7 @@ export async function POST(req: Request) {
                     const count = countMatch ? countMatch[1] : '5';
                     const milestones = milestonesMatch ? milestonesMatch[1] : cleanedPrompt;
 
-                    return `ISOMETRIC 3D INFOGRAPHIC ROADMAP. Strictly render EXACTLY ${count} ${theme} containers. A vertical S-curve winding through a pearl-gray space. Render the 3-word "header" clearly as a floating label above each ${theme}, and use the "vignette" description to illustrate the scene inside the ${theme}. High-Fidelity, 10xDS Elite standard. Milestones: ${milestones.substring(0, 1000)}`;
+                    return `ISOMETRIC 3D INFOGRAPHIC ROADMAP. Render EXACTLY ${count} ${theme} containers. Portrait layout. Winding path. NO-OFFICE, NO-HARDWARE. Milestones: ${milestones.substring(0, 1000)}`;
                   })()
                 }
               ]
@@ -141,12 +141,17 @@ export async function POST(req: Request) {
           ],
           generationConfig: {
             responseModalities: ['TEXT', 'IMAGE'],
+            imageConfig: {
+              aspect_ratio: "4:5"
+            }
           }
         }
       });
 
       const data = response.data as any;
-      const imagePart = data?.candidates?.[0]?.content?.parts?.find((p: any) => p.inlineData?.mimeType?.startsWith('image/'));
+      const candidates = data?.candidates || [];
+      const parts = candidates[0]?.content?.parts || [];
+      const imagePart = parts.find((p: any) => p.inlineData?.mimeType?.startsWith('image/'));
 
       if (imagePart?.inlineData?.data) {
         const base64Data = imagePart.inlineData.data;
