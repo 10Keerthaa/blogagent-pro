@@ -133,7 +133,20 @@ export async function POST(req: Request) {
                     const count = countMatch ? countMatch[1] : '5';
                     const milestones = milestonesMatch ? milestonesMatch[1] : cleanedPrompt;
 
-                    return `ISOMETRIC 3D INFOGRAPHIC ROADMAP. Render exactly ${count} ${theme} containers. Portrait layout. A winding path of soft pastels (Sage, Dusty Rose, Cerulean) winding through a pearl-gray space. Mandatory: Render the single-word milestone headers clearly above each ${theme} in clean typography. Include professional, technical vignettes illustrating each header. STRICTLY PROHIBIT dashboards, computer screens, or office environments. High-fidelity 10xDS Elite standard.`;
+                    return `ISOMETRIC 3D INFOGRAPHIC ROADMAP. 
+Render exactly ${count} ${theme} containers—no more, no less. 
+A winding S-Curve path flows through a clean, light pearl-gray space.
+
+**FULL-SPECTRUM PASTEL MAPPING:**
+1. **Nodes:** Use a distinct pastel color for each group of nodes: Sage, Dusty Rose, Cerulean, and Soft Amber.
+2. **The Path:** The winding digital road must be a gentle rainbow-pastel gradient blending these four colors smoothly.
+3. **Background:** Light pearl-gray ({r: 242, g: 242, b: 242}).
+4. **Lighting:** Soft, vibrant, and diffuse, creating a high-fidelity "editorial" look.
+
+**STRICTLY FORBIDDEN:** Do not include deep blues, strong neons, or dark shadows. Keep the image colorful, soft, and completely pastel.
+**SPELLING MANDATE:** Render headers (e.g., CONCEPTUALIZE) exactly as provided. Do not miss letters. 
+
+Portrait 4:5 ratio. 10xDS Elite standard.`;
                   })()
                 }
               ]
