@@ -9,12 +9,17 @@ import { Globe, Calendar, ExternalLink } from 'lucide-react';
 const formatDate = (date: any) => {
     if (!date) return 'N/A';
     try {
-        // Handle Firestore Timestamp objects
-        if (date && typeof date === 'object' && 'seconds' in date) {
-            return new Date(date.seconds * 1000).toLocaleDateString();
+        let d: Date;
+        if (date && typeof date === 'object') {
+            if ('seconds' in date) d = new Date(date.seconds * 1000);
+            else if ('_seconds' in date) d = new Date(date._seconds * 1000);
+            else d = new Date(date);
+        } else {
+            d = new Date(date);
         }
-        // Handle ISO strings or Date objects
-        return new Date(date).toLocaleDateString();
+
+        if (isNaN(d.getTime())) return 'N/A';
+        return d.toLocaleDateString();
     } catch (e) {
         return 'N/A';
     }
@@ -23,10 +28,17 @@ const formatDate = (date: any) => {
 const formatDateTime = (date: any) => {
     if (!date) return 'N/A';
     try {
-        if (date && typeof date === 'object' && 'seconds' in date) {
-            return new Date(date.seconds * 1000).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+        let d: Date;
+        if (date && typeof date === 'object') {
+            if ('seconds' in date) d = new Date(date.seconds * 1000);
+            else if ('_seconds' in date) d = new Date(date._seconds * 1000);
+            else d = new Date(date);
+        } else {
+            d = new Date(date);
         }
-        return new Date(date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+
+        if (isNaN(d.getTime())) return 'N/A';
+        return d.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
     } catch (e) {
         return 'N/A';
     }
