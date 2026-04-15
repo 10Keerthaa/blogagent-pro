@@ -25,26 +25,22 @@ export async function POST(req: Request) {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    // TASK 1: Generate Visual Summary Prompt via Vertex AI Gemini 2.5 Pro
+    // TASK 1: Master Dashboard Analysis via Vertex AI Gemini 2.5 Pro
     let visualPrompt = '';
     try {
       const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
       const aiPrompt = `
-        Analyze this blog post and extract sequential milestones that represent a 'Technical Journey' for an infographic.
+        Analyze this blog post and structure it for a 'Master Technical Dashboard' infographic.
         
-        CRITICAL INSTRUCTIONS:
-        1. Title & Header Detection: Look at the Blog Title: "${prompt}". If it contains a number between 5 and 10 (e.g., '7 Steps', '8 Phases'), you MUST extract EXACTLY that many milestones. Scan the Blog Content for headers like "Phase 1", "Step 2", etc., to confirm the sequence. DO NOT merge, summarize, or omit any milestones if a specific number is requested.
-        2. Container Theme: Identify a 'Container Theme' based on the industry (e.g., 'translucent glass cubes' for Tech, 'translucent glass pillars' for Architecture, 'translucent glass crates' for Logistics, 'translucent glass spheres' for General).
+        CRITICAL STRUCTURE:
+        1. CENTRAL THEME: Extract the main strategic approach header.
+        2. QUADRANTS: Identify exactly 4 primary industries or use cases discussed.
+        3. MILESTONE BAR: Extract 5-7 sequential project steps (e.g. Identify, Define, Evaluate).
+        4. SIDEBARS: Identify 3 Challenges and 3 Future Trends.
 
-        Output ONLY a JSON object with these fields:
-        - "container_theme": The identified 3D container theme.
-        - "milestones": A JSON array where each milestone has:
-            - "header": A 3-word title for the milestone.
-            - "visual_vignette": A description of a 3D character interacting with a specific tech element from the text.
-            - "industry": The primary industry of the post.
-
-        CRITICAL: Output valid JSON only. No explanation text. No markdown backticks.
+        Output ONLY a JSON object with: "central_theme", "quadrants" (title/points), "milestones", "challenges", "future".
+        CRITICAL: Valid JSON only. No markdown.
 
         Blog Content: ${content.substring(0, 3500)}
       `;
@@ -54,7 +50,7 @@ export async function POST(req: Request) {
         method: 'POST',
         data: {
           contents: [{ role: "user", parts: [{ text: aiPrompt }] }],
-          generationConfig: { temperature: 0.4, topP: 0.9, topK: 40 }
+          generationConfig: { temperature: 0.2, topP: 0.9, topK: 40 }
         }
       });
 
@@ -66,45 +62,19 @@ export async function POST(req: Request) {
         rawText = data.candidates[0].content.parts[0].text;
       }
 
-      // ELITE RESILIENT EXTRACTION: Look for the JSON array specifically
       try {
         const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        const jsonContent = jsonMatch ? jsonMatch[0] : rawText;
-        const parsedData = JSON.parse(jsonContent);
-        const parsed = Array.isArray(parsedData) ? parsedData : (parsedData.milestones || []);
-        const theme = parsedData.container_theme || 'translucent glass spheres';
-
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const industry = parsed[0]?.industry || 'Technical';
-          const milestoneCount = parsed.length;
-          const milestones = parsed.map(m => `Header: ${m.header} - Vignette: ${m.visual_vignette}`).join('; ');
-          
-          // Store theme and count in a way that Task 2 can easily read (via a simple formatted string)
-          visualPrompt = `THEME: ${theme} | COUNT: ${milestoneCount} | INDUSTRY: ${industry} | MILESTONES: ${milestones}`;
-        } else {
-          visualPrompt = rawText;
-        }
-      } catch (parseError) {
-        console.warn("JSON Parse failed, attempting Regex Recovery...");
-        // EMERGENCY REGEX RECOVERY: Manually extract headers and vignettes from raw text
-        const headerMatches = Array.from(rawText.matchAll(/"header":\s*"([^"]+)"/g));
-        const vignetteMatches = Array.from(rawText.matchAll(/"visual_vignette":\s*"([^"]+)"/g));
-        
-        if (headerMatches.length >= 3) {
-           const milestones = headerMatches.map((m, i) => {
-             const h = m[1];
-             const v = vignetteMatches[i] ? vignetteMatches[i][1] : "Professional 3D technical scene";
-             return `Header: ${h} - Vignette: ${v}`;
-           }).join('; ');
-           visualPrompt = `A Pastel Isometric S-Curve Roadmap. Path includes these milestones inside translucent glass bubbles: ${milestones}.`;
-        } else {
-          visualPrompt = rawText.substring(0, 500); // Massive fallback to raw text snippets
-        }
+        const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : rawText);
+        const central = parsed.central_theme || prompt;
+        const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}`).join(', ');
+        const milestones = (parsed.milestones || []).join(' > ');
+        visualPrompt = `CENTRAL: ${central} | QUADRANTS: ${quadrants} | MILESTONES: ${milestones} | CHALLENGES: ${(parsed.challenges || []).join(', ')}`;
+      } catch (e) {
+        visualPrompt = rawText.substring(0, 500);
       }
-      visualPrompt = visualPrompt.trim();
     } catch (designerError: any) {
       console.error("Vertex AI Designer Error:", designerError);
-      visualPrompt = `Professional 'Industry Roadmap' infographic for: ${prompt}. LAYOUT: Isometric S-Curve Winding Roadmap with 4-5 circular illustrative vignettes connected by a glowing digital road. Each vignette shows people interacting with technology specific to the topic. STYLE: Isometric Flat Design. PALETTE: Pastel (Lavender, Mint, Sky Blue, Coral). Floating text bubble labels. Portrait 4:5 ratio. 10xDS Elite corporate standard.`;
+      visualPrompt = `Master Dashboard for ${prompt}. Full-Spectrum Colorful.`;
     }
 
     // TASK 2: Restored High-Fidelity Generation via Gemini 2.5 Flash Image
@@ -133,20 +103,19 @@ export async function POST(req: Request) {
                     const count = countMatch ? countMatch[1] : '5';
                     const milestones = milestonesMatch ? milestonesMatch[1] : cleanedPrompt;
 
-                    return `ISOMETRIC 3D INFOGRAPHIC ROADMAP. 
-Render exactly ${count} ${theme} containers—no more, no less. 
-A winding S-Curve path flows through a clean, light pearl-gray space.
+                    return `MASTER TECHNICAL DASHBOARD. 
+Layout: Central hexagonal thematic core connected to four peripheral quadrants.
+Data: ${cleanedPrompt.substring(0, 1000)}.
 
-**FULL-SPECTRUM PASTEL MAPPING:**
-1. **Nodes:** Use a distinct pastel color for each group of nodes: Sage, Dusty Rose, Cerulean, and Soft Amber.
-2. **The Path:** The winding digital road must be a gentle rainbow-pastel gradient blending these four colors smoothly.
-3. **Background:** Light pearl-gray ({r: 242, g: 242, b: 242}).
-4. **Lighting:** Soft, vibrant, and diffuse, creating a high-fidelity "editorial" look.
+VIBRANT FULL-SPECTRUM COLORFUL VISUALS:
+1. Quadrant Modules: Use vibrant colors (Sage, Rose, Cerulean, Amber).
+2. Bottom Ribbon: Sequential milestone chevron steps.
+3. Sidebar Icons: Challenges and Trend summaries.
 
-**STRICTLY FORBIDDEN:** Do not include deep blues, strong neons, or dark shadows. Keep the image colorful, soft, and completely pastel.
-**SPELLING MANDATE:** Render headers (e.g., CONCEPTUALIZE) exactly as provided. Do not miss letters. 
-
-Portrait 4:5 ratio. 10xDS Elite standard.`;
+STYLE: Flat 2.5D Vector Illustration. High-fidelity 10xDS Elite standard.
+PALETTE: Dark Navy background ({r: 10, g: 25, b: 47}). 
+SPELLING MANDATE: All headers perfectly spelled.
+Portrait 4:5 (800x1000). 10xDS Elite.`;
                   })()
                 }
               ]
@@ -182,15 +151,13 @@ Portrait 4:5 ratio. 10xDS Elite standard.`;
         const logoW = logoMeta.width || 130;
 
         const MARGIN = 60; // Elite Calibration Margin
-        // --- ELITE CALIBRATION: Resize to 800x1000 ---
+        // --- ELITE DASHBOARD CALIBRATION: 800x1000 Portrait ---
         const buffer = await sharp(rawBuffer)
-          // 1. Force exact pixel dimension
           .resize(800, 1000, {
-            fit: 'contain', // Keep the roadmap's perspective
-            background: { r: 242, g: 242, b: 242, alpha: 1 }, // Elite Pearl-Gray background fill
-            kernel: 'cubic' // Clean resample
+            fit: 'contain', 
+            background: { r: 10, g: 25, b: 47, alpha: 1 }, // Elite Dark Navy background fill
+            kernel: 'cubic'
           })
-          // 2. Composite the logo with precise 60px margin
           .composite([
             {
               input: resizedLogo,
