@@ -215,7 +215,7 @@ export const HistoryList = () => {
                                                         </span>
                                                     ))}
                                                 </div>
-                                            )})}
+                                            )}
                                             {item.publishedBy && (
                                                 <div className="flex items-center gap-2 flex-wrap mt-1">
                                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Published by:</span>
