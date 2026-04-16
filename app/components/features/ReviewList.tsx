@@ -188,7 +188,7 @@ export const ReviewList = () => {
                 <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-10`}>
                     {/* Header Actions */}
                     <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
-                        <div className="w-full flex items-center justify-between py-8 pr-10">
+                        <div className="w-full flex items-center justify-between py-8 pr-6">
                             <div className="flex items-center gap-6">
                                 <Button
                                     variant="ghost"
@@ -231,7 +231,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="w-full space-y-10 pr-10 relative">
+                    <section className="w-full space-y-10 pr-6 relative">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}

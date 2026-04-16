@@ -211,7 +211,7 @@ export const PostPreview = () => {
     return (
         <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12">
             {/* MAIN EDITOR AREA - "BLANK PAGE" STYLE */}
-            <div className="max-w-4xl mx-auto w-full px-8 pb-32 relative">
+            <div className="w-full px-6 pb-32 relative">
                 {selectionRect && (
                     <FloatingToolbar
                         isVisible={isToolbarVisible}
