@@ -32,7 +32,7 @@ const DashboardContent = () => {
 
         {/* LEFT PANEL: Sidebar Form — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
         <div
-          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0
+          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0 ml-8
             ${showSidebar ? 'w-full lg:w-[40%] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
         >
           <SidebarForm />
