@@ -45,9 +45,9 @@ export const Textarea = ({
                 {...props}
             />
             {error ? (
-                <p className="text-[10px] font-semibold text-red-500 animate-fadeIn ml-1">{error}</p>
+                <p className="text-[10px] font-semibold text-red-500 animate-fadeIn pl-6">{error}</p>
             ) : helperText ? (
-                <p id={`${inputId}-helper`} className="text-[10px] text-slate-400 font-medium ml-1">{helperText}</p>
+                <p id={`${inputId}-helper`} className="text-[10px] text-slate-400 font-medium pl-6">{helperText}</p>
             ) : null}
         </div>
     );
