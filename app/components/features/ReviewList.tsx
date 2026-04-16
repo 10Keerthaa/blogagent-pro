@@ -197,10 +197,10 @@ export const ReviewList = () => {
                                         setSelectedReviewDraft(null);
                                         handleClearForm();
                                     }}
-                                    className="group h-12 rounded-none bg-white dark:bg-transparent border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 transition-all px-6 shadow-sm"
+                                    className="group flex items-center gap-2 h-7 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-800 bg-transparent text-slate-500 hover:text-indigo-600 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all shadow-none"
                                 >
-                                    <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
-                                    <span className="text-[11px] font-bold uppercase tracking-widest">Return to Reviews</span>
+                                    <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Return to Reviews</span>
                                 </Button>
                                 <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
                                 <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>

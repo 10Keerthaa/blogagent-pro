@@ -60,7 +60,7 @@ export const SidebarForm = () => {
 
                 {/* SEO Keywords */}
                 <section className="space-y-4">
-                    <div className="flex items-center justify-between pl-6">
+                    <div className="flex items-center justify-between pl-0">
                         <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Keywords</label>
                         <button
                             onClick={handleFetchKeywords}
@@ -125,7 +125,7 @@ export const SidebarForm = () => {
 
                 {/* Meta Description */}
                 <section className="space-y-4">
-                    <div className="flex items-center justify-between pl-6">
+                    <div className="flex items-center justify-between pl-0">
                         <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Description</label>
                         <button
                             onClick={handleGenerateDescription}
