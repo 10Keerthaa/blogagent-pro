@@ -42,6 +42,12 @@ export async function POST(req: Request) {
            "milestones": string[] (Array of exactly ${N} short technical headers)
            Blog: ${content.substring(0, 3500)}`
         : `Analyze this blog post and structure it for a 'Master Technical Dashboard'.
+           STRICT CONSTRAINTS:
+           - Max 4 Quadrants.
+           - Max 3 bullet points per section.
+           - Max 40 characters per bullet point.
+           - Terminology: Use high-impact, single-word or short-phrase terminology (e.g., 'Scalability' instead of 'Ability to scale').
+           
            Output ONLY a JSON object with: 
            "mode": "DASHBOARD",
            "central_theme": string,
@@ -70,14 +76,50 @@ export async function POST(req: Request) {
 
       try {
         const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : rawText);
+        let parsed = JSON.parse(jsonMatch ? jsonMatch[0] : rawText);
         
+        // --- TASK 1.5: ELITE SPELLING SANITY CHECK & CONDENSATION ---
+        try {
+          const sanityUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
+          const sanityPrompt = `Review this Infographic JSON for absolute technical accuracy and Elite Minimalist style.
+          1. Correct spelling of headers (e.g., Orchestration, Infrastructure, Scalability).
+          2. Ensure brand consistency for terms: 'Document AI', 'OCR', 'No-Code Orchestration', 'Hyperautomation'.
+          3. If any bullet point exceeds 40 characters, condense it into a high-impact short phrase.
+          4. Ensure max 3 bullets per section.
+          
+          JSON: ${JSON.stringify(parsed)}`;
+
+          const sResp = await client.request({
+            url: sanityUrl,
+            method: 'POST',
+            data: {
+              contents: [{ role: "user", parts: [{ text: sanityPrompt }] }],
+              generationConfig: { temperature: 0.1, topP: 0.95 }
+            }
+          });
+
+          const sData = sResp.data as any;
+          let sRawText = '';
+          if (Array.isArray(sData)) {
+            sRawText = sData.map(chunk => (chunk.candidates && chunk.candidates[0] && chunk.candidates[0].content.parts[0].text) || '').join('');
+          } else if (sData.candidates) {
+            sRawText = sData.candidates[0].content.parts[0].text;
+          }
+          const sJsonMatch = sRawText.match(/\{[\s\S]*\}/);
+          if (sJsonMatch) {
+            parsed = JSON.parse(sJsonMatch[0]);
+          }
+        } catch (sanityError) {
+          console.error("Spelling Sanity Check Failed (using original):", sanityError);
+        }
+        // --- END SANITY CHECK ---
+
         if (parsed.mode === 'ROADMAP') {
           const milestones = (parsed.milestones || []).join(' > ');
           visualPrompt = `MODE: ROADMAP | COUNT: ${parsed.count} | MILESTONES: ${milestones}`;
         } else {
           const central = parsed.central_theme || prompt;
-          const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}`).join(', ');
+          const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}: ${q.points.join(', ')}`).join(' | ');
           const milestones = (parsed.milestones || []).join(' > ');
           visualPrompt = `MODE: DASHBOARD | CENTRAL: ${central} | QUADRANTS: ${quadrants} | MILESTONES: ${milestones} | CHALLENGES: ${(parsed.challenges || []).join(', ')}`;
         }
@@ -117,14 +159,15 @@ export async function POST(req: Request) {
                         const steps = stepsMatch ? stepsMatch[1] : 'Phase 1 > Phase 2';
 
                         return `ISOMETRIC 3D TECHNICAL ROADMAP. 
-Layout: An elegant S-Curve winding pathway through a digital space.
+Layout: An elegant S-Curve winding pathway through a digital digital space.
 Containers: Render exactly ${N} distinct technical pods or glass bubbles along the path.
 Content: Each pod must contain a unique technical label from these steps: ${steps}.
 
-STRICT TYPOGRAPHIC MANDATE:
-- NO LOREM IPSUM: Every label must be a real English word from the list above. No gibberish.
-- PERFECT SPELLING: Ensure words like "TECHNICAL" and "MILESTONES" are spelled precisely.
-- NO WATERMARKS: Do not write "10xDS" or any other branding text in the image.
+STRICT ELITE MINIMALIST CONSTRAINTS:
+- VISUAL HIERARCHY: Bold, oversized Headers/Labels. Very small, refined secondary detail text.
+- TEXT VOLUME: Absolute minimum. Use single-word technical descriptors where possible.
+- PERFECT SPELLING: Ensure technical vocabulary like 'Orchestration', 'Document AI', and 'Infrastructure' are flawless.
+- NO WATERMARKS: Do not write "10xDS" or any other AI-generated branding text.
 
 STYLE: High-fidelity 3D vector. 
 PALETTE: Dark Navy background with vibrant neon-pastel nodes.
@@ -132,14 +175,15 @@ Portrait 4:5 (800x1000).`;
                     } else {
                         return `MASTER TECHNICAL DASHBOARD. 
 Layout: Central hexagonal thematic core connected to four peripheral quadrants.
-Data: ${visualPrompt.substring(0, 1000)}.
+Data Highlights: ${visualPrompt.substring(0, 1000)}.
 
-STRICT TYPOGRAPHIC MANDATE:
-- NO LOREM IPSUM: All sidebar items, challenges, and trends must be real English technical phrases.
-- PERFECT SPELLING: Core headers like "MILESTONES", "STRATEGY", and "CHALLENGES" must be spelled perfectly.
-- NO WATERMARKS: Keep the canvas clean of all branding text.
+STRICT ELITE MINIMALIST CONSTRAINTS:
+- VISUAL HIERARCHY: Dominate with large Titles. Use significantly smaller, clean font for bullet points.
+- TEXT DENSITY: Max 3 points per section. High-impact terminology only.
+- PERFECT SPELLING: Core headers like "MILESTONES", "STRATEGY", and "CHALLENGES" must be spelled perfectly. 
+- NO WATERMARKS: Keep the canvas clean of all AI-generated branding text.
 
-VIBRANT FULL-SPECTRUM COLORFUL VISUALS:
+VIBRANT FULL-SPECTRUM VISUALS:
 1. Quadrant Modules: Use vibrant colors (Sage, Rose, Cerulean, Amber).
 2. Bottom Ribbon: Sequential milestone chevron steps.
 3. Sidebar Icons: Challenges and Trend summaries.
