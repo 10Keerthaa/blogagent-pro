@@ -81,11 +81,13 @@ export async function POST(req: Request) {
         // --- TASK 1.5: ELITE SPELLING SANITY CHECK & CONDENSATION ---
         try {
           const sanityUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
-          const sanityPrompt = `Review this Infographic JSON for absolute technical accuracy and Elite Minimalist style.
-          1. Correct spelling of headers (e.g., Orchestration, Infrastructure, Scalability).
-          2. Ensure brand consistency for terms: 'Document AI', 'OCR', 'No-Code Orchestration', 'Hyperautomation'.
-          3. If any bullet point exceeds 40 characters, condense it into a high-impact short phrase.
-          4. Ensure max 3 bullets per section.
+          const sanityPrompt = `Review this Infographic JSON for absolute technical accuracy, perfect spelling, and Elite Minimalist style.
+          STRICT RULES:
+          1. PROOFREAD EVERYTHING: Correct spelling of all technical headers and EVERY single bullet point word.
+          2. BRANDING: Ensure terms like 'Document AI', 'OCR', 'No-Code Orchestration', and 'Hyperautomation' are correctly cased.
+          3. HARD CONDENSATION: If any bullet point exceeds 40 characters, surgically condense it into a high-impact phrase. 
+          4. NO HALLUCINATIONS: Do not add any text not present in the original data or related to the blog content.
+          5. EXCLUDE SYSTEM TERMS: Never use words like 'MODE', 'DASHBOARD', 'MASTER', or 'QUADRANT' in the output JSON values.
           
           JSON: ${JSON.stringify(parsed)}`;
 
@@ -159,15 +161,15 @@ export async function POST(req: Request) {
                         const steps = stepsMatch ? stepsMatch[1] : 'Phase 1 > Phase 2';
 
                         return `ISOMETRIC 3D TECHNICAL ROADMAP. 
-Layout: An elegant S-Curve winding pathway through a digital digital space.
+Layout: An elegant S-Curve winding pathway through a digital space.
 Containers: Render exactly ${N} distinct technical pods or glass bubbles along the path.
 Content: Each pod must contain a unique technical label from these steps: ${steps}.
 
 STRICT ELITE MINIMALIST CONSTRAINTS:
+- PROMPT EXCLUSION: NEVER write the words "MODE", "ROADMAP", or "CONTAINER" in the image.
+- LOGO BUFFER: Maintain a 150px EMPTY TRANSPARENT SPACE in the bottom-right corner. NO text or icons in that zone.
 - VISUAL HIERARCHY: Bold, oversized Headers/Labels. Very small, refined secondary detail text.
-- TEXT VOLUME: Absolute minimum. Use single-word technical descriptors where possible.
-- PERFECT SPELLING: Ensure technical vocabulary like 'Orchestration', 'Document AI', and 'Infrastructure' are flawless.
-- NO WATERMARKS: Do not write "10xDS" or any other AI-generated branding text.
+- PERFECT SPELLING: Ensure technical vocabulary is flawless.
 
 STYLE: High-fidelity 3D vector. 
 PALETTE: Dark Navy background with vibrant neon-pastel nodes.
@@ -178,10 +180,10 @@ Layout: Central hexagonal thematic core connected to four peripheral quadrants.
 Data Highlights: ${visualPrompt.substring(0, 1000)}.
 
 STRICT ELITE MINIMALIST CONSTRAINTS:
+- PROMPT EXCLUSION: NEVER write the words "MODE", "DASHBOARD", "MASTER", or "QUADRANT" in the image.
+- LOGO BUFFER: Maintain a 150px EMPTY TRANSPARENT SPACE in the bottom-right corner. NO text or icons in that zone.
 - VISUAL HIERARCHY: Dominate with large Titles. Use significantly smaller, clean font for bullet points.
-- TEXT DENSITY: Max 3 points per section. High-impact terminology only.
-- PERFECT SPELLING: Core headers like "MILESTONES", "STRATEGY", and "CHALLENGES" must be spelled perfectly. 
-- NO WATERMARKS: Keep the canvas clean of all AI-generated branding text.
+- PERFECT SPELLING: Core headers and all bullet points must be spelled perfectly. 
 
 VIBRANT FULL-SPECTRUM VISUALS:
 1. Quadrant Modules: Use vibrant colors (Sage, Rose, Cerulean, Amber).
