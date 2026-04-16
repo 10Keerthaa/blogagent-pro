@@ -185,7 +185,7 @@ export const ReviewList = () => {
     return (
         <div className="relative">
             {selectedReviewDraft ? (
-                <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-8`}>
+                <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-16`}>
                     {/* Header Actions */}
                     <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
                         <div className="w-full flex items-center justify-between py-8 pr-10">
