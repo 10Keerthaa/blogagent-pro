@@ -62,8 +62,8 @@ export const SidebarForm = () => {
                 <section className="space-y-3">
                     <Textarea
                         label="Main Blog Topic"
-                        labelClassName="!pl-16"
-                        textareaClassName="!pl-16"
+                        labelClassName="!pl-8"
+                        textareaClassName="!pl-8"
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
                         value={displayPrompt}
                         onChange={(e) => setPrompt(e.target.value)}
@@ -74,7 +74,7 @@ export const SidebarForm = () => {
                 {/* SEO Keywords */}
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 !pl-16">Keywords</label>
+                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 !pl-8">Keywords</label>
                         <button
                             onClick={handleFetchKeywords}
                             disabled={isFetchingKeywords || !prompt || isReadOnly}
@@ -85,7 +85,7 @@ export const SidebarForm = () => {
                         </button>
                     </div>
                     <div
-                        className={`flex flex-wrap items-center gap-2 min-h-[100px] pl-16 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/10 focus-within:border-violet-500'}`}
+                        className={`flex flex-wrap items-center gap-2 min-h-[100px] pl-8 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/10 focus-within:border-violet-500'}`}
                         onClick={() => !isReadOnly && inputRef.current?.focus()}
                     >
                         {displayKeywords.map((tag: string, idx: number) => {
@@ -139,7 +139,7 @@ export const SidebarForm = () => {
                 {/* Meta Description */}
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 !pl-16">Description</label>
+                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 !pl-8">Description</label>
                         <button
                             onClick={handleGenerateDescription}
                             disabled={isGeneratingDescription || !prompt || isReadOnly || !primaryKeyword}
@@ -151,7 +151,7 @@ export const SidebarForm = () => {
                     </div>
                     {/* Mandatory primary keyword notification */}
                     {!isReadOnly && displayKeywords.length > 0 && !primaryKeyword && (
-                        <div className="flex items-start gap-2 px-3 py-2.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-none ml-16">
+                        <div className="flex items-start gap-2 px-3 py-2.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-none ml-8">
                             <Star className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
                             <p className="text-[10px] font-bold text-amber-700 dark:text-amber-400 leading-relaxed">
                                 Select a <span className="underline decoration-amber-500/60">primary keyword</span> by clicking the ★ icon on a keyword above to enable description generation.
@@ -161,8 +161,8 @@ export const SidebarForm = () => {
                     <div>
                         <Textarea
                             placeholder="SEO optimized summary..."
-                            labelClassName="!pl-16"
-                            textareaClassName="!pl-16"
+                            labelClassName="!pl-8"
+                            textareaClassName="!pl-8"
                             value={displayDescription}
                             onChange={(e) => setDescription(e.target.value)}
                             className="min-h-[140px] shadow-sm focus:shadow-md"
