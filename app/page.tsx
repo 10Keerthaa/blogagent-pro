@@ -39,7 +39,7 @@ const DashboardContent = () => {
         </div>
 
         {/* RIGHT PANEL: Dynamic Workspace — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
-        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-500 ease-in-out !pl-0 !pr-8 !pb-8 !pt-0
+        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-500 ease-in-out !pl-0 !pr-6 !pb-8 !pt-0
           ${showSidebar ? 'lg:w-[60%]' : 'w-full'}`}>
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />

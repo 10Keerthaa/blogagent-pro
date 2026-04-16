@@ -33,7 +33,7 @@ export const SidebarForm = () => {
     return (
         <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
             {/* Brand Header */}
-            <div className="py-8 pr-8 pl-10 border-b border-slate-100 dark:border-slate-800/50">
+            <div className="py-8 pl-10 border-b border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center gap-3 group cursor-default">
                     <div className="w-10 h-10 bg-indigo-600 rounded-none flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-none transition-transform group-hover:scale-110">
                         <Zap className="text-white w-6 h-6 fill-current" />
@@ -45,7 +45,7 @@ export const SidebarForm = () => {
                 </div>
             </div>
 
-            <div className="py-8 pr-8 pl-10 space-y-8 flex-1 bg-slate-50/30 dark:bg-transparent">
+            <div className="py-8 pl-10 space-y-8 flex-1 bg-slate-50/30 dark:bg-transparent">
                 {/* Blog Topic */}
                 <section className="space-y-3">
                     <Textarea
@@ -160,7 +160,7 @@ export const SidebarForm = () => {
             </div>
 
             {/* Action Bar */}
-            <div className={`p-8 pl-10 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent ${isReadOnly ? 'hidden' : ''} space-y-4`}>
+            <div className={`py-8 pr-0 pl-10 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent ${isReadOnly ? 'hidden' : ''} space-y-4`}>
                 {user && (
                     <div className="space-y-2">
                         <Button
