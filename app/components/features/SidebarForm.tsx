@@ -59,7 +59,7 @@ export const SidebarForm = () => {
 
             <div className="py-8 pl-10 space-y-8 flex-1 bg-slate-50/30 dark:bg-transparent">
                 {/* Blog Topic */}
-                <section className="space-y-3 pl-20 transition-all duration-300">
+                <section className="space-y-3 pl-32 transition-all duration-300">
                     <Textarea
                         label="Main Blog Topic"
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
@@ -70,7 +70,7 @@ export const SidebarForm = () => {
                     />
                 </section>
                 {/* SEO Keywords */}
-                <section className="space-y-4 pl-20 transition-all duration-300">
+                <section className="space-y-4 pl-32 transition-all duration-300">
                     <div className="flex items-center justify-between">
                         <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Keywords</label>
                         <button
@@ -135,7 +135,7 @@ export const SidebarForm = () => {
                 </section>
 
                 {/* Meta Description */}
-                <section className="space-y-4 pl-20 transition-all duration-300">
+                <section className="space-y-4 pl-32 transition-all duration-300">
                     <div className="flex items-center justify-between">
                         <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Description</label>
                         <button
