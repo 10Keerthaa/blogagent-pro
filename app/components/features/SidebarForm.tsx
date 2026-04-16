@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { Zap, Loader2, X, RefreshCw, Star, AlertCircle, Check, AlertTriangle } from 'lucide-react';
+import { Zap, Loader2, X, RefreshCw, Star, AlertCircle, Check, AlertTriangle, Plus } from 'lucide-react';
 import { useDashboard } from '../context/DashboardContext';
 import { Textarea } from '../ui/Textarea';
 import { Button } from '../ui/Button';
@@ -20,7 +20,7 @@ export const SidebarForm = () => {
         primaryKeyword, setPrimaryKeyword,
         handleResumeDraft, isResuming, user, isHumanizing,
         humanizationError, handleRetryHumanization,
-        hasResumeDraft
+        hasResumeDraft, handleClearForm, setActiveTab
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -38,10 +38,22 @@ export const SidebarForm = () => {
                     <div className="w-10 h-10 bg-indigo-600 rounded-none flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-none transition-transform group-hover:scale-110">
                         <Zap className="text-white w-6 h-6 fill-current" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                         <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-none tracking-tight">BlogAgent <span className="text-indigo-600">Pro</span></h1>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Enterprise Engine V3.0</p>
                     </div>
+
+                    <button
+                        onClick={() => {
+                            handleClearForm();
+                            setActiveTab('create');
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/20 dark:hover:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-none border border-indigo-100/50 dark:border-indigo-800/50 text-[10px] font-black uppercase tracking-widest transition-all hover:shadow-sm"
+                        title="Start a fresh post"
+                    >
+                        <Plus className="w-3.5 h-3.5" />
+                        New Post
+                    </button>
                 </div>
             </div>
 
