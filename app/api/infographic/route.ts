@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 
-export const maxDuration = 120; // Extended for two sequential AI calls + GCS upload
+export const maxDuration = 300; // Extended for complex 10-node renders + two sequential AI calls + GCS upload
 
 export async function POST(req: Request) {
   try {
