@@ -32,14 +32,14 @@ const DashboardContent = () => {
 
         {/* LEFT PANEL: Sidebar Form — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
         <div
-          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0 !ml-8
-            ${showSidebar ? 'w-[calc(100%-32px)] lg:w-[calc(40%-32px)] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
+          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0
+            ${showSidebar ? 'w-full lg:w-[40%] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
         >
           <SidebarForm />
         </div>
 
         {/* RIGHT PANEL: Dynamic Workspace — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
-        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-500 ease-in-out p-8
+        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-500 ease-in-out !pl-0 !pr-8 !py-8
           ${showSidebar ? 'lg:w-[60%]' : 'w-full'}`}>
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
