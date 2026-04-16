@@ -23,7 +23,7 @@ export const Textarea = ({
             {label && (
                 <label
                     htmlFor={inputId}
-                    className="text-[11px] font-bold uppercase tracking-wide text-slate-400 select-none cursor-pointer px-1"
+                    className="text-[11px] font-bold uppercase tracking-wide text-slate-400 select-none cursor-pointer pl-6"
                 >
                     {label}
                 </label>
@@ -32,7 +32,7 @@ export const Textarea = ({
                 id={inputId}
                 className={`
           w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 
-          rounded-none px-4 py-3 text-sm transition-all duration-200
+          rounded-none pl-6 pr-4 py-3 text-sm transition-all duration-200
           focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500
           placeholder:text-slate-400 disabled:opacity-50 disabled:bg-slate-50
           dark:disabled:bg-slate-950 min-h-[120px] resize-none font-medium

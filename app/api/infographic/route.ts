@@ -25,25 +25,31 @@ export async function POST(req: Request) {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    // TASK 1: Master Dashboard Analysis via Vertex AI Gemini 2.5 Pro
+    // DETECTION PHASE: Extract numerical constraint N from prompt
+    const numMatch = prompt.match(/(\d+)/);
+    const N = numMatch ? parseInt(numMatch[1], 10) : null;
+
+    // TASK 1: Analysis Pass via Vertex AI Gemini 2.5 Pro
     let visualPrompt = '';
     try {
       const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
-      const aiPrompt = `
-        Analyze this blog post and structure it for a 'Master Technical Dashboard' infographic.
-        
-        CRITICAL STRUCTURE:
-        1. CENTRAL THEME: Extract the main strategic approach header.
-        2. QUADRANTS: Identify exactly 4 primary industries or use cases discussed.
-        3. MILESTONE BAR: Extract 5-7 sequential project steps (e.g. Identify, Define, Evaluate).
-        4. SIDEBARS: Identify 3 Challenges and 3 Future Trends.
-
-        Output ONLY a JSON object with: "central_theme", "quadrants" (title/points), "milestones", "challenges", "future".
-        CRITICAL: Valid JSON only. No markdown.
-
-        Blog Content: ${content.substring(0, 3500)}
-      `;
+      const aiPrompt = N && N >= 5 
+        ? `Analyze this blog post and extract EXACTLY ${N} milestones for an 'Isometric Roadmap' infographic.
+           Output ONLY a JSON object with: 
+           "mode": "ROADMAP",
+           "count": ${N},
+           "milestones": string[] (Array of exactly ${N} short technical headers)
+           Blog: ${content.substring(0, 3500)}`
+        : `Analyze this blog post and structure it for a 'Master Technical Dashboard'.
+           Output ONLY a JSON object with: 
+           "mode": "DASHBOARD",
+           "central_theme": string,
+           "quadrants": [{"title": string, "points": string[]}],
+           "milestones": string[],
+           "challenges": string[],
+           "future": string[]
+           Blog: ${content.substring(0, 3500)}`;
 
       const resp = await client.request({
         url,
@@ -65,16 +71,22 @@ export async function POST(req: Request) {
       try {
         const jsonMatch = rawText.match(/\{[\s\S]*\}/);
         const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : rawText);
-        const central = parsed.central_theme || prompt;
-        const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}`).join(', ');
-        const milestones = (parsed.milestones || []).join(' > ');
-        visualPrompt = `CENTRAL: ${central} | QUADRANTS: ${quadrants} | MILESTONES: ${milestones} | CHALLENGES: ${(parsed.challenges || []).join(', ')}`;
+        
+        if (parsed.mode === 'ROADMAP') {
+          const milestones = (parsed.milestones || []).join(' > ');
+          visualPrompt = `MODE: ROADMAP | COUNT: ${parsed.count} | MILESTONES: ${milestones}`;
+        } else {
+          const central = parsed.central_theme || prompt;
+          const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}`).join(', ');
+          const milestones = (parsed.milestones || []).join(' > ');
+          visualPrompt = `MODE: DASHBOARD | CENTRAL: ${central} | QUADRANTS: ${quadrants} | MILESTONES: ${milestones} | CHALLENGES: ${(parsed.challenges || []).join(', ')}`;
+        }
       } catch (e) {
-        visualPrompt = rawText.substring(0, 500);
+        visualPrompt = `MODE: DASHBOARD | CENTRAL: ${prompt}. Fallback.`;
       }
     } catch (designerError: any) {
       console.error("Vertex AI Designer Error:", designerError);
-      visualPrompt = `Master Dashboard for ${prompt}. Full-Spectrum Colorful.`;
+      visualPrompt = `MODE: DASHBOARD | CENTRAL: ${prompt}. Elite Gradient.`;
     }
 
     // TASK 2: Restored High-Fidelity Generation via Gemini 2.5 Flash Image
@@ -95,24 +107,37 @@ export async function POST(req: Request) {
               parts: [
                 {
                   text: (() => {
-                    const themeMatch = cleanedPrompt.match(/THEME: (.*?) \|/);
-                    const countMatch = cleanedPrompt.match(/COUNT: (.*?) \|/);
-                    const milestonesMatch = cleanedPrompt.match(/MILESTONES: (.*)/);
-                    
-                    const theme = themeMatch ? themeMatch[1] : 'translucent glass spheres';
-                    const count = countMatch ? countMatch[1] : '5';
-                    const milestones = milestonesMatch ? milestonesMatch[1] : cleanedPrompt;
+                    const modeMatch = visualPrompt.match(/MODE: (.*?) \|/);
+                    const mode = modeMatch ? modeMatch[1] : 'DASHBOARD';
 
-                    return `MASTER TECHNICAL DASHBOARD. 
+                    if (mode === 'ROADMAP') {
+                        const countMatch = visualPrompt.match(/COUNT: (.*?) \|/);
+                        const stepsMatch = visualPrompt.match(/MILESTONES: (.*)/);
+                        const N = countMatch ? countMatch[1] : '8';
+                        const steps = stepsMatch ? stepsMatch[1] : 'Phase 1 > Phase 2';
+
+                        return `ISOMETRIC 3D TECHNICAL ROADMAP. 
+Layout: An elegant S-Curve winding pathway through a digital space.
+Containers: Render exactly ${N} distinct technical pods or glass bubbles along the path.
+Content: Each pod must contain a unique technical label from these steps: ${steps}.
+
+STRICT TYPOGRAPHIC MANDATE:
+- NO LOREM IPSUM: Every label must be a real English word from the list above. No gibberish.
+- PERFECT SPELLING: Ensure words like "TECHNICAL" and "MILESTONES" are spelled precisely.
+- NO WATERMARKS: Do not write "10xDS" or any other branding text in the image.
+
+STYLE: High-fidelity 3D vector. 
+PALETTE: Dark Navy background with vibrant neon-pastel nodes.
+Portrait 4:5 (800x1000).`;
+                    } else {
+                        return `MASTER TECHNICAL DASHBOARD. 
 Layout: Central hexagonal thematic core connected to four peripheral quadrants.
-Data: ${cleanedPrompt.substring(0, 1000)}.
-${refinement ? `USER VISUAL DIRECTIVE: ${refinement}` : ''}
+Data: ${visualPrompt.substring(0, 1000)}.
 
-TEXT & BRANDING HARDENING MANDATE:
-- BAN LOREM IPSUM: STRICTLY FORBIDDEN: Do not use any placeholder or non-English text. Every sidebar and trend summary must contain short, meaningful English technical phrases derived from the blog data.
-- FIX SPELLING: Verify the spelling of the header "MILESTONES". It must be spelled correctly, not as "MILESONES".
-- REMOVE WATERMARK TEXT: Do not render the text "10xDS ELITE" anywhere in the image. The bottom-right corner must remain clean to accommodate the post-processed logo.
-- TYPOGRAPHY: All headers and labels must be rendered in high-contrast, bold English characters only.
+STRICT TYPOGRAPHIC MANDATE:
+- NO LOREM IPSUM: All sidebar items, challenges, and trends must be real English technical phrases.
+- PERFECT SPELLING: Core headers like "MILESTONES", "STRATEGY", and "CHALLENGES" must be spelled perfectly.
+- NO WATERMARKS: Keep the canvas clean of all branding text.
 
 VIBRANT FULL-SPECTRUM COLORFUL VISUALS:
 1. Quadrant Modules: Use vibrant colors (Sage, Rose, Cerulean, Amber).
@@ -122,6 +147,7 @@ VIBRANT FULL-SPECTRUM COLORFUL VISUALS:
 STYLE: Flat 2.5D Vector Illustration. 
 PALETTE: Dark Navy background ({r: 10, g: 25, b: 47}). 
 Portrait 4:5 (800x1000).`;
+                    }
                   })()
                 }
               ]

@@ -45,7 +45,7 @@ export const SidebarForm = () => {
                 </div>
             </div>
 
-            <div className="p-8 space-y-8 flex-1 bg-slate-50/30 dark:bg-transparent">
+            <div className="p-8 pl-14 space-y-8 flex-1 bg-slate-50/30 dark:bg-transparent">
                 {/* Blog Topic */}
                 <section className="space-y-3">
                     <Textarea
@@ -60,7 +60,7 @@ export const SidebarForm = () => {
 
                 {/* SEO Keywords */}
                 <section className="space-y-4">
-                    <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center justify-between pl-6">
                         <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Keywords</label>
                         <button
                             onClick={handleFetchKeywords}
@@ -72,7 +72,7 @@ export const SidebarForm = () => {
                         </button>
                     </div>
                     <div
-                        className={`flex flex-wrap items-center gap-2 min-h-[100px] p-4 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500'}`}
+                        className={`flex flex-wrap items-center gap-2 min-h-[100px] pl-6 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500'}`}
                         onClick={() => !isReadOnly && inputRef.current?.focus()}
                     >
                         {displayKeywords.map((tag: string, idx: number) => {
@@ -125,7 +125,7 @@ export const SidebarForm = () => {
 
                 {/* Meta Description */}
                 <section className="space-y-4">
-                    <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center justify-between pl-6">
                         <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Description</label>
                         <button
                             onClick={handleGenerateDescription}
