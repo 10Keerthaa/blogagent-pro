@@ -183,7 +183,7 @@ export const ReviewList = () => {
     }, [reviewDrafts, role, user]);
 
     return (
-        <div className="relative ml-8">
+        <div className="relative !ml-8">
             {selectedReviewDraft ? (
                 <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-8`}>
                     {/* Header Actions */}

@@ -31,7 +31,7 @@ export const SidebarForm = () => {
     const displayDescription = selectedReviewDraft?.metaDesc || description;
 
     return (
-        <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300 pl-8">
+        <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300 !pl-8">
             {/* Brand Header */}
             <div className="py-8 pr-8 border-b border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center gap-3 group cursor-default">
