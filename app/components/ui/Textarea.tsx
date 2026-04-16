@@ -6,6 +6,8 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
     label?: string;
     helperText?: string;
     error?: string;
+    labelClassName?: string;
+    textareaClassName?: string;
 }
 
 export const Textarea = ({
@@ -13,6 +15,8 @@ export const Textarea = ({
     helperText,
     error,
     className = '',
+    labelClassName = '',
+    textareaClassName = '',
     id,
     ...props
 }: TextareaProps) => {
@@ -23,7 +27,7 @@ export const Textarea = ({
             {label && (
                 <label
                     htmlFor={inputId}
-                    className="text-[11px] font-bold uppercase tracking-wide text-slate-400 select-none cursor-pointer pl-6"
+                    className={`text-[11px] font-bold uppercase tracking-wide text-slate-400 select-none cursor-pointer pl-6 ${labelClassName}`}
                 >
                     {label}
                 </label>
@@ -39,6 +43,7 @@ export const Textarea = ({
           text-black dark:text-white shadow-sm
           ${error ? 'border-red-500 focus:ring-red-500/10 focus:border-red-500' : ''}
           ${className}
+          ${textareaClassName}
         `}
                 aria-describedby={helperText ? `${inputId}-helper` : undefined}
                 aria-invalid={!!error}
