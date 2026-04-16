@@ -321,8 +321,8 @@ export const PostPreview = () => {
                     }}
                 />
 
-                {/* BUTTON SEQUENCE: INFOGRAPHIC -> AI -> SAVE/REVIEW */}
-                <div className="mt-20 pt-16 border-t border-slate-100 dark:border-slate-800 space-y-12">
+                {/* ACTION BAR: INFOGRAPHIC -> AI -> SAVE/REVIEW */}
+                <div className="mt-12 pt-12 border-t border-slate-100 dark:border-slate-800 space-y-12">
 
                     {/* 1. Generate Infographic Button */}
                     <div className="flex flex-col gap-6">
@@ -411,8 +411,8 @@ export const PostPreview = () => {
                         </div>
                     </div>
 
-                    {/* ACTION BAR - inline at the bottom of editor content */}
-                    <div className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800 flex gap-0">
+                    {/* MAIN ACTION BAR - Fixed positioning or stable end-of-flow */}
+                    <div className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex gap-0 sticky bottom-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md z-20 -mx-6 px-6">
                         <Button
                             variant="secondary"
                             onClick={() => handleAutoSave(preview)}

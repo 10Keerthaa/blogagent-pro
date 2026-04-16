@@ -169,7 +169,7 @@ STRICT ELITE MINIMALIST CONSTRAINTS:
 - PROMPT EXCLUSION: NEVER write the words "MODE", "ROADMAP", or "CONTAINER" in the image.
 - LOGO BUFFER: Maintain a 150px EMPTY TRANSPARENT SPACE in the bottom-right corner. NO text or icons in that zone.
 - VISUAL HIERARCHY: Bold, oversized Headers/Labels. Very small, refined secondary detail text.
-- PERFECT SPELLING: Ensure technical vocabulary is flawless.
+- MIRROR RULE: Copy the text from the steps EXACTLY. Do not change any spelling or casing. Perfect spelling of "${steps}" is mandatory.
 
 STYLE: High-fidelity 3D vector. 
 PALETTE: Dark Navy background with vibrant neon-pastel nodes.
@@ -183,7 +183,7 @@ STRICT ELITE MINIMALIST CONSTRAINTS:
 - PROMPT EXCLUSION: NEVER write the words "MODE", "DASHBOARD", "MASTER", or "QUADRANT" in the image.
 - LOGO BUFFER: Maintain a 150px EMPTY TRANSPARENT SPACE in the bottom-right corner. NO text or icons in that zone.
 - VISUAL HIERARCHY: Dominate with large Titles. Use significantly smaller, clean font for bullet points.
-- PERFECT SPELLING: Core headers and all bullet points must be spelled perfectly. 
+- MIRROR RULE: You must copy the text from the data highlights EXACTLY. If a word is provided to you, render it character-for-character. Flawless spelling is the highest priority.
 
 VIBRANT FULL-SPECTRUM VISUALS:
 1. Quadrant Modules: Use vibrant colors (Sage, Rose, Cerulean, Amber).
