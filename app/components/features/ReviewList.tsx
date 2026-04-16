@@ -9,7 +9,7 @@ import { Textarea } from '../ui/Textarea';
 import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
-    FileText, Calendar, ArrowRight, X, CheckCircle, XCircle, Zap, Sparkles, Users,
+    FileText, Calendar, ArrowLeft, X, CheckCircle, XCircle, Zap, Sparkles, Users,
     AlertCircle
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
@@ -185,10 +185,10 @@ export const ReviewList = () => {
     return (
         <div className="relative">
             {selectedReviewDraft ? (
-                <div className={`animate-fadeIn max-w-[1100px] mx-auto w-full transition-all duration-500 space-y-12 pb-24`}>
+                <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-8`}>
                     {/* Header Actions */}
                     <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
-                        <div className="w-full flex items-center justify-between py-8 px-10">
+                        <div className="w-full flex items-center justify-between py-8 pr-10">
                             <div className="flex items-center gap-6">
                                 <Button
                                     variant="ghost"
@@ -197,10 +197,10 @@ export const ReviewList = () => {
                                         setSelectedReviewDraft(null);
                                         handleClearForm();
                                     }}
-                                    className="h-10 rounded-none text-slate-400 hover:text-indigo-600 transition-colors"
+                                    className="group h-12 rounded-none bg-white dark:bg-transparent border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 transition-all px-6 shadow-sm"
                                 >
-                                    <X className="w-4 h-4 mr-3" />
-                                    Return
+                                    <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
+                                    <span className="text-[11px] font-bold uppercase tracking-widest">Return to Reviews</span>
                                 </Button>
                                 <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
                                 <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
@@ -231,7 +231,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="w-full space-y-10 px-10 relative">
+                    <section className="w-full space-y-10 pr-10 relative">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
