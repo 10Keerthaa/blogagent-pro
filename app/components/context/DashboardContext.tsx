@@ -842,29 +842,23 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 publishedBy
             });
 
-            // ✅ Elite Publish Toast Notification
-            const toast = document.createElement('div');
-            toast.setAttribute('role', 'status');
-            toast.style.cssText = `
-                position:fixed; bottom:32px; right:32px; z-index:99999;
-                display:flex; align-items:center; gap:12px;
-                background:#fff; border:1px solid #d1fae5;
-                box-shadow:0 8px 40px rgba(0,0,0,0.12);
-                padding:16px 24px; min-width:320px;
-                animation:fadeIn 0.3s ease;
+            // ✅ Publish Success Message
+            const banner = document.createElement('div');
+            banner.setAttribute('role', 'status');
+            banner.style.cssText = `
+                position:fixed; top:0; left:0; right:0; z-index:99999;
+                background:#059669; color:#fff;
+                display:flex; align-items:center; justify-content:center; gap:10px;
+                padding:18px 24px; font-family:inherit;
+                box-shadow:0 4px 24px rgba(0,0,0,0.15);
             `;
-            toast.innerHTML = `
-                <div style="width:36px;height:36px;background:#059669;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <div style="flex:1;">
-                    <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#064e3b;">Post Published</p>
-                    <p style="margin:4px 0 0;font-size:12px;color:#6b7280;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px;">${draft.title}</p>
-                </div>
-                ${pubData.url ? `<a href="${pubData.url}" target="_blank" rel="noopener noreferrer" style="font-size:10px;font-weight:700;color:#4f46e5;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;white-space:nowrap;">View →</a>` : ''}
+            banner.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span style="font-size:15px; font-weight:600; letter-spacing:0.01em;">The post is published!</span>
+                ${pubData.url ? `<a href="${pubData.url}" target="_blank" rel="noopener noreferrer" style="margin-left:16px;font-size:13px;font-weight:700;color:#fff;text-decoration:underline;underline-offset:4px;">View post →</a>` : ''}
             `;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 5000);
+            document.body.appendChild(banner);
+            setTimeout(() => banner.remove(), 4000);
 
             setSelectedReviewDraft(null); fetchDrafts(); fetchHistory(); setActiveTab('history');
         } catch (e: any) { setError(e.message); }
