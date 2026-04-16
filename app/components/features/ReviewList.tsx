@@ -9,7 +9,7 @@ import { Textarea } from '../ui/Textarea';
 import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
-    FileText, Calendar, ArrowLeft, X, CheckCircle, XCircle, Zap, Sparkles, Users,
+    FileText, Calendar, ArrowLeft, ArrowRight, X, CheckCircle, XCircle, Zap, Sparkles, Users,
     AlertCircle
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
