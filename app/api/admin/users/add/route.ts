@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 
     // 1. Create User in Firebase Auth
     // Use a default temporary password that they must change
-    const tempPassword = "BlogAgent2026!";
+    const tempPassword = "10xBlogagent2026!";
     
     let userRecord;
     try {

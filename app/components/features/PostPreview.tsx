@@ -150,7 +150,7 @@ export const PostPreview = () => {
                 anchor.href = value;
                 anchor.target = '_blank';
                 anchor.rel = 'noopener noreferrer';
-                anchor.className = 'text-indigo-500 underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium';
+                anchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
                 // Wrap the selected fragment in the <a> tag
                 anchor.appendChild(range.extractContents());
                 range.insertNode(anchor);
@@ -179,7 +179,7 @@ export const PostPreview = () => {
 
                 // Insert a pulsing placeholder while AI is working
                 const placeholder = document.createElement('span');
-                placeholder.className = 'bg-indigo-100 dark:bg-indigo-900/30 animate-pulse rounded px-1 text-indigo-500';
+                placeholder.className = 'bg-violet-100 dark:bg-violet-900/30 animate-pulse rounded px-1 text-violet-500';
                 placeholder.innerText = '✦';
                 const liveRange = sel.getRangeAt(0);
                 liveRange.deleteContents();
@@ -228,9 +228,9 @@ export const PostPreview = () => {
                 {/* EDITABLE TITLE */}
                 <div className="flex justify-center mb-4">
                     {preview.isHumanized && (
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 dark:bg-indigo-900/20 dark:border-indigo-800 animate-in fade-in slide-in-from-top-1 duration-700">
-                            <Sparkles className="w-3 h-3 text-indigo-500" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-100 dark:bg-violet-900/20 dark:border-violet-800 animate-in fade-in slide-in-from-top-1 duration-700">
+                            <Sparkles className="w-3 h-3 text-violet-500" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-violet-600 dark:text-violet-400">
                                 AI Refined & Humanized
                             </span>
                         </div>
@@ -244,7 +244,7 @@ export const PostPreview = () => {
                         setPreview({ ...preview, title: newTitle });
                         handleAutoSave({ ...preview, title: newTitle });
                     }}
-                    className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-indigo-500/10 rounded-lg p-2 transition-all"
+                    className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg p-2 transition-all"
                 >
                     {preview.title}
                 </h1>
@@ -257,7 +257,7 @@ export const PostPreview = () => {
                         className="w-full h-auto block object-cover"
                         style={{ aspectRatio: '4/3' }}
                     />
-                    <div className="absolute inset-0 bg-indigo-900/40 pointer-events-none" />
+                    <div className="absolute inset-0 bg-violet-950/40 pointer-events-none" />
 
                     <div className="absolute inset-0 pointer-events-none">
                         <img src="/Blog.png" alt="Blog" className="absolute top-[40px] left-[40px] h-10 w-auto" />
@@ -330,7 +330,7 @@ export const PostPreview = () => {
                             variant="primary"
                             onClick={() => handleGenerateInfographic()}
                             isLoading={isGeneratingInfographic}
-                            className="w-full h-14 rounded-none bg-indigo-500 hover:bg-indigo-600 uppercase tracking-widest text-[11px] font-bold"
+                            className="w-full h-14 rounded-none bg-violet-500 hover:bg-violet-600 uppercase tracking-widest text-[11px] font-bold"
                         >
                             Generate Visual Infographic
                         </Button>
@@ -346,9 +346,9 @@ export const PostPreview = () => {
                                         variant="ghost" 
                                         size="sm" 
                                         onClick={() => setIsRefining(!isRefining)}
-                                        className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 hover:text-indigo-600 transition-all flex items-center gap-2"
+                                        className="text-[10px] font-bold uppercase tracking-widest text-violet-500 hover:text-violet-600 transition-all flex items-center gap-2"
                                     >
-                                        {isRefining ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5 text-indigo-400" />}
+                                        {isRefining ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5 text-violet-400" />}
                                         {isRefining ? 'Cancel Refinement' : 'Refine Visual'}
                                     </Button>
                                 </div>
@@ -360,7 +360,7 @@ export const PostPreview = () => {
                                             value={infographicFeedback}
                                             onChange={(e) => setInfographicFeedback(e.target.value)}
                                             placeholder="Describe visual changes (e.g., 'Use more blue tones' or 'Add a cloud icon')..."
-                                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none p-4 text-sm focus:ring-1 focus:ring-indigo-500 outline-none min-h-[100px] resize-none"
+                                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none p-4 text-sm focus:ring-1 focus:ring-violet-500 outline-none min-h-[100px] resize-none"
                                         />
                                         <Button
                                             variant="primary"
@@ -368,7 +368,7 @@ export const PostPreview = () => {
                                             onClick={() => handleGenerateInfographic(infographicFeedback)}
                                             isLoading={isInfographicRefining}
                                             disabled={!infographicFeedback.trim()}
-                                            className="w-full h-12 rounded-none bg-indigo-600 hover:bg-indigo-700 uppercase tracking-widest text-[10px] font-bold"
+                                            className="w-full h-12 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[10px] font-bold"
                                         >
                                             Update Graphic
                                         </Button>
@@ -397,14 +397,14 @@ export const PostPreview = () => {
                                 value={feedback}
                                 onChange={(e) => setFeedback(e.target.value)}
                                 placeholder="Type instructions to refine this post..."
-                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none min-h-[120px]"
+                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none min-h-[120px]"
                             />
                             <Button
                                 variant="primary"
                                 onClick={handleApplyFeedback}
                                 isLoading={isApplyingFeedback}
                                 disabled={isApplyingFeedback || !feedback || !primaryKeyword}
-                                className="w-full h-14 rounded-none bg-indigo-600 hover:bg-indigo-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
+                                className="w-full h-14 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
                             >
                                 {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply AI Refinement'}
                             </Button>

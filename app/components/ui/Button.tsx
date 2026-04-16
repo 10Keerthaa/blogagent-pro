@@ -18,10 +18,10 @@ export const Button = ({
     disabled,
     ...props
 }: ButtonProps) => {
-    const baseStyles = 'inline-flex items-center justify-center rounded-none font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-50:ring-offset-2 dark:focus-visible:ring-offset-slate-950 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none active:shadow-inner select-none uppercase tracking-wider text-[11px]';
+    const baseStyles = 'inline-flex items-center justify-center rounded-none font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-50:ring-offset-2 dark:focus-visible:ring-offset-slate-950 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none active:shadow-inner select-none uppercase tracking-wider text-[11px]';
 
     const variants = {
-        primary: 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm hover:shadow-md dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:shadow-none',
+        primary: 'bg-violet-600 text-white hover:bg-violet-700 shadow-sm hover:shadow-md dark:bg-violet-500 dark:hover:bg-violet-600 dark:shadow-none',
         secondary: 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 shadow-sm border border-slate-200 dark:border-slate-700',
         ghost: 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors',
         danger: 'bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 dark:bg-red-900/10 dark:text-red-500 dark:border-red-900/20'

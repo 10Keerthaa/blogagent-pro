@@ -56,7 +56,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                     onClick={() => !readOnly && setIsOpen(!isOpen)}
                     className={`min-h-[44px] p-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm flex flex-wrap gap-1.5 items-center cursor-pointer ${
                         readOnly ? 'opacity-80 cursor-default' : 'hover:border-slate-300 dark:hover:border-slate-700'
-                    } ${isOpen ? 'ring-4 ring-indigo-500/10 border-indigo-500' : ''}`}
+                    } ${isOpen ? 'ring-4 ring-violet-500/10 border-violet-500' : ''}`}
                 >
                     {selectedNames.length > 0 ? (
                         selectedNames.map(cat => (
@@ -65,7 +65,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-[10px] font-bold transition-all ${
                                     cat.id === LOCKED_CATEGORY_ID 
                                         ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700' 
-                                        : 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800'
+                                        : 'bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-800'
                                 }`}
                             >
                                 {cat.id === LOCKED_CATEGORY_ID && <Lock className="w-2.5 h-2.5 opacity-60" />}
@@ -76,7 +76,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                                             e.stopPropagation();
                                             handleToggle(cat.id);
                                         }}
-                                        className="hover:text-indigo-900 dark:hover:text-white transition-colors"
+                                        className="hover:text-violet-900 dark:hover:text-white transition-colors"
                                     >
                                         <X className="w-2.5 h-2.5" />
                                     </button>
@@ -102,7 +102,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                         <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 animate-fadeIn min-w-[240px]">
                             {/* Search Header */}
                             <div className="p-3 border-b border-slate-100 dark:border-slate-800 sticky top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
-                                <div className="flex items-center bg-slate-50 dark:bg-slate-950 ring-1 ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:ring-indigo-500 transition-all rounded-none">
+                                <div className="flex items-center bg-slate-50 dark:bg-slate-950 ring-1 ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:ring-violet-500 transition-all rounded-none">
                                     <div className="pl-3 py-2">
                                         <Search className="w-3.5 h-3.5 text-slate-400" />
                                     </div>
@@ -140,18 +140,18 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                                             key={cat.id}
                                             onClick={() => handleToggle(cat.id)}
                                             className={`flex items-center justify-between p-2.5 text-xs font-bold cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 ${
-                                                selectedIds.includes(cat.id) ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-300'
+                                                selectedIds.includes(cat.id) ? 'text-violet-600 dark:text-violet-400' : 'text-slate-600 dark:text-slate-300'
                                             }`}
                                         >
                                             <div className="flex items-center gap-2.5">
                                                 <div className={`w-4 h-4 rounded-none border transition-all flex items-center justify-center ${
                                                     selectedIds.includes(cat.id) 
-                                                        ? 'bg-indigo-600 border-indigo-600 shadow-sm' 
+                                                        ? 'bg-violet-600 border-violet-600 shadow-sm' 
                                                         : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700'
                                                 }`}>
                                                     {selectedIds.includes(cat.id) && <Check className="w-3 h-3 text-white" />}
                                                 </div>
-                                                <span className={selectedIds.includes(cat.id) ? 'underline decoration-indigo-300 underline-offset-4' : ''}>
+                                                <span className={selectedIds.includes(cat.id) ? 'underline decoration-violet-300 underline-offset-4' : ''}>
                                                     {cat.name}
                                                 </span>
                                             </div>

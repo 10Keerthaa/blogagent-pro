@@ -35,11 +35,11 @@ export const SidebarForm = () => {
             {/* Brand Header */}
             <div className="py-8 pl-10 border-b border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center gap-3 group cursor-default">
-                    <div className="w-10 h-10 bg-indigo-600 rounded-none flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-none transition-transform group-hover:scale-110">
+                    <div className="w-10 h-10 bg-violet-600 rounded-none flex items-center justify-center shadow-lg shadow-violet-100 dark:shadow-none transition-transform group-hover:scale-110">
                         <Zap className="text-white w-6 h-6 fill-current" />
                     </div>
                     <div className="flex-1">
-                        <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-none tracking-tight">BlogAgent <span className="text-indigo-600">Pro</span></h1>
+                        <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-none tracking-tight">10x<span className="text-violet-600">Blogagent</span></h1>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Enterprise Engine V3.0</p>
                     </div>
 
@@ -48,7 +48,7 @@ export const SidebarForm = () => {
                             handleClearForm();
                             setActiveTab('create');
                         }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/20 dark:hover:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-none border border-indigo-100/50 dark:border-indigo-800/50 text-[10px] font-black uppercase tracking-widest transition-all hover:shadow-sm"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-50 hover:bg-violet-100 dark:bg-violet-900/20 dark:hover:bg-violet-900/40 text-violet-600 dark:text-violet-400 rounded-none border border-violet-100/50 dark:border-violet-800/50 text-[10px] font-black uppercase tracking-widest transition-all hover:shadow-sm"
                         title="Start a fresh post"
                     >
                         <Plus className="w-3.5 h-3.5" />
@@ -69,7 +69,6 @@ export const SidebarForm = () => {
                         readOnly={isReadOnly}
                     />
                 </section>
-
                 {/* SEO Keywords */}
                 <section className="space-y-4">
                     <div className="flex items-center justify-between pl-0">
@@ -77,14 +76,14 @@ export const SidebarForm = () => {
                         <button
                             onClick={handleFetchKeywords}
                             disabled={isFetchingKeywords || !prompt || isReadOnly}
-                            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
+                            className="text-[10px] font-bold text-violet-600 hover:text-violet-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
                         >
                             {isFetchingKeywords ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                             Auto Fetch
                         </button>
                     </div>
                     <div
-                        className={`flex flex-wrap items-center gap-2 min-h-[100px] pl-6 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-indigo-500/10 focus-within:border-indigo-500'}`}
+                        className={`flex flex-wrap items-center gap-2 min-h-[100px] pl-6 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/10 focus-within:border-violet-500'}`}
                         onClick={() => !isReadOnly && inputRef.current?.focus()}
                     >
                         {displayKeywords.map((tag: string, idx: number) => {
@@ -93,21 +92,21 @@ export const SidebarForm = () => {
                                 <span
                                     key={idx}
                                     className={`inline-flex items-center gap-1.5 px-3 py-1 border rounded-none text-[11px] font-bold shadow-sm animate-fadeIn transition-all ${isPrimary
-                                        ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 ring-1 ring-indigo-500/20'
+                                        ? 'bg-violet-50 dark:bg-violet-900/30 border-violet-200 dark:border-violet-800 text-violet-700 dark:text-violet-300 ring-1 ring-violet-500/20'
                                         : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
                                         }`}
                                 >
                                     {!isReadOnly && (
                                         <button
                                             onClick={(e) => { e.stopPropagation(); setPrimaryKeyword(isPrimary ? null : tag); }}
-                                            className={`transition-colors ${isPrimary ? 'text-indigo-600 animate-pulse' : 'text-slate-400 hover:text-indigo-500'}`}
+                                            className={`transition-colors ${isPrimary ? 'text-violet-600 animate-pulse' : 'text-slate-400 hover:text-violet-500'}`}
                                             title={isPrimary ? "Primary Keyword" : "Mark as Primary"}
                                         >
                                             <Star className={`w-3 h-3 ${isPrimary ? 'fill-current' : ''}`} />
                                         </button>
                                     )}
-                                    {isPrimary && <span className="w-1 h-3 bg-indigo-500 mr-1 opacity-50" />}
-                                    <span className={isPrimary ? 'underline decoration-indigo-500/50 underline-offset-4' : ''}>
+                                    {isPrimary && <span className="w-1 h-3 bg-violet-500 mr-1 opacity-50" />}
+                                    <span className={isPrimary ? 'underline decoration-violet-500/50 underline-offset-4' : ''}>
                                         {tag}
                                     </span>
                                     {!isReadOnly && (
@@ -142,7 +141,7 @@ export const SidebarForm = () => {
                         <button
                             onClick={handleGenerateDescription}
                             disabled={isGeneratingDescription || !prompt || isReadOnly || !primaryKeyword}
-                            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
+                            className="text-[10px] font-bold text-violet-600 hover:text-violet-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
                         >
                             {isGeneratingDescription ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
                             Refine
@@ -220,11 +219,11 @@ export const SidebarForm = () => {
                     onClick={handleGenerate}
                     isLoading={isGenerating || isHumanizing}
                     disabled={!prompt}
-                    className="w-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-indigo-600/10 dark:shadow-none"
+                    className="w-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-violet-600/10 dark:shadow-none"
                 >
                     {isGenerating ? 'Synthesizing...' : isHumanizing ? 'Refining Tone...' : 'Generate Elite post'}
                 </Button>
             </div>
         </aside>
     );
-};
+};};

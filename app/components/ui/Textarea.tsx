@@ -33,7 +33,7 @@ export const Textarea = ({
                 className={`
           w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 
           rounded-none pl-6 pr-4 py-3 text-sm transition-all duration-200
-          focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500
+          focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500
           placeholder:text-slate-400 disabled:opacity-50 disabled:bg-slate-50
           dark:disabled:bg-slate-950 min-h-[120px] resize-none font-medium
           text-black dark:text-white shadow-sm

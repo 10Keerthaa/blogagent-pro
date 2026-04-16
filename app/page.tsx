@@ -79,7 +79,7 @@ const DashboardContent = () => {
   );
 };
 
-export default function BlogAgentPro() {
+export default function TenXBlogagent() {
   return (
     <DashboardProvider>
       <DashboardContent />

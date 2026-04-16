@@ -112,7 +112,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
     const toolbarContent = (
         <div
             ref={toolbarRef}
-            className="fixed z-[9999] pointer-events-auto -translate-x-1/2 flex items-center gap-1.5 p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-indigo-100/50 dark:border-indigo-900/50 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200 select-none"
+            className="fixed z-[9999] pointer-events-auto -translate-x-1/2 flex items-center gap-1.5 p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-violet-100/50 dark:border-violet-900/50 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200 select-none"
             style={{
                 top: finalTop,
                 left: finalLeft
@@ -169,16 +169,16 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     <button
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => handleAiAction('rephrase')}
-                        className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-lg transition-colors group flex items-center gap-2 disabled:opacity-50"
+                        className="p-2 hover:bg-violet-50 dark:hover:bg-violet-950/30 rounded-lg transition-colors group flex items-center gap-2 disabled:opacity-50"
                         title="AI Re-phrase"
                         disabled={!!loadingAction}
                     >
                         {loadingAction === 'rephrase' ? (
-                            <Loader2 className="w-4 h-4 text-indigo-500 animate-spin" />
+                            <Loader2 className="w-4 h-4 text-violet-500 animate-spin" />
                         ) : (
-                            <Wand2 className="w-4 h-4 text-indigo-500" />
+                            <Wand2 className="w-4 h-4 text-violet-500" />
                         )}
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-500 hidden sm:inline">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-violet-500 hidden sm:inline">
                             {loadingAction === 'rephrase' ? 'Working...' : 'Rephrase'}
                         </span>
                     </button>
@@ -237,19 +237,19 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     className="flex items-center gap-2 px-2 py-1"
                     onMouseDown={(e) => e.preventDefault()}
                 >
-                    <LinkIcon className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />
+                    <LinkIcon className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
                     <input
                         autoFocus
                         type="url"
                         placeholder="Paste URL..."
-                        className="bg-transparent border-none outline-none text-xs text-slate-700 dark:text-slate-200 w-44 placeholder:text-slate-400 border-b border-indigo-200 pb-0.5"
+                        className="bg-transparent border-none outline-none text-xs text-slate-700 dark:text-slate-200 w-44 placeholder:text-slate-400 border-b border-violet-200 pb-0.5"
                         value={linkUrl}
                         onChange={(e) => setLinkUrl(e.target.value)}
                     />
                     <button
                         type="submit"
                         onMouseDown={(e) => e.preventDefault()}
-                        className="p-1.5 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 flex items-center justify-center"
+                        className="p-1.5 bg-violet-500 text-white rounded-md hover:bg-violet-600 flex items-center justify-center"
                     >
                         <Check className="w-3.5 h-3.5" />
                     </button>

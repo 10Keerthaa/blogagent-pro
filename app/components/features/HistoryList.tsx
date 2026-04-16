@@ -99,7 +99,7 @@ export const HistoryList = () => {
                                             href={selectedHistoryItem.url} 
                                             target="_blank" 
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 text-indigo-500 hover:text-indigo-600 font-bold transition-colors"
+                                            className="inline-flex items-center gap-2 text-violet-500 hover:text-violet-600 font-bold transition-colors"
                                         >
                                             View Live Article <ExternalLink className="w-4 h-4" />
                                         </a>
@@ -118,8 +118,8 @@ export const HistoryList = () => {
                                     <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Reviewed By</p>
                                     <div className="flex flex-wrap gap-3">
                                         {selectedHistoryItem.auditLog.map((log: any, i: number) => (
-                                            <div key={i} className="flex items-center justify-between gap-8 px-5 py-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 w-full">
-                                                <p className="text-sm font-bold text-indigo-700 dark:text-indigo-300">{log.email}</p>
+                                            <div key={i} className="flex items-center justify-between gap-8 px-5 py-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 border border-violet-100 dark:border-violet-900/50 w-full">
+                                                <p className="text-sm font-bold text-violet-700 dark:text-violet-300">{log.email}</p>
                                                 <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">{formatDateTime(log.timestamp)}</span>
                                             </div>
                                         ))}
@@ -181,15 +181,15 @@ export const HistoryList = () => {
                                 key={idx}
                                 hoverable
                                 onClick={() => handleSelectHistoryItem(item)}
-                                className="p-8 group border-slate-200 dark:border-slate-800 border-l-4 border-l-transparent hover:border-l-indigo-500 transition-all duration-500 shadow-sm cursor-pointer"
+                                className="p-8 group border-slate-200 dark:border-slate-800 border-l-4 border-l-transparent hover:border-l-violet-500 transition-all duration-500 shadow-sm cursor-pointer"
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-7">
-                                        <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/50 flex items-center justify-center group-hover:bg-indigo-600 transition-all duration-500 shadow-sm">
-                                            <Globe className="w-8 h-8 text-indigo-500 group-hover:text-white transition-colors" />
+                                        <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 transition-all duration-500 shadow-sm">
+                                            <Globe className="w-8 h-8 text-violet-500 group-hover:text-white transition-colors" />
                                         </div>
                                         <div className="space-y-2">
-                                            <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors tracking-tight leading-tight">
+                                            <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight leading-tight">
                                                 {item.title}
                                             </h3>
                                             <div className="flex items-center gap-6">
@@ -203,20 +203,19 @@ export const HistoryList = () => {
                                                         by {item.authorEmail}
                                                     </span>
                                                 )}
-                                            </div>
-                                            {item.auditLog && item.auditLog.length > 0 && (
+                                            </div>                                             {item.auditLog && item.auditLog.length > 0 && (
                                                 <div className="flex items-center gap-2 flex-wrap mt-1">
                                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Reviewed by:</span>
                                                     {item.auditLog.map((log: any, i: number) => (
                                                         <span
                                                             key={i}
-                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50"
+                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-300 border border-violet-100 dark:border-violet-900/50"
                                                         >
                                                             {log.email}
                                                         </span>
                                                     ))}
                                                 </div>
-                                            )}
+                                            )})}
                                             {item.publishedBy && (
                                                 <div className="flex items-center gap-2 flex-wrap mt-1">
                                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Published by:</span>
@@ -242,8 +241,8 @@ export const HistoryList = () => {
                         );
                     })
                 ) : (
-                    <div className="flex flex-col items-center justify-center p-24 text-center bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/10 dark:to-purple-950/10 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800/50 shadow-sm">
-                        <div className="w-20 h-20 rounded-3xl bg-white dark:bg-slate-900 flex items-center justify-center mb-8 shadow-xl shadow-indigo-100 dark:shadow-none">
+                    <div className="flex flex-col items-center justify-center p-24 text-center bg-gradient-to-br from-violet-50/50 to-fuchsia-50/50 dark:from-violet-950/10 dark:to-fuchsia-950/10 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800/50 shadow-sm">
+                        <div className="w-20 h-20 rounded-3xl bg-white dark:bg-slate-900 flex items-center justify-center mb-8 shadow-xl shadow-violet-100 dark:shadow-none">
                             <Globe className="w-9 h-9 text-slate-200 dark:text-slate-700" />
                         </div>
                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Launch Protocol Pending</h3>

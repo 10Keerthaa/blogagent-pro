@@ -19,10 +19,10 @@
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
-  --accent: #4f46e5;
-  /* Indigo-600 */
-  --accent-light: #6366f1;
-  --accent-soft: rgba(79, 70, 229, 0.05);
+  --accent: #8b5cf6;
+  /* Violet-500 */
+  --accent-light: #a78bfa;
+  --accent-soft: rgba(139, 92, 246, 0.05);
 
   /* Status Colors */
   --status-pending: #f59e0b;

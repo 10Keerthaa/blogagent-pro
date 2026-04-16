@@ -309,7 +309,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                             if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
                                 const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                                 const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
-                                paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                                paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium">$1</a>`);
                                 usedAnchors.add(matchText.toLowerCase());
                                 currentLinkCount++;
                                 lastLinkWordIndex = globalWordCounter;
@@ -330,7 +330,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                         const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                         const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'i');
                         if (regex.test(paragraph)) {
-                            paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-indigo-300 underline-offset-4 hover:decoration-indigo-600 transition-all font-medium">$1</a>`);
+                            paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium">$1</a>`);
                             usedAnchors.add(phrase.toLowerCase());
                             currentLinkCount++;
                             lastLinkWordIndex = globalWordCounter;
