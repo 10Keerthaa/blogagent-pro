@@ -64,6 +64,40 @@ export async function POST(req: Request) {
       </div>`;
     }
 
+    // Step 2: Sideload Featured Image to WordPress Media Library (for Thumbnails/Featured slot)
+    let featuredMediaId = null;
+    if (imageUrl) {
+      try {
+        console.log("Sideloading Featured Image to WordPress...");
+        const imgRes = await fetch(imageUrl);
+        if (imgRes.ok) {
+          const imgBuffer = await imgRes.arrayBuffer();
+          const filename = `featured-${Date.now()}.png`;
+
+          const mediaResponse = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
+            method: 'POST',
+            headers: {
+              'Authorization': authHeader,
+              'Content-Type': 'image/png',
+              'Content-Disposition': `attachment; filename="${filename}"`,
+            },
+            body: Buffer.from(imgBuffer)
+          });
+
+          if (mediaResponse.ok) {
+            const mediaData = await mediaResponse.json();
+            featuredMediaId = mediaData.id;
+            console.log(`✅ Media Sideloaded: ID ${featuredMediaId}`);
+          } else {
+             const mediaErr = await mediaResponse.text();
+             console.error("❌ WordPress Media Upload Failed:", mediaErr.substring(0, 500));
+          }
+        }
+      } catch (sideloadErr) {
+        console.error("⚠️ Sideloading failed (continuing without ID):", sideloadErr);
+      }
+    }
+
     // Step 3: Create the Post on WordPress
     const postResponse = await fetch(`${wpUrl}/wp-json/wp/v2/posts`, {
       method: 'POST',
@@ -76,6 +110,7 @@ export async function POST(req: Request) {
         content: finalContent,
         excerpt: metaDesc,
         status: 'publish',
+        featured_media: featuredMediaId, // 🔥 KEY FIX: Assign the sideloaded ID here
         rank_math_description: metaDesc,
         categories: categories || [253] // Default to Blog if missing
       })
