@@ -10,7 +10,7 @@ import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
     FileText, Calendar, ArrowLeft, ArrowRight, X, CheckCircle, XCircle, Zap, Sparkles, Users,
-    AlertCircle, Shield
+    AlertCircle, Shield, Loader2
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 import { Portal } from '../ui/Portal';
