@@ -168,30 +168,35 @@ export const ReviewList = () => {
 
     if (selectedReviewDraft) {
         return (
-            /* ── THE TRAPPED SCROLL ARCHITECTURE ── */
-            <div className="flex-1 h-full flex flex-col bg-slate-50 relative overflow-hidden animate-fadeIn">
+            /* ── THE EDITOR-MIRROR TRAPPED ARCHITECTURE ── */
+            <div className="flex-1 h-full flex flex-col bg-slate-100/30 dark:bg-[#0a0a0a] relative overflow-hidden animate-fadeIn">
                 
-                {/* 1. FIXED TOP HEADERArea */}
-                <div className="h-16 bg-white border-b border-slate-200 flex items-center px-6 justify-between flex-shrink-0 z-10">
-                    <button 
-                        onClick={() => setSelectedReviewDraft(null)}
-                        className="flex items-center gap-2 text-[10px] font-black tracking-widest uppercase text-slate-500 hover:text-slate-900 transition-colors cursor-pointer group"
-                    >
-                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Queue
-                    </button>
-                    <div className="px-4 py-1.5 bg-violet-100 text-violet-700 rounded-lg text-[10px] font-black tracking-widest uppercase">
-                        Editorial Review
+                {/* 1. FIXED TOP TERMINAL HEADER — Pinned at the very top of the 60% panel */}
+                <div className="h-16 bg-white dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-slate-800 flex items-center px-8 justify-between flex-shrink-0 z-20 shadow-sm transition-all duration-300">
+                    <div className="flex items-center gap-8">
+                        <button 
+                            onClick={() => setSelectedReviewDraft(null)}
+                            className="flex items-center gap-2.5 text-[11px] font-black tracking-[0.2em] uppercase text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer group"
+                        >
+                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> 
+                            Back to Queue
+                        </button>
+                        <div className="h-4 w-px bg-slate-200 dark:bg-slate-800" />
+                        <div className="px-4 py-1.5 bg-violet-600 text-white rounded-lg text-[10px] font-black tracking-widest uppercase shadow-lg shadow-violet-200 dark:shadow-none">
+                            Editorial Review
+                        </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <div className="flex flex-col items-start -mt-1">
-                            <span className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-1">WordPress Category</span>
-                            <div className="flex items-center gap-2 border border-slate-200 rounded-xl px-3 py-1.5 bg-slate-50 group hover:border-violet-200 transition-all">
+
+                    <div className="flex items-center gap-6">
+                        <div className="flex flex-col items-end">
+                            <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-slate-400 mb-1 pointer-events-none">WordPress Category</span>
+                            <div className="flex items-center gap-2 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2 bg-slate-50 dark:bg-slate-900 group hover:border-violet-300 dark:hover:border-violet-700 transition-all shadow-sm">
                                 <Lock className="w-3.5 h-3.5 text-slate-400 group-hover:text-violet-500 transition-colors" />
                                 <span className="text-[11px] font-bold text-slate-400">Blog /</span>
                                 <select 
                                     value={selectedCategories[0] || ''}
                                     onChange={(e) => setSelectedCategories(e.target.value ? [Number(e.target.value)] : [])}
-                                    className="bg-transparent text-[11px] font-extrabold text-slate-700 outline-none cursor-pointer focus:ring-0 select-none"
+                                    className="bg-transparent text-[11px] font-extrabold text-slate-700 dark:text-slate-200 outline-none cursor-pointer focus:ring-0 select-none appearance-none min-w-[140px]"
                                 >
                                     <option value="">Select Category</option>
                                     {CATEGORIES.map(cat => (
@@ -203,58 +208,57 @@ export const ReviewList = () => {
                     </div>
                 </div>
 
-                {/* 2. SCROLLABLE MIDDLE CANVAS — Exactly as AI Studio Source */}
-                <div className="flex-1 overflow-y-auto p-8 lg:p-12 custom-scrollbar">
-                    <div className="max-w-4xl mx-auto bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100/60 overflow-hidden mb-12 animate-slideUp">
+                {/* 2. SCROLLABLE CINEMATIC CANVAS — Document Box sitter */}
+                <div className="flex-1 overflow-y-auto p-12 lg:p-16 custom-scrollbar scroll-smooth">
+                    <div className="max-w-4xl mx-auto bg-white dark:bg-slate-950 rounded-[3rem] shadow-[0_32px_80px_-16px_rgba(0,0,0,0.1)] dark:shadow-none border border-slate-100/60 dark:border-slate-800/60 overflow-hidden mb-16 animate-slideUp">
                         
-                        {/* THE HERO CANVAS — Exactly min-h-[360px] justify-end p-12 lg:p-16 */}
-                        <div className="relative text-white p-12 lg:p-16 overflow-hidden min-h-[360px] lg:min-h-[460px] flex flex-col justify-end group">
+                        {/* THE HERO BLOCK — Optimized Baseline Layout */}
+                        <div className="relative text-white p-16 lg:p-20 overflow-hidden min-h-[420px] lg:min-h-[500px] flex flex-col justify-end group">
                             {selectedReviewDraft.imageUrl ? (
                                 <>
                                     <img 
                                         src={selectedReviewDraft.imageUrl}
                                         alt={selectedReviewDraft.title}
-                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-110"
                                     />
-                                    {/* AI Studio Elite Overlay */}
-                                    <div className="absolute inset-0 bg-violet-700/50 mix-blend-multiply" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+                                    {/* Brand Visual Stack */}
+                                    <div className="absolute inset-0 bg-violet-900/60 mix-blend-multiply" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
                                     
-                                    <div className="relative z-10 w-full">
-                                        {/* Tags at Top Left */}
-                                        <div className="flex items-center gap-3 mb-auto absolute top-[-2rem] lg:top-[-4rem]">
-                                            <div className="bg-violet-600 px-5 py-2 text-[10px] font-black uppercase tracking-widest shadow-2xl">
-                                                Blog
-                                            </div>
-                                            <div className="bg-black/60 backdrop-blur-md px-5 py-2 text-[10px] font-black uppercase tracking-widest border border-white/10 shadow-2xl">
-                                                {getCategoryName()}
-                                            </div>
+                                    {/* Header Overlays (Pinned to top within padding) */}
+                                    <div className="absolute top-16 left-16 flex items-center gap-4">
+                                        <div className="bg-violet-600 px-6 py-2.5 text-white font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl">
+                                            Blog
                                         </div>
-
-                                        <div className="mt-8 space-y-6">
-                                            <div className="inline-flex items-center gap-3 px-3.5 py-1.5 bg-white/10 backdrop-blur-md rounded-lg border border-white/20">
-                                                <FileText className="w-4 h-4 text-white/80" />
-                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Production Draft</span>
-                                            </div>
-                                            <textarea
-                                                value={selectedReviewDraft.title}
-                                                onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                                                className="w-full bg-transparent border-none p-0 text-3xl lg:text-5xl font-black leading-tight drop-shadow-2xl focus:ring-0 resize-none scroll-hidden"
-                                                rows={2}
-                                            />
+                                        <div className="bg-black/60 backdrop-blur-xl px-6 py-2.5 text-white font-black text-[10px] uppercase tracking-[0.2em] border border-white/10 shadow-2xl">
+                                            {getCategoryName()}
                                         </div>
                                     </div>
 
-                                    {/* Logo Pill */}
-                                    <div className="absolute bottom-12 right-12 z-20">
-                                        <div className="bg-white p-4 rounded-xl shadow-2xl">
+                                    {/* Baseline Content Title */}
+                                    <div className="relative z-10 w-full animate-slideUp">
+                                        <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 mb-10">
+                                            <FileText className="w-4 h-4 text-white/80" />
+                                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Production Draft</span>
+                                        </div>
+                                        <textarea
+                                            value={selectedReviewDraft.title}
+                                            onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
+                                            className="w-full bg-transparent border-none p-0 text-4xl lg:text-6xl font-black leading-[1.1] text-white focus:ring-0 resize-none scroll-hidden drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                                            rows={2}
+                                        />
+                                    </div>
+
+                                    {/* Signature 10xDS Logo (Bottom Right) */}
+                                    <div className="absolute bottom-16 right-16 z-20 transition-transform hover:scale-110 duration-500">
+                                        <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-2xl">
                                             <img src="/10xDS.png" alt="logo" className="h-10 lg:h-12 w-auto object-contain" />
                                         </div>
                                     </div>
                                 </>
                             ) : (
-                                <div className="absolute inset-0 bg-violet-700 flex flex-col justify-end p-16">
-                                    <div className="absolute top-0 right-0 w-96 h-96 bg-violet-500 rounded-full blur-[100px] opacity-40 animate-pulse" />
+                                <div className="absolute inset-0 bg-violet-600 flex flex-col justify-end p-20">
+                                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-[160px] animate-pulse" />
                                     <textarea
                                         value={selectedReviewDraft.title}
                                         onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
@@ -265,8 +269,8 @@ export const ReviewList = () => {
                             )}
                         </div>
                         
-                        {/* DOCUMENT BODY Wrapper — Prose text-lg text-slate-700 */}
-                        <div className="p-12 lg:p-16 pb-24 relative bg-white">
+                        {/* DYNAMIC DOCUMENT CONTENT Wrapper */}
+                        <div className="p-16 lg:p-20 lg:pt-24 relative bg-white dark:bg-slate-950">
                             {selectionRect && (
                                 <FloatingToolbar
                                     isVisible={isToolbarVisible}
@@ -288,43 +292,43 @@ export const ReviewList = () => {
                                     setIsEditorFocused(false);
                                     handleSaveManualEdits({ ...selectedReviewDraft, content: editorRef.current?.innerHTML || '' });
                                 }}
-                                className="outline-none prose prose-slate prose-lg lg:prose-xl max-w-none text-slate-700 leading-relaxed font-sans"
+                                className="outline-none prose prose-slate prose-lg lg:prose-xl dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed font-sans min-h-[400px]"
                             />
 
                             {/* Infographic Logic */}
                             {selectedReviewDraft.infographicUrl && (
-                                <div className="mt-20 pt-16 border-t border-slate-100">
-                                    <div className="flex items-center justify-between mb-10">
-                                        <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Vertical Analysis</span>
+                                <div className="mt-24 pt-20 border-t border-slate-100 dark:border-slate-800">
+                                    <div className="flex items-center justify-between mb-12">
+                                        <span className="text-[12px] font-black text-slate-400 uppercase tracking-[0.4em] select-none">Executive Infographic</span>
                                         <Button 
                                             variant="ghost" 
                                             size="sm" 
                                             onClick={() => setIsRefiningVisual(!isRefiningVisual)}
-                                            className="text-[10px] uppercase font-black tracking-widest text-violet-700 border-violet-100 border px-5"
+                                            className="text-[10px] uppercase font-black tracking-widest text-violet-600 border-violet-100/50 border px-6 h-10 rounded-xl"
                                         >
-                                            {isRefiningVisual ? 'Close' : 'Refine Visual'}
+                                            {isRefiningVisual ? 'Cancel Refine' : 'Refine Visual'}
                                         </Button>
                                     </div>
-                                    <div className="space-y-10">
+                                    <div className="space-y-12">
                                         {isRefiningVisual && (
-                                            <div className="bg-slate-50 p-8 space-y-5 rounded-2xl animate-fadeIn border border-slate-200">
+                                            <div className="bg-slate-50 dark:bg-slate-900/50 p-10 space-y-6 rounded-[2rem] animate-fadeIn border border-slate-200 dark:border-slate-800 shadow-inner">
                                                 <Textarea
                                                     value={infographicFeedback}
                                                     onChange={(e) => setInfographicFeedback(e.target.value)}
-                                                    placeholder="Specify design changes..."
-                                                    className="w-full min-h-[120px] bg-white border-slate-200"
+                                                    placeholder="Specify design changes (e.g., 'Make colors more subtle')..."
+                                                    className="w-full min-h-[140px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-sm"
                                                 />
                                                 <Button
                                                     variant="primary"
                                                     onClick={() => handleGenerateInfographic(infographicFeedback)}
                                                     isLoading={isInfographicRefining}
-                                                    className="w-full h-14 bg-violet-600 text-xs font-black tracking-widest uppercase rounded-xl"
+                                                    className="w-full h-14 bg-violet-600 hover:bg-violet-700 text-[11px] font-black tracking-widest uppercase rounded-xl shadow-xl shadow-violet-200 dark:shadow-none"
                                                 >
-                                                    Update Graphic Artifact
+                                                    Regenerate Visual Artifact
                                                 </Button>
                                             </div>
                                         )}
-                                        <div className="shadow-2xl rounded-3xl overflow-hidden border border-slate-100">
+                                        <div className="shadow-[0_48px_100px_-24px_rgba(0,0,0,0.15)] rounded-[3rem] overflow-hidden border border-slate-100 dark:border-slate-800 transition-transform hover:scale-[1.01] duration-700">
                                             <img src={selectedReviewDraft.infographicUrl} alt="infographic" className="w-full h-auto" />
                                         </div>
                                     </div>
@@ -334,61 +338,61 @@ export const ReviewList = () => {
                     </div>
                 </div>
 
-                {/* 3. DOCKED ACTIONS BAR (Sticky Bottom) — Exactly py-3.5 and py-4 */}
-                <div className="flex-shrink-0 bg-white border-t border-slate-200 z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.03)] flex flex-col">
+                {/* 3. DOCKED BOTTOM CONTROL TERMINAL — px-8 and py-3.5/py-4 */}
+                <div className="flex-shrink-0 bg-white dark:bg-[#0a0a0a] border-t border-slate-200 dark:border-slate-800 z-30 shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.05)] flex flex-col">
                     
-                    {/* Row 1: AI Editor — px-8 py-3.5 */}
-                    <div className="px-8 py-3.5 bg-violet-50/80 border-b border-violet-100 flex items-center gap-5">
+                    {/* Compact AI Context Row — py-3.5 */}
+                    <div className="px-8 py-3.5 bg-violet-50/60 dark:bg-violet-950/20 border-b border-violet-100 dark:border-violet-900/40 flex items-center gap-6">
                         <div className="flex items-center gap-3 shrink-0">
-                            <span className="w-2.5 h-2.5 rounded-full bg-violet-500 animate-pulse shadow-[0_0_8px_rgba(139,92,246,0.5)]"></span>
-                            <span className="text-[11px] font-black text-violet-900 uppercase tracking-widest">AI Editor</span>
+                            <div className="w-2.5 h-2.5 rounded-full bg-violet-600 animate-pulse shadow-[0_0_12px_rgba(124,58,237,0.6)]"></div>
+                            <span className="text-[11px] font-black text-violet-900 dark:text-violet-400 uppercase tracking-widest">AI Context Refine</span>
                         </div>
                         <input 
                             type="text" 
-                            placeholder="E.g., Rewrite the second paragraph to sound more professional..."
+                            placeholder="Instruct AI to modify specific parts (e.g., 'Make the conclusion more inspiring')"
                             value={feedback}
                             onChange={(e) => setFeedback(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleApplyReviewFeedback()}
-                            className="flex-1 bg-white border border-violet-200 rounded-xl px-5 h-12 text-sm focus:ring-2 focus:ring-violet-500/10 transition-all outline-none"
+                            className="flex-1 bg-white dark:bg-slate-900 border border-violet-200 dark:border-violet-800 rounded-2xl px-6 h-12 text-sm font-medium text-slate-700 dark:text-slate-200 focus:ring-4 focus:ring-violet-500/5 transition-all outline-none"
                         />
                         <button 
                             onClick={handleApplyReviewFeedback}
                             disabled={isApplyingFeedback || !feedback}
-                            className="px-8 h-12 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-black text-[10px] tracking-widest uppercase rounded-xl transition-all shadow-lg active:scale-95"
+                            className="px-10 h-12 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-black text-[10px] tracking-[0.2em] uppercase rounded-xl transition-all shadow-xl active:scale-95 shrink-0"
                         >
                             {isApplyingFeedback ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Apply Refinement'}
                         </button>
                     </div>
 
-                    {/* Row 2: Audit Actions — px-8 py-4 */}
-                    <div className="px-8 py-4 bg-slate-50/50 flex items-center justify-between">
+                    {/* Final Audit Row — py-4 */}
+                    <div className="px-8 py-4 bg-slate-50/40 dark:bg-slate-900/40 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <button 
                                 onClick={() => setIsPreviewOpen(true)}
-                                className="px-8 h-12 bg-white border border-slate-200 hover:border-slate-300 text-slate-600 font-bold text-[10px] tracking-widest uppercase rounded-xl shadow-sm transition-all active:scale-95"
+                                className="px-10 h-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-slate-400 text-slate-600 dark:text-slate-300 font-bold text-[10px] tracking-widest uppercase rounded-2xl shadow-sm transition-all active:scale-95"
                             >
-                                Preview
+                                Preview Mode
                             </button>
                             <button 
                                 onClick={() => handleRejectDraft(selectedReviewDraft.id)}
                                 disabled={isRejecting}
-                                className="px-8 h-12 bg-red-50 text-red-600 hover:bg-red-100 border border-red-100 font-bold text-[10px] tracking-widest uppercase rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-2"
+                                className="px-10 h-12 bg-red-50 dark:bg-red-950/20 text-red-600 hover:bg-red-100 border border-red-100 dark:border-red-900/40 font-bold text-[10px] tracking-widest uppercase rounded-2xl transition-all shadow-sm active:scale-95 flex items-center gap-3"
                             >
                                 {isRejecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
-                                Reject
+                                Reject Draft
                             </button>
                         </div>
                         <div className="flex items-center gap-4">
                             <button 
                                 onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)}
-                                className="px-8 h-12 bg-violet-50 hover:bg-violet-100 text-violet-700 font-black text-[10px] tracking-widest uppercase rounded-xl transition-all"
+                                className="px-10 h-12 bg-violet-50 dark:bg-violet-900/30 hover:bg-violet-100 text-violet-700 dark:text-violet-300 font-black text-[10px] tracking-widest uppercase rounded-2xl transition-all"
                             >
                                 Mark Reviewed
                             </button>
                             <button 
                                 onClick={() => handleApproveDraft(selectedReviewDraft)}
                                 disabled={isPublished}
-                                className="px-12 h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] tracking-widest uppercase rounded-xl shadow-xl active:scale-95 flex items-center gap-2"
+                                className="px-12 h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] tracking-[0.2em] uppercase rounded-2xl shadow-2xl active:scale-95 flex items-center gap-3"
                             >
                                 {isPublished ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
                                 Approve & Publish
@@ -400,73 +404,76 @@ export const ReviewList = () => {
         );
     }
 
-    /* ── QUEUE VIEW (Same as before) ── */
+    /* ── QUEUE LISTING View ── */
     return (
-        <div className="animate-fadeIn w-full space-y-10 pb-24 px-4 lg:px-8">
+        <div className="animate-fadeIn w-full space-y-12 pb-32 px-4 lg:px-12">
             <div className="flex items-center justify-between mb-2">
-                <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
+                <h2 className="text-[12px] font-black tracking-[0.3em] text-slate-400 uppercase pointer-events-none">Editorial Workflow Buffer ({filteredDrafts?.length || 0})</h2>
             </div>
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 gap-8">
                 {isFetchingDrafts || filteredDrafts === null ? (
                     Array.from({ length: 3 }).map((_, i) => (
-                        <div key={i} className="flex gap-6 items-center p-8 bg-white rounded-3xl border border-slate-200 shadow-sm animate-pulse">
-                            <Skeleton className="w-16 h-16 rounded-2xl shrink-0" /><div className="flex-1 space-y-3"><Skeleton className="h-5 w-2/3" /><Skeleton className="h-3 w-1/4" /></div>
+                        <div key={i} className="flex gap-8 items-center p-10 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse">
+                            <Skeleton className="w-20 h-20 rounded-3xl shrink-0" /><div className="flex-1 space-y-4"><Skeleton className="h-6 w-1/3" /><Skeleton className="h-4 w-1/4" /></div>
                         </div>
                     ))
                 ) : filteredDrafts.length > 0 ? (
                     filteredDrafts.map((draft) => (
-                        <Card key={draft.id} hoverable className="p-8 cursor-pointer group border-slate-200" onClick={() => handleSelectReviewDraft(draft.id)}>
+                        <Card key={draft.id} hoverable className="p-10 cursor-pointer group border-slate-200 dark:border-slate-800 rounded-[2.5rem] overflow-hidden" onClick={() => handleSelectReviewDraft(draft.id)}>
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-7">
-                                    <div className="w-16 h-16 rounded-3xl bg-violet-50 border border-violet-100 flex items-center justify-center group-hover:bg-violet-600 transition-all duration-500 shadow-sm">
-                                        <FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" />
+                                <div className="flex items-center gap-8">
+                                    <div className="w-20 h-20 rounded-[2rem] bg-violet-50 dark:bg-violet-900/10 border border-violet-100 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 transition-all duration-700 shadow-inner">
+                                        <FileText className="w-10 h-10 text-violet-400 group-hover:text-white transition-colors" />
                                     </div>
-                                    <div className="space-y-2">
-                                        <h3 className="text-lg font-bold text-slate-900 group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3>
-                                        <div className="flex items-center gap-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                                            <Calendar className="w-3.5 h-3.5" /> {new Date(draft.createdAt || draft.created_at).toLocaleDateString()}
+                                    <div className="space-y-3">
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3>
+                                        <div className="flex items-center gap-8 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                            <span className="flex items-center gap-2"><Calendar className="w-4 h-4" /> {new Date(draft.createdAt || draft.created_at).toLocaleDateString()}</span>
                                             {draft.authorEmail && <span className="text-violet-400 lowercase italic font-medium">by {draft.authorEmail}</span>}
-                                            <Badge variant="outline" className="px-3">DRAFT</Badge>
+                                            <Badge variant="outline" className="px-4 py-1 rounded-full border-slate-200 dark:border-slate-800">Ready</Badge>
                                         </div>
                                     </div>
                                 </div>
-                                <ArrowRight className="w-6 h-6 text-slate-300 group-hover:text-violet-500 transition-all group-hover:translate-x-2" />
+                                <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-8 group-hover:translate-x-0">
+                                    <span className="text-[11px] font-black uppercase tracking-widest text-violet-600">Enter Terminal</span>
+                                    <ArrowRight className="w-6 h-6 text-violet-600" />
+                                </div>
                             </div>
                         </Card>
                     ))
                 ) : (
-                    <div className="bg-white/40 border-2 border-dashed border-violet-100 rounded-[2.5rem] p-16 text-center">
-                        <Zap className="w-12 h-12 text-violet-300 mx-auto mb-6 animate-pulse" />
-                        <h3 className="text-xl font-bold text-slate-900 mb-2 uppercase tracking-wide">Editorial Buffer Empty</h3>
-                        <p className="text-sm text-slate-500 italic">Systems are optimized and waiting for high-intent generations.</p>
+                    <div className="bg-white/40 dark:bg-slate-900/20 border-2 border-dashed border-violet-100 dark:border-violet-900/40 rounded-[3rem] p-24 text-center">
+                        <Zap className="w-16 h-16 text-violet-200 dark:text-violet-900 mx-auto mb-8 animate-pulse" />
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3 uppercase tracking-widest">Workflow Synchronized</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 italic max-w-sm mx-auto font-medium">No pending drafts detected in the editorial archive.</p>
                     </div>
                 )}
             </div>
 
-            {/* PREVIEW MODAL */}
+            {/* PREVIEW INTERFACE PORTAL */}
             {isPreviewOpen && selectedReviewDraft && (
                 <Portal>
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn">
-                        <div className="bg-white w-[96%] max-w-[1440px] h-[94vh] flex flex-col rounded-3xl shadow-2xl relative animate-scaleIn overflow-hidden">
-                            <button onClick={() => setIsPreviewOpen(false)} className="absolute top-8 right-8 p-3 bg-slate-100 hover:bg-slate-200 rounded-full transition-all z-30 shadow-sm">
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-md animate-fadeIn">
+                        <div className="bg-white dark:bg-slate-950 w-[96%] max-w-[1500px] h-[94vh] flex flex-col rounded-[3rem] shadow-2xl relative animate-scaleIn overflow-hidden border border-white/10">
+                            <button onClick={() => setIsPreviewOpen(false)} className="absolute top-10 right-10 p-4 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-all z-30 shadow-xl">
                                 <X className="w-6 h-6 text-slate-500" />
                             </button>
-                            <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-24 flex flex-col items-center">
-                                <div className="max-w-[900px] w-full space-y-20">
-                                    <h1 className="text-4xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-tight text-center">{selectedReviewDraft.title}</h1>
+                            <div className="flex-1 overflow-y-auto custom-scrollbar p-16 lg:p-32 flex flex-col items-center bg-slate-50 dark:bg-[#060606]">
+                                <div className="max-w-[1000px] w-full space-y-24">
+                                    <h1 className="text-5xl lg:text-8xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.05] text-center drop-shadow-sm">{selectedReviewDraft.title}</h1>
                                     {selectedReviewDraft.imageUrl && (
-                                        <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl">
+                                        <div className="relative rounded-[3.5rem] overflow-hidden shadow-[0_64px_120px_-32px_rgba(0,0,0,0.3)] border border-slate-200 dark:border-slate-800">
                                              <img src={selectedReviewDraft.imageUrl} className="w-full h-auto" alt="preview" />
-                                             <div className="absolute inset-0 bg-violet-700/50 mix-blend-multiply" />
+                                             <div className="absolute inset-0 bg-violet-900/40 mix-blend-multiply" />
                                         </div>
                                     )}
-                                    <article dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }} className="prose prose-stone prose-xl max-w-none text-slate-800 leading-relaxed" />
+                                    <article dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }} className="prose prose-stone prose-2xl dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 leading-[1.6] pb-32" />
                                 </div>
                             </div>
-                            <div className="p-10 border-t border-slate-100 flex justify-end gap-5 bg-slate-50/50">
-                                <Button variant="secondary" onClick={() => setIsPreviewOpen(false)} className="px-10 h-16 rounded-2xl border-slate-200 font-bold uppercase tracking-widest text-[11px]">Keep Editing</Button>
-                                <Button variant="primary" onClick={() => { handleApproveDraft(selectedReviewDraft); setIsPreviewOpen(false); }} isLoading={isPublished} className="px-12 h-16 bg-emerald-600 hover:bg-emerald-700 rounded-2xl shadow-xl font-black uppercase tracking-[0.2em] text-[11px]">
-                                    <CheckCircle className="w-5 h-5 mr-3" />Approve & Go Live
+                            <div className="p-12 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-6 bg-white dark:bg-[#0a0a0a]">
+                                <Button variant="secondary" onClick={() => setIsPreviewOpen(false)} className="px-12 h-16 rounded-[1.5rem] border-slate-200 dark:border-slate-800 font-bold uppercase tracking-widest text-[11px] shadow-sm">Continue Review</Button>
+                                <Button variant="primary" onClick={() => { handleApproveDraft(selectedReviewDraft); setIsPreviewOpen(false); }} isLoading={isPublished} className="px-16 h-16 bg-emerald-600 hover:bg-emerald-700 rounded-[1.5rem] shadow-2xl shadow-emerald-600/20 font-black uppercase tracking-[0.3em] text-[11px]">
+                                    <CheckCircle className="w-5 h-5 mr-4" />Confirm & Go Live
                                 </Button>
                             </div>
                         </div>
