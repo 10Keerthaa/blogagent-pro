@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useDashboard } from '../context/DashboardContext';
-import { User, Shield, BarChart3, Users, ChevronDown } from 'lucide-react';
+import { User, Shield, BarChart3, Users, ChevronDown, Zap } from 'lucide-react';
 import { TeamManagement } from './TeamManagement';
 import { PerformanceManagement } from './PerformanceManagement';
 
