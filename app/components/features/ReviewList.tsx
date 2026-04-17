@@ -185,30 +185,30 @@ export const ReviewList = () => {
     return (
         <div className="relative">
             {selectedReviewDraft ? (
-                // 3-SECTION STICKY-WRAP: (1) fixed top bar, (2) scrollable canvas, (3) docked bottom
-                <div className="animate-fadeIn flex flex-col h-full min-h-0 w-full">
-
-                    {/* ── 1. TOP BAR ── */}
-                    <div className="flex-shrink-0 z-30 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800">
-                        <div className="flex items-center justify-between h-16 px-8">
-                            <div className="flex-1 flex justify-start">
-                                <button
-                                    onClick={() => { setSelectedReviewDraft(null); handleClearForm(); }}
-                                    className="flex items-center gap-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-bold text-[11px] uppercase tracking-widest transition-colors"
+                <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-10`}>
+                    {/* Header Actions */}
+                    <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
+                        <div className="w-full flex items-center justify-between py-8 pr-6">
+                            <div className="flex items-center gap-6">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                        setSelectedReviewDraft(null);
+                                        handleClearForm();
+                                    }}
+                                    className="group w-[150px] flex items-center justify-start gap-2 h-7 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-800 bg-transparent text-slate-500 hover:text-violet-600 hover:border-violet-300 dark:hover:border-violet-700 transition-all shadow-none"
                                 >
-                                    <ArrowLeft className="w-4 h-4" />
-                                    Back to Queue
-                                </button>
+                                    <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Back</span>
+                                </Button>
+                                <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
+                                <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
                             </div>
-                            <div className="flex-1 flex justify-center">
-                                <span className="px-4 py-1.5 bg-[#f8f5ff] text-violet-600 font-bold uppercase tracking-widest text-[10px] rounded-md border border-violet-100 dark:bg-violet-900/30 dark:border-violet-800">
-                                    Editorial Review
-                                </span>
-                            </div>
-                            <div className="flex-1 flex justify-end items-center gap-2">
-                                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#94a3b8]">WordPress Category</span>
-                                <div className="min-w-[180px]">
-                                    <CategorySelector
+                            <div className="flex items-center gap-3">
+                                {/* ELITE CATEGORY SELECTOR INTEGRATION */}
+                                <div className="ml-4 min-w-[200px]">
+                                    <CategorySelector 
                                         selectedIds={selectedCategories}
                                         onChange={setSelectedCategories}
                                         readOnly={isReadOnly}
@@ -218,172 +218,198 @@ export const ReviewList = () => {
                         </div>
                     </div>
 
-                    {/* ── 2. SCROLLABLE CANVAS ── */}
-                    <div className="flex-1 overflow-y-auto p-8 custom-scrollbar bg-slate-50 dark:bg-slate-950">
-                        {/* Floating Toolbar */}
+                    {/* Content Section */}
+                    <section className="w-full space-y-10 pr-6 relative">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
                                 rect={selectionRect}
                                 onAction={handleToolbarAction}
                                 isLink={isLinkActive}
-                                onClose={() => { setIsToolbarVisible(false); setSelectionRect(null); }}
+                                onClose={() => {
+                                    setIsToolbarVisible(false);
+                                    setSelectionRect(null);
+                                }}
                             />
                         )}
+                        <Input
+                            label="Editorial Title"
+                            value={selectedReviewDraft.title}
+                            onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
+                            className="text-3xl font-extrabold py-8 px-0 border-none bg-transparent focus:ring-0 focus:border-violet-500 rounded-none border-b border-slate-100 dark:border-slate-800 tracking-tight text-center"
+                        />
 
-                        {/* ── The Centered Document Paper ── */}
-                        <div className="max-w-4xl mx-auto">
-                            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden mb-12 border border-slate-100 dark:border-slate-800">
-
-                                {/* ── Purple Hero Banner ── */}
-                                <div className="bg-violet-700 text-white p-12 lg:p-16 relative overflow-hidden">
-                                    {/* Glow orb */}
-                                    <div className="absolute top-0 right-0 w-96 h-96 bg-violet-500 rounded-full blur-[100px] opacity-50 mix-blend-screen pointer-events-none -mr-48 -mt-48" />
-                                    <div className="relative z-10">
-                                        {/* Category Badges */}
-                                        <div className="flex flex-wrap items-center gap-3 mb-6">
-                                            {(() => {
-                                                const sortedCats = CATEGORIES.filter(c => selectedCategories.includes(c.id)).sort((a, b) => a.id === LOCKED_CATEGORY_ID ? -1 : 1);
-                                                if (sortedCats.length === 0) return <span className="bg-white/20 backdrop-blur-md text-white text-sm font-bold px-4 py-1.5 rounded-lg">Blog</span>;
-                                                return sortedCats.map((cat, idx) => (
-                                                    <React.Fragment key={cat.id}>
-                                                        {idx > 0 && <span className="text-white/60 font-medium text-sm">→</span>}
-                                                        <span className={`${cat.id === LOCKED_CATEGORY_ID ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-md text-white text-sm font-bold px-4 py-1.5 rounded-lg`}>
-                                                            {cat.name}
-                                                        </span>
-                                                    </React.Fragment>
-                                                ));
-                                            })()}
-                                        </div>
-                                        {/* Editable Title */}
-                                        <textarea
-                                            value={selectedReviewDraft.title}
-                                            onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                                            readOnly={isReadOnly}
-                                            rows={2}
-                                            className="w-full bg-transparent border-none resize-none text-[40px] lg:text-[52px] font-bold text-white tracking-tight leading-[1.1] shadow-none focus:outline-none focus:ring-0 placeholder:text-white/50"
-                                        />
-                                        {/* Cover image blended into hero */}
-                                        {selectedReviewDraft.imageUrl && (
-                                            <img src={selectedReviewDraft.imageUrl} className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-20 pointer-events-none" alt="" />
+                        {selectedReviewDraft.imageUrl && (
+                            <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl">
+                                <img
+                                    src={selectedReviewDraft.imageUrl}
+                                    alt={selectedReviewDraft.title}
+                                    className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
+                                    style={{ aspectRatio: '4/3' }}
+                                />
+                                <div
+                                    className="absolute inset-0 z-10 pointer-events-none"
+                                    style={{ backgroundColor: 'rgba(139, 92, 246, 0.45)' }}
+                                />
+                                <div className="absolute inset-0 z-20 pointer-events-none">
+                                    <img
+                                        src="/Blog.png"
+                                        alt="Blog Tag"
+                                        className="absolute top-[40px] left-[40px] w-auto h-10 object-contain"
+                                    />
+                                    <div
+                                        className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
+                                        style={{ top: '100px', lineHeight: '1.3' }}
+                                    >
+                                        {selectedReviewDraft.title.includes(':') ? (
+                                            <>
+                                                <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                    {selectedReviewDraft.title.split(':')[0]}:
+                                                </h1>
+                                                <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
+                                                    {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                {selectedReviewDraft.title}
+                                            </h1>
                                         )}
                                     </div>
-                                </div>
-
-                                {/* ── Content Body ── */}
-                                <div className="p-10 lg:p-12">
-                                    <div
-                                        ref={editorRef}
-                                        contentEditable={!isReadOnly}
-                                        suppressContentEditableWarning
-                                        onFocus={() => setIsEditorFocused(true)}
-                                        onBlur={(e) => {
-                                            setIsEditorFocused(false);
-                                            if (isReadOnly || !selectedReviewDraft) return;
-                                            const html = e.currentTarget.innerHTML;
-                                            const updated = { ...selectedReviewDraft, content: html };
-                                            setSelectedReviewDraft(updated);
-                                            handleSaveManualEdits(updated);
-                                        }}
-                                        className={`text-slate-700 dark:text-slate-300 text-[17px] leading-[1.85] font-normal prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[400px] prose-headings:text-slate-900 dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
-                                        onMouseUp={updateSelectionRect}
-                                        onSelect={updateSelectionRect}
-                                        onKeyUp={(e) => { if (!['Control','Meta','Shift','Alt'].includes(e.key)) updateSelectionRect(); }}
-                                        onKeyDown={(e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); const url = window.prompt('Enter the URL:'); if (url) handleToolbarAction('link', url); } }}
-                                        onMouseDown={(e) => { const target = (e.target as HTMLElement).closest('a'); if (target && (e.ctrlKey || e.metaKey || e.detail === 2)) { e.preventDefault(); window.open(target.href, '_blank'); } }}
+                                    <img
+                                        src="/10xDS.png"
+                                        alt="Brand Logo"
+                                        className="absolute bottom-[40px] right-[40px] w-auto h-14 object-contain"
                                     />
-
-                                    {/* Infographic section */}
-                                    {selectedReviewDraft.infographicUrl && (
-                                        <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
-                                            <div className="flex items-center justify-between mb-8">
-                                                <div className="flex-1" />
-                                                <h4 className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest text-center">Visual Insight</h4>
-                                                <div className="flex-1 flex justify-end">
-                                                    <Button variant="ghost" size="sm" onClick={() => setIsRefiningVisual(!isRefiningVisual)} className="text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:text-violet-400 hover:text-violet-900 dark:hover:text-white flex items-center gap-2">
-                                                        {isRefiningVisual ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
-                                                        {isRefiningVisual ? 'Close' : 'Refine'}
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                            <div className="w-full space-y-6">
-                                                <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isRefiningVisual ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                                    <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-inner mb-6">
-                                                        <Textarea
-                                                            value={infographicFeedback}
-                                                            onChange={(e) => setInfographicFeedback(e.target.value)}
-                                                            placeholder="Describe visual corrections..."
-                                                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 min-h-[100px] text-sm focus:ring-1 focus:ring-violet-500 p-4"
-                                                        />
-                                                        <Button variant="primary" size="sm" onClick={() => handleGenerateInfographic(infographicFeedback)} isLoading={isInfographicRefining} disabled={!infographicFeedback.trim()} className="w-full h-12 rounded-xl bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[10px] font-bold">
-                                                            Regenerate Visual
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm rounded-xl">
-                                                    <img src={selectedReviewDraft.infographicUrl} alt={selectedReviewDraft.title} className="w-full h-auto" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        )}
 
-                    {/* ── 3. DOCKED BOTTOM PANEL ── */}
+                        <div
+                            ref={editorRef}
+                            contentEditable={!isReadOnly}
+                            suppressContentEditableWarning
+                            onFocus={() => setIsEditorFocused(true)}
+                            onBlur={(e) => {
+                                setIsEditorFocused(false);
+                                if (isReadOnly || !selectedReviewDraft) return;
+                                const html = e.currentTarget.innerHTML;
+                                const updated = { ...selectedReviewDraft, content: html };
+                                setSelectedReviewDraft(updated);
+                                handleSaveManualEdits(updated);
+                            }}
+                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
+                                prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
+                            onMouseUp={updateSelectionRect}
+                            onSelect={updateSelectionRect}
+                            onKeyUp={(e) => {
+                                if (['Control', 'Meta', 'Shift', 'Alt'].includes(e.key)) return;
+                                updateSelectionRect();
+                            }}
+                            onKeyDown={(e) => {
+                                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                                    e.preventDefault();
+                                    const url = window.prompt('Enter the URL:');
+                                    if (url) handleToolbarAction('link', url);
+                                }
+                            }}
+                            onMouseDown={(e) => {
+                                const target = (e.target as HTMLElement).closest('a');
+                                if (target && (e.ctrlKey || e.metaKey || e.detail === 2)) {
+                                    e.preventDefault();
+                                    window.open(target.href, '_blank');
+                                }
+                            }}
+                        />
+
+                        {selectedReviewDraft.infographicUrl && (
+                            <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
+                                <div className="flex items-center justify-between mb-8">
+                                    <div className="flex-1" />
+                                    <h4 className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest text-center">Visual Insight</h4>
+                                    <div className="flex-1 flex justify-end">
+                                        <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            onClick={() => setIsRefiningVisual(!isRefiningVisual)}
+                                            className="text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:text-violet-400 hover:text-violet-900 dark:hover:text-white flex items-center gap-2"
+                                        >
+                                            {isRefiningVisual ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
+                                            {isRefiningVisual ? 'Close' : 'Refine'}
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div className="w-full space-y-6">
+                                    <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isRefiningVisual ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-inner mb-6">
+                                            <Textarea
+                                                value={infographicFeedback}
+                                                onChange={(e) => setInfographicFeedback(e.target.value)}
+                                                placeholder="Describe visual corrections..."
+                                                className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 min-h-[100px] text-sm focus:ring-1 focus:ring-violet-500 p-4"
+                                            />
+                                            <Button
+                                                variant="primary"
+                                                size="sm"
+                                                onClick={() => handleGenerateInfographic(infographicFeedback)}
+                                                isLoading={isInfographicRefining}
+                                                disabled={!infographicFeedback.trim()}
+                                                className="w-full h-12 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[10px] font-bold"
+                                            >
+                                                Regenerate Visual
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                                        <img src={selectedReviewDraft.infographicUrl} alt={selectedReviewDraft.title} className="w-full h-auto" />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </section>
+
                     {!isReadOnly && (
-                        <div className="flex-shrink-0 z-20 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
-                            {/* Row 1: AI Refinement */}
-                            <div ref={refinementRef} className={`bg-violet-50/80 dark:bg-violet-900/20 px-8 py-3.5 flex items-center gap-4 border-b border-violet-100/50 dark:border-violet-800/30 ${!primaryKeyword ? 'opacity-60 pointer-events-none' : ''}`}>
-                                <div className="flex items-center gap-2 shrink-0">
-                                    <span className="w-2 h-2 rounded-full bg-violet-600 shrink-0" />
-                                    <span className="text-[11px] font-bold text-violet-700 dark:text-violet-300 uppercase tracking-widest whitespace-nowrap">AI Editor</span>
+                        <section className="w-auto mx-[-1.5rem] lg:mx-[-2.5rem] border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30" ref={refinementRef}>
+                            <div className="flex flex-col">
+                                <div className="w-full py-4 px-10">
+                                    <h4 className="text-[11px] font-bold uppercase tracking-widest text-violet-400">AI Refinement</h4>
                                 </div>
                                 {!primaryKeyword && (
-                                    <div className="flex items-center gap-1 text-[10px] font-bold text-amber-600 dark:text-amber-400 whitespace-nowrap">
-                                        <AlertCircle className="w-3 h-3" /> Select primary keyword first
+                                    <div className="w-full px-10 text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2">
+                                        <AlertCircle className="w-3.5 h-3.5" />
+                                        Action Locked: Select a primary keyword to enable refinement
                                     </div>
                                 )}
-                                <input
-                                    type="text"
-                                    value={feedback}
-                                    onChange={(e) => setFeedback(e.target.value)}
-                                    onKeyDown={(e) => { if (e.key === 'Enter' && feedback && primaryKeyword) handleApplyReviewFeedback(); }}
-                                    placeholder="Rewrite, fix tone, enhance vocabulary..."
-                                    className="flex-1 h-9 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 shadow-sm"
-                                />
-                                <Button
-                                    variant="primary"
-                                    onClick={handleApplyReviewFeedback}
-                                    isLoading={isApplyingFeedback}
-                                    disabled={!feedback || !primaryKeyword}
-                                    className="h-9 px-5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-[10px] uppercase tracking-widest shadow-md whitespace-nowrap shrink-0"
-                                >
-                                    {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning...' : 'Apply Refinement'}
-                                </Button>
-                            </div>
-                            {/* Row 2: Audit Buttons */}
-                            <div className="bg-slate-50 dark:bg-slate-800/50 px-8 py-4 flex justify-between items-center">
-                                <div className="flex items-center gap-3">
-                                    <Button variant="secondary" size="sm" onClick={() => setIsPreviewOpen(true)} className="h-10 px-5 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 font-bold text-[11px] uppercase tracking-widest hover:bg-slate-50 shadow-sm">
-                                        Preview
-                                    </Button>
-                                    <Button variant="danger" size="sm" onClick={() => handleRejectDraft(selectedReviewDraft.id)} isLoading={isRejecting} className="h-10 px-5 rounded-full border border-red-300 bg-white dark:bg-slate-900 text-red-500 font-bold text-[11px] uppercase tracking-widest hover:bg-red-50 shadow-sm">
-                                        Reject
-                                    </Button>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <Button variant="secondary" onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)} disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)} className="h-10 px-5 rounded-full bg-[#ede9fe] dark:bg-violet-900/30 text-violet-600 dark:text-violet-300 border-none font-bold text-[11px] uppercase tracking-widest hover:bg-[#ddd6fe] disabled:opacity-60 shadow-sm transition-all">
-                                        {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)
-                                            ? <><CheckCircle className="w-4 h-4 mr-1.5 text-emerald-500" />Reviewed</>
-                                            : <><Users className="w-4 h-4 mr-1.5" />Mark as Reviewed</>}
-                                    </Button>
-                                    <Button variant="primary" size="sm" onClick={() => handleApproveDraft(selectedReviewDraft)} isLoading={isPublished} className="h-10 px-5 rounded-full bg-green-500 hover:bg-green-600 border-none text-white font-bold text-[11px] uppercase tracking-widest shadow-md shadow-green-400/20">
-                                        <CheckCircle className="w-4 h-4 mr-1.5 shrink-0" />Approve & Publish
-                                    </Button>
+                                <div className={!primaryKeyword ? 'opacity-50 pointer-events-none' : ''}>
+                                    <Textarea
+                                        value={feedback}
+                                        onChange={(e) => setFeedback(e.target.value)}
+                                        placeholder="Inject directives..."
+                                        className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
+                                    />
+                                    <div className="w-full flex justify-center px-10">
+                                        <Button variant="secondary" onClick={handleApplyReviewFeedback} isLoading={isApplyingFeedback} disabled={!feedback || !primaryKeyword} className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm">
+                                            {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply Refinement'}
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
+                        </section>
+                    )}
+
+                    {!isReadOnly && (
+                        <div className="w-full pt-10 pb-20 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50 px-10">
+                            <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none">
+                                Save Edits
+                            </Button>
+                            <Button variant="secondary" onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)} disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]">
+                                {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? <><CheckCircle className="w-4 h-4 mr-2 text-emerald-500" />Reviewed</> : <><Users className="w-4 h-4 mr-2" />Mark as Reviewed</>}
+                            </Button>
+                            <Button variant="danger" size="sm" onClick={() => handleRejectDraft(selectedReviewDraft.id)} isLoading={isRejecting} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]">Reject</Button>
+                            <Button variant="secondary" size="sm" onClick={() => setIsPreviewOpen(true)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors shadow-none font-bold">Preview</Button>
+                            <Button variant="primary" size="sm" onClick={() => handleApproveDraft(selectedReviewDraft)} isLoading={isPublished} className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]">
+                                <CheckCircle className="w-4 h-4 mr-2 shrink-0" />Approve & Publish Now
+                            </Button>
                         </div>
                     )}
                 </div>
