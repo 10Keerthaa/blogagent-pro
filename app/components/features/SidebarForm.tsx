@@ -65,11 +65,11 @@ export const SidebarForm = () => {
                     <Textarea
                         label="Main Blog Topic"
                         labelClassName="!pl-0"
-                        textareaClassName="!pl-0"
+                        textareaClassName="!pl-0 !border-0 !border-b !border-slate-200 dark:!border-slate-800 !shadow-none !rounded-none focus:!ring-0 focus:!border-violet-500 !min-h-[40px] !h-10 overflow-hidden resize-none !px-0 bg-transparent"
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
                         value={displayPrompt}
                         onChange={(e) => setPrompt(e.target.value)}
-                        className="shadow-sm focus:shadow-md"
+                        className="!shadow-none border-none bg-transparent"
                         readOnly={isReadOnly}
                     />
                 </section>
@@ -87,7 +87,7 @@ export const SidebarForm = () => {
                         </button>
                     </div>
                     <div
-                        className={`flex flex-wrap items-center gap-2 min-h-[100px] pl-0 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/10 focus-within:border-violet-500'}`}
+                        className={`flex flex-wrap items-center gap-2 min-h-[40px] pb-3 bg-transparent border-b border-slate-200 dark:border-slate-800 transition-all ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:border-violet-500'}`}
                         onClick={() => !isReadOnly && inputRef.current?.focus()}
                     >
                         {displayKeywords.map((tag: string, idx: number) => {
@@ -125,15 +125,29 @@ export const SidebarForm = () => {
                             );
                         })}
                         {!isReadOnly && (
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                placeholder={keywords.length === 0 ? "Add keywords..." : "Add more..."}
-                                className="flex-1 min-w-[80px] bg-transparent border-none outline-none ring-0 focus:ring-0 text-xs font-bold p-0 text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
-                                value={keywordInput}
-                                onChange={(e) => setKeywordInput(e.target.value)}
-                                onKeyDown={handleAddKeyword}
-                            />
+                            <div className="flex-1 flex items-center min-w-[80px]">
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    placeholder={keywords.length === 0 ? "Add keywords..." : "Add more..."}
+                                    className="flex-1 bg-transparent border-none outline-none ring-0 focus:ring-0 text-sm font-medium p-0 text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
+                                    value={keywordInput}
+                                    onChange={(e) => setKeywordInput(e.target.value)}
+                                    onKeyDown={handleAddKeyword}
+                                />
+                                <button 
+                                    type="button"
+                                    onClick={(e) => { 
+                                        e.stopPropagation(); 
+                                        if(keywordInput.trim() && !keywords.includes(keywordInput.trim())) { 
+                                            handleAddKeyword({ key: 'Enter', preventDefault: () => {} } as any); 
+                                        } 
+                                    }} 
+                                    className="text-slate-400 hover:text-violet-500 transition-colors ml-2"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                </button>
+                            </div>
                         )}
                     </div>
                 </section>
@@ -164,10 +178,10 @@ export const SidebarForm = () => {
                         <Textarea
                             placeholder="SEO optimized summary..."
                             labelClassName="!pl-0"
-                            textareaClassName="!pl-0"
+                            textareaClassName="!pl-0 !border-0 !border-b !border-slate-200 dark:!border-slate-800 !shadow-none !rounded-none focus:!ring-0 focus:!border-violet-500 !min-h-[40px] !h-10 overflow-hidden resize-none !px-0 bg-transparent"
                             value={displayDescription}
                             onChange={(e) => setDescription(e.target.value)}
-                            className="min-h-[140px] shadow-sm focus:shadow-md"
+                            className="!shadow-none border-none bg-transparent"
                             readOnly={isReadOnly}
                             maxLength={200}
                         />

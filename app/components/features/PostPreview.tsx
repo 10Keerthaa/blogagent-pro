@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 import {
     Bold, Italic, Link as LinkIcon, Save, ArrowRight,
     Heading2, Heading3, List, ListOrdered, Wand2, Sparkles, Image as ImageIcon,
-    RotateCcw, AlertCircle, X
+    RotateCcw, AlertCircle, X, Edit
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 
@@ -99,7 +99,29 @@ export const PostPreview = () => {
         if (result?.id) setCurrentPostId(result.id);
     }, [user, currentPostId, infographicUrl, upsertPost, isSavingManual, isSavingReview, description, primaryKeyword, mainTopic, keywords]);
 
-    if (!preview) return null;
+    if (!preview) {
+        return (
+            <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col items-center justify-center p-8">
+                {/* Preview Button */}
+                <div className="absolute top-8 right-8">
+                    <button className="text-[12px] border border-slate-900/20 dark:border-slate-700 px-4 py-1 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+                        Preview
+                    </button>
+                </div>
+
+                {/* Empty State Center Content */}
+                <div className="flex flex-col items-center justify-center text-center max-w-lg mx-auto animate-fadeIn mt-[-10vh]">
+                    <div className="w-24 h-24 bg-[#f8f5ff] dark:bg-violet-900/20 rounded-full flex items-center justify-center mb-6">
+                        <Edit className="w-10 h-10 text-[#8b5cf6]" strokeWidth={2} />
+                    </div>
+                    <h2 className="text-[28px] font-bold text-slate-900 dark:text-white mb-4 tracking-tight">Editor Workspace</h2>
+                    <p className="text-[#64748b] dark:text-slate-400 max-w-[420px] mx-auto text-base font-medium leading-relaxed">
+                        Use the sidebar engine to formulate a topic, attach SEO keywords, and generate your elite draft.
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     const execCommand = (command: string, value: any = null) => {
         document.execCommand(command, false, value);
