@@ -369,47 +369,90 @@ export const ReviewList = () => {
                     </section>
 
                     {!isReadOnly && (
-                        <section className="w-auto mx-[-1.5rem] lg:mx-[-2.5rem] border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30" ref={refinementRef}>
-                            <div className="flex flex-col">
-                                <div className="w-full py-4 px-10">
-                                    <h4 className="text-[11px] font-bold uppercase tracking-widest text-violet-400">AI Refinement</h4>
+                        <section className="px-6 lg:px-10 py-8" ref={refinementRef}>
+                            <div className="bg-[#f8f5ff] dark:bg-violet-900/20 rounded-2xl p-6 space-y-4">
+                                {/* Header */}
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2.5 h-2.5 rounded-full bg-violet-600 shrink-0" />
+                                    <h4 className="text-sm font-extrabold text-slate-800 dark:text-white">AI Editor Bot</h4>
                                 </div>
                                 {!primaryKeyword && (
-                                    <div className="w-full px-10 text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2">
+                                    <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
                                         <AlertCircle className="w-3.5 h-3.5" />
-                                        Action Locked: Select a primary keyword to enable refinement
+                                        Select a primary keyword to enable refinement
                                     </div>
                                 )}
-                                <div className={!primaryKeyword ? 'opacity-50 pointer-events-none' : ''}>
-                                    <Textarea
+                                <p className="text-[13px] font-semibold text-violet-600 dark:text-violet-400 leading-snug">
+                                    Need to tweak this technical draft? Ask the AI to rewrite sections, fix tone, or enhance vocabulary before publishing.
+                                </p>
+                                {/* Inline Input + Button Row */}
+                                <div className={`flex items-center gap-3 ${!primaryKeyword ? 'opacity-50 pointer-events-none' : ''}`}>
+                                    <input
+                                        type="text"
                                         value={feedback}
                                         onChange={(e) => setFeedback(e.target.value)}
-                                        placeholder="Inject directives..."
-                                        className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
+                                        placeholder="E.g., Rewrite the second paragraph to sound more professional..."
+                                        className="flex-1 h-12 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 shadow-sm"
+                                        onKeyDown={(e) => { if (e.key === 'Enter' && feedback && primaryKeyword) handleApplyReviewFeedback(); }}
                                     />
-                                    <div className="w-full flex justify-center px-10">
-                                        <Button variant="secondary" onClick={handleApplyReviewFeedback} isLoading={isApplyingFeedback} disabled={!feedback || !primaryKeyword} className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm">
-                                            {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply Refinement'}
-                                        </Button>
-                                    </div>
+                                    <Button
+                                        variant="primary"
+                                        onClick={handleApplyReviewFeedback}
+                                        isLoading={isApplyingFeedback}
+                                        disabled={!feedback || !primaryKeyword}
+                                        className="h-12 px-6 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-[11px] uppercase tracking-widest shadow-md whitespace-nowrap"
+                                    >
+                                        {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply Refinement'}
+                                    </Button>
                                 </div>
                             </div>
                         </section>
                     )}
 
                     {!isReadOnly && (
-                        <div className="w-full pt-10 pb-20 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50 px-10">
-                            <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none">
-                                Save Edits
-                            </Button>
-                            <Button variant="secondary" onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)} disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]">
-                                {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? <><CheckCircle className="w-4 h-4 mr-2 text-emerald-500" />Reviewed</> : <><Users className="w-4 h-4 mr-2" />Mark as Reviewed</>}
-                            </Button>
-                            <Button variant="danger" size="sm" onClick={() => handleRejectDraft(selectedReviewDraft.id)} isLoading={isRejecting} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]">Reject</Button>
-                            <Button variant="secondary" size="sm" onClick={() => setIsPreviewOpen(true)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors shadow-none font-bold">Preview</Button>
-                            <Button variant="primary" size="sm" onClick={() => handleApproveDraft(selectedReviewDraft)} isLoading={isPublished} className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]">
-                                <CheckCircle className="w-4 h-4 mr-2 shrink-0" />Approve & Publish Now
-                            </Button>
+                        <div className="w-full pb-20 px-6 lg:px-10 pt-4 flex items-center justify-between gap-4">
+                            {/* Left: Preview + Reject */}
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() => setIsPreviewOpen(true)}
+                                    className="h-11 px-6 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 font-bold text-[11px] uppercase tracking-widest hover:bg-slate-50 shadow-sm"
+                                >
+                                    Preview
+                                </Button>
+                                <Button
+                                    variant="danger"
+                                    size="sm"
+                                    onClick={() => handleRejectDraft(selectedReviewDraft.id)}
+                                    isLoading={isRejecting}
+                                    className="h-11 px-6 rounded-full border border-red-300 bg-white dark:bg-slate-900 text-red-500 font-bold text-[11px] uppercase tracking-widest hover:bg-red-50 shadow-sm"
+                                >
+                                    Reject
+                                </Button>
+                            </div>
+                            {/* Right: Mark as Reviewed + Approve & Publish */}
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)}
+                                    disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)}
+                                    className="h-11 px-6 rounded-full bg-[#ede9fe] dark:bg-violet-900/30 text-violet-600 dark:text-violet-300 border-none font-bold text-[11px] uppercase tracking-widest hover:bg-[#ddd6fe] disabled:opacity-60 shadow-sm transition-all"
+                                >
+                                    {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)
+                                        ? <><CheckCircle className="w-4 h-4 mr-1.5 text-emerald-500" />Reviewed</>
+                                        : <><Users className="w-4 h-4 mr-1.5" />Mark as Reviewed</>}
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    size="sm"
+                                    onClick={() => handleApproveDraft(selectedReviewDraft)}
+                                    isLoading={isPublished}
+                                    className="h-11 px-6 rounded-full bg-emerald-500 hover:bg-emerald-600 border-none text-white font-bold text-[11px] uppercase tracking-widest shadow-md shadow-emerald-400/20"
+                                >
+                                    <CheckCircle className="w-4 h-4 mr-1.5 shrink-0" />Approve & Publish
+                                </Button>
+                            </div>
                         </div>
                     )}
                 </div>
