@@ -200,7 +200,7 @@ export const ReviewList = () => {
                                     className="group flex items-center gap-2 h-7 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-800 bg-transparent text-slate-500 hover:text-violet-600 hover:border-violet-300 dark:hover:border-violet-700 transition-all shadow-none"
                                 >
                                     <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Return to Reviews</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Back</span>
                                 </Button>
                                 <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
                                 <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
