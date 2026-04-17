@@ -209,7 +209,7 @@ export const ReviewList = () => {
                 </div>
 
                 {/* 2. SCROLLABLE CINEMATIC CANVAS — Document Box sitter */}
-                <div className="flex-1 overflow-y-auto p-12 lg:p-16 custom-scrollbar scroll-smooth">
+                <div className="flex-1 overflow-y-auto p-12 custom-scrollbar scroll-smooth">
                     <div className="max-w-4xl mx-auto bg-white dark:bg-slate-950 rounded-[3rem] shadow-[0_32px_80px_-16px_rgba(0,0,0,0.1)] dark:shadow-none border border-slate-100/60 dark:border-slate-800/60 overflow-hidden mb-16 animate-slideUp">
                         
                         {/* THE HERO BLOCK — Optimized Baseline Layout */}
@@ -244,7 +244,7 @@ export const ReviewList = () => {
                                         <textarea
                                             value={selectedReviewDraft.title}
                                             onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                                            className="w-full bg-transparent border-none p-0 text-4xl lg:text-6xl font-black leading-[1.1] text-white focus:ring-0 resize-none scroll-hidden drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                                            className="w-full bg-transparent border-none p-0 text-4xl lg:text-5xl font-black leading-tight text-white focus:ring-0 resize-none scroll-hidden drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
                                             rows={2}
                                         />
                                     </div>
@@ -257,12 +257,12 @@ export const ReviewList = () => {
                                     </div>
                                 </>
                             ) : (
-                                <div className="absolute inset-0 bg-violet-600 flex flex-col justify-end p-20">
+                                <div className="absolute inset-0 bg-violet-700 flex flex-col justify-end p-20">
                                     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-[160px] animate-pulse" />
                                     <textarea
                                         value={selectedReviewDraft.title}
                                         onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                                        className="relative z-10 w-full bg-transparent border-none p-0 text-5xl font-black text-white focus:ring-0 leading-tight resize-none scroll-hidden"
+                                        className="relative z-10 w-full bg-transparent border-none p-0 text-4xl lg:text-5xl font-black text-white focus:ring-0 leading-tight resize-none scroll-hidden"
                                         rows={2}
                                     />
                                 </div>
@@ -292,7 +292,7 @@ export const ReviewList = () => {
                                     setIsEditorFocused(false);
                                     handleSaveManualEdits({ ...selectedReviewDraft, content: editorRef.current?.innerHTML || '' });
                                 }}
-                                className="outline-none prose prose-slate prose-lg lg:prose-xl dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed font-sans min-h-[400px]"
+                                className="outline-none prose prose-slate prose-violet max-w-none text-lg leading-relaxed text-slate-700 dark:text-slate-300 font-sans min-h-[400px]"
                             />
 
                             {/* Infographic Logic */}
