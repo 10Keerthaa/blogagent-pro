@@ -17,8 +17,8 @@ const DashboardContent = () => {
   // Show only on the 'create' tab (where the form is needed)
   // OR when a review draft is actively open
   // Hidden on bare review list & history tab (History is always full screen) — List-First experience
-  const showSidebar = 
-    activeTab === 'create' || 
+  const showSidebar =
+    activeTab === 'create' ||
     (activeTab === 'review' && !!selectedReviewDraft);
 
   if (!user) {
@@ -44,8 +44,8 @@ const DashboardContent = () => {
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
 
-          {/* Scrollable Workspace */}
-          <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar scroll-smooth">
+          {/* Scrollable Workspace — Delegates padding and scroll to ReviewList when a draft is open */}
+          <div className={`flex-1 custom-scrollbar scroll-smooth transition-colors duration-500 bg-slate-50 dark:bg-[#0a0a0a] ${activeTab === 'review' && selectedReviewDraft ? 'overflow-hidden' : 'overflow-y-auto p-6 lg:p-10'}`}>
             {/* Elite Error Banner */}
             {error && (
               <div
