@@ -34,10 +34,10 @@ export const SidebarForm = () => {
         <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
             <div className="py-8 pl-10 space-y-8 flex-1 bg-slate-50/30 dark:bg-transparent">
                 {/* Blog Topic */}
-                <section className="space-y-3">
+                <section className="space-y-4">
+                    <label className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 !pl-0">Main Blog Topic</label>
                     <Textarea
-                        label="Main Blog Topic"
-                        labelClassName="!pl-0"
+                        labelClassName="hidden"
                         textareaClassName="!pl-0 !border-0 !border-b !border-slate-200 dark:!border-slate-800 !shadow-none !rounded-none focus:!ring-0 focus:!border-violet-500 !min-h-[40px] !h-10 overflow-hidden resize-none !px-0 bg-transparent"
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
                         value={displayPrompt}

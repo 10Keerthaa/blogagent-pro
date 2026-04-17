@@ -44,8 +44,8 @@ const DashboardContent = () => {
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
 
-          {/* Scrollable Workspace — strips padding when review draft is open (ReviewList owns its layout) */}
-          <div className={`flex-1 custom-scrollbar scroll-smooth bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-500 ${activeTab === 'review' && selectedReviewDraft ? 'overflow-hidden flex flex-col' : 'overflow-y-auto p-6 lg:p-10'}`}>
+          {/* Scrollable Workspace (Universal Flow) */}
+          <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar scroll-smooth bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-500">
             {/* Elite Error Banner */}
             {error && (
               <div
@@ -67,7 +67,7 @@ const DashboardContent = () => {
             )}
 
             {/* Dynamic Views with Elite Motion */}
-            <div className={`${activeTab === 'review' && selectedReviewDraft ? 'flex-1 overflow-hidden flex flex-col' : 'h-full flex flex-col w-full'}`}>
+            <div className="h-full flex flex-col w-full">
               {activeTab === 'create' && <PostPreview />}
               {activeTab === 'review' && <ReviewList />}
               {activeTab === 'history' && <HistoryList />}
