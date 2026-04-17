@@ -10,7 +10,7 @@ import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
     FileText, Calendar, ArrowLeft, ArrowRight, X, CheckCircle, XCircle, Zap, Sparkles, Users,
-    AlertCircle, Shield, Loader2
+    AlertCircle, Shield, Loader2, Lock
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 import { Portal } from '../ui/Portal';
@@ -45,6 +45,12 @@ export const ReviewList = () => {
 
     const isReadOnly = role === 'editor';
 
+    // Helper for category name
+    const getCategoryName = () => {
+        const cat = CATEGORIES.find(c => c.id === selectedCategories[0]);
+        return cat ? cat.name : 'Uncategorized';
+    };
+
     // Ensure we start at the top when a draft is selected
     React.useEffect(() => {
         if (selectedReviewDraft) {
@@ -66,21 +72,15 @@ export const ReviewList = () => {
                 setIsToolbarVisible(false);
                 return;
             }
-
             const range = selection.getRangeAt(0);
             if (!editorRef.current.contains(range.commonAncestorContainer)) return;
-
             const container = range.commonAncestorContainer;
             const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
-            
             const activeLink = element?.closest('a') || 
                              selection.anchorNode?.parentElement?.closest('a') || 
                              selection.focusNode?.parentElement?.closest('a');
-            
-            const isInsideLink = !!activeLink;
-            setIsLinkActive(isInsideLink);
+            setIsLinkActive(!!activeLink);
             const rect = range.getBoundingClientRect();
-
             if (rect.width > 0 && !selection.isCollapsed) {
                 setSelectionRect(rect);
                 setIsToolbarVisible(true);
@@ -102,7 +102,6 @@ export const ReviewList = () => {
 
     const handleToolbarAction = async (action: string, value?: string) => {
         if (!editorRef.current) return;
-
         switch (action) {
             case 'bold': execCommand('bold'); break;
             case 'italic': execCommand('italic'); break;
@@ -110,12 +109,11 @@ export const ReviewList = () => {
                 if (editorRef.current && selectedReviewDraft) {
                     editorRef.current.focus();
                     document.execCommand('unlink', false, undefined);
-                    const latestHtml = editorRef.current.innerHTML;
-                    const updatedDraft = { ...selectedReviewDraft, content: latestHtml };
-                    setSelectedReviewDraft(updatedDraft);
-                    handleSaveManualEdits(updatedDraft);
+                    const html = editorRef.current.innerHTML;
+                    const updated = { ...selectedReviewDraft, content: html };
+                    setSelectedReviewDraft(updated);
+                    handleSaveManualEdits(updated);
                     setIsToolbarVisible(false);
-                    setSelectionRect(null);
                 }
                 break;
             case 'link': {
@@ -131,10 +129,7 @@ export const ReviewList = () => {
                 range.insertNode(anchor);
                 sel.collapseToEnd();
                 if (editorRef.current && selectedReviewDraft) {
-                    const html = editorRef.current.innerHTML;
-                    const updatedDraft = { ...selectedReviewDraft, content: html };
-                    setSelectedReviewDraft(updatedDraft);
-                    handleSaveManualEdits(updatedDraft);
+                    handleSaveManualEdits({ ...selectedReviewDraft, content: editorRef.current.innerHTML });
                 }
                 break;
             }
@@ -145,25 +140,20 @@ export const ReviewList = () => {
                 if (!sel || sel.isCollapsed) return;
                 const selectedText = sel.toString();
                 const placeholder = document.createElement('span');
-                placeholder.className = 'bg-violet-100 dark:bg-violet-900/30 animate-pulse rounded px-1 text-violet-500';
+                placeholder.className = 'bg-violet-100 animate-pulse rounded px-1 text-violet-500';
                 placeholder.innerText = '✦';
                 const liveRange = sel.getRangeAt(0);
                 liveRange.deleteContents();
                 liveRange.insertNode(placeholder);
-
                 let fullText = '';
                 await handleRefineSelection(selectedText, action, (newText: string) => {
                     fullText = newText;
                     placeholder.innerText = fullText;
                 });
-
                 const finalNode = document.createTextNode(fullText || selectedText);
                 placeholder.parentNode?.replaceChild(finalNode, placeholder);
                 if (editorRef.current && selectedReviewDraft) {
-                    const html = editorRef.current.innerHTML;
-                    const updatedDraft = { ...selectedReviewDraft, content: html };
-                    setSelectedReviewDraft(updatedDraft);
-                    handleSaveManualEdits(updatedDraft);
+                    handleSaveManualEdits({ ...selectedReviewDraft, content: editorRef.current.innerHTML });
                 }
                 break;
             }
@@ -176,42 +166,32 @@ export const ReviewList = () => {
         return reviewDrafts.filter(d => d.createdBy === user?.uid);
     }, [reviewDrafts, role, user]);
 
-    // Helper for category name
-    const getCategoryName = () => {
-        const cat = CATEGORIES.find(c => c.id === selectedCategories[0]);
-        return cat ? cat.name : 'Uncategorized';
-    };
-
-    return (
-        <div className="relative w-full">
-            {selectedReviewDraft ? (
-                <div className="animate-fadeIn w-full space-y-10">
-                    {/* Integrated Header (Back + Category) */}
-                    <div className="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800">
-                        <div className="flex items-center gap-6">
-                            <button
-                                onClick={() => setSelectedReviewDraft(null)}
-                                className="flex items-center gap-2.5 px-3 py-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors group"
-                            >
-                                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                                <span className="text-[11px] font-black uppercase tracking-widest">Back to Queue</span>
-                            </button>
-                            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
-                            <Badge variant="pending" className="px-5 py-1.5 bg-violet-50 text-violet-700 border-violet-100 dark:bg-violet-950/30 dark:text-violet-400 dark:border-violet-800 rounded-lg font-black uppercase text-[9px] tracking-widest shadow-none">
-                                Editorial Review
-                            </Badge>
-                        </div>
-
-                        {/* WordPress Category Block */}
-                        <div className="flex flex-col items-end">
-                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">WordPress Category</span>
-                            <div className="flex items-center gap-2.5 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl group hover:border-violet-200 transition-all shadow-sm">
-                                <Shield className="w-4 h-4 text-slate-400 group-hover:text-violet-500 transition-colors" />
+    if (selectedReviewDraft) {
+        return (
+            /* ── THE TRAPPED SCROLL ARCHITECTURE ── */
+            <div className="flex-1 h-full flex flex-col bg-slate-50 relative overflow-hidden animate-fadeIn">
+                
+                {/* 1. FIXED TOP HEADERArea */}
+                <div className="h-16 bg-white border-b border-slate-200 flex items-center px-6 justify-between flex-shrink-0 z-10">
+                    <button 
+                        onClick={() => setSelectedReviewDraft(null)}
+                        className="flex items-center gap-2 text-[10px] font-black tracking-widest uppercase text-slate-500 hover:text-slate-900 transition-colors cursor-pointer group"
+                    >
+                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Queue
+                    </button>
+                    <div className="px-4 py-1.5 bg-violet-100 text-violet-700 rounded-lg text-[10px] font-black tracking-widest uppercase">
+                        Editorial Review
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="flex flex-col items-start -mt-1">
+                            <span className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-1">WordPress Category</span>
+                            <div className="flex items-center gap-2 border border-slate-200 rounded-xl px-3 py-1.5 bg-slate-50 group hover:border-violet-200 transition-all">
+                                <Lock className="w-3.5 h-3.5 text-slate-400 group-hover:text-violet-500 transition-colors" />
                                 <span className="text-[11px] font-bold text-slate-400">Blog /</span>
                                 <select 
                                     value={selectedCategories[0] || ''}
                                     onChange={(e) => setSelectedCategories(e.target.value ? [Number(e.target.value)] : [])}
-                                    className="bg-transparent border-none p-0 text-[11px] font-extrabold text-slate-700 dark:text-slate-200 focus:ring-0 cursor-pointer min-w-[120px]"
+                                    className="bg-transparent text-[11px] font-extrabold text-slate-700 outline-none cursor-pointer focus:ring-0 select-none"
                                 >
                                     <option value="">Select Category</option>
                                     {CATEGORIES.map(cat => (
@@ -221,70 +201,72 @@ export const ReviewList = () => {
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* THE PAPER (Document Card) — Exactly max-w-4xl mx-auto */}
-                    <div className="max-w-4xl mx-auto bg-white dark:bg-slate-950 rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] overflow-hidden border border-slate-200/60 dark:border-slate-800 mb-12 group/scribe transition-all">
+                {/* 2. SCROLLABLE MIDDLE CANVAS — Exactly as AI Studio Source */}
+                <div className="flex-1 overflow-y-auto p-8 lg:p-12 custom-scrollbar">
+                    <div className="max-w-4xl mx-auto bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100/60 overflow-hidden mb-12 animate-slideUp">
                         
-                        {/* THE HERO BLOCK — Exactly min-h-[360px] flex flex-col justify-end p-12 lg:p-16 */}
-                        <div className="relative min-h-[360px] lg:min-h-[420px] flex flex-col justify-end overflow-hidden group">
+                        {/* THE HERO CANVAS — Exactly min-h-[360px] justify-end p-12 lg:p-16 */}
+                        <div className="relative text-white p-12 lg:p-16 overflow-hidden min-h-[360px] lg:min-h-[460px] flex flex-col justify-end group">
                             {selectedReviewDraft.imageUrl ? (
                                 <>
                                     <img 
-                                        src={selectedReviewDraft.imageUrl} 
-                                        alt={selectedReviewDraft.title} 
-                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover/scribe:scale-110" 
+                                        src={selectedReviewDraft.imageUrl}
+                                        alt={selectedReviewDraft.title}
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
                                     />
-                                    {/* AI Studio Overlay Tint */}
+                                    {/* AI Studio Elite Overlay */}
                                     <div className="absolute inset-0 bg-violet-700/50 mix-blend-multiply" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-violet-950/90 via-violet-950/20 to-transparent" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
                                     
-                                    {/* Placements (Tags at Top, Title at Bottom via p-12 lg:p-16) */}
-                                    <div className="relative z-10 w-full p-12 lg:p-16">
-                                        {/* Top Left Tags (Pinned absolutely within the padding box) */}
-                                        <div className="absolute top-12 left-12 flex items-center gap-3">
-                                            <div className="bg-violet-600 px-5 py-2 text-white font-bold text-[10px] uppercase tracking-widest shadow-2xl">
+                                    <div className="relative z-10 w-full">
+                                        {/* Tags at Top Left */}
+                                        <div className="flex items-center gap-3 mb-auto absolute top-[-2rem] lg:top-[-4rem]">
+                                            <div className="bg-violet-600 px-5 py-2 text-[10px] font-black uppercase tracking-widest shadow-2xl">
                                                 Blog
                                             </div>
-                                            <div className="bg-black/60 backdrop-blur-md px-5 py-2 text-white font-bold text-[10px] uppercase tracking-widest border border-white/10 shadow-2xl">
+                                            <div className="bg-black/60 backdrop-blur-md px-5 py-2 text-[10px] font-black uppercase tracking-widest border border-white/10 shadow-2xl">
                                                 {getCategoryName()}
                                             </div>
                                         </div>
 
-                                        {/* H1 Title — Text-4xl lg:text-5xl font-bold leading-tight */}
-                                        <textarea
-                                            value={selectedReviewDraft.title}
-                                            onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                                            className="w-full bg-transparent border-none p-0 text-4xl lg:text-6xl font-bold tracking-tight text-white focus:ring-0 leading-tight resize-none drop-shadow-2xl scroll-hidden"
-                                            rows={2}
-                                        />
+                                        <div className="mt-8 space-y-6">
+                                            <div className="inline-flex items-center gap-3 px-3.5 py-1.5 bg-white/10 backdrop-blur-md rounded-lg border border-white/20">
+                                                <FileText className="w-4 h-4 text-white/80" />
+                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Production Draft</span>
+                                            </div>
+                                            <textarea
+                                                value={selectedReviewDraft.title}
+                                                onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
+                                                className="w-full bg-transparent border-none p-0 text-3xl lg:text-5xl font-black leading-tight drop-shadow-2xl focus:ring-0 resize-none scroll-hidden"
+                                                rows={2}
+                                            />
+                                        </div>
                                     </div>
 
-                                    {/* Brand Logo (Bottom Right) */}
+                                    {/* Logo Pill */}
                                     <div className="absolute bottom-12 right-12 z-20">
-                                        <div className="bg-white p-4 rounded-xl shadow-2xl transition-transform hover:scale-105 duration-300">
+                                        <div className="bg-white p-4 rounded-xl shadow-2xl">
                                             <img src="/10xDS.png" alt="logo" className="h-10 lg:h-12 w-auto object-contain" />
                                         </div>
                                     </div>
                                 </>
                             ) : (
-                                /* Fallback Solid Hero */
-                                <div className="absolute inset-0 bg-violet-700 flex flex-col justify-end p-12 lg:p-16">
-                                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-violet-500 rounded-full blur-[140px] opacity-40 animate-pulse" />
-                                    <div className="relative z-10 space-y-6">
-                                        <div className="bg-white/10 backdrop-blur-md px-4 py-1.5 text-white text-[10px] font-black uppercase tracking-widest w-fit border border-white/10">Draft Archive</div>
-                                        <textarea
-                                            value={selectedReviewDraft.title}
-                                            onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                                            className="w-full bg-transparent border-none p-0 text-4xl lg:text-6xl font-black text-white focus:ring-0 leading-tight resize-none scroll-hidden"
-                                            rows={2}
-                                        />
-                                    </div>
+                                <div className="absolute inset-0 bg-violet-700 flex flex-col justify-end p-16">
+                                    <div className="absolute top-0 right-0 w-96 h-96 bg-violet-500 rounded-full blur-[100px] opacity-40 animate-pulse" />
+                                    <textarea
+                                        value={selectedReviewDraft.title}
+                                        onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
+                                        className="relative z-10 w-full bg-transparent border-none p-0 text-5xl font-black text-white focus:ring-0 leading-tight resize-none scroll-hidden"
+                                        rows={2}
+                                    />
                                 </div>
                             )}
                         </div>
-
-                        {/* DOCUMENT BODY — Prose text-lg leading-relaxed text-slate-700 */}
-                        <div className="p-12 lg:p-16 lg:pt-20 relative bg-white dark:bg-slate-950">
+                        
+                        {/* DOCUMENT BODY Wrapper — Prose text-lg text-slate-700 */}
+                        <div className="p-12 lg:p-16 pb-24 relative bg-white">
                             {selectionRect && (
                                 <FloatingToolbar
                                     isVisible={isToolbarVisible}
@@ -297,221 +279,193 @@ export const ReviewList = () => {
                                     }}
                                 />
                             )}
-                            
                             <div 
                                 ref={editorRef}
                                 contentEditable={!isReadOnly}
                                 onMouseUp={updateSelectionRect}
-                                onKeyUp={updateSelectionRect}
                                 onFocus={() => setIsEditorFocused(true)}
                                 onBlur={() => {
                                     setIsEditorFocused(false);
-                                    const html = editorRef.current?.innerHTML || '';
-                                    const updatedDraft = { ...selectedReviewDraft, content: html };
-                                    setSelectedReviewDraft(updatedDraft);
-                                    handleSaveManualEdits(updatedDraft);
+                                    handleSaveManualEdits({ ...selectedReviewDraft, content: editorRef.current?.innerHTML || '' });
                                 }}
-                                className="prose prose-slate text-lg lg:text-xl leading-relaxed text-slate-700 dark:text-slate-300 max-w-none focus:outline-none min-h-[500px]"
+                                className="outline-none prose prose-slate prose-lg lg:prose-xl max-w-none text-slate-700 leading-relaxed font-sans"
                             />
 
-                            {/* Infographic Section */}
+                            {/* Infographic Logic */}
                             {selectedReviewDraft.infographicUrl && (
-                                <div className="mt-24 pt-16 border-t border-slate-100 dark:border-slate-800/50">
-                                    <div className="flex items-center justify-between mb-12">
-                                        <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800" />
-                                        <h4 className="mx-8 text-[11px] font-black text-slate-400 uppercase tracking-[0.4em]">Integrated Visuals</h4>
-                                        <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800" />
+                                <div className="mt-20 pt-16 border-t border-slate-100">
+                                    <div className="flex items-center justify-between mb-10">
+                                        <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Vertical Analysis</span>
                                         <Button 
                                             variant="ghost" 
                                             size="sm" 
                                             onClick={() => setIsRefiningVisual(!isRefiningVisual)}
-                                            className="ml-8 text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:text-violet-400 hover:bg-violet-50 transition-all px-5 border border-violet-100/50"
+                                            className="text-[10px] uppercase font-black tracking-widest text-violet-700 border-violet-100 border px-5"
                                         >
-                                            {isRefiningVisual ? <X className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
-                                            {isRefiningVisual ? 'Close Refinement' : 'Refine Component'}
+                                            {isRefiningVisual ? 'Close' : 'Refine Visual'}
                                         </Button>
                                     </div>
                                     <div className="space-y-10">
                                         {isRefiningVisual && (
-                                            <div className="bg-slate-50 dark:bg-slate-900 p-8 space-y-5 animate-fadeIn border border-slate-200 dark:border-slate-800 rounded-2xl">
+                                            <div className="bg-slate-50 p-8 space-y-5 rounded-2xl animate-fadeIn border border-slate-200">
                                                 <Textarea
                                                     value={infographicFeedback}
                                                     onChange={(e) => setInfographicFeedback(e.target.value)}
-                                                    placeholder="E.g., 'Make the connecting lines more subtle'..."
-                                                    className="w-full bg-white dark:bg-slate-950 min-h-[140px] p-6 text-sm focus:ring-violet-500 border-slate-200 dark:border-slate-800"
+                                                    placeholder="Specify design changes..."
+                                                    className="w-full min-h-[120px] bg-white border-slate-200"
                                                 />
                                                 <Button
                                                     variant="primary"
                                                     onClick={() => handleGenerateInfographic(infographicFeedback)}
                                                     isLoading={isInfographicRefining}
-                                                    disabled={!infographicFeedback.trim()}
-                                                    className="w-full h-14 bg-violet-600 hover:bg-violet-700 text-[11px] font-black uppercase tracking-widest rounded-xl"
+                                                    className="w-full h-14 bg-violet-600 text-xs font-black tracking-widest uppercase rounded-xl"
                                                 >
-                                                    Regenerate High-Resolution Visual
+                                                    Update Graphic Artifact
                                                 </Button>
                                             </div>
                                         )}
-                                        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12)] overflow-hidden rounded-[2rem]">
-                                            <img src={selectedReviewDraft.infographicUrl} alt="Visual" className="w-full h-auto" />
+                                        <div className="shadow-2xl rounded-3xl overflow-hidden border border-slate-100">
+                                            <img src={selectedReviewDraft.infographicUrl} alt="infographic" className="w-full h-auto" />
                                         </div>
                                     </div>
                                 </div>
                             )}
-
-                            {/* AUDIT & CONTROL TOOLBAR (Pixel Perfect Docked) */}
-                            <div className="mt-24 pt-16 border-t border-slate-100 dark:border-slate-800 flex flex-col -mx-12 lg:-mx-16 -mb-12 lg:-mb-16">
-                                
-                                {/* Row 1: AI Editor — px-6 py-3.5 */}
-                                <div className="px-8 lg:px-12 py-3.5 bg-violet-50 dark:bg-violet-950/20 border-b border-violet-100 dark:border-violet-900/40 flex items-center gap-6">
-                                    <div className="flex items-center gap-3.5 shrink-0">
-                                        <div className="h-2.5 w-2.5 bg-violet-600 rounded-full animate-pulse shadow-[0_0_12px_rgba(124,58,237,0.5)]" />
-                                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-violet-800 dark:text-violet-300">AI Editor</span>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        placeholder="Describe semantic edits (e.g., 'Make the tone more assertive')"
-                                        value={feedback}
-                                        onChange={(e) => setFeedback(e.target.value)}
-                                        className="flex-1 bg-white/60 dark:bg-slate-900/60 border border-violet-100 dark:border-violet-800 rounded-xl px-6 h-12 text-sm focus:ring-2 focus:ring-violet-500/20 outline-none transition-all placeholder:italic"
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter' && feedback && !isApplyingFeedback) {
-                                                handleApplyReviewFeedback();
-                                            }
-                                        }}
-                                    />
-                                    <button
-                                        onClick={handleApplyReviewFeedback}
-                                        disabled={!feedback || isApplyingFeedback}
-                                        className="flex items-center gap-3.5 px-8 h-12 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all shadow-xl shadow-violet-200 dark:shadow-none active:scale-95 shrink-0"
-                                    >
-                                        {isApplyingFeedback ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-                                        Apply Refinement
-                                    </button>
-                                </div>
-
-                                {/* Row 2: Actions — px-6 py-4 */}
-                                <div className="px-8 lg:px-12 py-4 bg-slate-50 dark:bg-slate-900/50 flex items-center justify-between">
-                                    <div className="flex items-center gap-4">
-                                        <button
-                                            onClick={() => setIsPreviewOpen(true)}
-                                            className="px-8 py-2.5 h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all shadow-sm flex items-center gap-2"
-                                        >
-                                            Preview
-                                        </button>
-                                        <button
-                                            onClick={() => handleRejectDraft(selectedReviewDraft.id)}
-                                            disabled={isRejecting}
-                                            className="px-8 py-2.5 h-12 bg-red-50 text-red-600 hover:bg-red-100 border border-red-100 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all shadow-sm flex items-center gap-3"
-                                        >
-                                            {isRejecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
-                                            Reject
-                                        </button>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <button
-                                            onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)}
-                                            className="px-8 py-2.5 h-12 bg-violet-50 text-violet-700 hover:bg-violet-100 border border-violet-100 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all shadow-sm"
-                                        >
-                                            Mark Reviewed
-                                        </button>
-                                        <button
-                                            onClick={() => handleApproveDraft(selectedReviewDraft)}
-                                            disabled={isPublished}
-                                            className="px-10 py-2.5 h-12 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all shadow-xl shadow-emerald-200 dark:shadow-none active:scale-95 flex items-center gap-3"
-                                        >
-                                            {isPublished ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
-                                            Approve & Publish
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-            ) : (
-                /* The Draft List (Queues) */
-                <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
-                    <div className="flex items-center justify-between mb-2 px-1">
-                        <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
+
+                {/* 3. DOCKED ACTIONS BAR (Sticky Bottom) — Exactly py-3.5 and py-4 */}
+                <div className="flex-shrink-0 bg-white border-t border-slate-200 z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.03)] flex flex-col">
+                    
+                    {/* Row 1: AI Editor — px-8 py-3.5 */}
+                    <div className="px-8 py-3.5 bg-violet-50/80 border-b border-violet-100 flex items-center gap-5">
+                        <div className="flex items-center gap-3 shrink-0">
+                            <span className="w-2.5 h-2.5 rounded-full bg-violet-500 animate-pulse shadow-[0_0_8px_rgba(139,92,246,0.5)]"></span>
+                            <span className="text-[11px] font-black text-violet-900 uppercase tracking-widest">AI Editor</span>
+                        </div>
+                        <input 
+                            type="text" 
+                            placeholder="E.g., Rewrite the second paragraph to sound more professional..."
+                            value={feedback}
+                            onChange={(e) => setFeedback(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleApplyReviewFeedback()}
+                            className="flex-1 bg-white border border-violet-200 rounded-xl px-5 h-12 text-sm focus:ring-2 focus:ring-violet-500/10 transition-all outline-none"
+                        />
+                        <button 
+                            onClick={handleApplyReviewFeedback}
+                            disabled={isApplyingFeedback || !feedback}
+                            className="px-8 h-12 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-black text-[10px] tracking-widest uppercase rounded-xl transition-all shadow-lg active:scale-95"
+                        >
+                            {isApplyingFeedback ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Apply Refinement'}
+                        </button>
                     </div>
-                    <div className="grid grid-cols-1 gap-6">
-                        {isFetchingDrafts || filteredDrafts === null ? (
-                            Array.from({ length: 3 }).map((_, i) => (
-                                <div key={i} className="flex gap-6 items-center p-8 bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse">
-                                    <Skeleton className="w-16 h-16 rounded-[1.25rem] shrink-0" /><div className="flex-1 space-y-3"><Skeleton className="h-5 w-2/3" /><Skeleton className="h-3 w-1/4" /></div>
-                                </div>
-                            ))
-                        ) : filteredDrafts.length > 0 ? (
-                            filteredDrafts.map((draft) => (
-                                <Card key={draft.id} hoverable className="p-8 cursor-pointer group border-slate-200 dark:border-slate-800 overflow-hidden" onClick={() => handleSelectReviewDraft(draft.id)}>
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-7">
-                                            <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-900/10 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm">
-                                                <FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3>
-                                                <div className="flex items-center gap-6">
-                                                    <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                                                        <Calendar className="w-3.5 h-3.5" />
-                                                        {new Date(draft.createdAt || draft.created_at).toLocaleDateString()}
-                                                    </span>
-                                                    {draft.authorEmail && <span className="text-[10px] font-medium text-violet-400 lowercase italic">by {draft.authorEmail}</span>}
-                                                    <Badge variant="outline" className="px-3 border-slate-200 dark:border-slate-800 text-[9px] uppercase tracking-widest font-black">Ready</Badge>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
-                                            <span className="text-[11px] font-extrabold uppercase tracking-widest text-violet-500">Launch Review</span>
-                                            <ArrowRight className="w-5 h-5 text-violet-500" />
-                                        </div>
-                                    </div>
-                                </Card>
-                            ))
-                        ) : (
-                            <div className="bg-white/40 dark:bg-violet-950/5 backdrop-blur-sm border-2 border-dashed border-violet-100 dark:border-violet-900/40 rounded-[2rem] p-16 text-center shadow-sm">
-                                <div className="w-20 h-20 bg-violet-50 dark:bg-violet-950/30 rounded-[1.25rem] flex items-center justify-center mx-auto mb-8 ring-1 ring-violet-100 dark:ring-violet-900/50 shadow-inner">
-                                    <Zap className="w-10 h-10 text-violet-500 animate-pulse" />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 uppercase tracking-wide">Queue Clear</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[320px] font-medium leading-relaxed mx-auto italic">All high-intent drafts have been processed.</p>
-                            </div>
-                        )}
+
+                    {/* Row 2: Audit Actions — px-8 py-4 */}
+                    <div className="px-8 py-4 bg-slate-50/50 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <button 
+                                onClick={() => setIsPreviewOpen(true)}
+                                className="px-8 h-12 bg-white border border-slate-200 hover:border-slate-300 text-slate-600 font-bold text-[10px] tracking-widest uppercase rounded-xl shadow-sm transition-all active:scale-95"
+                            >
+                                Preview
+                            </button>
+                            <button 
+                                onClick={() => handleRejectDraft(selectedReviewDraft.id)}
+                                disabled={isRejecting}
+                                className="px-8 h-12 bg-red-50 text-red-600 hover:bg-red-100 border border-red-100 font-bold text-[10px] tracking-widest uppercase rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-2"
+                            >
+                                {isRejecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
+                                Reject
+                            </button>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <button 
+                                onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)}
+                                className="px-8 h-12 bg-violet-50 hover:bg-violet-100 text-violet-700 font-black text-[10px] tracking-widest uppercase rounded-xl transition-all"
+                            >
+                                Mark Reviewed
+                            </button>
+                            <button 
+                                onClick={() => handleApproveDraft(selectedReviewDraft)}
+                                disabled={isPublished}
+                                className="px-12 h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] tracking-widest uppercase rounded-xl shadow-xl active:scale-95 flex items-center gap-2"
+                            >
+                                {isPublished ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
+                                Approve & Publish
+                            </button>
+                        </div>
                     </div>
                 </div>
-            )}
+            </div>
+        );
+    }
+
+    /* ── QUEUE VIEW (Same as before) ── */
+    return (
+        <div className="animate-fadeIn w-full space-y-10 pb-24 px-4 lg:px-8">
+            <div className="flex items-center justify-between mb-2">
+                <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-6">
+                {isFetchingDrafts || filteredDrafts === null ? (
+                    Array.from({ length: 3 }).map((_, i) => (
+                        <div key={i} className="flex gap-6 items-center p-8 bg-white rounded-3xl border border-slate-200 shadow-sm animate-pulse">
+                            <Skeleton className="w-16 h-16 rounded-2xl shrink-0" /><div className="flex-1 space-y-3"><Skeleton className="h-5 w-2/3" /><Skeleton className="h-3 w-1/4" /></div>
+                        </div>
+                    ))
+                ) : filteredDrafts.length > 0 ? (
+                    filteredDrafts.map((draft) => (
+                        <Card key={draft.id} hoverable className="p-8 cursor-pointer group border-slate-200" onClick={() => handleSelectReviewDraft(draft.id)}>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-7">
+                                    <div className="w-16 h-16 rounded-3xl bg-violet-50 border border-violet-100 flex items-center justify-center group-hover:bg-violet-600 transition-all duration-500 shadow-sm">
+                                        <FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <h3 className="text-lg font-bold text-slate-900 group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3>
+                                        <div className="flex items-center gap-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                            <Calendar className="w-3.5 h-3.5" /> {new Date(draft.createdAt || draft.created_at).toLocaleDateString()}
+                                            {draft.authorEmail && <span className="text-violet-400 lowercase italic font-medium">by {draft.authorEmail}</span>}
+                                            <Badge variant="outline" className="px-3">DRAFT</Badge>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ArrowRight className="w-6 h-6 text-slate-300 group-hover:text-violet-500 transition-all group-hover:translate-x-2" />
+                            </div>
+                        </Card>
+                    ))
+                ) : (
+                    <div className="bg-white/40 border-2 border-dashed border-violet-100 rounded-[2.5rem] p-16 text-center">
+                        <Zap className="w-12 h-12 text-violet-300 mx-auto mb-6 animate-pulse" />
+                        <h3 className="text-xl font-bold text-slate-900 mb-2 uppercase tracking-wide">Editorial Buffer Empty</h3>
+                        <p className="text-sm text-slate-500 italic">Systems are optimized and waiting for high-intent generations.</p>
+                    </div>
+                )}
+            </div>
 
             {/* PREVIEW MODAL */}
             {isPreviewOpen && selectedReviewDraft && (
                 <Portal>
                     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fadeIn">
-                        <div className="bg-white dark:bg-slate-950 w-[96%] max-w-[1440px] h-[94vh] flex flex-col rounded-3xl shadow-[0_0_100px_rgba(0,0,0,0.5)] relative animate-scaleIn overflow-hidden border border-slate-200 dark:border-slate-800">
-                            <button onClick={() => setIsPreviewOpen(false)} className="absolute top-8 right-8 p-3 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-all z-30 shadow-sm">
+                        <div className="bg-white w-[96%] max-w-[1440px] h-[94vh] flex flex-col rounded-3xl shadow-2xl relative animate-scaleIn overflow-hidden">
+                            <button onClick={() => setIsPreviewOpen(false)} className="absolute top-8 right-8 p-3 bg-slate-100 hover:bg-slate-200 rounded-full transition-all z-30 shadow-sm">
                                 <X className="w-6 h-6 text-slate-500" />
                             </button>
                             <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-24 flex flex-col items-center">
-                                <div className="max-w-[850px] w-full space-y-16">
-                                    <h1 className="text-4xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight text-center">
-                                        {selectedReviewDraft.title}
-                                    </h1>
-
+                                <div className="max-w-[900px] w-full space-y-20">
+                                    <h1 className="text-4xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-tight text-center">{selectedReviewDraft.title}</h1>
                                     {selectedReviewDraft.imageUrl && (
-                                        <div className="relative group overflow-hidden rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-800 w-full mb-12">
-                                            <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" />
-                                            <div className="absolute inset-0 bg-violet-700/45" />
-                                            <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-12 text-center space-y-8">
-                                                 <img src="/Blog.png" className="h-10 lg:h-12 w-auto mb-4" alt="blog" />
-                                                 <h2 className="text-3xl lg:text-5xl font-bold drop-shadow-2xl">{selectedReviewDraft.title}</h2>
-                                                 <img src="/10xDS.png" className="h-12 lg:h-16 w-auto mt-10" alt="logo" />
-                                            </div>
+                                        <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl">
+                                             <img src={selectedReviewDraft.imageUrl} className="w-full h-auto" alt="preview" />
+                                             <div className="absolute inset-0 bg-violet-700/50 mix-blend-multiply" />
                                         </div>
                                     )}
-                                    <article dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }} className="text-black dark:text-white text-lg lg:text-xl leading-relaxed prose prose-stone lg:prose-xl dark:prose-invert max-w-none" />
+                                    <article dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }} className="prose prose-stone prose-xl max-w-none text-slate-800 leading-relaxed" />
                                 </div>
                             </div>
-                            <div className="p-10 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-5 bg-slate-50/50 dark:bg-slate-900/50">
-                                <Button variant="secondary" onClick={() => setIsPreviewOpen(false)} className="px-10 h-16 rounded-2xl border border-slate-200 shadow-sm font-bold tracking-widest text-[11px] uppercase">Continue Design</Button>
-                                <Button variant="primary" onClick={() => { handleApproveDraft(selectedReviewDraft); setIsPreviewOpen(false); }} isLoading={isPublished} className="px-12 h-16 bg-emerald-600 hover:bg-emerald-700 rounded-2xl shadow-xl shadow-emerald-600/10 font-black tracking-[0.2em] text-[11px] uppercase">
+                            <div className="p-10 border-t border-slate-100 flex justify-end gap-5 bg-slate-50/50">
+                                <Button variant="secondary" onClick={() => setIsPreviewOpen(false)} className="px-10 h-16 rounded-2xl border-slate-200 font-bold uppercase tracking-widest text-[11px]">Keep Editing</Button>
+                                <Button variant="primary" onClick={() => { handleApproveDraft(selectedReviewDraft); setIsPreviewOpen(false); }} isLoading={isPublished} className="px-12 h-16 bg-emerald-600 hover:bg-emerald-700 rounded-2xl shadow-xl font-black uppercase tracking-[0.2em] text-[11px]">
                                     <CheckCircle className="w-5 h-5 mr-3" />Approve & Go Live
                                 </Button>
                             </div>
