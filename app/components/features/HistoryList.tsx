@@ -166,63 +166,78 @@ export const HistoryList = () => {
     }
 
     return (
-        <div className="animate-fadeIn flex-1 w-full flex justify-center p-8 pb-24 bg-slate-50 dark:bg-[#060606] transition-all duration-500 overflow-y-auto custom-scrollbar">
-            <div className="w-full max-w-4xl flex flex-col gap-8">
-                {/* Header aligned with cards */}
-                <div className="pb-4 border-b border-slate-200 dark:border-slate-800 mb-2">
-                    <h2 className="text-[11px] font-bold tracking-[0.2em] text-slate-400 dark:text-slate-500 uppercase">
-                        Production History ({history.length})
-                    </h2>
-                </div>
-                
+        <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
+            <div className="flex items-center justify-between mb-2 px-1">
+                <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">
+                    Production History ({history.length})
+                </h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6">
                 {history.length > 0 ? (
                     history.map((item, idx) => {
                         return (
-                            <div
+                            <Card
                                 key={idx}
+                                hoverable
                                 onClick={() => handleSelectHistoryItem(item)}
-                                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.04)] cursor-pointer transition-all hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-violet-200 dark:hover:border-violet-800 flex items-center justify-between group"
+                                className="p-8 group border-slate-200 dark:border-slate-800 border-l-4 border-l-transparent hover:border-l-violet-500 transition-all duration-500 shadow-sm cursor-pointer"
                             >
-                                <div className="flex items-center gap-6">
-                                    {/* Globe Icon Box - Refined 64x64 */}
-                                    <div className="w-16 h-16 rounded-2xl bg-[#f8f5ff] dark:bg-violet-900/20 flex items-center justify-center shrink-0 border border-violet-50 dark:border-violet-800/50">
-                                        <Globe className="w-7 h-7 text-violet-600 dark:text-violet-400" />
-                                    </div>
-                                    {/* Text Content */}
-                                    <div className="space-y-1.5 min-w-0">
-                                        <h3 className="text-[18px] font-bold text-slate-900 dark:text-white tracking-tight group-hover:text-violet-600 transition-colors truncate">
-                                            {item.title}
-                                        </h3>
-                                        <div className="flex flex-wrap items-center gap-4 text-[13px]">
-                                            <span className="flex items-center gap-1.5 text-slate-500 font-semibold">
-                                                <Calendar className="w-3.5 h-3.5 opacity-70" />
-                                                {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
-                                            </span>
-                                            <span className="font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2.5 py-0.5 rounded uppercase tracking-wide text-[11px]">
-                                                Published
-                                            </span>
-                                            {(item.publishedBy?.email || item.authorEmail) && (
-                                                <span className="text-slate-400 font-medium">
-                                                    <span className="uppercase tracking-widest text-[9px] font-black opacity-60">Published by: </span>
-                                                    <span className="text-slate-600 dark:text-slate-300 font-bold lowercase">{item.publishedBy?.email || item.authorEmail}</span>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-7">
+                                        <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 transition-all duration-500 shadow-sm">
+                                            <Globe className="w-8 h-8 text-violet-500 group-hover:text-white transition-colors" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight leading-tight">
+                                                {item.title}
+                                            </h3>
+                                            <div className="flex items-center gap-6">
+                                                <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                                    <Calendar className="w-3.5 h-3.5" />
+                                                    {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
                                                 </span>
+                                                <Badge variant="success" className="px-3">Published</Badge>
+                                                {item.authorEmail && (
+                                                    <span className="text-[10px] font-medium text-emerald-600/70 dark:text-emerald-400/50 lowercase italic">
+                                                        by {item.authorEmail}
+                                                    </span>
+                                                )}
+                                            </div>                                             {item.auditLog && item.auditLog.length > 0 && (
+                                                <div className="flex items-center gap-2 flex-wrap mt-1">
+                                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Reviewed by:</span>
+                                                    {item.auditLog.map((log: any, i: number) => (
+                                                        <span
+                                                            key={i}
+                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-300 border border-violet-100 dark:border-violet-900/50"
+                                                        >
+                                                            {log.email}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            {item.publishedBy && (
+                                                <div className="flex items-center gap-2 flex-wrap mt-1">
+                                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Published by:</span>
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
+                                                        {item.publishedBy.email}
+                                                    </span>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
-                                </div>
-                                {/* VIEW LIVE Button */}
-                                {item.url && (
                                     <a
                                         href={item.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={(e) => e.stopPropagation()}
-                                        className="shrink-0 px-5 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-[11px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 hover:bg-slate-900 hover:text-white hover:border-slate-900 dark:hover:bg-white dark:hover:text-slate-900 transition-all shadow-sm"
+                                        className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 transition-all text-slate-400 shadow-sm opacity-0 group-hover:opacity-100 duration-500 -translate-x-4 group-hover:translate-x-0"
+                                        title="View published article"
                                     >
-                                        View Live
+                                        <ExternalLink className="w-5 h-5" />
                                     </a>
-                                )}
-                            </div>
+                                </div>
+                            </Card>
                         );
                     })
                 ) : (
