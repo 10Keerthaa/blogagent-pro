@@ -185,46 +185,41 @@ export const ReviewList = () => {
     return (
         <div className="relative">
             {selectedReviewDraft ? (
-                <div className={`animate-fadeIn w-full transition-all duration-500 space-y-0`}>
+                <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-10`}>
                     {/* Header Actions */}
-                    <div className="sticky top-0 bg-white dark:bg-slate-950 z-30 border-b border-slate-100 dark:border-slate-800">
-                        <div className="w-full flex items-start justify-between py-6 px-10">
-                            <div className="flex-1 flex justify-start">
-                                <button
+                    <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
+                        <div className="w-full flex items-center justify-between py-8 pr-6">
+                            <div className="flex items-center gap-6">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
                                     onClick={() => {
                                         setSelectedReviewDraft(null);
                                         handleClearForm();
                                     }}
-                                    className="flex items-center gap-2 text-slate-500 hover:text-slate-700 font-bold text-[11px] uppercase tracking-widest mt-1.5 transition-colors"
+                                    className="group w-[150px] flex items-center justify-start gap-2 h-7 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-800 bg-transparent text-slate-500 hover:text-violet-600 hover:border-violet-300 dark:hover:border-violet-700 transition-all shadow-none"
                                 >
-                                    <ArrowLeft className="w-4 h-4" />
-                                    BACK TO QUEUE
-                                </button>
+                                    <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Back</span>
+                                </Button>
+                                <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
+                                <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
                             </div>
-                            <div className="flex-1 flex justify-center mt-1">
-                                <span className="px-4 py-1.5 bg-[#f8f5ff] text-violet-600 font-bold uppercase tracking-widest text-[10px] rounded-md shadow-sm border border-violet-100 dark:bg-violet-900/30 dark:border-violet-800">
-                                    Editorial Review
-                                </span>
-                            </div>
-                            <div className="flex-1 flex justify-end">
-                                <div className="flex flex-col items-start gap-1">
-                                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#94a3b8] pl-1">
-                                        WordPress Category
-                                    </span>
-                                    <div className="min-w-[200px]">
-                                        <CategorySelector 
-                                            selectedIds={selectedCategories}
-                                            onChange={setSelectedCategories}
-                                            readOnly={isReadOnly}
-                                        />
-                                    </div>
+                            <div className="flex items-center gap-3">
+                                {/* ELITE CATEGORY SELECTOR INTEGRATION */}
+                                <div className="ml-4 min-w-[200px]">
+                                    <CategorySelector 
+                                        selectedIds={selectedCategories}
+                                        onChange={setSelectedCategories}
+                                        readOnly={isReadOnly}
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Content Section */}
-                    <section className="w-full space-y-10 relative">
+                    <section className="w-full space-y-10 pr-6 relative">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
@@ -237,37 +232,58 @@ export const ReviewList = () => {
                                 }}
                             />
                         )}
+                        <Input
+                            label="Editorial Title"
+                            value={selectedReviewDraft.title}
+                            onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
+                            className="text-3xl font-extrabold py-8 px-0 border-none bg-transparent focus:ring-0 focus:border-violet-500 rounded-none border-b border-slate-100 dark:border-slate-800 tracking-tight text-center"
+                        />
 
-                        {/* Top Purple Title Section */}
-                        <div className="relative rounded-[1.5rem] overflow-hidden mt-8 mx-10 bg-[#7c3aed] shadow-lg">
-                            {selectedReviewDraft.imageUrl && (
-                                <img src={selectedReviewDraft.imageUrl} className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-20" alt="Cover" />
-                            )}
-                            <div className="relative z-10 px-12 lg:px-16 py-16 lg:py-20 min-h-[380px] flex flex-col justify-end">
-                                <div className="flex flex-wrap items-center gap-3 mb-6">
-                                {(() => {
-                                    const sortedCats = CATEGORIES.filter(c => selectedCategories.includes(c.id)).sort((a, b) => a.id === LOCKED_CATEGORY_ID ? -1 : 1);
-                                    if (sortedCats.length === 0) {
-                                        return <span className="bg-white/20 text-white text-sm font-bold px-4 py-1.5 rounded-lg">Blog</span>;
-                                    }
-                                    return sortedCats.map((cat, idx) => (
-                                        <React.Fragment key={cat.id}>
-                                            {idx > 0 && <span className="text-white/60 font-medium text-sm">→</span>}
-                                            <span className={`${cat.id === LOCKED_CATEGORY_ID ? 'bg-white/20' : 'bg-black/20'} text-white text-sm font-bold px-4 py-1.5 rounded-lg`}>
-                                                {cat.name}
-                                            </span>
-                                        </React.Fragment>
-                                    ));
-                                })()}
-                                </div>
-                                <Textarea
-                                    value={selectedReviewDraft.title}
-                                    onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                                    className="p-0 border-none bg-transparent resize-none text-[42px] lg:text-[56px] font-bold text-white tracking-tight leading-[1.1] font-sans shadow-none focus:ring-0 focus:outline-none focus:border-transparent min-h-[80px]"
-                                    readOnly={isReadOnly}
+                        {selectedReviewDraft.imageUrl && (
+                            <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl">
+                                <img
+                                    src={selectedReviewDraft.imageUrl}
+                                    alt={selectedReviewDraft.title}
+                                    className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
+                                    style={{ aspectRatio: '4/3' }}
                                 />
+                                <div
+                                    className="absolute inset-0 z-10 pointer-events-none"
+                                    style={{ backgroundColor: 'rgba(139, 92, 246, 0.45)' }}
+                                />
+                                <div className="absolute inset-0 z-20 pointer-events-none">
+                                    <img
+                                        src="/Blog.png"
+                                        alt="Blog Tag"
+                                        className="absolute top-[40px] left-[40px] w-auto h-10 object-contain"
+                                    />
+                                    <div
+                                        className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
+                                        style={{ top: '100px', lineHeight: '1.3' }}
+                                    >
+                                        {selectedReviewDraft.title.includes(':') ? (
+                                            <>
+                                                <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                    {selectedReviewDraft.title.split(':')[0]}:
+                                                </h1>
+                                                <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
+                                                    {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                {selectedReviewDraft.title}
+                                            </h1>
+                                        )}
+                                    </div>
+                                    <img
+                                        src="/10xDS.png"
+                                        alt="Brand Logo"
+                                        className="absolute bottom-[40px] right-[40px] w-auto h-14 object-contain"
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <div
                             ref={editorRef}
@@ -282,8 +298,8 @@ export const ReviewList = () => {
                                 setSelectedReviewDraft(updated);
                                 handleSaveManualEdits(updated);
                             }}
-                            className={`text-slate-800 dark:text-slate-200 text-[17px] leading-[1.8] font-medium mx-10 prose prose-stone dark:prose-invert max-w-[800px] focus:outline-none min-h-[400px]
-                                prose-headings:text-slate-900 dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
+                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
+                                prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
                             onMouseUp={updateSelectionRect}
                             onSelect={updateSelectionRect}
                             onKeyUp={(e) => {
@@ -307,7 +323,7 @@ export const ReviewList = () => {
                         />
 
                         {selectedReviewDraft.infographicUrl && (
-                            <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50 mx-10">
+                            <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
                                 <div className="flex items-center justify-between mb-8">
                                     <div className="flex-1" />
                                     <h4 className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest text-center">Visual Insight</h4>
@@ -344,7 +360,7 @@ export const ReviewList = () => {
                                             </Button>
                                         </div>
                                     </div>
-                                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm rounded-xl">
+                                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
                                         <img src={selectedReviewDraft.infographicUrl} alt={selectedReviewDraft.title} className="w-full h-auto" />
                                     </div>
                                 </div>
@@ -353,7 +369,7 @@ export const ReviewList = () => {
                     </section>
 
                     {!isReadOnly && (
-                        <section className="w-auto border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30 mt-12 mx-10" ref={refinementRef}>
+                        <section className="w-auto mx-[-1.5rem] lg:mx-[-2.5rem] border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30" ref={refinementRef}>
                             <div className="flex flex-col">
                                 <div className="w-full py-4 px-10">
                                     <h4 className="text-[11px] font-bold uppercase tracking-widest text-violet-400">AI Refinement</h4>
@@ -369,10 +385,10 @@ export const ReviewList = () => {
                                         value={feedback}
                                         onChange={(e) => setFeedback(e.target.value)}
                                         placeholder="Inject directives..."
-                                        className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-10 py-8 text-base shadow-none focus:ring-0"
+                                        className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
                                     />
                                     <div className="w-full flex justify-center px-10">
-                                        <Button variant="secondary" onClick={handleApplyReviewFeedback} isLoading={isApplyingFeedback} disabled={!feedback || !primaryKeyword} className="w-[90%] lg:w-[85%] h-14 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm">
+                                        <Button variant="secondary" onClick={handleApplyReviewFeedback} isLoading={isApplyingFeedback} disabled={!feedback || !primaryKeyword} className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm">
                                             {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply Refinement'}
                                         </Button>
                                     </div>
@@ -382,69 +398,44 @@ export const ReviewList = () => {
                     )}
 
                     {!isReadOnly && (
-                        <div className="w-auto mt-12 mx-10 mb-8 pt-8 pb-8 flex items-center justify-between px-8 bg-white dark:bg-slate-900 shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)] rounded-[1.5rem] border border-slate-100 dark:border-slate-800">
-                            <div className="flex gap-4">
-                                <Button variant="secondary" onClick={() => setIsPreviewOpen(true)} className="px-6 py-2.5 h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-[11px] uppercase tracking-widest shadow-sm rounded-xl hover:bg-slate-50">
-                                    PREVIEW
-                                </Button>
-                                <Button variant="danger" onClick={() => handleRejectDraft(selectedReviewDraft.id)} isLoading={isRejecting} className="px-6 py-2.5 h-12 bg-white dark:bg-slate-900 border border-red-200 text-red-500 font-bold text-[11px] uppercase tracking-widest hover:bg-red-50 shadow-sm rounded-xl">
-                                    REJECT
-                                </Button>
-                            </div>
-                            <div className="flex gap-4">
-                                <Button variant="secondary" onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)} disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)} className="px-6 py-2.5 h-12 bg-[#f8f5ff] dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 border-none font-bold text-[11px] uppercase tracking-widest hover:bg-[#f3ebff] transition-all rounded-xl shadow-none">
-                                    {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? 'REVIEWED' : 'MARK AS REVIEWED'}
-                                </Button>
-                                <Button variant="primary" onClick={() => handleApproveDraft(selectedReviewDraft)} isLoading={isPublished} className="px-6 py-2.5 h-12 bg-[#10b981] hover:bg-emerald-600 border-none text-white font-bold text-[11px] uppercase tracking-widest rounded-xl shadow-lg shadow-emerald-500/20">
-                                    APPROVE & PUBLISH
-                                </Button>
-                            </div>
+                        <div className="w-full pt-10 pb-20 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50 px-10">
+                            <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none">
+                                Save Edits
+                            </Button>
+                            <Button variant="secondary" onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)} disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]">
+                                {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? <><CheckCircle className="w-4 h-4 mr-2 text-emerald-500" />Reviewed</> : <><Users className="w-4 h-4 mr-2" />Mark as Reviewed</>}
+                            </Button>
+                            <Button variant="danger" size="sm" onClick={() => handleRejectDraft(selectedReviewDraft.id)} isLoading={isRejecting} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]">Reject</Button>
+                            <Button variant="secondary" size="sm" onClick={() => setIsPreviewOpen(true)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors shadow-none font-bold">Preview</Button>
+                            <Button variant="primary" size="sm" onClick={() => handleApproveDraft(selectedReviewDraft)} isLoading={isPublished} className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]">
+                                <CheckCircle className="w-4 h-4 mr-2 shrink-0" />Approve & Publish Now
+                            </Button>
                         </div>
                     )}
                 </div>
             ) : (
-                <div className="animate-fadeIn w-full space-y-8 pb-24 transition-all duration-500 px-10 pt-10">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-[12px] font-bold tracking-widest text-[#94a3b8] uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
+                <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
+                    <div className="flex items-center justify-between mb-2 px-1">
+                        <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
                     </div>
-                    <div className="grid grid-cols-1 gap-5">
+                    <div className="grid grid-cols-1 gap-6">
                         {isFetchingDrafts || filteredDrafts === null ? (
                             Array.from({ length: 3 }).map((_, i) => (
-                                <div key={i} className="flex gap-6 items-center p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-sm animate-pulse border border-slate-100">
-                                    <Skeleton className="w-14 h-14 rounded-2xl shrink-0" /><div className="flex-1 space-y-3"><Skeleton className="h-5 w-1/3" /><Skeleton className="h-3 w-1/4" /></div>
+                                <div key={i} className="flex gap-6 items-center p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse">
+                                    <Skeleton className="w-16 h-16 rounded-2xl shrink-0" /><div className="flex-1 space-y-3"><Skeleton className="h-5 w-2/3" /><Skeleton className="h-3 w-1/4" /></div>
                                 </div>
                             ))
                         ) : filteredDrafts.length > 0 ? (
                             filteredDrafts.map((draft) => (
-                                <div 
-                                    key={draft.id} 
-                                    className="bg-white dark:bg-slate-900 border border-slate-100 hover:border-violet-200 dark:border-slate-800 dark:hover:border-violet-800 rounded-2xl p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer transition-all hover:shadow-md flex items-center justify-between group"
-                                    onClick={() => handleSelectReviewDraft(draft.id)}
-                                >
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-16 h-16 rounded-[1rem] bg-[#f8f5ff] dark:bg-violet-900/20 flex items-center justify-center shrink-0">
-                                            <FileText className="w-7 h-7 text-[#8b5cf6]" />
+                                <Card key={draft.id} hoverable className="p-8 cursor-pointer group border-slate-200 dark:border-slate-800" onClick={() => handleSelectReviewDraft(draft.id)}>
+                                    <div className={`flex items-center justify-between p-4 cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-violet-100/10 dark:bg-violet-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                                        <div className="flex items-center gap-7">
+                                            <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
+                                            <div className="space-y-2"><h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3><div className="flex items-center gap-6"><span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" />{new Date(draft.createdAt || draft.created_at).toLocaleDateString()}</span>{draft.authorEmail && <span className="text-[10px] font-medium text-violet-400 lowercase italic">by {draft.authorEmail}</span>}<Badge variant="outline" className="px-3">Draft</Badge></div></div>
                                         </div>
-                                        <div className="space-y-1.5">
-                                            <h3 className="text-[18px] font-bold text-slate-800 dark:text-gray-100 tracking-tight group-hover:text-violet-600 transition-colors">{draft.title}</h3>
-                                            <div className="flex items-center gap-4 text-[13px]">
-                                                <span className="flex items-center gap-1.5 text-slate-500 font-medium">
-                                                    <Calendar className="w-3.5 h-3.5" />
-                                                    {new Date(draft.createdAt || draft.created_at).toLocaleDateString()}
-                                                </span>
-                                                {draft.authorEmail && (
-                                                    <span className="text-violet-400 font-medium italic">by {draft.authorEmail}</span>
-                                                )}
-                                                <span className="px-2.5 py-0.5 bg-[#f1f5f9] dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded font-bold text-[10px] uppercase tracking-wider">
-                                                    DRAFT
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0"><span className="text-[11px] font-extrabold uppercase tracking-widest text-violet-500">Launch Review</span><ArrowRight className="w-5 h-5 text-violet-500" /></div>
                                     </div>
-                                    <div className="flex items-center opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-4 group-hover:translate-x-0 pr-4">
-                                        <ArrowRight className="w-5 h-5 text-violet-500" />
-                                    </div>
-                                </div>
+                                </Card>
                             ))
                         ) : (
                             <div className="bg-white/40 dark:bg-violet-950/5 backdrop-blur-sm border-2 border-dashed border-violet-100 dark:border-violet-900/40 rounded-3xl p-16 text-center shadow-sm">
