@@ -44,8 +44,8 @@ const DashboardContent = () => {
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
 
-          {/* Scrollable Workspace (Universal Flow) */}
-          <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar scroll-smooth bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-500">
+          {/* Scrollable Workspace (Universal Flow) — Exactly p-8 lg:p-12 per AI Studio Spec */}
+          <div className="flex-1 overflow-y-auto p-8 lg:p-12 custom-scrollbar scroll-smooth bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-500">
             {/* Elite Error Banner */}
             {error && (
               <div
