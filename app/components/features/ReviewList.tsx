@@ -233,27 +233,70 @@ export const ReviewList = () => {
                     {/* 2. SCROLLABLE CANVAS (Middle Sister) */}
                     <div className="flex-1 overflow-y-auto p-8 lg:p-12 custom-scrollbar">
                         <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] overflow-hidden mb-12 relative border border-slate-100/50">
-                            
-                            {/* Purple Hero Header */}
-                            <div className="bg-violet-700 text-white p-12 lg:p-16 relative overflow-hidden">
-                                {/* The Glowing Orb */}
-                                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-500 rounded-full blur-[120px] mix-blend-screen pointer-events-none -mr-64 -mt-64 opacity-60 animate-pulse" />
-                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-fuchsia-500 rounded-full blur-[100px] mix-blend-multiply opacity-20 pointer-events-none" />
-                                
-                                <div className="relative z-10 flex flex-col gap-8">
-                                    {/* Glassmorphic Breadcrumb */}
-                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 w-fit">
-                                        <FileText className="w-4 h-4 text-violet-200" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-100">Production Draft</span>
+                                               {/* Purple Hero Header (with Image Support) */}
+                            <div className="relative overflow-hidden">
+                                {selectedReviewDraft.imageUrl ? (
+                                    <div className="relative h-[400px] lg:h-[480px]">
+                                        <img 
+                                            src={selectedReviewDraft.imageUrl} 
+                                            alt="Featured" 
+                                            className="w-full h-full object-cover"
+                                        />
+                                        {/* Brand Overlay */}
+                                        <div className="absolute inset-0 bg-violet-700/60 mix-blend-multiply" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-violet-900/80 via-transparent to-transparent" />
+                                        
+                                        {/* Blog Tag */}
+                                        <img 
+                                            src="/Blog.png" 
+                                            alt="Blog Tag" 
+                                            className="absolute top-10 left-10 h-10 w-auto object-contain drop-shadow-lg" 
+                                        />
+                                        
+                                        {/* Brand Logo */}
+                                        <img 
+                                            src="/10xDS.png" 
+                                            alt="Brand Logo" 
+                                            className="absolute bottom-10 right-10 h-14 w-auto object-contain drop-shadow-lg" 
+                                        />
+
+                                        {/* The Card Title Content (Over Image) */}
+                                        <div className="absolute inset-0 p-12 lg:p-16 flex flex-col justify-end gap-6">
+                                            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 w-fit">
+                                                <FileText className="w-4 h-4 text-violet-100" />
+                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-100">Production Draft</span>
+                                            </div>
+                                            <textarea
+                                                value={selectedReviewDraft.title}
+                                                onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
+                                                className="w-full bg-transparent border-none p-0 text-3xl lg:text-4xl font-black tracking-tight text-white focus:ring-0 leading-tight resize-none drop-shadow-xl"
+                                                rows={2}
+                                            />
+                                        </div>
                                     </div>
-                                    
-                                    <textarea
-                                        value={selectedReviewDraft.title}
-                                        onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                                        className="w-full bg-transparent border-none p-0 text-4xl lg:text-5xl font-black tracking-tight text-white focus:ring-0 leading-tight resize-none scroll-hidden"
-                                        rows={2}
-                                    />
-                                </div>
+                                ) : (
+                                    /* Fallback Solid Hero */
+                                    <div className="bg-violet-700 text-white p-12 lg:p-16 relative overflow-hidden">
+                                        {/* The Glowing Orb */}
+                                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-500 rounded-full blur-[120px] mix-blend-screen pointer-events-none -mr-64 -mt-64 opacity-60 animate-pulse" />
+                                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-fuchsia-500 rounded-full blur-[100px] mix-blend-multiply opacity-20 pointer-events-none" />
+                                        
+                                        <div className="relative z-10 flex flex-col gap-8">
+                                            {/* Glassmorphic Breadcrumb */}
+                                            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 w-fit">
+                                                <FileText className="w-4 h-4 text-violet-200" />
+                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-100">Production Draft</span>
+                                            </div>
+                                            
+                                            <textarea
+                                                value={selectedReviewDraft.title}
+                                                onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
+                                                className="w-full bg-transparent border-none p-0 text-4xl lg:text-5xl font-black tracking-tight text-white focus:ring-0 leading-tight resize-none scroll-hidden"
+                                                rows={2}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Content Body */}
