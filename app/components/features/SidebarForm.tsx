@@ -31,7 +31,7 @@ export const SidebarForm = () => {
     const displayDescription = selectedReviewDraft?.metaDesc || description;
 
     return (
-        <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
+        <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
             {/* Brand Header */}
             <div className="h-16 pl-10 pr-6 border-b border-slate-100 dark:border-slate-800/50 flex items-center shrink-0">
                 <div className="flex items-center justify-between w-full group cursor-default">
@@ -191,24 +191,22 @@ export const SidebarForm = () => {
             </div>
 
             {/* Action Bar */}
-            <div className={`py-8 pr-0 pl-10 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent ${isReadOnly ? 'hidden' : ''} space-y-4`}>
+            <div className={`pt-6 pb-0 px-0 border-t border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-transparent ${isReadOnly ? 'hidden' : ''} flex flex-col`}>
                 {user && (
-                    <div className="space-y-2">
+                    <div className="w-full">
                         <Button
                             variant="secondary"
                             onClick={handleResumeDraft}
                             isLoading={isResuming}
                             disabled={!hasResumeDraft}
                             title={!hasResumeDraft ? "No unsaved drafts to recover." : "Recover your last interrupted work"}
-                            className={`w-full text-xs font-bold uppercase tracking-widest border-slate-200 dark:border-slate-800 gap-2 transition-all duration-500 ${!hasResumeDraft ? 'grayscale opacity-40 bg-slate-100/50 cursor-not-allowed shadow-none' : 'hover:shadow-md'}`}
+                            className={`w-full h-14 rounded-none text-xs font-bold uppercase tracking-widest border-none gap-2 transition-all duration-500 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 ${!hasResumeDraft ? 'grayscale opacity-60 cursor-not-allowed text-slate-400' : 'text-slate-700 dark:text-slate-300'}`}
                         >
                             <RefreshCw className={`w-3.5 h-3.5 ${isResuming ? 'animate-spin' : ''}`} />
                             Resume Last Draft
                         </Button>
                         {!hasResumeDraft && (
-                            <p className="text-[10px] text-center text-slate-400 font-medium italic animate-fadeIn">
-                                No unsaved drafts to recover.
-                            </p>
+                            <p className="hidden">No unsaved drafts to recover.</p>
                         )}
                     </div>
                 )}
@@ -239,7 +237,7 @@ export const SidebarForm = () => {
                     onClick={handleGenerate}
                     isLoading={isProcessingFullPost}
                     disabled={!prompt}
-                    className="w-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-violet-600/10 dark:shadow-none"
+                    className="w-full h-14 rounded-none text-xs font-bold uppercase tracking-widest shadow-none bg-violet-400 hover:bg-violet-500 text-white mt-1"
                 >
                     {isProcessingFullPost ? 'Processing...' : 'Generate Elite post'}
                 </Button>
