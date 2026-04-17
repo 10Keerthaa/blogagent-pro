@@ -122,8 +122,7 @@ export async function POST(req: Request) {
         } else {
           const central = parsed.central_theme || prompt;
           const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}: ${q.points.join(', ')}`).join(' | ');
-          const milestones = (parsed.milestones || []).join(' > ');
-          visualPrompt = `MODE: DASHBOARD | CENTRAL: ${central} | QUADRANTS: ${quadrants} | MILESTONES: ${milestones} | CHALLENGES: ${(parsed.challenges || []).join(', ')}`;
+          visualPrompt = `MODE: DASHBOARD | CENTRAL: ${central} | QUADRANTS: ${quadrants} | CHALLENGES: ${(parsed.challenges || []).join(', ')}`;
         }
       } catch (e) {
         visualPrompt = `MODE: DASHBOARD | CENTRAL: ${prompt}. Fallback.`;
@@ -169,6 +168,7 @@ STRICT ELITE MINIMALIST CONSTRAINTS:
 - PROMPT EXCLUSION: NEVER write the words "MODE", "ROADMAP", or "CONTAINER" in the image.
 - LOGO BUFFER: Maintain a 150px EMPTY TRANSPARENT SPACE in the bottom-right corner. NO text or icons in that zone.
 - VISUAL HIERARCHY: Bold, oversized Headers/Labels. Very small, refined secondary detail text.
+- MANDATORY DICTIONARY SPELLING: You MUST verify the spelling of EVERY SINGLE WORD you draw. ZERO tolerance for gibberish, mashed letters, or typos (e.g., no 'Prolonrud', 'Subotmal'). Every letter must be perfectly legible and exactly match standard English.
 - MIRROR RULE: Copy the text from the steps EXACTLY. Do not change any spelling or casing. Perfect spelling of "${steps}" is mandatory.
 
 STYLE: High-fidelity 3D vector. 
@@ -183,12 +183,12 @@ STRICT ELITE MINIMALIST CONSTRAINTS:
 - PROMPT EXCLUSION: NEVER write the words "MODE", "DASHBOARD", "MASTER", or "QUADRANT" in the image.
 - LOGO BUFFER: Maintain a 150px EMPTY TRANSPARENT SPACE in the bottom-right corner. NO text or icons in that zone.
 - VISUAL HIERARCHY: Dominate with large Titles. Use significantly smaller, clean font for bullet points.
+- MANDATORY DICTIONARY SPELLING: You MUST verify the spelling of EVERY SINGLE WORD you draw. ZERO tolerance for gibberish, mashed letters, or typos (e.g., no 'Mususegpureidal', 'Prolonrud', or 'Subotmal'). Every letter must be perfectly legible and correctly spelled in English.
 - MIRROR RULE: You must copy the text from the data highlights EXACTLY. If a word is provided to you, render it character-for-character. Flawless spelling is the highest priority.
 
 VIBRANT FULL-SPECTRUM VISUALS:
 1. Quadrant Modules: Use vibrant colors (Sage, Rose, Cerulean, Amber).
-2. Bottom Ribbon: Sequential milestone chevron steps.
-3. Sidebar Icons: Challenges and Trend summaries.
+2. Sidebar Icons: Challenges and Trend summaries.
 
 STYLE: Flat 2.5D Vector Illustration. 
 PALETTE: Dark Navy background ({r: 10, g: 25, b: 47}). 
