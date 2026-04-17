@@ -230,28 +230,20 @@ export const ReviewList = () => {
                                     />
                                     {/* Brand Multi-Tint Overlay */}
                                     <div className="absolute inset-0 bg-violet-700/50 mix-blend-multiply" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-violet-900/90 via-violet-900/40 to-transparent" />
                                     
                                     {/* Placements from Housekeeping Innovations reference */}
                                     <div className="absolute inset-0 p-10 lg:p-12">
-                                        {/* Top Left: Blog Tag */}
-                                        <div className="absolute top-10 left-10">
-                                            <div className="bg-violet-600 px-5 py-2 text-white font-bold text-sm shadow-xl">
+                                        {/* Top Left Group: Blog Tag + Title */}
+                                        <div className="absolute top-10 left-10 right-24 text-white">
+                                            <div className="bg-violet-600 px-5 py-2 text-white font-bold text-sm shadow-xl w-fit mb-8">
                                                 Blog
                                             </div>
-                                        </div>
-
-                                        {/* Bottom Left Group: Badge + Title */}
-                                        <div className="absolute bottom-10 left-10 right-24 text-white space-y-4">
-                                            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/20">
-                                                <FileText className="w-3.5 h-3.5 text-white/80" />
-                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Production Draft</span>
-                                            </div>
+                                            
                                             <textarea
                                                 value={selectedReviewDraft.title}
                                                 onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
                                                 className="w-full bg-transparent border-none p-0 text-3xl lg:text-4xl font-extrabold tracking-tight text-white focus:ring-0 leading-tight resize-none drop-shadow-2xl scroll-hidden"
-                                                rows={2}
+                                                rows={3}
                                             />
                                         </div>
 
