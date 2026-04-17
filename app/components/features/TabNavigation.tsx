@@ -37,16 +37,20 @@ export const TabNavigation = () => {
             aria-label="Dashboard Navigation"
             className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between px-6 shrink-0 z-40 sticky top-0 transition-all duration-300"
         >
-            {/* BRANDING LOGO (Left) */}
-            <div className="flex items-center gap-3 group cursor-default">
-                <div className="w-10 h-10 rounded-2xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-200 dark:shadow-none">
-                    <Zap className="text-white w-6 h-6 fill-current" />
+            {/* BRANDING LOGO (Left) - Hidden on Editor check to avoid Sidebar overlap */}
+            {activeTab !== 'create' ? (
+                <div className="flex items-center gap-3 group cursor-default animate-fadeIn">
+                    <div className="w-10 h-10 rounded-none bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-200 dark:shadow-none">
+                        <Zap className="text-white w-6 h-6 fill-current" />
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-[17px] font-black tracking-tight text-slate-800 dark:text-white leading-tight">10x<span className="text-violet-600">Blogagent</span></span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 leading-tight">Enterprise Engine v3.0</span>
+                    </div>
                 </div>
-                <div className="flex flex-col">
-                    <span className="text-[15px] font-black uppercase tracking-brand text-slate-800 dark:text-white leading-tight">Antigravity</span>
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 leading-tight">Enterprise Engine v3.0</span>
-                </div>
-            </div>
+            ) : (
+                <div className="w-10 h-10" /> // Spacer for layout balance
+            )}
 
             {/* UNDERLINE TABS (Absolute Centered) */}
             <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-10 h-full">
