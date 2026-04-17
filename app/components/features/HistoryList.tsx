@@ -166,14 +166,12 @@ export const HistoryList = () => {
     }
 
     return (
-        <div className="animate-fadeIn w-full pb-24 transition-all duration-500 px-10 pt-10">
-            <div className="mb-8">
-                <h2 className="text-[12px] font-bold tracking-widest text-[#94a3b8] uppercase">
+        <div className="animate-fadeIn flex-1 w-full flex justify-center p-8 pb-24 transition-all duration-500">
+            <div className="w-full max-w-5xl flex flex-col gap-4">
+                {/* Header */}
+                <h2 className="text-[12px] font-bold tracking-widest text-[#94a3b8] uppercase mb-2">
                     Production History ({history.length})
                 </h2>
-            </div>
-
-            <div className="grid grid-cols-1 gap-5">
                 {history.length > 0 ? (
                     history.map((item, idx) => {
                         return (
