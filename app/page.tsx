@@ -44,8 +44,8 @@ const DashboardContent = () => {
           {/* Top Segmented Navigation (Elite) */}
           <TabNavigation />
 
-          {/* Scrollable Workspace — Delegates padding and scroll to ReviewList when a draft is open */}
-          <div className={`flex-1 custom-scrollbar scroll-smooth transition-colors duration-500 bg-slate-50 dark:bg-[#0a0a0a] ${activeTab === 'review' && selectedReviewDraft ? 'overflow-hidden flex flex-col' : 'overflow-y-auto p-8 lg:p-12'}`}>
+          {/* Scrollable Workspace */}
+          <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar scroll-smooth">
             {/* Elite Error Banner */}
             {error && (
               <div
