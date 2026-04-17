@@ -197,7 +197,7 @@ export const ReviewList = () => {
                                         setSelectedReviewDraft(null);
                                         handleClearForm();
                                     }}
-                                    className="group flex items-center gap-2 h-7 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-800 bg-transparent text-slate-500 hover:text-violet-600 hover:border-violet-300 dark:hover:border-violet-700 transition-all shadow-none"
+                                    className="group w-[150px] flex items-center justify-start gap-2 h-7 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-800 bg-transparent text-slate-500 hover:text-violet-600 hover:border-violet-300 dark:hover:border-violet-700 transition-all shadow-none"
                                 >
                                     <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
                                     <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Back</span>
