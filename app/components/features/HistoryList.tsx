@@ -166,90 +166,76 @@ export const HistoryList = () => {
     }
 
     return (
-        <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
-            <div className="flex items-center justify-between mb-2 px-1">
-                <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">
+        <div className="animate-fadeIn w-full space-y-12 pb-24 transition-all duration-500 px-4 lg:px-12">
+            <div className="flex items-center border-b border-slate-200/60 dark:border-slate-800 pb-6 mb-8">
+                <h2 className="text-[11px] font-bold tracking-executive text-slate-400 uppercase">
                     Production History ({history.length})
                 </h2>
             </div>
 
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 gap-8">
                 {history.length > 0 ? (
                     history.map((item, idx) => {
                         return (
-                            <Card
+                            <div
                                 key={idx}
-                                hoverable
                                 onClick={() => handleSelectHistoryItem(item)}
-                                className="p-8 group border-slate-200 dark:border-slate-800 border-l-4 border-l-transparent hover:border-l-violet-500 transition-all duration-500 shadow-sm cursor-pointer"
+                                className="bg-white dark:bg-slate-900 rounded-3xl p-8 flex items-center justify-between border border-slate-100 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 cursor-pointer group"
                             >
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-7">
-                                        <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 transition-all duration-500 shadow-sm">
-                                            <Globe className="w-8 h-8 text-violet-500 group-hover:text-white transition-colors" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight leading-tight">
-                                                {item.title}
-                                            </h3>
-                                            <div className="flex items-center gap-6">
-                                                <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                                                    <Calendar className="w-3.5 h-3.5" />
-                                                    {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
+                                <div className="flex items-center gap-8 flex-1">
+                                    {/* Icon Wing */}
+                                    <div className="w-20 h-20 rounded-2xl bg-violet-50 dark:bg-violet-950/20 flex items-center justify-center transition-all duration-500 group-hover:scale-105 group-hover:bg-violet-600 shadow-inner">
+                                        <Globe className="w-10 h-10 text-violet-500 group-hover:text-white transition-colors" />
+                                    </div>
+
+                                    {/* Info Wing */}
+                                    <div className="flex-1 space-y-4">
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight group-hover:text-violet-600 transition-colors">
+                                            {item.title}
+                                        </h3>
+                                        <div className="flex items-center gap-6">
+                                            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                                <Calendar className="w-4 h-4" />
+                                                {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
+                                            </div>
+                                            <div className="px-5 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-100/50 dark:border-emerald-900/50">
+                                                Published
+                                            </div>
+                                            {item.authorEmail && (
+                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                    Published By: <span className="text-slate-600 dark:text-slate-200">{item.authorEmail}</span>
                                                 </span>
-                                                <Badge variant="success" className="px-3">Published</Badge>
-                                                {item.authorEmail && (
-                                                    <span className="text-[10px] font-medium text-emerald-600/70 dark:text-emerald-400/50 lowercase italic">
-                                                        by {item.authorEmail}
-                                                    </span>
-                                                )}
-                                            </div>                                             {item.auditLog && item.auditLog.length > 0 && (
-                                                <div className="flex items-center gap-2 flex-wrap mt-1">
-                                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Reviewed by:</span>
-                                                    {item.auditLog.map((log: any, i: number) => (
-                                                        <span
-                                                            key={i}
-                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-300 border border-violet-100 dark:border-violet-900/50"
-                                                        >
-                                                            {log.email}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            )}
-                                            {item.publishedBy && (
-                                                <div className="flex items-center gap-2 flex-wrap mt-1">
-                                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Published by:</span>
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
-                                                        {item.publishedBy.email}
-                                                    </span>
-                                                </div>
                                             )}
                                         </div>
                                     </div>
+                                </div>
+
+                                {/* Action Wing */}
+                                <div className="shrink-0 pl-10">
                                     <a
                                         href={item.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={(e) => e.stopPropagation()}
-                                        className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 transition-all text-slate-400 shadow-sm opacity-0 group-hover:opacity-100 duration-500 -translate-x-4 group-hover:translate-x-0"
-                                        title="View published article"
+                                        className="inline-flex items-center justify-center px-10 h-14 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-[10px] font-black uppercase tracking-widest text-slate-800 dark:text-white hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 transition-all shadow-sm"
                                     >
-                                        <ExternalLink className="w-5 h-5" />
+                                        View Live
                                     </a>
                                 </div>
-                            </Card>
+                            </div>
                         );
                     })
                 ) : (
-                    <div className="flex flex-col items-center justify-center p-24 text-center bg-gradient-to-br from-violet-50/50 to-fuchsia-50/50 dark:from-violet-950/10 dark:to-fuchsia-950/10 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800/50 shadow-sm">
-                        <div className="w-20 h-20 rounded-3xl bg-white dark:bg-slate-900 flex items-center justify-center mb-8 shadow-xl shadow-violet-100 dark:shadow-none">
-                            <Globe className="w-9 h-9 text-slate-200 dark:text-slate-700" />
+                    <div className="flex flex-col items-center justify-center p-24 text-center bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-2xl">
+                        <div className="w-24 h-24 rounded-3xl bg-slate-50 dark:bg-slate-950 flex items-center justify-center mb-10 inner-shadow">
+                            <Globe className="w-12 h-12 text-slate-200 dark:text-slate-700" />
                         </div>
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Launch Protocol Pending</h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[320px] font-medium leading-relaxed">System is awaiting the first production deployment to the WordPress cloud.</p>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-4">Archive Protocol Empty</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[360px] font-medium leading-relaxed">System is awaiting the initial production sync from your WordPress engine.</p>
                     </div>
                 )}
             </div>
         </div>
     );
 };
+

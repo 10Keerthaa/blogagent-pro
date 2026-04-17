@@ -37,6 +37,12 @@
   --radius-xl: 12px;
   --radius-2xl: 16px;
   --radius-3xl: 24px;
+  
+  /* --- Elite Branding Extensions --- */
+  --color-elite-violet: #7c3aed;
+  --color-elite-emerald: #10b981;
+  --tracking-executive: 0.2em;
+  --tracking-brand: 0.05em;
 }
 
 *,
