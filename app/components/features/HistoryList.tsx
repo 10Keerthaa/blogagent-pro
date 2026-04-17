@@ -167,8 +167,9 @@ export const HistoryList = () => {
 
     return (
         <div className={`animate-fadeIn flex-1 bg-slate-100/50 dark:bg-slate-950/20 p-8 lg:p-12 transition-all duration-500 ${!selectedHistoryItem ? 'h-full min-h-screen' : ''}`}>
-            <div className="max-w-4xl mx-auto w-full">
-                <div className="flex items-center border-b border-slate-200 dark:border-slate-800 pb-4 mb-2">
+            <div className="w-full flex justify-center">
+                <div className="max-w-4xl w-full">
+                    <div className="flex items-center border-b border-slate-200 dark:border-slate-800 pb-4 mb-2">
                     <h2 className="text-[11px] font-bold tracking-[0.2em] text-slate-400 dark:text-slate-500 uppercase">
                         Production History ({history.length})
                     </h2>
@@ -226,6 +227,7 @@ export const HistoryList = () => {
                 </div>
             </div>
         </div>
-    );
+    </div>
+);
 };
 
