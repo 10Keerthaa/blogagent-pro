@@ -180,29 +180,30 @@ export const HistoryList = () => {
                             <div
                                 key={idx}
                                 onClick={() => handleSelectHistoryItem(item)}
-                                className="bg-white dark:bg-slate-900 rounded-[32px] py-10 px-8 flex items-center justify-between border border-slate-100 dark:border-slate-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] transition-all duration-500 cursor-pointer group"
+                                className="bg-white dark:bg-slate-900 rounded-[40px] p-10 mb-8 flex items-center justify-between border border-slate-100 dark:border-slate-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_15px_45px_rgba(0,0,0,0.07)] transition-all duration-500 cursor-pointer group"
                             >
                                 <div className="flex items-center gap-10 flex-1">
-                                    {/* Iconic Symmetry (Left Wing) */}
-                                    <div className="w-20 h-20 rounded-2xl bg-purple-50 dark:bg-purple-950/20 flex items-center justify-center transition-all duration-500 group-hover:scale-105 group-hover:bg-violet-600 shadow-sm">
+                                    {/* Left: The Icon (Fixed) */}
+                                    <div className="w-20 h-20 shrink-0 rounded-2xl bg-violet-50 dark:bg-violet-950/20 flex items-center justify-center transition-all duration-500 group-hover:scale-105 group-hover:bg-violet-600 shadow-sm">
                                         <Globe className="w-10 h-10 text-violet-500 group-hover:text-white transition-colors" />
                                     </div>
 
-                                    {/* Metadata Anchor (Center Column) */}
-                                    <div className="flex-1 space-y-3">
-                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight group-hover:text-violet-600 transition-colors">
+                                    {/* Middle: The Data Hub (flex-1) */}
+                                    <div className="flex-1 flex flex-col justify-center space-y-3">
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-none group-hover:text-violet-600 transition-colors">
                                             {item.title}
                                         </h3>
+                                        {/* Bottom Row: Single horizontal flex-line */}
                                         <div className="flex items-center gap-6">
-                                            <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                            <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-none">
                                                 <Calendar className="w-3.5 h-3.5" />
                                                 {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
                                             </div>
-                                            <div className="px-4 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-100/50 dark:border-emerald-900/50">
+                                            <div className="px-4 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-100/50 dark:border-emerald-900/50 leading-none">
                                                 Published
                                             </div>
                                             {item.authorEmail && (
-                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-executive">
+                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-executive leading-none">
                                                     PUBLISHED BY: <span className="text-slate-500 dark:text-slate-200">{item.authorEmail}</span>
                                                 </span>
                                             )}
@@ -210,8 +211,8 @@ export const HistoryList = () => {
                                     </div>
                                 </div>
 
-                                {/* Action Button (Right Wing) */}
-                                <div className="shrink-0 pl-12">
+                                {/* Right: The Action (ml-auto) */}
+                                <div className="shrink-0 ml-auto pl-10">
                                     <a
                                         href={item.url}
                                         target="_blank"
