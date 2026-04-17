@@ -15,7 +15,8 @@ export const TabNavigation = () => {
         role, 
         handleLogout,
         setIsTeamManagementOpen,
-        setIsPerformanceOpen
+        setIsPerformanceOpen,
+        handleClearForm
     } = useDashboard();
 
     const [isProfileOpen, setIsProfileOpen] = React.useState(false);
