@@ -382,28 +382,27 @@ export const ReviewList = () => {
                                         Select a primary keyword to enable refinement
                                     </div>
                                 )}
-                                <p className="text-[13px] font-semibold text-violet-600 dark:text-violet-400 leading-snug">
-                                    Need to tweak this technical draft? Ask the AI to rewrite sections, fix tone, or enhance vocabulary before publishing.
-                                </p>
-                                {/* Inline Input + Button Row */}
-                                <div className={`flex items-center gap-3 ${!primaryKeyword ? 'opacity-50 pointer-events-none' : ''}`}>
-                                    <input
-                                        type="text"
+
+                                {/* Textarea + Button Column */}
+                                <div className={`flex flex-col gap-3 ${!primaryKeyword ? 'opacity-50 pointer-events-none' : ''}`}>
+                                    <textarea
                                         value={feedback}
                                         onChange={(e) => setFeedback(e.target.value)}
                                         placeholder="E.g., Rewrite the second paragraph to sound more professional..."
-                                        className="flex-1 h-12 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 shadow-sm"
-                                        onKeyDown={(e) => { if (e.key === 'Enter' && feedback && primaryKeyword) handleApplyReviewFeedback(); }}
+                                        rows={4}
+                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 shadow-sm resize-none"
                                     />
-                                    <Button
-                                        variant="primary"
-                                        onClick={handleApplyReviewFeedback}
-                                        isLoading={isApplyingFeedback}
-                                        disabled={!feedback || !primaryKeyword}
-                                        className="h-12 px-6 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-[11px] uppercase tracking-widest shadow-md whitespace-nowrap"
-                                    >
-                                        {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply Refinement'}
-                                    </Button>
+                                    <div className="flex justify-end">
+                                        <Button
+                                            variant="primary"
+                                            onClick={handleApplyReviewFeedback}
+                                            isLoading={isApplyingFeedback}
+                                            disabled={!feedback || !primaryKeyword}
+                                            className="h-11 px-6 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-[11px] uppercase tracking-widest shadow-md whitespace-nowrap"
+                                        >
+                                            {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply Refinement'}
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </section>
