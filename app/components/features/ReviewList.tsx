@@ -10,7 +10,7 @@ import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
     FileText, Calendar, ArrowLeft, ArrowRight, X, CheckCircle, XCircle, Zap, Sparkles, Users,
-    AlertCircle
+    AlertCircle, Shield
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 import { Portal } from '../ui/Portal';
@@ -183,235 +183,227 @@ export const ReviewList = () => {
     }, [reviewDrafts, role, user]);
 
     return (
-        <div className="relative">
+        <div className="relative h-full flex flex-col">
             {selectedReviewDraft ? (
-                <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-10`}>
-                    {/* Header Actions */}
-                    <div className="sticky top-[-1px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
-                        <div className="w-full flex items-center justify-between py-8 pr-6">
-                            <div className="flex items-center gap-6">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                        setSelectedReviewDraft(null);
-                                        handleClearForm();
-                                    }}
-                                    className="group w-[150px] flex items-center justify-start gap-2 h-7 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-800 bg-transparent text-slate-500 hover:text-violet-600 hover:border-violet-300 dark:hover:border-violet-700 transition-all shadow-none"
-                                >
-                                    <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Back</span>
-                                </Button>
-                                <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
-                                <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                {/* ELITE CATEGORY SELECTOR INTEGRATION */}
-                                <div className="ml-4 min-w-[200px]">
-                                    <CategorySelector 
-                                        selectedIds={selectedCategories}
-                                        onChange={setSelectedCategories}
-                                        readOnly={isReadOnly}
-                                    />
+                /* ── THE TRAPPED SCROLL ROOT ── */
+                <div className="flex-1 h-full flex flex-col bg-slate-50 relative overflow-hidden animate-fadeIn">
+                    
+                    {/* 1. TOP HEADER (Fixed Sister) */}
+                    <div className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0 z-10 transition-all">
+                        {/* Left: Back */}
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => setSelectedReviewDraft(null)}
+                                className="flex items-center gap-2 px-3 py-2 text-slate-500 hover:text-slate-900 transition-colors"
+                            >
+                                <ArrowLeft className="w-4 h-4" />
+                                <span className="text-[11px] font-black uppercase tracking-widest">Back to Queue</span>
+                            </button>
+                        </div>
+
+                        {/* Center: Badge */}
+                        <div className="absolute left-1/2 -translate-x-1/2">
+                            <Badge variant="pending" className="px-4 py-1.5 bg-violet-50 text-violet-700 border-violet-100 rounded-full font-bold shadow-none">
+                                Editorial Review
+                            </Badge>
+                        </div>
+
+                        {/* Right: WordPress Category Block */}
+                        <div className="flex items-center gap-4">
+                            <div className="flex flex-col items-end">
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">WordPress Category</span>
+                                <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl group hover:border-violet-200 transition-all">
+                                    <Shield className="w-3.5 h-3.5 text-slate-400 group-hover:text-violet-500 transition-colors" />
+                                    <span className="text-[11px] font-bold text-slate-400">Blog /</span>
+                                    <select 
+                                        value={selectedCategories[0] || ''}
+                                        onChange={(e) => setSelectedCategories([e.target.value])}
+                                        className="bg-transparent border-none p-0 text-[11px] font-bold text-slate-700 focus:ring-0 cursor-pointer min-w-[100px]"
+                                    >
+                                        <option value="">Select Category</option>
+                                        {CATEGORIES.map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                        ))}
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Content Section */}
-                    <section className="w-full space-y-10 pr-6 relative">
-                        {selectionRect && (
-                            <FloatingToolbar
-                                isVisible={isToolbarVisible}
-                                rect={selectionRect}
-                                onAction={handleToolbarAction}
-                                isLink={isLinkActive}
-                                onClose={() => {
-                                    setIsToolbarVisible(false);
-                                    setSelectionRect(null);
-                                }}
-                            />
-                        )}
-                        <Input
-                            label="Editorial Title"
-                            value={selectedReviewDraft.title}
-                            onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                            className="text-3xl font-extrabold py-8 px-0 border-none bg-transparent focus:ring-0 focus:border-violet-500 rounded-none border-b border-slate-100 dark:border-slate-800 tracking-tight text-center"
-                        />
-
-                        {selectedReviewDraft.imageUrl && (
-                            <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl">
-                                <img
-                                    src={selectedReviewDraft.imageUrl}
-                                    alt={selectedReviewDraft.title}
-                                    className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
-                                    style={{ aspectRatio: '4/3' }}
-                                />
-                                <div
-                                    className="absolute inset-0 z-10 pointer-events-none"
-                                    style={{ backgroundColor: 'rgba(139, 92, 246, 0.45)' }}
-                                />
-                                <div className="absolute inset-0 z-20 pointer-events-none">
-                                    <img
-                                        src="/Blog.png"
-                                        alt="Blog Tag"
-                                        className="absolute top-[40px] left-[40px] w-auto h-10 object-contain"
-                                    />
-                                    <div
-                                        className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
-                                        style={{ top: '100px', lineHeight: '1.3' }}
-                                    >
-                                        {selectedReviewDraft.title.includes(':') ? (
-                                            <>
-                                                <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
-                                                    {selectedReviewDraft.title.split(':')[0]}:
-                                                </h1>
-                                                <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
-                                                    {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
-                                                </p>
-                                            </>
-                                        ) : (
-                                            <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
-                                                {selectedReviewDraft.title}
-                                            </h1>
-                                        )}
+                    {/* 2. SCROLLABLE CANVAS (Middle Sister) */}
+                    <div className="flex-1 overflow-y-auto p-8 lg:p-12 custom-scrollbar">
+                        <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] overflow-hidden mb-12 relative border border-slate-100/50">
+                            
+                            {/* Purple Hero Header */}
+                            <div className="bg-violet-700 text-white p-12 lg:p-16 relative overflow-hidden">
+                                {/* The Glowing Orb */}
+                                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-500 rounded-full blur-[120px] mix-blend-screen pointer-events-none -mr-64 -mt-64 opacity-60 animate-pulse" />
+                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-fuchsia-500 rounded-full blur-[100px] mix-blend-multiply opacity-20 pointer-events-none" />
+                                
+                                <div className="relative z-10 flex flex-col gap-8">
+                                    {/* Glassmorphic Breadcrumb */}
+                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 w-fit">
+                                        <FileText className="w-4 h-4 text-violet-200" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-100">Production Draft</span>
                                     </div>
-                                    <img
-                                        src="/10xDS.png"
-                                        alt="Brand Logo"
-                                        className="absolute bottom-[40px] right-[40px] w-auto h-14 object-contain"
+                                    
+                                    <textarea
+                                        value={selectedReviewDraft.title}
+                                        onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
+                                        className="w-full bg-transparent border-none p-0 text-4xl lg:text-5xl font-black tracking-tight text-white focus:ring-0 leading-tight resize-none scroll-hidden"
+                                        rows={2}
                                     />
                                 </div>
                             </div>
-                        )}
 
-                        <div
-                            ref={editorRef}
-                            contentEditable={!isReadOnly}
-                            suppressContentEditableWarning
-                            onFocus={() => setIsEditorFocused(true)}
-                            onBlur={(e) => {
-                                setIsEditorFocused(false);
-                                if (isReadOnly || !selectedReviewDraft) return;
-                                const html = e.currentTarget.innerHTML;
-                                const updated = { ...selectedReviewDraft, content: html };
-                                setSelectedReviewDraft(updated);
-                                handleSaveManualEdits(updated);
-                            }}
-                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
-                                prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
-                            onMouseUp={updateSelectionRect}
-                            onSelect={updateSelectionRect}
-                            onKeyUp={(e) => {
-                                if (['Control', 'Meta', 'Shift', 'Alt'].includes(e.key)) return;
-                                updateSelectionRect();
-                            }}
-                            onKeyDown={(e) => {
-                                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                                    e.preventDefault();
-                                    const url = window.prompt('Enter the URL:');
-                                    if (url) handleToolbarAction('link', url);
-                                }
-                            }}
-                            onMouseDown={(e) => {
-                                const target = (e.target as HTMLElement).closest('a');
-                                if (target && (e.ctrlKey || e.metaKey || e.detail === 2)) {
-                                    e.preventDefault();
-                                    window.open(target.href, '_blank');
-                                }
-                            }}
-                        />
+                            {/* Content Body */}
+                            <div className="p-12 lg:p-16 pb-24 relative">
+                                {selectionRect && (
+                                    <FloatingToolbar
+                                        isVisible={isToolbarVisible}
+                                        rect={selectionRect}
+                                        onAction={handleToolbarAction}
+                                        isLink={isLinkActive}
+                                        onClose={() => {
+                                            setIsToolbarVisible(false);
+                                            setSelectionRect(null);
+                                        }}
+                                    />
+                                )}
+                                
+                                <div 
+                                    ref={editorRef}
+                                    contentEditable={!isReadOnly}
+                                    onMouseUp={updateSelectionRect}
+                                    onKeyUp={updateSelectionRect}
+                                    onFocus={() => setIsEditorFocused(true)}
+                                    onBlur={() => {
+                                        setIsEditorFocused(false);
+                                        const html = editorRef.current?.innerHTML || '';
+                                        const updatedDraft = { ...selectedReviewDraft, content: html };
+                                        setSelectedReviewDraft(updatedDraft);
+                                        handleSaveManualEdits(updatedDraft);
+                                    }}
+                                    className="prose prose-slate prose-lg lg:prose-xl max-w-none focus:outline-none dark:prose-invert min-h-[400px]"
+                                />
 
-                        {selectedReviewDraft.infographicUrl && (
-                            <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
-                                <div className="flex items-center justify-between mb-8">
-                                    <div className="flex-1" />
-                                    <h4 className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest text-center">Visual Insight</h4>
-                                    <div className="flex-1 flex justify-end">
-                                        <Button 
-                                            variant="ghost" 
-                                            size="sm" 
-                                            onClick={() => setIsRefiningVisual(!isRefiningVisual)}
-                                            className="text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:text-violet-400 hover:text-violet-900 dark:hover:text-white flex items-center gap-2"
-                                        >
-                                            {isRefiningVisual ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
-                                            {isRefiningVisual ? 'Close' : 'Refine'}
-                                        </Button>
-                                    </div>
-                                </div>
-                                <div className="w-full space-y-6">
-                                    <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isRefiningVisual ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-inner mb-6">
-                                            <Textarea
-                                                value={infographicFeedback}
-                                                onChange={(e) => setInfographicFeedback(e.target.value)}
-                                                placeholder="Describe visual corrections..."
-                                                className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 min-h-[100px] text-sm focus:ring-1 focus:ring-violet-500 p-4"
-                                            />
-                                            <Button
-                                                variant="primary"
-                                                size="sm"
-                                                onClick={() => handleGenerateInfographic(infographicFeedback)}
-                                                isLoading={isInfographicRefining}
-                                                disabled={!infographicFeedback.trim()}
-                                                className="w-full h-12 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[10px] font-bold"
-                                            >
-                                                Regenerate Visual
-                                            </Button>
+                                {selectedReviewDraft.infographicUrl && (
+                                    <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
+                                        <div className="flex items-center justify-between mb-8">
+                                            <div className="flex-1" />
+                                            <h4 className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest text-center">Visual Insight</h4>
+                                            <div className="flex-1 flex justify-end">
+                                                <Button 
+                                                    variant="ghost" 
+                                                    size="sm" 
+                                                    onClick={() => setIsRefiningVisual(!isRefiningVisual)}
+                                                    className="text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:text-violet-400 hover:text-violet-900 dark:hover:text-white flex items-center gap-2"
+                                                >
+                                                    {isRefiningVisual ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
+                                                    {isRefiningVisual ? 'Close' : 'Refine'}
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <div className="w-full space-y-6">
+                                            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isRefiningVisual ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-inner mb-6">
+                                                    <Textarea
+                                                        value={infographicFeedback}
+                                                        onChange={(e) => setInfographicFeedback(e.target.value)}
+                                                        placeholder="Describe visual corrections..."
+                                                        className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 min-h-[100px] text-sm focus:ring-1 focus:ring-violet-500 p-4"
+                                                    />
+                                                    <Button
+                                                        variant="primary"
+                                                        size="sm"
+                                                        onClick={() => handleGenerateInfographic(infographicFeedback)}
+                                                        isLoading={isInfographicRefining}
+                                                        disabled={!infographicFeedback.trim()}
+                                                        className="w-full h-12 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[10px] font-bold"
+                                                    >
+                                                        Regenerate Visual
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                                                <img src={selectedReviewDraft.infographicUrl} alt={selectedReviewDraft.title} className="w-full h-auto" />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-                                        <img src={selectedReviewDraft.infographicUrl} alt={selectedReviewDraft.title} className="w-full h-auto" />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </section>
-
-                    {!isReadOnly && (
-                        <section className="w-auto mx-[-1.5rem] lg:mx-[-2.5rem] border-y border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/30" ref={refinementRef}>
-                            <div className="flex flex-col">
-                                <div className="w-full py-4 px-10">
-                                    <h4 className="text-[11px] font-bold uppercase tracking-widest text-violet-400">AI Refinement</h4>
-                                </div>
-                                {!primaryKeyword && (
-                                    <div className="w-full px-10 text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mb-2">
-                                        <AlertCircle className="w-3.5 h-3.5" />
-                                        Action Locked: Select a primary keyword to enable refinement
-                                    </div>
                                 )}
-                                <div className={!primaryKeyword ? 'opacity-50 pointer-events-none' : ''}>
-                                    <Textarea
-                                        value={feedback}
-                                        onChange={(e) => setFeedback(e.target.value)}
-                                        placeholder="Inject directives..."
-                                        className="w-full bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-800/50 min-h-[160px] rounded-none px-0 py-8 text-base shadow-none focus:ring-0"
-                                    />
-                                    <div className="w-full flex justify-center px-10">
-                                        <Button variant="secondary" onClick={handleApplyReviewFeedback} isLoading={isApplyingFeedback} disabled={!feedback || !primaryKeyword} className="w-[90%] lg:w-[85%] h-14 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all uppercase tracking-[0.2em] text-[10px] font-bold mb-8 shadow-sm">
-                                            {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply Refinement'}
-                                        </Button>
-                                    </div>
-                                </div>
                             </div>
-                        </section>
-                    )}
-
-                    {!isReadOnly && (
-                        <div className="w-full pt-10 pb-20 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50 px-10">
-                            <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none">
-                                Save Edits
-                            </Button>
-                            <Button variant="secondary" onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)} disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]">
-                                {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? <><CheckCircle className="w-4 h-4 mr-2 text-emerald-500" />Reviewed</> : <><Users className="w-4 h-4 mr-2" />Mark as Reviewed</>}
-                            </Button>
-                            <Button variant="danger" size="sm" onClick={() => handleRejectDraft(selectedReviewDraft.id)} isLoading={isRejecting} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]">Reject</Button>
-                            <Button variant="secondary" size="sm" onClick={() => setIsPreviewOpen(true)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors shadow-none font-bold">Preview</Button>
-                            <Button variant="primary" size="sm" onClick={() => handleApproveDraft(selectedReviewDraft)} isLoading={isPublished} className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]">
-                                <CheckCircle className="w-4 h-4 mr-2 shrink-0" />Approve & Publish Now
-                            </Button>
                         </div>
-                    )}
+                    </div>
+
+                    {/* 3. DOCKED CONTROLS (Bottom Sister) */}
+                    <div className="flex-shrink-0 bg-white border-t border-slate-200 z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.03)] flex flex-col">
+                        
+                        {/* Row 1: AI Refinement */}
+                        <div className="px-8 py-4 bg-violet-50/70 border-b border-violet-100 flex items-center gap-4">
+                            <div className="flex items-center gap-3 shrink-0">
+                                <div className="h-2.5 w-2.5 bg-violet-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
+                                <span className="text-[11px] font-black uppercase tracking-widest text-violet-800">AI Editor</span>
+                            </div>
+                            <div className="flex-1">
+                                <input
+                                    type="text"
+                                    placeholder="Describe specific changes (e.g., 'Make the tone more professional')"
+                                    value={feedback}
+                                    onChange={(e) => setFeedback(e.target.value)}
+                                    className="w-full bg-white/50 border border-violet-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 outline-none transition-all"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && feedback && !isApplyingFeedback) {
+                                            handleApplyReviewFeedback();
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <button
+                                onClick={handleApplyReviewFeedback}
+                                disabled={!feedback || isApplyingFeedback}
+                                className="flex items-center gap-2 px-6 py-2.5 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white text-[11px] font-black uppercase tracking-widest rounded-xl transition-all shadow-md shadow-violet-200 active:scale-95"
+                            >
+                                {isApplyingFeedback ? <Zap className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                                Apply Fix
+                            </button>
+                        </div>
+
+                        {/* Row 2: Auditing Actions */}
+                        <div className="px-8 py-5 bg-slate-50/50 flex justify-between items-center">
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => setIsPreviewOpen(true)}
+                                    className="px-6 py-2.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all shadow-sm"
+                                >
+                                    Preview Mode
+                                </button>
+                                <button
+                                    onClick={() => handleRejectDraft(selectedReviewDraft.id)}
+                                    disabled={isRejecting}
+                                    className="px-6 py-2.5 bg-red-50 text-red-600 hover:bg-red-100 border border-red-100 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all shadow-sm flex items-center gap-2"
+                                >
+                                    {isRejecting ? <Zap className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
+                                    Reject Draft
+                                </button>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)}
+                                    className="px-6 py-2.5 bg-violet-50 text-violet-600 hover:bg-violet-100 border border-violet-100 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all shadow-sm"
+                                >
+                                    Mark as Reviewed
+                                </button>
+                                <button
+                                    onClick={() => handleApproveDraft(selectedReviewDraft)}
+                                    disabled={isPublished}
+                                    className="px-8 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black uppercase tracking-widest rounded-xl transition-all shadow-md shadow-emerald-200 active:scale-95 flex items-center gap-2"
+                                >
+                                    {isPublished ? <Zap className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+                                    Approve & Publish
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
@@ -430,7 +422,7 @@ export const ReviewList = () => {
                                 <Card key={draft.id} hoverable className="p-8 cursor-pointer group border-slate-200 dark:border-slate-800" onClick={() => handleSelectReviewDraft(draft.id)}>
                                     <div className={`flex items-center justify-between p-4 cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-violet-100/10 dark:bg-violet-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
                                         <div className="flex items-center gap-7">
-                                            <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
+                                            <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-900/10 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
                                             <div className="space-y-2"><h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3><div className="flex items-center gap-6"><span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" />{new Date(draft.createdAt || draft.created_at).toLocaleDateString()}</span>{draft.authorEmail && <span className="text-[10px] font-medium text-violet-400 lowercase italic">by {draft.authorEmail}</span>}<Badge variant="outline" className="px-3">Draft</Badge></div></div>
                                         </div>
                                         <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0"><span className="text-[11px] font-extrabold uppercase tracking-widest text-violet-500">Launch Review</span><ArrowRight className="w-5 h-5 text-violet-500" /></div>
