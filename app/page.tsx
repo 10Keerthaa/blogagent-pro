@@ -26,24 +26,23 @@ const DashboardContent = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#060606] transition-colors duration-500 overflow-x-hidden">
-      {/* ELITE LAYOUT SHELL: Centered Max-Width Container */}
-      <div className="w-full min-h-screen flex flex-col lg:flex-row shadow-2xl shadow-slate-200/50 dark:shadow-none bg-slate-50 dark:bg-[#0a0a0a]">
+    <div className="h-screen flex flex-col bg-slate-50 dark:bg-[#060606] overflow-hidden">
+      {/* ELITE GLOBAL HEADER (Part 1 - App Name, Tabs, Admin Console, User Profile) */}
+      <TabNavigation />
 
-        {/* LEFT PANEL: Sidebar Form — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
+      <div className="flex-1 flex overflow-hidden lg:flex-row flex-col bg-slate-50 dark:bg-[#0a0a0a]">
+        {/* LEFT PANEL: Sidebar Form (Part 2 - Topic, Keywords, Description) */}
         <div
-          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0
-            ${showSidebar ? 'w-full lg:w-[40%] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
+          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0 border-r border-slate-200 dark:border-slate-800
+            ${showSidebar ? 'w-full lg:w-[35%] xl:w-[30%] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
         >
           <SidebarForm />
         </div>
 
-        {/* RIGHT PANEL: Dynamic Workspace — 40:60 asymmetrical Focus-Flow split with cinematic 500ms transition */}
-        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative border-l border-slate-100 dark:border-slate-900 transition-all duration-500 ease-in-out !pl-0
-          ${showSidebar ? 'lg:w-[60%]' : 'w-full'}`}>
-          {/* Top Segmented Navigation (Elite) */}
-          <TabNavigation />
-
+        {/* RIGHT PANEL: Dynamic Workspace (Part 3 - Editor Area) */}
+        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative transition-all duration-500 ease-in-out
+          ${showSidebar ? 'lg:w-[65%] xl:w-[70%]' : 'w-full'}`}>
+          
           {/* Scrollable Workspace */}
           <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar scroll-smooth">
             {/* Elite Error Banner */}

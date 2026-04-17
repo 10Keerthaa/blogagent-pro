@@ -35,27 +35,23 @@ export const TabNavigation = () => {
     return (
         <nav
             aria-label="Dashboard Navigation"
-            className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 grid grid-cols-3 px-6 shrink-0 z-40 sticky top-0 transition-all duration-300"
+            className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 grid grid-cols-3 px-10 shrink-0 z-40 sticky top-0 transition-all duration-300"
         >
             {/* WING 1: Branding Logo (Left) */}
-            <div className="flex items-center transition-all duration-500">
-                {activeTab !== 'create' ? (
-                    <div className="flex items-center gap-3 group cursor-default animate-fadeIn">
-                        <div className="w-10 h-10 rounded-none bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-200 dark:shadow-none">
-                            <Zap className="text-white w-6 h-6 fill-current" />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-[17px] font-black tracking-tight text-slate-800 dark:text-white leading-tight">10x<span className="text-violet-600">Blogagent</span></span>
-                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 leading-tight">Enterprise Engine v3.0</span>
-                        </div>
+            <div className="flex items-center">
+                <div className="flex items-center gap-3 group cursor-default">
+                    <div className="w-10 h-10 rounded-none bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-200 dark:shadow-none transition-transform group-hover:scale-105">
+                        <Zap className="text-white w-6 h-6 fill-current" />
                     </div>
-                ) : (
-                    <div className="w-10 h-10" /> // Minimal spacer for balanced grid flow
-                )}
+                    <div className="flex flex-col">
+                        <span className="text-[17px] font-black tracking-tight text-slate-800 dark:text-white leading-tight">10x<span className="text-violet-600">Blogagent</span></span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 leading-tight">Enterprise Engine v3.0</span>
+                    </div>
+                </div>
             </div>
 
-            {/* WING 2: Underline Tabs (Center Pillar / Left-biased in Editor) */}
-            <div className={`flex items-center h-full ${activeTab === 'create' ? 'justify-start pl-10' : 'justify-center'}`}>
+            {/* WING 2: Underline Tabs (True Center Pillar) */}
+            <div className="flex items-center justify-center h-full">
                 <div className="flex items-center gap-10 h-full relative">
                     {tabs.map((tab) => (
                         <button

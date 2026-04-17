@@ -32,25 +32,16 @@ export const SidebarForm = () => {
 
     return (
         <aside className="w-full shrink-0 bg-slate-50 dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
-            {/* Brand Header — Synchronized h-16 for pixel-perfect baseline alignment with TabNavigation */}
+            {/* Sidebar Action Bar — Streamlined for AI Studio Layout */}
             <div className="h-16 flex items-center px-10 border-b border-slate-100 dark:border-slate-800/50 shrink-0">
-                <div className="flex items-center justify-between w-full group cursor-default">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-violet-600 rounded-none flex items-center justify-center shadow-lg shadow-violet-100 dark:shadow-none transition-transform group-hover:scale-110">
-                            <Zap className="text-white w-6 h-6 fill-current" />
-                        </div>
-                        <div className="flex-1">
-                            <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-none tracking-tight">10x<span className="text-violet-600">Blogagent</span></h1>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Enterprise Engine V3.0</p>
-                        </div>
-                    </div>
-
+                <div className="flex items-center justify-between w-full">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Editor Console</span>
                     <button
                         onClick={() => {
                             handleClearForm();
                             setActiveTab('create');
                         }}
-                        className="flex items-center gap-1.5 px-3 py-2.5 bg-violet-50 hover:bg-violet-100 dark:bg-violet-900/20 dark:hover:bg-violet-900/40 text-violet-600 dark:text-violet-400 rounded-none border border-violet-100/50 dark:border-violet-800/50 text-[10px] font-black uppercase tracking-widest transition-all hover:shadow-sm"
+                        className="flex items-center gap-1.5 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-md shadow-violet-200 dark:shadow-none"
                         title="Start a fresh post"
                     >
                         <Plus className="w-3.5 h-3.5" />
