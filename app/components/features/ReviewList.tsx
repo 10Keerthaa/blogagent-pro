@@ -186,10 +186,11 @@ export const ReviewList = () => {
         <div className="relative">
             {selectedReviewDraft ? (
                 <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-10`}>
-                    {/* Header Actions */}
+                    {/* Part 3: Editorial Sub-Header (True Studio Strip) */}
                     <div className="sticky top-[-1px] bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
-                        <div className="w-full flex items-center justify-between py-8 pr-6">
-                            <div className="flex items-center gap-6">
+                        <div className="w-full grid grid-cols-3 items-center h-16 px-10">
+                            {/* Left: Navigation */}
+                            <div className="flex items-center">
                                 <Button
                                     variant="ghost"
                                     size="sm"
@@ -197,17 +198,22 @@ export const ReviewList = () => {
                                         setSelectedReviewDraft(null);
                                         handleClearForm();
                                     }}
-                                    className="group flex items-center gap-2 h-7 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-800 bg-transparent text-slate-500 hover:text-violet-600 hover:border-violet-300 dark:hover:border-violet-700 transition-all shadow-none"
+                                    className="group flex items-center gap-2 h-8 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-500 hover:text-violet-600 hover:border-violet-300 transition-all shadow-sm"
                                 >
                                     <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Back</span>
+                                    <span className="text-[10px] font-black uppercase tracking-[0.15em]">Back to Queue</span>
                                 </Button>
-                                <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
-                                <Badge variant="pending" className="px-4 py-1">Editorial Review</Badge>
                             </div>
-                            <div className="flex items-center gap-3">
-                                {/* CATEGORY SELECTOR INTEGRATION */}
-                                <div className="ml-4 min-w-[200px]">
+
+                            {/* Center: Branding (Absolute Center) */}
+                            <div className="flex justify-center">
+                               <Badge variant="pending" className="px-6 py-1 bg-emerald-50 text-emerald-600 border-emerald-100 font-black tracking-widest uppercase text-[10px]">Editorial Review</Badge>
+                            </div>
+
+                            {/* Right: Wordpress Controls */}
+                            <div className="flex items-center justify-end gap-3">
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1">Wordpress Category</span>
+                                <div className="min-w-[200px]">
                                     <CategorySelector 
                                         selectedIds={selectedCategories}
                                         onChange={setSelectedCategories}

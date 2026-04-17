@@ -32,25 +32,8 @@ export const SidebarForm = () => {
 
     return (
         <aside className="w-full shrink-0 bg-slate-50 dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
-            {/* Sidebar Action Bar — Streamlined for AI Studio Layout */}
-            <div className="h-16 flex items-center px-10 border-b border-slate-100 dark:border-slate-800/50 shrink-0">
-                <div className="flex items-center justify-between w-full">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Editor Console</span>
-                    <button
-                        onClick={() => {
-                            handleClearForm();
-                            setActiveTab('create');
-                        }}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-md shadow-violet-200 dark:shadow-none"
-                        title="Start a fresh post"
-                    >
-                        <Plus className="w-3.5 h-3.5" />
-                        New Post
-                    </button>
-                </div>
-            </div>
-
-            <div className="py-8 pl-10 space-y-8 flex-1 bg-slate-50/30 dark:bg-transparent">
+            {/* NO SIDEBAR HEADER — Studio Layout Vertical Baseline */}
+            <div className="py-10 pl-10 space-y-10 flex-1 bg-slate-50/30 dark:bg-transparent">
                 {/* Blog Topic */}
                 <section className="space-y-3">
                     <Textarea

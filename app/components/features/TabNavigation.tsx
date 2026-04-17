@@ -48,6 +48,18 @@ export const TabNavigation = () => {
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 leading-tight">Enterprise Engine v3.0</span>
                     </div>
                 </div>
+
+                {/* NEW POST ACTION (Hoisted to Header) */}
+                <button
+                    onClick={() => {
+                        handleClearForm();
+                        setActiveTab('create');
+                    }}
+                    className="ml-8 flex items-center gap-1.5 px-3 py-1.5 text-violet-600 hover:text-violet-700 dark:text-violet-400 text-[10px] font-black uppercase tracking-widest transition-all group/new"
+                >
+                    <Plus className="w-3.5 h-3.5 transition-transform group-hover/new:rotate-90" />
+                    New Post
+                </button>
             </div>
 
             {/* WING 2: Underline Tabs (True Center Pillar) */}
