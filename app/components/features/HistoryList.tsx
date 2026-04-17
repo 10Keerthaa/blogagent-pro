@@ -166,51 +166,48 @@ export const HistoryList = () => {
     }
 
     return (
-        <div className="animate-fadeIn flex-1 w-full flex justify-center p-8 pb-24 transition-all duration-500">
-            <div className="w-full max-w-5xl flex flex-col gap-4">
-                {/* Header */}
-                <h2 className="text-[12px] font-bold tracking-widest text-[#94a3b8] uppercase mb-2">
-                    Production History ({history.length})
-                </h2>
+        <div className="animate-fadeIn flex-1 w-full flex justify-center p-8 pb-24 bg-slate-50 dark:bg-[#060606] transition-all duration-500 overflow-y-auto custom-scrollbar">
+            <div className="w-full max-w-4xl flex flex-col gap-6">
+                {/* Header aligned with cards */}
+                <div className="pb-2 border-b border-slate-200 dark:border-slate-800 mb-2">
+                    <h2 className="text-[11px] font-bold tracking-[0.2em] text-slate-400 dark:text-slate-500 uppercase">
+                        Production History ({history.length})
+                    </h2>
+                </div>
+                
                 {history.length > 0 ? (
                     history.map((item, idx) => {
                         return (
                             <div
                                 key={idx}
                                 onClick={() => handleSelectHistoryItem(item)}
-                                className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer transition-all hover:shadow-md hover:border-violet-100 dark:hover:border-violet-800 flex items-center justify-between group"
+                                className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.04)] cursor-pointer transition-all hover:shadow-lg hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-violet-100 dark:hover:border-violet-800 flex items-center justify-between group"
                             >
-                                <div className="flex items-center gap-5">
-                                    {/* Globe Icon */}
-                                    <div className="w-14 h-14 rounded-[1rem] bg-[#f8f5ff] dark:bg-violet-900/20 flex items-center justify-center shrink-0">
-                                        <Globe className="w-6 h-6 text-[#8b5cf6]" />
+                                <div className="flex items-center gap-6">
+                                    {/* Globe Icon Box - Refined 64x64 */}
+                                    <div className="w-16 h-16 rounded-2xl bg-[#f8f5ff] dark:bg-violet-900/20 flex items-center justify-center shrink-0 border border-violet-50 dark:border-violet-800/50">
+                                        <Globe className="w-7 h-7 text-violet-600 dark:text-violet-400" />
                                     </div>
-                                    {/* Text */}
-                                    <div className="space-y-1.5">
-                                        <h3 className="text-[17px] font-bold text-slate-800 dark:text-white tracking-tight group-hover:text-violet-600 transition-colors">
+                                    {/* Text Content */}
+                                    <div className="space-y-1.5 min-w-0">
+                                        <h3 className="text-[18px] font-bold text-slate-900 dark:text-white tracking-tight group-hover:text-violet-600 transition-colors truncate">
                                             {item.title}
                                         </h3>
-                                        <div className="flex flex-wrap items-center gap-3 text-[13px]">
-                                            <span className="flex items-center gap-1.5 text-slate-500 font-medium">
-                                                <Calendar className="w-3.5 h-3.5" />
+                                        <div className="flex flex-wrap items-center gap-4 text-[13px]">
+                                            <span className="flex items-center gap-1.5 text-slate-500 font-semibold">
+                                                <Calendar className="w-3.5 h-3.5 opacity-70" />
                                                 {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
                                             </span>
-                                            <span className="font-bold text-emerald-500 uppercase tracking-wide text-[12px]">Published</span>
+                                            <span className="font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2.5 py-0.5 rounded uppercase tracking-wide text-[11px]">
+                                                Published
+                                            </span>
                                             {(item.publishedBy?.email || item.authorEmail) && (
-                                                <span className="text-slate-400 font-medium text-[12px]">
-                                                    <span className="uppercase tracking-widest text-[10px] font-bold text-slate-400">Published by: </span>
-                                                    <span className="text-violet-500 font-semibold">{item.publishedBy?.email || item.authorEmail}</span>
+                                                <span className="text-slate-400 font-medium">
+                                                    <span className="uppercase tracking-widest text-[9px] font-black opacity-60">Published by: </span>
+                                                    <span className="text-slate-600 dark:text-slate-300 font-bold lowercase">{item.publishedBy?.email || item.authorEmail}</span>
                                                 </span>
                                             )}
                                         </div>
-                                        {item.auditLog && item.auditLog.length > 0 && (
-                                            <div className="flex items-center gap-2 flex-wrap">
-                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Reviewed by:</span>
-                                                {item.auditLog.map((log: any, i: number) => (
-                                                    <span key={i} className="text-[11px] font-semibold text-violet-500">{log.email}</span>
-                                                ))}
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                                 {/* VIEW LIVE Button */}

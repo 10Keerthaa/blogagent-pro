@@ -35,10 +35,10 @@ export const TabNavigation = () => {
     return (
         <nav
             aria-label="Dashboard Navigation"
-            className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center px-10 shrink-0 z-10 sticky top-0 transition-all duration-300"
+            className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between px-10 shrink-0 z-50 sticky top-0 transition-all duration-300"
         >
             {/* ── LEFT: BRANDING ── */}
-            <div className="flex-1 flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-[200px]">
                 <div className="w-8 h-8 bg-violet-600 rounded-none flex items-center justify-center shadow-lg shadow-violet-100 dark:shadow-none transition-transform hover:scale-105">
                     <BarChart3 className="text-white w-5 h-5" />
                 </div>
@@ -50,8 +50,8 @@ export const TabNavigation = () => {
                 </div>
             </div>
 
-            {/* ── CENTER: TABS ── */}
-            <div className="flex items-center gap-8 h-full">
+            {/* ── CENTER: TABS (Mathematically dead-center) ── */}
+            <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-8 h-full">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
@@ -83,7 +83,7 @@ export const TabNavigation = () => {
             </div>
 
             {/* ── RIGHT: ADMIN & PROFILE ── */}
-            <div className="flex-1 flex items-center justify-end gap-6">
+            <div className="flex items-center justify-end gap-6 min-w-[200px]">
                 {/* Admin Console Pill */}
                 {role === 'admin' && (
                     <div className="relative">
