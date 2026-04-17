@@ -354,50 +354,51 @@ export const ReviewList = () => {
                                                 disabled={!infographicFeedback.trim()}
                                                 className="w-full h-12 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[10px] font-bold"
                                             >
-                                                Regenerate Visual
                                             </Button>
-                            </div>
-                            
-                            {/* AI REFINEMENT (Anchored at Bottom of content stack) */}
-                            {!isReadOnly && (
-                                <div className="flex flex-col gap-2 w-full mt-24 pt-12 border-t border-slate-100 dark:border-slate-800/50" ref={refinementRef}>
-                                    <div className="flex items-center justify-between">
-                                        <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
-                                            <Sparkles className="w-3.5 h-3.5 text-violet-400" />
-                                            REFINE WITH AI
-                                        </h4>
-                                    </div>
-                                    {!primaryKeyword && (
-                                        <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mt-2">
-                                            <AlertCircle className="w-3.5 h-3.5" />
-                                            Action Locked: Select a primary keyword to enable refinement
                                         </div>
-                                    )}
-                                    <div className={!primaryKeyword ? 'opacity-50 pointer-events-none mt-2' : 'mt-2'}>
-                                        <Textarea
-                                            value={feedback}
-                                            onChange={(e) => setFeedback(e.target.value)}
-                                            placeholder="Inject directives to refine this post..."
-                                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none min-h-[160px]"
-                                        />
-                                        <Button
-                                            variant="primary"
-                                            onClick={handleApplyReviewFeedback}
-                                            isLoading={isApplyingFeedback}
-                                            disabled={!feedback || !primaryKeyword}
-                                            className="w-full h-14 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
-                                        >
-                                            {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply AI Refinement'}
-                                        </Button>
                                     </div>
                                 </div>
-                            )}
-                        </div>
-                    </section>
+                            </div>
+                        )}
+                        
+                        {/* AI REFINEMENT (Anchored at Bottom of content stack) */}
+                        {!isReadOnly && (
+                            <div className="flex flex-col gap-2 w-full mt-24 pt-12 border-t border-slate-100 dark:border-slate-800/50" ref={refinementRef}>
+                                <div className="flex items-center justify-between">
+                                    <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                                        <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+                                        REFINE WITH AI
+                                    </h4>
+                                </div>
+                                {!primaryKeyword && (
+                                    <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mt-2">
+                                        <AlertCircle className="w-3.5 h-3.5" />
+                                        Action Locked: Select a primary keyword to enable refinement
+                                    </div>
+                                )}
+                                <div className={!primaryKeyword ? 'opacity-50 pointer-events-none mt-2' : 'mt-2'}>
+                                    <Textarea
+                                        value={feedback}
+                                        onChange={(e) => setFeedback(e.target.value)}
+                                        placeholder="Inject directives to refine this post..."
+                                        className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none min-h-[160px]"
+                                    />
+                                    <Button
+                                        variant="primary"
+                                        onClick={handleApplyReviewFeedback}
+                                        isLoading={isApplyingFeedback}
+                                        disabled={!feedback || !primaryKeyword}
+                                        className="w-full h-14 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
+                                    >
+                                        {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply AI Refinement'}
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </section>
 
-
-
-                    {!isReadOnly && (
+                {!isReadOnly && (
                         <div className="sticky bottom-0 left-0 right-0 py-6 px-10 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-center gap-6 z-40 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
                             <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none">
                                 Save Edits
