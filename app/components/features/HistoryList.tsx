@@ -166,78 +166,68 @@ export const HistoryList = () => {
     }
 
     return (
-        <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
-            <div className="flex items-center justify-between mb-2 px-1">
-                <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">
+        <div className="animate-fadeIn w-full pb-24 transition-all duration-500 px-10 pt-10">
+            <div className="mb-8">
+                <h2 className="text-[12px] font-bold tracking-widest text-[#94a3b8] uppercase">
                     Production History ({history.length})
                 </h2>
             </div>
 
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 gap-5">
                 {history.length > 0 ? (
                     history.map((item, idx) => {
                         return (
-                            <Card
+                            <div
                                 key={idx}
-                                hoverable
                                 onClick={() => handleSelectHistoryItem(item)}
-                                className="p-8 group border-slate-200 dark:border-slate-800 border-l-4 border-l-transparent hover:border-l-violet-500 transition-all duration-500 shadow-sm cursor-pointer"
+                                className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer transition-all hover:shadow-md hover:border-violet-100 dark:hover:border-violet-800 flex items-center justify-between group"
                             >
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-7">
-                                        <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 transition-all duration-500 shadow-sm">
-                                            <Globe className="w-8 h-8 text-violet-500 group-hover:text-white transition-colors" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight leading-tight">
-                                                {item.title}
-                                            </h3>
-                                            <div className="flex items-center gap-6">
-                                                <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                                                    <Calendar className="w-3.5 h-3.5" />
-                                                    {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
-                                                </span>
-                                                <Badge variant="success" className="px-3">Published</Badge>
-                                                {item.authorEmail && (
-                                                    <span className="text-[10px] font-medium text-emerald-600/70 dark:text-emerald-400/50 lowercase italic">
-                                                        by {item.authorEmail}
-                                                    </span>
-                                                )}
-                                            </div>                                             {item.auditLog && item.auditLog.length > 0 && (
-                                                <div className="flex items-center gap-2 flex-wrap mt-1">
-                                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Reviewed by:</span>
-                                                    {item.auditLog.map((log: any, i: number) => (
-                                                        <span
-                                                            key={i}
-                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-300 border border-violet-100 dark:border-violet-900/50"
-                                                        >
-                                                            {log.email}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            )}
-                                            {item.publishedBy && (
-                                                <div className="flex items-center gap-2 flex-wrap mt-1">
-                                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Published by:</span>
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
-                                                        {item.publishedBy.email}
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
+                                <div className="flex items-center gap-5">
+                                    {/* Globe Icon */}
+                                    <div className="w-14 h-14 rounded-[1rem] bg-[#f8f5ff] dark:bg-violet-900/20 flex items-center justify-center shrink-0">
+                                        <Globe className="w-6 h-6 text-[#8b5cf6]" />
                                     </div>
+                                    {/* Text */}
+                                    <div className="space-y-1.5">
+                                        <h3 className="text-[17px] font-bold text-slate-800 dark:text-white tracking-tight group-hover:text-violet-600 transition-colors">
+                                            {item.title}
+                                        </h3>
+                                        <div className="flex flex-wrap items-center gap-3 text-[13px]">
+                                            <span className="flex items-center gap-1.5 text-slate-500 font-medium">
+                                                <Calendar className="w-3.5 h-3.5" />
+                                                {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
+                                            </span>
+                                            <span className="font-bold text-emerald-500 uppercase tracking-wide text-[12px]">Published</span>
+                                            {(item.publishedBy?.email || item.authorEmail) && (
+                                                <span className="text-slate-400 font-medium text-[12px]">
+                                                    <span className="uppercase tracking-widest text-[10px] font-bold text-slate-400">Published by: </span>
+                                                    <span className="text-violet-500 font-semibold">{item.publishedBy?.email || item.authorEmail}</span>
+                                                </span>
+                                            )}
+                                        </div>
+                                        {item.auditLog && item.auditLog.length > 0 && (
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Reviewed by:</span>
+                                                {item.auditLog.map((log: any, i: number) => (
+                                                    <span key={i} className="text-[11px] font-semibold text-violet-500">{log.email}</span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                {/* VIEW LIVE Button */}
+                                {item.url && (
                                     <a
                                         href={item.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={(e) => e.stopPropagation()}
-                                        className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 transition-all text-slate-400 shadow-sm opacity-0 group-hover:opacity-100 duration-500 -translate-x-4 group-hover:translate-x-0"
-                                        title="View published article"
+                                        className="shrink-0 px-5 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-[11px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 hover:bg-slate-900 hover:text-white hover:border-slate-900 dark:hover:bg-white dark:hover:text-slate-900 transition-all shadow-sm"
                                     >
-                                        <ExternalLink className="w-5 h-5" />
+                                        View Live
                                     </a>
-                                </div>
-                            </Card>
+                                )}
+                            </div>
                         );
                     })
                 ) : (
