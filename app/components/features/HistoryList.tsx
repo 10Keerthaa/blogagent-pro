@@ -166,75 +166,64 @@ export const HistoryList = () => {
     }
 
     return (
-        <div className="animate-fadeIn w-full space-y-12 pb-24 transition-all duration-500 px-4 lg:px-12">
-            <div className="flex items-center border-b border-slate-200/60 dark:border-slate-800 pb-6 mb-8">
-                <h2 className="text-[11px] font-bold tracking-executive text-slate-400 uppercase">
-                    Production History ({history.length})
-                </h2>
-            </div>
+        <div className={`animate-fadeIn flex-1 bg-slate-100/50 dark:bg-slate-950/20 p-8 lg:p-12 transition-all duration-500 ${!selectedHistoryItem ? 'h-full min-h-screen' : ''}`}>
+            <div className="max-w-4xl mx-auto w-full">
+                <div className="flex items-center border-b border-slate-200 dark:border-slate-800 pb-4 mb-2">
+                    <h2 className="text-[11px] font-bold tracking-[0.2em] text-slate-400 dark:text-slate-500 uppercase">
+                        Production History ({history.length})
+                    </h2>
+                </div>
 
-            <div className="grid grid-cols-1 gap-8">
-                {history.length > 0 ? (
-                    history.map((item, idx) => {
-                        return (
-                            <div
-                                key={idx}
-                                onClick={() => handleSelectHistoryItem(item)}
-                                className="bg-white dark:bg-slate-900 rounded-[40px] p-10 mb-8 flex items-center justify-between border border-slate-100 dark:border-slate-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_15px_45px_rgba(0,0,0,0.07)] transition-all duration-500 cursor-pointer group"
-                            >
-                                <div className="flex items-center gap-10 flex-1">
-                                    {/* Left: The Icon (Fixed) */}
-                                    <div className="w-20 h-20 shrink-0 rounded-2xl bg-violet-50 dark:bg-violet-950/20 flex items-center justify-center transition-all duration-500 group-hover:scale-105 group-hover:bg-violet-600 shadow-sm">
-                                        <Globe className="w-10 h-10 text-violet-500 group-hover:text-white transition-colors" />
-                                    </div>
+                <div className="flex flex-col gap-6">
+                    {history.length > 0 ? (
+                        history.map((item, idx) => {
+                            return (
+                                <div
+                                    key={idx}
+                                    onClick={() => handleSelectHistoryItem(item)}
+                                    className="bg-white dark:bg-slate-900 rounded-2xl p-6 flex items-center justify-between border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group"
+                                >
+                                    <div className="flex items-center gap-6 flex-1">
+                                        {/* Left: The Icon (Precision alignment) */}
+                                        <div className="w-16 h-16 shrink-0 rounded-xl bg-violet-50 dark:bg-violet-950/20 flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-violet-600 shadow-sm">
+                                            <Globe className="w-8 h-8 text-violet-500 group-hover:text-white transition-colors" />
+                                        </div>
 
-                                    {/* Middle: The Data Hub (flex-1) */}
-                                    <div className="flex-1 flex flex-col justify-center space-y-3">
-                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-none group-hover:text-violet-600 transition-colors">
-                                            {item.title}
-                                        </h3>
-                                        {/* Bottom Row: Single horizontal flex-line */}
-                                        <div className="flex items-center gap-6">
-                                            <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-none">
-                                                <Calendar className="w-3.5 h-3.5" />
-                                                {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
+                                        {/* Middle: The Data Hub */}
+                                        <div className="flex-1 flex flex-col justify-center space-y-1.5">
+                                            <h3 className="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight group-hover:text-violet-600 transition-colors">
+                                                {item.title}
+                                            </h3>
+                                            {/* Bottom Row: Metadata Strip */}
+                                            <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                    <Calendar className="w-3 h-3" />
+                                                    {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
+                                                </div>
+                                                <div className="px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest border border-emerald-100/50 dark:border-emerald-800">
+                                                    Published
+                                                </div>
+                                                {item.authorEmail && (
+                                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                                        <span className="opacity-50">BY:</span> <span className="text-slate-500 dark:text-slate-300">{item.authorEmail}</span>
+                                                    </span>
+                                                )}
                                             </div>
-                                            <div className="px-4 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-100/50 dark:border-emerald-900/50 leading-none">
-                                                Published
-                                            </div>
-                                            {item.authorEmail && (
-                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-executive leading-none">
-                                                    PUBLISHED BY: <span className="text-slate-500 dark:text-slate-200">{item.authorEmail}</span>
-                                                </span>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* Right: The Action (ml-auto) */}
-                                <div className="shrink-0 ml-auto pl-10">
-                                    <a
-                                        href={item.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="inline-flex items-center justify-center px-10 h-14 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-[11px] font-black uppercase tracking-wider text-slate-800 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
-                                    >
-                                        View Live
-                                    </a>
-                                </div>
+                            );
+                        })
+                    ) : (
+                        <div className="flex flex-col items-center justify-center p-24 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div className="w-20 h-20 rounded-2xl bg-slate-50 dark:bg-slate-950 flex items-center justify-center mb-8">
+                                <Globe className="w-10 h-10 text-slate-200 dark:text-slate-700" />
                             </div>
-                        );
-                    })
-                ) : (
-                    <div className="flex flex-col items-center justify-center p-24 text-center bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-2xl">
-                        <div className="w-24 h-24 rounded-3xl bg-slate-50 dark:bg-slate-950 flex items-center justify-center mb-10 inner-shadow">
-                            <Globe className="w-12 h-12 text-slate-200 dark:text-slate-700" />
+                            <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-3">Archive Protocol Empty</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[320px] font-medium leading-relaxed">System is awaiting the initial production sync from your WordPress engine.</p>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-4">Archive Protocol Empty</h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[360px] font-medium leading-relaxed">System is awaiting the initial production sync from your WordPress engine.</p>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );
