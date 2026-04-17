@@ -35,50 +35,55 @@ export const TabNavigation = () => {
     return (
         <nav
             aria-label="Dashboard Navigation"
-            className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between px-6 shrink-0 z-40 sticky top-0 transition-all duration-300"
+            className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 grid grid-cols-3 px-6 shrink-0 z-40 sticky top-0 transition-all duration-300"
         >
-            {/* BRANDING LOGO (Left) - Hidden on Editor check to avoid Sidebar overlap */}
-            {activeTab !== 'create' ? (
-                <div className="flex items-center gap-3 group cursor-default animate-fadeIn">
-                    <div className="w-10 h-10 rounded-none bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-200 dark:shadow-none">
-                        <Zap className="text-white w-6 h-6 fill-current" />
+            {/* WING 1: Branding Logo (Left) */}
+            <div className="flex items-center transition-all duration-500">
+                {activeTab !== 'create' ? (
+                    <div className="flex items-center gap-3 group cursor-default animate-fadeIn">
+                        <div className="w-10 h-10 rounded-none bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-200 dark:shadow-none">
+                            <Zap className="text-white w-6 h-6 fill-current" />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-[17px] font-black tracking-tight text-slate-800 dark:text-white leading-tight">10x<span className="text-violet-600">Blogagent</span></span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 leading-tight">Enterprise Engine v3.0</span>
+                        </div>
                     </div>
-                    <div className="flex flex-col">
-                        <span className="text-[17px] font-black tracking-tight text-slate-800 dark:text-white leading-tight">10x<span className="text-violet-600">Blogagent</span></span>
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 leading-tight">Enterprise Engine v3.0</span>
-                    </div>
-                </div>
-            ) : (
-                <div className="w-10 h-10" /> // Spacer for layout balance
-            )}
-
-            {/* UNDERLINE TABS (Absolute Centered) */}
-            <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-10 h-full">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
-                        className={`relative h-full flex items-center px-2 transition-all duration-300 group`}
-                    >
-                        <span className={`text-xs font-bold tracking-tight transition-colors duration-300 ${activeTab === tab.id ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}>
-                            {tab.label}
-                            {tab.count !== undefined && tab.count > 0 && (
-                                <span className="absolute -top-1 -right-2 flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-600"></span>
-                                </span>
-                            )}
-                        </span>
-                        
-                        {/* THE ELITE UNDERLINE */}
-                        {activeTab === tab.id && (
-                            <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-violet-600 rounded-t-full animate-fadeIn" />
-                        )}
-                    </button>
-                ))}
+                ) : (
+                    <div className="w-10 h-10" /> // Minimal spacer for balanced grid flow
+                )}
             </div>
 
-            <div className="flex items-center gap-8">
+            {/* WING 2: Underline Tabs (Center Pillar) */}
+            <div className="flex items-center justify-center h-full">
+                <div className="flex items-center gap-10 h-full relative">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            className={`relative h-full flex items-center px-2 transition-all duration-300 group`}
+                        >
+                            <span className={`text-xs font-bold tracking-tight transition-colors duration-300 ${activeTab === tab.id ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}>
+                                {tab.label}
+                                {tab.count !== undefined && tab.count > 0 && (
+                                    <span className="absolute -top-1 -right-2 flex h-2 w-2">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-600"></span>
+                                    </span>
+                                )}
+                            </span>
+                            
+                            {/* THE ELITE UNDERLINE */}
+                            {activeTab === tab.id && (
+                                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-violet-600 rounded-t-full animate-fadeIn" />
+                            )}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* WING 3: Controls (Right Wing) */}
+            <div className="flex items-center justify-end gap-8">
                 {/* ADMIN CONSOLE PILL */}
                 {role === 'admin' && (
                     <div className="relative">
