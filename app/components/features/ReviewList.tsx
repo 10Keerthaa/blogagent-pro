@@ -185,12 +185,7 @@ export const ReviewList = () => {
     return (
         <div className="relative">
             {selectedReviewDraft ? (
-                /* ═══════════════════════════════════
-                   3-SECTION STICKY-WRAP ARCHITECTURE
-                   1. Fixed top bar  (flex-shrink-0)
-                   2. Scrollable middle canvas (flex-1 overflow-y-auto)
-                   3. Docked bottom panel (flex-shrink-0)
-                ═══════════════════════════════════ */}
+                // 3-SECTION STICKY-WRAP: (1) fixed top bar, (2) scrollable canvas, (3) docked bottom
                 <div className="animate-fadeIn flex flex-col h-full min-h-0 w-full">
 
                     {/* ── 1. TOP BAR ── */}
