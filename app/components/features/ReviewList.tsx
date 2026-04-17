@@ -360,9 +360,11 @@ export const ReviewList = () => {
                                             </Button>
                                         </div>
                                     </div>
+                                </div>
                             </div>
-                        </div>
-                    </section>
+                        )}
+                    </div>
+                </section>
 
                     {!isReadOnly && (
                         <div className="flex flex-col gap-2 max-w-[850px] mx-auto w-full mt-12" ref={refinementRef}>
