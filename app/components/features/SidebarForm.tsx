@@ -36,12 +36,12 @@ export const SidebarForm = () => {
             <div className="h-16 flex items-center px-10 border-b border-slate-100 dark:border-slate-800/50 shrink-0">
                 <div className="flex items-center justify-between w-full group cursor-default">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-violet-600 rounded-none flex items-center justify-center shadow-lg shadow-violet-100 dark:shadow-none transition-transform group-hover:scale-110">
-                            <Zap className="text-white w-5 h-5 fill-current" />
+                        <div className="w-10 h-10 bg-violet-600 rounded-none flex items-center justify-center shadow-lg shadow-violet-100 dark:shadow-none transition-transform group-hover:scale-110">
+                            <Zap className="text-white w-6 h-6 fill-current" />
                         </div>
                         <div className="flex-1">
-                            <h1 className="text-sm font-bold text-slate-900 dark:text-white leading-none tracking-tight">10x<span className="text-violet-600">Blogagent</span></h1>
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">V3.0</p>
+                            <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-none tracking-tight">10x<span className="text-violet-600">Blogagent</span></h1>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Enterprise Engine V3.0</p>
                         </div>
                     </div>
 
