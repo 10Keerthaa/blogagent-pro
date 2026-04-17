@@ -35,7 +35,7 @@ export const TabNavigation = () => {
     return (
         <nav
             aria-label="Dashboard Navigation"
-            className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between px-6 shrink-0 z-10 sticky top-0 transition-all duration-300"
+            className="h-16 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex items-center justify-between px-6 shrink-0 z-10 sticky top-0 transition-all duration-300"
         >
             <div className="flex items-center gap-3">
                 {tabs.map((tab) => (

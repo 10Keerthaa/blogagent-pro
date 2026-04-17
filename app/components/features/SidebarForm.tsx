@@ -31,7 +31,7 @@ export const SidebarForm = () => {
     const displayDescription = selectedReviewDraft?.metaDesc || description;
 
     return (
-        <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
+        <aside className="w-full shrink-0 bg-slate-50 dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
             {/* Brand Header — Synchronized h-16 for pixel-perfect baseline alignment with TabNavigation */}
             <div className="h-16 flex items-center px-10 border-b border-slate-100 dark:border-slate-800/50 shrink-0">
                 <div className="flex items-center justify-between w-full group cursor-default">
