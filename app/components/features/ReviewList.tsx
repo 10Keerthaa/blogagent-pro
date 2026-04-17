@@ -211,9 +211,9 @@ export const ReviewList = () => {
                             </div>
 
                             {/* Right: Wordpress Controls */}
-                            <div className="flex items-center justify-end gap-3">
-                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1">Wordpress Category</span>
-                                <div className="min-w-[200px]">
+                            <div className="flex items-center justify-end gap-3 pr-2">
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1 opacity-70">Wordpress Category</span>
+                                <div className="min-w-[180px]">
                                     <CategorySelector 
                                         selectedIds={selectedCategories}
                                         onChange={setSelectedCategories}
@@ -397,7 +397,7 @@ export const ReviewList = () => {
                     )}
 
                     {!isReadOnly && (
-                        <div className="w-full pt-10 pb-20 flex flex-wrap items-center justify-center gap-6 border-t border-slate-100 dark:border-slate-800/50 px-10">
+                        <div className="sticky bottom-0 left-0 right-0 py-6 px-10 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-center gap-6 z-40 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
                             <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none">
                                 Save Edits
                             </Button>
