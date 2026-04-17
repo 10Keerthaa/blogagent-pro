@@ -33,14 +33,16 @@ export const SidebarForm = () => {
     return (
         <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen lg:h-auto overflow-y-auto custom-scrollbar border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
             {/* Brand Header */}
-            <div className="py-8 pl-10 border-b border-slate-100 dark:border-slate-800/50">
-                <div className="flex items-center gap-3 group cursor-default">
-                    <div className="w-10 h-10 bg-violet-600 rounded-none flex items-center justify-center shadow-lg shadow-violet-100 dark:shadow-none transition-transform group-hover:scale-110">
-                        <Zap className="text-white w-6 h-6 fill-current" />
-                    </div>
-                    <div className="flex-1">
-                        <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-none tracking-tight">10x<span className="text-violet-600">Blogagent</span></h1>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Enterprise Engine V3.0</p>
+            <div className="h-16 pl-10 pr-6 border-b border-slate-100 dark:border-slate-800/50 flex items-center shrink-0">
+                <div className="flex items-center justify-between w-full group cursor-default">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-violet-600 rounded-none flex items-center justify-center shadow-lg shadow-violet-100 dark:shadow-none transition-transform group-hover:scale-110">
+                            <Zap className="text-white w-5 h-5 fill-current" />
+                        </div>
+                        <div>
+                            <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-none tracking-tight">10x<span className="text-violet-600">Blogagent</span></h1>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Enterprise Engine V3.0</p>
+                        </div>
                     </div>
 
                     <button
@@ -62,8 +64,8 @@ export const SidebarForm = () => {
                 <section className="space-y-3">
                     <Textarea
                         label="Main Blog Topic"
-                        labelClassName="!pl-2"
-                        textareaClassName="!pl-2"
+                        labelClassName="!pl-0"
+                        textareaClassName="!pl-0"
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
                         value={displayPrompt}
                         onChange={(e) => setPrompt(e.target.value)}
@@ -74,7 +76,7 @@ export const SidebarForm = () => {
                 {/* SEO Keywords */}
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 !pl-2">Keywords</label>
+                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 !pl-0">Keywords</label>
                         <button
                             onClick={handleFetchKeywords}
                             disabled={isFetchingKeywords || !prompt || isReadOnly}
@@ -85,7 +87,7 @@ export const SidebarForm = () => {
                         </button>
                     </div>
                     <div
-                        className={`flex flex-wrap items-center gap-2 min-h-[100px] pl-2 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/10 focus-within:border-violet-500'}`}
+                        className={`flex flex-wrap items-center gap-2 min-h-[100px] pl-0 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-none transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/10 focus-within:border-violet-500'}`}
                         onClick={() => !isReadOnly && inputRef.current?.focus()}
                     >
                         {displayKeywords.map((tag: string, idx: number) => {
@@ -139,7 +141,7 @@ export const SidebarForm = () => {
                 {/* Meta Description */}
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 !pl-2">Description</label>
+                        <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 !pl-0">Description</label>
                         <button
                             onClick={handleGenerateDescription}
                             disabled={isGeneratingDescription || !prompt || isReadOnly || !primaryKeyword}
@@ -161,8 +163,8 @@ export const SidebarForm = () => {
                     <div>
                         <Textarea
                             placeholder="SEO optimized summary..."
-                            labelClassName="!pl-2"
-                            textareaClassName="!pl-2"
+                            labelClassName="!pl-0"
+                            textareaClassName="!pl-0"
                             value={displayDescription}
                             onChange={(e) => setDescription(e.target.value)}
                             className="min-h-[140px] shadow-sm focus:shadow-md"
