@@ -45,7 +45,7 @@ const DashboardContent = () => {
           <TabNavigation />
 
           {/* Scrollable Workspace — strips padding when review draft is open (ReviewList owns its layout) */}
-          <div className={`flex-1 custom-scrollbar scroll-smooth ${activeTab === 'review' && selectedReviewDraft ? 'overflow-hidden flex flex-col' : 'overflow-y-auto p-6 lg:p-10'}`}>
+          <div className={`flex-1 custom-scrollbar scroll-smooth bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-500 ${activeTab === 'review' && selectedReviewDraft ? 'overflow-hidden flex flex-col' : 'overflow-y-auto p-6 lg:p-10'}`}>
             {/* Elite Error Banner */}
             {error && (
               <div

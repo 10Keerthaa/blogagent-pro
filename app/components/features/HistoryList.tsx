@@ -167,9 +167,9 @@ export const HistoryList = () => {
 
     return (
         <div className="animate-fadeIn flex-1 w-full flex justify-center p-8 pb-24 bg-slate-50 dark:bg-[#060606] transition-all duration-500 overflow-y-auto custom-scrollbar">
-            <div className="w-full max-w-4xl flex flex-col gap-6">
+            <div className="w-full max-w-4xl flex flex-col gap-8">
                 {/* Header aligned with cards */}
-                <div className="pb-2 border-b border-slate-200 dark:border-slate-800 mb-2">
+                <div className="pb-4 border-b border-slate-200 dark:border-slate-800 mb-2">
                     <h2 className="text-[11px] font-bold tracking-[0.2em] text-slate-400 dark:text-slate-500 uppercase">
                         Production History ({history.length})
                     </h2>
@@ -181,7 +181,7 @@ export const HistoryList = () => {
                             <div
                                 key={idx}
                                 onClick={() => handleSelectHistoryItem(item)}
-                                className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.04)] cursor-pointer transition-all hover:shadow-lg hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-violet-100 dark:hover:border-violet-800 flex items-center justify-between group"
+                                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.04)] cursor-pointer transition-all hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none hover:border-violet-200 dark:hover:border-violet-800 flex items-center justify-between group"
                             >
                                 <div className="flex items-center gap-6">
                                     {/* Globe Icon Box - Refined 64x64 */}

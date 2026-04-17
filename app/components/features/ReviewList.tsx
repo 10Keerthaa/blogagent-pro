@@ -217,7 +217,7 @@ export const ReviewList = () => {
                                     <span className="text-[11px] font-bold text-slate-400">Blog /</span>
                                     <select 
                                         value={selectedCategories[0] || ''}
-                                        onChange={(e) => setSelectedCategories([e.target.value])}
+                                        onChange={(e) => setSelectedCategories(e.target.value ? [Number(e.target.value)] : [])}
                                         className="bg-transparent border-none p-0 text-[11px] font-bold text-slate-700 focus:ring-0 cursor-pointer min-w-[100px]"
                                     >
                                         <option value="">Select Category</option>
