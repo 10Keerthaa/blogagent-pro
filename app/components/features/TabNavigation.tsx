@@ -54,8 +54,8 @@ export const TabNavigation = () => {
                 )}
             </div>
 
-            {/* WING 2: Underline Tabs (Center Pillar) */}
-            <div className="flex items-center justify-center h-full">
+            {/* WING 2: Underline Tabs (Center Pillar / Left-biased in Editor) */}
+            <div className={`flex items-center h-full ${activeTab === 'create' ? 'justify-start pl-10' : 'justify-center'}`}>
                 <div className="flex items-center gap-10 h-full relative">
                     {tabs.map((tab) => (
                         <button
