@@ -8,6 +8,7 @@ import {
     Link as LinkIcon,
     Link2Off,
     Wand2,
+    Sparkles,
     AlignLeft,
     AlignJustify,
     X,
@@ -164,6 +165,24 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     )}
 
                     <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1" />
+
+                    {/* --- AI Action: Humanize --- */}
+                    <button
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        onClick={() => handleAiAction('humanize')}
+                        className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-lg transition-colors group flex items-center gap-2 disabled:opacity-50"
+                        title="AI Humanize"
+                        disabled={!!loadingAction}
+                    >
+                        {loadingAction === 'humanize' ? (
+                            <Loader2 className="w-4 h-4 text-indigo-500 animate-spin" />
+                        ) : (
+                            <Sparkles className="w-4 h-4 text-indigo-500" />
+                        )}
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-500 hidden sm:inline">
+                            {loadingAction === 'humanize' ? '...' : 'Humanize'}
+                        </span>
+                    </button>
 
                     {/* --- AI Action: Rephrase --- */}
                     <button

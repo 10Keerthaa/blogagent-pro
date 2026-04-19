@@ -10,7 +10,7 @@ export interface PageKnowledge {
 
 export class SemanticLinker {
     private knowledge: PageKnowledge[] = [];
-    private confidenceThreshold = 0.85;
+    private confidenceThreshold = 0.95;
 
     async init() {
         const snapshot = await db.collection('page_knowledge').get();
@@ -46,12 +46,14 @@ export class SemanticLinker {
         ${potentialPages.map((p, i) => `[ID: ${i}] URL: ${p.url} | Intent: ${p.intent} | Tech Level: ${p.tech_level}`).join('\n')}
         
         TASK:
-        Determine if any of the candidate pages is a HIGH-CONFIDENCE semantic match for the anchors in the given context.
+        Determine if any of the candidate pages is a VERY HIGH-CONFIDENCE semantic match for the anchors in the given context.
         
         RULES:
         1. "Confidence" score is 0.0 to 1.0. 
-        2. "Conflict Resolution": If two pages are relevant, prioritize the one with the HIGHEST "Tech Level" (specific deep-dives over generic overviews).
-        3. If no page is a strong match, return confidence 0.
+        2. "Strict Domain Match": Only approve links related to Technology, Business, or Industrial expertise. 
+        3. "Relevance": Destination URL must point to content that "very closely" relates to the technical substance of the paragraph. 
+        4. "Conflict Resolution": Prioritize pages with HIGHEST "Tech Level".
+        5. If the match isn't surgical and specific, return confidence 0.
         
         RETURN JSON ONLY:
         { "matched_id": number | null, "confidence": number, "reasoning": "string" }`;

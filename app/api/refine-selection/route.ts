@@ -26,6 +26,9 @@ export async function POST(req: Request) {
             case 'expand':
                 instruction = "Expand on this content by adding relevant details and professional context.";
                 break;
+            case 'humanize':
+                instruction = "Rewrite this content to sound like it was written by an expert human, not an AI. Use a natural rhythm (mix sentence lengths), professional vocabulary (avoid 'unleash', 'landscape', 'moreover'), and seamless transitions. Return only the rewritten text.";
+                break;
             default:
                 instruction = "Refine this text professionally.";
         }

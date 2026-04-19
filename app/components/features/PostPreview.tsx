@@ -167,6 +167,7 @@ export const PostPreview = () => {
             }
 
             // --- 3b. AI Actions: placeholder streaming, then range replacement ---
+            case 'humanize':
             case 'rephrase':
             case 'shorten':
             case 'expand': {

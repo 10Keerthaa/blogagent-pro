@@ -238,11 +238,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!html) return html;
 
         const totalWords = html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
-        // Elite Link Density: 1 per 80 words with a FLOOR of 10 links for high-quality technical posts
         const maxLinksLimit = Math.max(10, Math.ceil(totalWords / 80)); 
         let currentLinkCount = 0;
         let globalWordCounter = 0;
-        let lastLinkWordIndex = -100; // Start with a safe buffer
+        let lastLinkWordIndex = -100;
 
         const phraseLookup: Record<string, string> = { ...sitemapData };
         for (const [url, anchors] of Object.entries(anchorMap)) {
@@ -251,71 +250,86 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
         if (Object.keys(phraseLookup).length === 0) return html;
 
-        // Prioritize technical phrases by length and depth
+        // ELITE: Filter out generic non-technical words to ensure strict Industry/Business/Tech relevance
+        const genericWords = /\b(strategies|solutions|benefits|growth|performance|results|guide|tips|tricks|help|improve|optimize|increase|effective|efficient|best|top|success|approach|methods|ways|need|want|ensure|provide|process|capabilities|industry)\b/i;
+
         const sortedKeywords = Object.keys(phraseLookup)
-            .filter(phrase => phrase.length >= 3 && !/^(is|are|the|how|can|it|we)\s/i.test(phrase))
+            .filter(phrase => 
+                phrase.length >= 4 && 
+                !/^(is|are|the|how|can|it|we)\s/i.test(phrase) &&
+                !genericWords.test(phrase) // Skip generic anchors
+            )
             .sort((a, b) => b.length - a.length);
 
-        const paragraphs = html.split(/<\/p>/i);
+        // Split by HEADINGS first and process them as untouchable blocks
+        const primaryBlocks = html.split(/(<h[1-6][^>]*>[\s\S]*?<\/h[1-6]>)/gi);
         const usedAnchors = new Set<string>();
-        const processedParagraphs: string[] = [];
+        const processedFullHtml: string[] = [];
 
-        // ELITE PRE-CHECK: Scan for existing AI-generated links to avoid double-wrapping
+        // Scan existing links
         const existingLinks = html.matchAll(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi);
         for (const match of existingLinks) {
             usedAnchors.add(match[2].toLowerCase().trim());
             currentLinkCount++;
-            // Estimate position for existing links if possible, or just treat as word 0
         }
 
-        // STRICT SEQUENTIAL PROCESSING to prevent clumping
-        for (let paragraph of paragraphs) {
-            const wordCountInPara = paragraph.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
-            
-            if (!paragraph.trim() || currentLinkCount >= maxLinksLimit) {
-                processedParagraphs.push(paragraph);
-                globalWordCounter += wordCountInPara;
+        for (let block of primaryBlocks) {
+            // RULE: Never link inside headings
+            if (block.match(/<h[1-6]/i)) {
+                processedFullHtml.push(block);
                 continue;
             }
 
-            let paragraphLinked = false;
+            // Split non-heading content by paragraph/list tags
+            const subBlocks = block.split(/(<\/p>|<\/li>)/i);
+            const processedSubBlocks: string[] = [];
 
-            // 100-WORD COOL-DOWN: Only try linking if enough distance has passed
-            if (globalWordCounter - lastLinkWordIndex >= 100) {
-                // Tier 1: Semantic Intent Matching (Primary)
-                const candidatesInPara = sortedKeywords.filter(k => {
-                    if (usedAnchors.has(k.toLowerCase())) return false; // Skip already linked anchors
+            for (let part of subBlocks) {
+                // If it's a delimiter (</p> or </li>), just push it
+                if (part.match(/<\/(p|li)>/i)) {
+                    processedSubBlocks.push(part);
+                    continue;
+                }
+
+                const wordCountInPart = part.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+                
+                if (!part.trim() || currentLinkCount >= maxLinksLimit || globalWordCounter - lastLinkWordIndex < 100) {
+                    processedSubBlocks.push(part);
+                    globalWordCounter += wordCountInPart;
+                    continue;
+                }
+
+                let partLinked = false;
+
+                // Tier 1: Semantic Intent Matching
+                const candidatesInPart = sortedKeywords.filter(k => {
+                    if (usedAnchors.has(k.toLowerCase())) return false;
                     const regex = new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-                    return regex.test(paragraph);
+                    return regex.test(part);
                 }).slice(0, 5);
 
-                if (candidatesInPara.length > 0) {
+                if (candidatesInPart.length > 0) {
                     try {
                         const resp = await fetch('/api/internal-links/contextualize', {
                             method: 'POST',
-                            body: JSON.stringify({ paragraph: paragraph.replace(/<[^>]+>/g, ' '), candidates: candidatesInPara })
+                            body: JSON.stringify({ paragraph: part.replace(/<[^>]+>/g, ' '), candidates: candidatesInPart })
                         });
                         const data = await resp.json();
                         
                         if (data.match) {
                             let targetUrl = data.match.url;
-                            
-                            // ELITE: Ensure Absolute URLs to prevent "App Opening" issues
-                            if (targetUrl.startsWith('/') && !targetUrl.startsWith('//')) {
-                                targetUrl = `https://10xds.com${targetUrl}`;
-                            } else if (!targetUrl.startsWith('http')) {
-                                targetUrl = `https://10xds.com/${targetUrl}`;
-                            }
+                            if (targetUrl.startsWith('/') && !targetUrl.startsWith('//')) targetUrl = `https://10xds.com${targetUrl}`;
+                            else if (!targetUrl.startsWith('http')) targetUrl = `https://10xds.com/${targetUrl}`;
 
-                            const matchText = candidatesInPara.find(c => paragraph.toLowerCase().includes(c.toLowerCase()));
+                            const matchText = candidatesInPart.find(c => part.toLowerCase().includes(c.toLowerCase()));
                             if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
                                 const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                                 const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
-                                paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium">$1</a>`);
+                                part = part.replace(regex, `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium">$1</a>`);
                                 usedAnchors.add(matchText.toLowerCase());
                                 currentLinkCount++;
                                 lastLinkWordIndex = globalWordCounter;
-                                paragraphLinked = true;
+                                partLinked = true;
                             }
                         }
                     } catch (e) {
@@ -323,31 +337,31 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     }
                 }
 
-                // Tier 2: Legacy Fallback (if Tier 1 didn't link)
-                if (!paragraphLinked && currentLinkCount < maxLinksLimit) {
+                // Tier 2: Exact Match Fallback
+                if (!partLinked && currentLinkCount < maxLinksLimit) {
                     for (const phrase of sortedKeywords) {
                         const targetUrl = phraseLookup[phrase.toLowerCase()];
                         if (usedAnchors.has(phrase.toLowerCase()) || currentLinkCount >= maxLinksLimit) continue;
 
                         const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                         const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'i');
-                        if (regex.test(paragraph)) {
-                            paragraph = paragraph.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium">$1</a>`);
+                        if (regex.test(part)) {
+                            part = part.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium">$1</a>`);
                             usedAnchors.add(phrase.toLowerCase());
                             currentLinkCount++;
                             lastLinkWordIndex = globalWordCounter;
-                            paragraphLinked = true;
                             break; 
                         }
                     }
                 }
-            }
 
-            processedParagraphs.push(paragraph);
-            globalWordCounter += wordCountInPara;
+                processedSubBlocks.push(part);
+                globalWordCounter += wordCountInPart;
+            }
+            processedFullHtml.push(processedSubBlocks.join(''));
         }
 
-        return processedParagraphs.join('</p>');
+        return processedFullHtml.join('');
     }, [sitemapData, anchorMap]);
 
     const processKeywordsInContent = useCallback((html: string, allKeywords: string[], primary: string | null): string => {
@@ -566,68 +580,30 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
             setHumanizationError(false);
             
-            // --- STAGE 2: Automated Humanization Pass ---
+            // --- STAGE 2: Image Generation & Draft Sync ---
             try {
-                const rawHumanized = await api.humanizeContent(
-                    { content: finalContent, title: finalTitle },
-                    (chunk: string) => {
-                        setPreview((prev: any) => ({
-                            ...prev,
-                            content: (prev?.content || '') + chunk
-                        }));
-                    }
-                );
-                
-                const cleanHumanized = cleanAiHtml(rawHumanized);
-                setPreview((prev: any) => ({ ...prev, content: cleanHumanized, isHumanized: true }));
-
-                // --- STAGE 3: Image Generation & Final Humanized Sync ---
                 const finalImgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
                 if (finalImgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: finalImgUrl }));
 
-                // --- STAGE 4: Auto-Save for Resumption (Draft Buffer) ---
-                try {
-                    await api.saveDraft({
-                        title: finalTitle,
-                        content: cleanHumanized,
-                        rawContent: finalContent, // ELITE: Save the original AI facts
-                        metaDesc: finalMeta,
-                        imageUrl: finalImgUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80',
-                        prompt,
-                        keywords,
-                        primaryKeyword,
-                        createdBy: user?.uid || 'anonymous',
-                        authorEmail: user?.email || '',
-                        status: 'in_progress',
-                        isHumanized: true,
-                        humanizationStatus: 'success',
-                        categories: selectedCategories
-                    });
-                } catch (saveErr) {
-                    console.warn("Auto-save failed:", saveErr);
-                }
-            } catch (humanizeErr) {
-                console.error("Humanization failed:", humanizeErr);
-                setHumanizationError(true);
-                // Fallback: Save as in_progress but with failed status so editor can retry
-                try {
-                    await api.saveDraft({
-                        title: finalTitle,
-                        content: finalContent, // Fallback to raw
-                        rawContent: finalContent,
-                        metaDesc: finalMeta,
-                        imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80',
-                        prompt,
-                        keywords,
-                        primaryKeyword,
-                        createdBy: user?.uid || 'anonymous',
-                        authorEmail: user?.email || '',
-                        status: 'in_progress',
-                        isHumanized: false,
-                        humanizationStatus: 'failed',
-                        categories: selectedCategories
-                    });
-                } catch (saveErr) { console.warn("Fallback auto-save failed"); }
+                // --- STAGE 3: Auto-Save for Resumption (Draft Buffer) ---
+                await api.saveDraft({
+                    title: finalTitle,
+                    content: finalContent,
+                    rawContent: finalContent,
+                    metaDesc: finalMeta,
+                    imageUrl: finalImgUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80',
+                    prompt,
+                    keywords,
+                    primaryKeyword,
+                    createdBy: user?.uid || 'anonymous',
+                    authorEmail: user?.email || '',
+                    status: 'in_progress',
+                    isHumanized: false,
+                    humanizationStatus: 'idle',
+                    categories: selectedCategories
+                });
+            } catch (err) {
+                console.warn("Post-generation sync failed:", err);
             }
         } catch (e: any) { setError(e.message); }
         finally { setIsProcessingFullPost(false); }
