@@ -20,16 +20,17 @@ export async function POST(req: Request) {
         const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:streamGenerateContent`;
 
         const aiPrompt = `
-        TASK: Generate a single, highly compelling meta description for a blog post.
+        TASK: Write a single meta description for a blog post.
         Topic: ${prompt}
         Primary Keyword (REQUIRED): ${primaryKeyword || "None"}
         Supporting Keywords: ${keywords || "None"}
 
         STRICT REQUIREMENTS — VIOLATING ANY OF THESE IS A FAILURE:
-        1. MAXIMUM 160 CHARACTERS total (including spaces). Do not exceed this under any circumstance.
-        2. You MUST include the exact phrase "${primaryKeyword || ""}" naturally within the text.
-        3. Aim for 150-160 characters but NEVER go over 160.
-        4. Return ONLY the plain description text. No quotes, no labels, no intro phrases, no markdown.
+        1. Length: EXACTLY 150–160 characters (including spaces). Not less than 150. Not more than 160.
+        2. Primary Keyword: You MUST include the exact phrase "${primaryKeyword || ""}" naturally within the text.
+        3. Informative: Reference at least 2 specific technical concepts, outcomes, or sub-topics drawn directly from the Topic and Supporting Keywords. Do NOT use vague phrases like "Discover how", "Learn everything", "Unlock the power of".
+        4. Tone: Expert and declarative — state what the post covers, not that it exists.
+        5. Return ONLY the plain description text. No quotes, no labels, no intro phrases, no markdown.
         `;
 
         const response = await client.request({
@@ -63,6 +64,17 @@ export async function POST(req: Request) {
             const trimmed = cleanedDescription.slice(0, 160);
             const lastSpace = trimmed.lastIndexOf(' ');
             cleanedDescription = lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
+            cleanedDescription = cleanedDescription.trim();
+        }
+
+        // ── Enforce minimum 150-character length ─────────────────────────────
+        // If the AI returns less than 150 chars, append a contextual filler using the topic.
+        if (cleanedDescription.length < 150 && prompt) {
+            const topicSnippet = prompt.length > 30 ? prompt.slice(0, 30).trim() : prompt;
+            const filler = ` Explore key insights on ${topicSnippet}.`;
+            const extended = (cleanedDescription + filler).slice(0, 160);
+            const lastSpace = extended.lastIndexOf(' ');
+            cleanedDescription = lastSpace > 0 ? extended.slice(0, lastSpace) : extended;
             cleanedDescription = cleanedDescription.trim();
         }
 

@@ -55,12 +55,12 @@ export const PostPreview = () => {
             // Detection: Look up the tree for an <a> tag
             const container = range.commonAncestorContainer;
             const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
-            
+
             // Robust Detection: Check both the container and selection nodes for an <a> tag
-            const activeLink = element?.closest('a') || 
-                             selection.anchorNode?.parentElement?.closest('a') || 
-                             selection.focusNode?.parentElement?.closest('a');
-            
+            const activeLink = element?.closest('a') ||
+                selection.anchorNode?.parentElement?.closest('a') ||
+                selection.focusNode?.parentElement?.closest('a');
+
             const isInsideLink = !!activeLink;
 
             setIsLinkActive(isInsideLink);
@@ -211,8 +211,8 @@ export const PostPreview = () => {
 
     return (
         <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12">
-            {/* MAIN EDITOR AREA - "BLANK PAGE" STYLE */}
-            <div className="w-full px-6 pb-12 relative">
+            {/* MAIN EDITOR AREA - CENTERED COLUMN */}
+            <div className="w-full max-w-[896px] mx-auto px-6 pb-12 relative">
                 {selectionRect && (
                     <FloatingToolbar
                         isVisible={isToolbarVisible}
@@ -340,12 +340,12 @@ export const PostPreview = () => {
                                 <div className="bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden shadow-2xl">
                                     <img src={infographicUrl} alt="Infographic" className="w-full h-auto" />
                                 </div>
-                                
+
                                 {/* REFINEMENT TOGGLE */}
                                 <div className="flex justify-center">
-                                    <Button 
-                                        variant="ghost" 
-                                        size="sm" 
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
                                         onClick={() => setIsRefining(!isRefining)}
                                         className="text-[10px] font-bold uppercase tracking-widest text-violet-500 hover:text-violet-600 transition-all flex items-center gap-2"
                                     >

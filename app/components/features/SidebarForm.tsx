@@ -198,7 +198,7 @@ export const SidebarForm = () => {
                 <Button
                     onClick={handleGenerate}
                     isLoading={isProcessingFullPost}
-                    disabled={!prompt}
+                    disabled={!prompt || keywords.length === 0 || !description}
                     className="w-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-violet-600/10 dark:shadow-none"
                 >
                     {isProcessingFullPost ? 'Processing...' : 'Generate Elite post'}
