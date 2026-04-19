@@ -172,7 +172,13 @@ STRICT ELITE MINIMALIST CONSTRAINTS:
 - MIRROR RULE: Copy the text from the steps EXACTLY. Do not change any spelling or casing. Perfect spelling of "${steps}" is mandatory.
 
 STYLE: High-fidelity 3D vector. 
-PALETTE: Dark Navy background with vibrant neon-pastel nodes.
+PALETTE RULES (STRICT - NO EXCEPTIONS):
+- Background: Pure deep BLACK (#000000). No gradients on the base layer.
+- Path/Spine: A glowing deep violet (#4B0082) or rich purple (#7B2FBE) ribbon winding as an S-curve.
+- Pods/Bubbles: Use GLASS or FROSTED effect in WHITE (#FFFFFF) with a purple (#9D4EDD) glow border. Alternate between pure white glass and deep purple (#3A0CA3) solid pods for visual rhythm.
+- Text Labels inside pods: Use YELLOW (#FFD700) for the main header. Use WHITE (#FFFFFF) for any sub-label.
+- Connecting Lines: Glowing purple-to-violet gradient (#7B2FBE to #C77DFF).
+- Accent Glows: Soft purple light halos around each pod node.
 Portrait 4:5 (800x1000).`;
                     } else {
                         return `MASTER TECHNICAL DASHBOARD. 
@@ -186,12 +192,16 @@ STRICT ELITE MINIMALIST CONSTRAINTS:
 - MANDATORY DICTIONARY SPELLING: You MUST verify the spelling of EVERY SINGLE WORD you draw. ZERO tolerance for gibberish, mashed letters, or typos (e.g., no 'Mususegpureidal', 'Prolonrud', or 'Subotmal'). Every letter must be perfectly legible and correctly spelled in English.
 - MIRROR RULE: You must copy the text from the data highlights EXACTLY. If a word is provided to you, render it character-for-character. Flawless spelling is the highest priority.
 
-VIBRANT FULL-SPECTRUM VISUALS:
-1. Quadrant Modules: Use vibrant colors (Sage, Rose, Cerulean, Amber).
-2. Sidebar Icons: Challenges and Trend summaries.
+PALETTE RULES (STRICT - NO EXCEPTIONS):
+- Background: Pure deep BLACK (#000000). No noise, no gradients on the base layer.
+- Central Hexagon: Deep purple (#3A0CA3) with a glowing violet (#7B2FBE) border. Label in YELLOW (#FFD700).
+- Quadrant Modules: Use ONLY these four purple variants — Deep Purple (#3A0CA3), Royal Violet (#7B2FBE), Soft Lavender (#C77DFF), Mauve (#9D4EDD). One per quadrant.
+- Quadrant Titles: YELLOW (#FFD700), bold.
+- Quadrant Bullet Points: WHITE (#FFFFFF), clean and small.
+- Connection Lines: White (#FFFFFF) or glowing violet (#9D4EDD).
+- Sidebar icons or accent elements: White or pale lavender (#E0AAFF).
 
 STYLE: Flat 2.5D Vector Illustration. 
-PALETTE: Dark Navy background ({r: 10, g: 25, b: 47}). 
 Portrait 4:5 (800x1000).`;
                     }
                   })()
@@ -233,7 +243,7 @@ Portrait 4:5 (800x1000).`;
         const buffer = await sharp(rawBuffer)
           .resize(800, 1000, {
             fit: 'contain', 
-            background: { r: 10, g: 25, b: 47, alpha: 1 }, // Elite Dark Navy background fill
+            background: { r: 0, g: 0, b: 0, alpha: 1 }, // Pure Black background fill
             kernel: 'cubic'
           })
           .composite([
