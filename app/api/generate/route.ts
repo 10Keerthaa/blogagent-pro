@@ -6,7 +6,7 @@ export const maxDuration = 60; // Set timeout for Vercel
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt, keywords, primaryKeyword, feedback } = body;
+    const { prompt, keywords, primaryKeyword, feedback, currentContent } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -42,7 +42,36 @@ export async function POST(req: Request) {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    const aiPrompt = `
+    // Determine if we are in "Surgical Refinement" mode
+    const isSurgical = !!(feedback && currentContent);
+
+    const aiPrompt = isSurgical ? `
+        OBJECTIVE: Perform an ELITE SURGICAL REFINEMENT on an existing blog post.
+        
+        GROUND TRUTH HTML:
+        ---
+        ${currentContent}
+        ---
+
+        USER INSTRUCTION: ${feedback}
+        ${learnedContext ? `\nLEARNED CONTEXT FROM URL (USE FOR FACTS/DATA): \n${learnedContext}\n` : ""}
+
+        STRICT SURGICAL CONTRACT — VIOLATING ANY OF THESE IS A FAILURE:
+        1. ZERO DRIFT: You must return the GROUND TRUTH HTML with EXTREME PRECISION. Do not rephrase, move, or edit any sentence, heading, or paragraph that was not explicitly mentioned in the USER INSTRUCTION. 
+        2. THREE MODES:
+           - INSERT: If asked to add/insert content, find the exact position described and inject the new <p> or <h2>/<h3> blocks. 
+           - DELETE: If asked to remove/delete content, locate the specific block and remove it entirely.
+           - REPLACE: If asked to change/rename/update a heading or paragraph, swap Only that specific text and maintain all surrounding content exactly as-is.
+        3. URL DATA: if LEARNED CONTEXT is provided, use its facts to inform your insertion.
+        4. STRUCTURE: Maintain all <h2>, <h3>, and <ul> tags exactly as they appear in the GROUND TRUTH.
+        5. FORMAT: Return the final, fully merged HTML within <content> tags. 
+        6. META/TITLE: Ensure the <title> and <meta> tags are also included and match the instruction if a change was requested there.
+
+        RESULT FORMAT:
+        <title>...</title>
+        <meta>...</meta>
+        <content>Full Updated HTML with surgical changes applied</content>
+    ` : `
         You are an expert SEO copywriter. Generate a high-quality, long-form blog post.
         
         Topic: ${prompt}
@@ -56,12 +85,6 @@ export async function POST(req: Request) {
         ${learnedContext}
         ---
         ` : ""}
-
-        ${feedback ? `\nSMART REFINEMENT MODE: 
-        Apply these changes SURGICALLY: ${feedback}. 
-        ${learnedContext ? "INTELLIGENT INSERTION: Based on the LEARNED CONTEXT above, add a new professionally written section that incorporates these facts. Match the current post's tone and style perfectly." : ""}
-        PRESERVE the rest of the existing article structure, headings, and detailed paragraphs exactly as they are. 
-        DO NOT rewrite unrelated sections. If asked to add a heading, insert it naturally without deleting other content.` : ""}
 
         STRICT REQUIREMENTS:
         1. BLOG TITLE (Meta Title): 50-60 characters.
@@ -84,7 +107,7 @@ export async function POST(req: Request) {
           * Key Scannable Point 1
           * Key Scannable Point 2
         </content>
-      `;
+    `;
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
 

@@ -684,7 +684,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setError(null); setPreview(null);
         try {
             const fullRawText = await api.generateContent(
-                { prompt: preview?.title || prompt, keywords: keywords.join(', '), primaryKeyword, feedback },
+                { prompt: preview?.title || prompt, keywords: keywords.join(', '), primaryKeyword, feedback, currentContent: preview?.content },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
@@ -717,7 +717,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         }
         setError(null);
         try {
-            const fullRawText = await api.generateContent({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), primaryKeyword, feedback }, () => { });
+            const fullRawText = await api.generateContent({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), primaryKeyword, feedback, currentContent: selectedReviewDraft.content }, () => { });
             const titleMatch = fullRawText.match(/<title>([\s\S]*?)<\/title>/i);
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
