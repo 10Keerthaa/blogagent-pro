@@ -337,8 +337,11 @@ export const PostPreview = () => {
                         </Button>
                         {infographicUrl && (
                             <div className="mt-6 flex flex-col gap-4">
-                                <div className="bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden shadow-2xl">
+                                <div className="bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden shadow-2xl relative group">
                                     <img src={infographicUrl} alt="Infographic" className="w-full h-auto" />
+                                    <div className="absolute inset-0 pointer-events-none">
+                                        <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[20px] lg:bottom-[30px] right-[20px] lg:right-[30px] h-8 lg:h-12 w-auto drop-shadow-xl" />
+                                    </div>
                                 </div>
 
                                 {/* REFINEMENT TOGGLE */}
