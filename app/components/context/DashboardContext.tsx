@@ -544,7 +544,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setError(null); setInfographicUrl(null); setPreview(null);
         try {
             const fullRawText = await api.generateContent(
-                { prompt, keywords: keywords.join(', '), primaryKeyword },
+                { prompt, keywords: keywords.join(', '), primaryKeyword, description },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
@@ -560,7 +560,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
 
             let finalTitle = titleMatch ? titleMatch[1].trim() : "";
-            const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : "", primaryKeyword);
+            // Sticky Description: Use the existing description if available, otherwise use the generated one
+            const generatedMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : "", primaryKeyword);
+            const finalMeta = description || generatedMeta; 
+            
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
 
             finalContent = finalContent.replace(/^<(h1|h2)[^>]*>.*?<\/\1>/i, '').trim();
@@ -576,7 +579,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
 
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
-            if (finalMeta) setDescription(finalMeta);
+            // Only update the description state if it was empty
+            if (finalMeta && !description) setDescription(finalMeta);
 
             setHumanizationError(false);
             
