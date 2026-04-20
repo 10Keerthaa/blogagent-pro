@@ -424,6 +424,7 @@ export const ReviewList = () => {
                         )}
                     </div>
                 </section>
+            </div>
             ) : (
                 <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
                     <div className="flex items-center justify-between mb-2 px-1">
