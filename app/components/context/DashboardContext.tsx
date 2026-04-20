@@ -400,10 +400,16 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         let cleaned = text.replace(/[\n\r]/g, '').replace(/\*/g, '').trim();
 
         if (cleaned.length > 155) {
-            const trimmed = cleaned.slice(0, 155);
-            const lastSpace = trimmed.lastIndexOf(' ');
-            cleaned = lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
-            cleaned = cleaned.trim();
+            // Try to find the last full sentence period before 155
+            const lastPeriod = cleaned.lastIndexOf('.', 155);
+            if (lastPeriod > 100) { // Only use period if it doesn't make it way too short
+                cleaned = cleaned.slice(0, lastPeriod + 1).trim();
+            } else {
+                // Fallback: word-boundary trim
+                const trimmed = cleaned.slice(0, 155);
+                const lastSpace = trimmed.lastIndexOf(' ');
+                cleaned = (lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed).trim();
+            }
         }
 
         if (primary && !cleaned.toLowerCase().includes(primary.toLowerCase())) {
