@@ -230,7 +230,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="w-full space-y-12 relative px-8 lg:px-20">
+                    <section className="w-full space-y-12 relative px-6 lg:px-12">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
@@ -243,7 +243,7 @@ export const ReviewList = () => {
                                 }}
                             />
                         )}
-                        <div className="max-w-[800px] mx-auto space-y-12">
+                        <div className="w-full space-y-12">
                             <Input
                                 label="Editorial Title"
                                 value={selectedReviewDraft.title}
@@ -310,7 +310,7 @@ export const ReviewList = () => {
                                 setSelectedReviewDraft(updated);
                                 handleSaveManualEdits(updated);
                             }}
-                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert mx-auto px-4 lg:px-8 focus:outline-none min-h-[500px]
+                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
                             onMouseUp={updateSelectionRect}
                             onSelect={updateSelectionRect}
