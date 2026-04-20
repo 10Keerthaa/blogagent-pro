@@ -55,6 +55,11 @@ export async function POST(req: Request) {
         Keywords to include: ${keywords || "None"}
         Primary Keyword: ${primaryKeyword || "None"}
         STRICT CONSTRAINT: Stay strictly focused on ${prompt}.
+        
+        ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
+        - DO NOT invent data, statistics, names, or specific case studies not found in the context.
+        - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
+        - Every sentence must add unique technical value. ZERO FLUFF.
 
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
 
@@ -83,6 +88,11 @@ export async function POST(req: Request) {
         - INTRODUCTION: 150–200 words.
         - EACH BODY SECTION: 200–300 words.
         - CONCLUSION: 100–150 words.
+
+        ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
+        - DO NOT invent data, statistics, or specific business metrics.
+        - Stick strictly to the Topic and Learned Context. 
+        - Every sentence must add unique technical value to the discussion.
 
         ━━━ TONE & AUDIENCE
         - TARGET: CIOs, Operations Heads, Digital Transformation Leads.
