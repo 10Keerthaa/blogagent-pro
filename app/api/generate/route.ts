@@ -113,7 +113,7 @@ export async function POST(req: Request) {
            - INTRODUCTION (150–200 words): Open with a business problem or industry shift—not a generic statement. State clearly what is covered.
            - BODY SECTIONS (H2 → H3 hierarchy): 4–6 H2 sections. Use 2–3 H3 sub-topics per H2 where needed.
              - Paragraphs: Max 4-5 lines, one idea each.
-             - Implementation: Use numbered lists starting with imperative verbs.
+             - Implementation: Use HTML ordered lists (<ol> and <li>) starting with imperative verbs. Every step MUST be in its own <li> tag.
              - Callouts: Add 1–2 "Pro tip:" or "Key insight:" boxes.
            - OPTIONAL MODULES (Use only if relevant): 
              - "Why [topic] matters for [industry/function]"
