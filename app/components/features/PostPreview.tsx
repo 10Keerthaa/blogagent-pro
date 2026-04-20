@@ -15,7 +15,8 @@ export const PostPreview = () => {
         isGeneratingInfographic, handleGenerateInfographic, infographicUrl,
         user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft,
         description, primaryKeyword, prompt: mainTopic, keywords,
-        handleRefineSelection, infographicFeedback, setInfographicFeedback, isInfographicRefining
+        handleRefineSelection, infographicFeedback, setInfographicFeedback, isInfographicRefining,
+        isGenerating
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
@@ -406,11 +407,11 @@ export const PostPreview = () => {
                             <Button
                                 variant="primary"
                                 onClick={handleApplyFeedback}
-                                isLoading={isApplyingFeedback}
-                                disabled={isApplyingFeedback || !feedback}
+                                isLoading={isGenerating}
+                                disabled={isGenerating || !feedback}
                                 className="w-full h-14 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
                             >
-                                {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply AI Refinement'}
+                                {isGenerating ? 'Processing...' : 'Apply AI Refinement'}
                             </Button>
                         </div>
                     </div>
