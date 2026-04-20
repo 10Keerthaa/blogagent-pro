@@ -45,6 +45,72 @@ export async function POST(req: Request) {
     // Determine if we are in "Surgical Refinement" mode
     const isSurgical = !!(feedback && currentContent);
 
+    // --- GENERATION STRATEGY TOGGLE ---
+    const GENERATION_MODE: 'V1_STANDARD' | 'V2_ELITE' = 'V1_STANDARD'; 
+
+    const PROMPT_V1_STANDARD = `
+        You are an expert SEO copywriter. Generate a high-quality, long-form blog post.
+        
+        Topic: ${prompt}
+        Keywords to include: ${keywords || "None"}
+        Primary Keyword: ${primaryKeyword || "None"}
+        STRICT CONSTRAINT: Stay strictly focused on ${prompt}.
+
+        ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
+
+        STRICT REQUIREMENTS:
+        1. BLOG TITLE: 50-60 characters.
+        2. META DESCRIPTION: Exactly 155 characters. MUST include the primary keyword.
+        3. BLOG CONTENT: 1500 to 2000 words.
+        4. CLEAN FORMATTING: Use standard Markdown bullet points (*) for lists. 
+        5. Use <h2> and <h3> for headings. NEVER use # markdown headers.
+        6. NO REDUNDANCY: Do not repeat the blog title as an <h1>. Start with <h2>.
+        7. CONCLUSION: End with a professional wrap-up and a call to action.
+    `;
+
+    const PROMPT_V2_ELITE = `
+        You are an expert Enterprise Content Strategist. Generate a high-quality, long-form blog post for a professional business audience.
+        
+        Topic: ${prompt}
+        Keywords to include: ${keywords || "None"}
+        Primary Keyword: ${primaryKeyword || "None"}
+        
+        ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
+
+        ━━━ WORD COUNT (STRICT ENFORCEMENT)
+        - TOTAL: 1500–2000 words (body content only, excluding FAQ and meta).
+        - INTRODUCTION: 150–200 words.
+        - EACH BODY SECTION: 200–300 words.
+        - CONCLUSION: 100–150 words.
+
+        ━━━ TONE & AUDIENCE
+        - TARGET: CIOs, Operations Heads, Digital Transformation Leads.
+        - TONE: Authoritative and informative. Clinical and declarative.
+        - VOICE: Strictly Active Voice.
+        
+        ━━━ STRUCTURE (STRICT ORDER)
+        1. BLOG TITLE: 50–60 characters.
+        2. META DESCRIPTION: 155 characters EXACTLY. Must include the primary keyword: ${primaryKeyword}.
+        3. <content> tag:
+           - INTRODUCTION (150–200 words): Open with a business problem or industry shift.
+           - BODY SECTIONS (H2 → H3 hierarchy): 4–6 H2 sections.
+             - Paragraphs: Max 4-5 lines.
+             - Implementation: Use HTML ordered lists (<ol> and <li>) starting with imperative verbs.
+             - Callouts: Add 1–2 "Pro tip:" or "Key insight:" boxes.
+           - OPTIONAL MODULES: "Why [topic] matters", "Key benefits", "Use cases", "Challenges".
+           - CONCLUSION (100–150 words): Summarize business impact.
+           - CTA: End with: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Ask our experts</a>.
+           - FAQ SECTION: 5–7 specific practitioner questions.
+
+        ━━━ FORBIDDEN FILLERS:
+        - "In today's rapidly evolving world", "As technology continues to advance", "In conclusion".
+
+        ━━━ FORMATTING RULES:
+        - Use <h2> and <h3> only.
+        - Every major section needs its own H2.
+        - First mention of a technology: provide a one-sentence context.
+    `;
+
     const aiPrompt = isSurgical ? `
         OBJECTIVE: Perform an ELITE SURGICAL REFINEMENT on an existing blog post.
         
@@ -75,63 +141,7 @@ export async function POST(req: Request) {
         <title>...</title>
         <meta>...</meta>
         <content>Full Updated HTML with surgical changes applied</content>
-    ` : `
-        You are an expert Enterprise Content Strategist. Generate a high-quality, long-form blog post for a professional business audience.
-        
-        Topic: ${prompt}
-        Keywords to include: ${keywords || "None"}
-        Primary Keyword: ${primaryKeyword || "None"}
-        
-        ${learnedContext ? `
-        LEARNED CONTEXT FROM EXTERNAL URL:
-        ---
-        ${learnedContext}
-        ---
-        ` : ""}
-
-        ━━━ AUDIENCE & TONE
-        - Target: CIOs, Operations Heads, Digital Transformation Leads.
-        - Tone: Authoritative, informative, and clinical. Assume technical familiarity but avoid unnecessary jargon.
-        - Voice: Strictly Active Voice.
-        
-        ━━━ WORD COUNT (STRICT ENFORCEMENT)
-        - TOTAL: 1500–2000 words (body content only, excluding FAQ and meta).
-        - INTRODUCTION: 150–200 words.
-        - EACH BODY SECTION: 200–300 words.
-        - CONCLUSION: 100–150 words.
-        - DO NOT HALLUCINATE: Stick strictly to the Topic, Keywords, and Learned Context. Every sentence must add unique technical value.
-
-        ━━━ TONE & AUDIENCE
-        - TARGET: CIOs, Operations Heads, Digital Transformation Leads.
-        - TONE: Authoritative and informative. Authoritative, clinical, but not lecturing. 
-        - VOICE: Strictly Active Voice.
-        
-        ━━━ STRUCTURE (STRICT ORDER)
-        1. BLOG TITLE: 50–60 characters.
-        2. META DESCRIPTION: 155 characters EXACTLY. Must include the primary keyword: ${primaryKeyword}.
-        3. <content> tag:
-           - INTRODUCTION (150–200 words): Open with a business problem or industry shift—not a generic statement. State clearly what is covered.
-           - BODY SECTIONS (H2 → H3 hierarchy): 4–6 H2 sections. Use 2–3 H3 sub-topics per H2 where needed.
-             - Paragraphs: Max 4-5 lines, one idea each.
-             - Implementation: Use HTML ordered lists (<ol> and <li>) starting with imperative verbs. Every step MUST be in its own <li> tag.
-             - Callouts: Add 1–2 "Pro tip:" or "Key insight:" boxes.
-           - OPTIONAL MODULES (Use only if relevant): 
-             - "Why [topic] matters for [industry/function]"
-             - "Key benefits of [topic]" (4–6 benefits with 2–3 sentences each)
-             - "Use cases of [topic] in [industry]" (Named scenarios with 2–4 sentences)
-             - "Challenges and considerations" (Implementation risks, privacy, etc.)
-           - CONCLUSION (100–150 words): Summarize 2–3 main points. Frame takeaways around business impact.
-           - CTA: End immediately with a purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Ask our experts</a>.
-           - FAQ SECTION: 5–7 specific practitioner questions (e.g., "How does CDA handle unstructured invoice data?"). No generic questions.
-
-        ━━━ FORBIDDEN FILLERS:
-        - "In today's rapidly evolving world", "As technology continues to advance", "It's no secret that", "In conclusion", "As we can see".
-
-        ━━━ FORMATTING RULES:
-        - Use <h2> and <h3> only. No Markdown headers (#).
-        - Every major section needs its own H2.
-        - First mention of a technology: provide a one-sentence context.
-    `;
+    ` : (GENERATION_MODE === 'V1_STANDARD' ? PROMPT_V1_STANDARD : PROMPT_V2_ELITE);
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
 
