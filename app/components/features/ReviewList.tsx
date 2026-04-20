@@ -391,7 +391,7 @@ export const ReviewList = () => {
                                         Action Locked: Select a primary keyword to enable refinement
                                     </div>
                                 )}
-                                <div className={!primaryKeyword ? 'opacity-50 pointer-events-none mt-2' : 'mt-2'}>
+                                <div className="mt-2">
                                     <Textarea
                                         value={feedback}
                                         onChange={(e) => setFeedback(e.target.value)}
@@ -402,7 +402,7 @@ export const ReviewList = () => {
                                         variant="primary"
                                         onClick={handleApplyReviewFeedback}
                                         isLoading={isApplyingFeedback}
-                                        disabled={!feedback || !primaryKeyword}
+                                        disabled={!feedback}
                                         className="w-full h-14 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
                                     >
                                         {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply AI Refinement'}
