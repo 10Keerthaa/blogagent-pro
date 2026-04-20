@@ -724,21 +724,18 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     const handleApplyReviewFeedback = async () => {
         if (!selectedReviewDraft || !feedback) return;
-        if (!primaryKeyword) {
-            setError("Please select a primary keyword before refining the review.");
-            return;
-        }
         setError(null);
         try {
-            const fullRawText = await api.generateContent({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), primaryKeyword, feedback, currentContent: selectedReviewDraft.content }, () => { });
+            const activeKeyword = primaryKeyword || '';
+            const fullRawText = await api.generateContent({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), primaryKeyword: activeKeyword, feedback, currentContent: selectedReviewDraft.content }, () => { });
             const titleMatch = fullRawText.match(/<title>([\s\S]*?)<\/title>/i);
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
             const finalTitle = titleMatch ? titleMatch[1].trim() : (selectedReviewDraft?.title || prompt);
-            const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : (selectedReviewDraft?.metaDesc || ""), primaryKeyword);
+            const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : (selectedReviewDraft?.metaDesc || ""), activeKeyword);
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
             finalContent = await applySitemapLinks(finalContent);
-            finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
+            finalContent = processKeywordsInContent(finalContent, keywords, activeKeyword);
             const updateData = { title: finalTitle, content: finalContent, metaDesc: finalMeta };
             await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData });
             setSelectedReviewDraft({ ...selectedReviewDraft, ...updateData });
