@@ -245,7 +245,7 @@ export const PostPreview = () => {
                         setPreview({ ...preview, title: newTitle });
                         handleAutoSave({ ...preview, title: newTitle });
                     }}
-                    className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg p-2 transition-all"
+                    className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg pl-16 pr-10 transition-all"
                 >
                     {preview.title}
                 </h1>
@@ -288,7 +288,7 @@ export const PostPreview = () => {
                         setPreview({ ...preview, content: newContent });
                         handleAutoSave({ ...preview, content: newContent });
                     }}
-                    className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif"
+                    className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif pl-16 pr-10"
                     style={{ minHeight: '50vh' }}
                     onMouseUp={updateSelectionRect}
                     onSelect={updateSelectionRect}

@@ -166,7 +166,6 @@ Content: Each pod must contain a unique technical label from these steps: ${step
 
 STRICT ELITE MINIMALIST CONSTRAINTS:
 - PROMPT EXCLUSION: NEVER write the words "MODE", "ROADMAP", or "CONTAINER" in the image.
-- LOGO BUFFER: Maintain a 150px EMPTY TRANSPARENT SPACE in the bottom-right corner. NO text or icons in that zone.
 - VISUAL HIERARCHY: Bold, oversized Headers/Labels. Very small, refined secondary detail text.
 - MANDATORY DICTIONARY SPELLING: You MUST verify the spelling of EVERY SINGLE WORD you draw. ZERO tolerance for gibberish, mashed letters, or typos (e.g., no 'Prolonrud', 'Subotmal'). Every letter must be perfectly legible and exactly match standard English.
 - MIRROR RULE: Copy the text from the steps EXACTLY. Do not change any spelling or casing. Perfect spelling of "${steps}" is mandatory.
@@ -187,7 +186,6 @@ Data Highlights: ${visualPrompt.substring(0, 1000)}.
 
 STRICT ELITE MINIMALIST CONSTRAINTS:
 - PROMPT EXCLUSION: NEVER write the words "MODE", "DASHBOARD", "MASTER", or "QUADRANT" in the image.
-- LOGO BUFFER: Maintain a 150px EMPTY TRANSPARENT SPACE in the bottom-right corner. NO text or icons in that zone.
 - VISUAL HIERARCHY: Dominate with large Titles. Use significantly smaller, clean font for bullet points.
 - MANDATORY DICTIONARY SPELLING: You MUST verify the spelling of EVERY SINGLE WORD you draw. ZERO tolerance for gibberish, mashed letters, or typos (e.g., no 'Mususegpureidal', 'Prolonrud', or 'Subotmal'). Every letter must be perfectly legible and correctly spelled in English.
 - MIRROR RULE: You must copy the text from the data highlights EXACTLY. If a word is provided to you, render it character-for-character. Flawless spelling is the highest priority.
@@ -232,10 +230,23 @@ Portrait 4:5 (800x1000).`;
         const logoBuffer = fs.readFileSync(logoPath);
 
         const TARGET_LOGO_HEIGHT = 75;
-        const resizedLogo = await sharp(logoBuffer)
-          .resize({ height: TARGET_LOGO_HEIGHT })
-          .png()  // Preserve alpha channel — prevents white box artifact
+        
+        // Elite Alpha-Masking: Remove white background from logo to prevent white box artifact
+        // Uses high-precision contrast adjustment to ensure absolute transparency of white pixels
+        const logoProcessor = sharp(logoBuffer);
+        const alphaMask = await logoProcessor
+          .clone()
+          .greyscale()
+          .negate()
+          .linear(1.5, -40) // Contrast boost to kill any faint white halo
           .toBuffer();
+
+        const resizedLogo = await sharp(logoBuffer)
+          .joinChannel(alphaMask) 
+          .resize({ height: TARGET_LOGO_HEIGHT })
+          .png()
+          .toBuffer();
+
         const logoMeta = await sharp(resizedLogo).metadata();
         const logoW = logoMeta.width || 130;
 
