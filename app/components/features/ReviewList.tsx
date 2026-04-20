@@ -230,7 +230,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="w-full space-y-12 relative">
+                    <section className="w-full space-y-12 relative px-8 lg:px-20">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
