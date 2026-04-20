@@ -67,13 +67,13 @@ export async function POST(req: Request) {
         3. BLOG CONTENT: 1500 to 2000 words inside <content> tags.
         4. STRUCTURE (Inside <content>):
            - Start with a strategic 1-paragraph introduction.
-           - Use 5–7 H2 sections. Headings should be direct questions or key statements (e.g., "What is [Topic]?", "Key Capabilities", "Challenges and Considerations").
-           - Formatting: Use **Bold Headers:** for specific use cases or sub-points within paragraphs to ensure scannability.
-           - Lists: Use standard Markdown bullets (*).
-        5. Use <h2> and <h3> for headings. NEVER use # markdown headers.
+           - Use 5–7 H2 sections. Headings should be direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
+           - Formatting: Use HTML <b>Bold Headers:</b> for specific sub-points. 
+           - Lists: ALWAYS use HTML <ul> and <li> tags for lists. NEVER use Markdown asterisks (*).
+        5. Use <h2> and <h3> for headings. NEVER use Markdown headers (#).
         6. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
         7. CONCLUSION (MANDATORY): End with a professional wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
-        8. FAQ SECTION (MANDATORY): Include 5–7 questions phrased for practitioners. Each answer: 2–3 sentences.
+        8. FAQ SECTION (MANDATORY): Include 5–7 questions phrased for practitioners. Wrap each question in <b> tags and each answer in <p> tags.
 
         RESULT FORMAT:
         <title>...</title>
