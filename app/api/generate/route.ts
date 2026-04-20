@@ -72,12 +72,13 @@ export async function POST(req: Request) {
         <meta>...</meta>
         <content>Full Updated HTML with surgical changes applied</content>
     ` : `
-        You are an expert Enterprise Content Strategist. Generate a high-quality, long-form blog post for a professional business audience.
+        You are an expert SEO copywriter. Generate a high-quality, long-form blog post.
         
         Topic: ${prompt}
         Keywords to include: ${keywords || "None"}
         Primary Keyword: ${primaryKeyword || "None"}
-        
+        STRICT CONSTRAINT: Stay strictly focused on ${prompt}.
+
         ${learnedContext ? `
         LEARNED CONTEXT FROM EXTERNAL URL:
         ---
@@ -85,41 +86,27 @@ export async function POST(req: Request) {
         ---
         ` : ""}
 
-        ━━━ AUDIENCE & TONE
-        - Target: CIOs, Operations Heads, Digital Transformation Leads.
-        - Tone: Authoritative, informative, and clinical. Assume technical familiarity but avoid unnecessary jargon.
-        - Voice: Strictly Active Voice.
-        
-        ━━━ WORD COUNT (TOTAL: 1500–2000 words)
-        - Introduction: 150–200 words
-        - Body Sections: 200–300 words each
-        - Conclusion: 100–150 words
-        - FAQ & Meta: Additional
-        
-        ━━━ STRUCTURE (STRICT ORDER)
-        1. BLOG TITLE: 50–60 characters.
-        2. META DESCRIPTION: 150–160 characters. Must include primary keyword. No filler.
-        3. <content> tag:
-           - INTRODUCTION: Open with a business problem or industry data point. State why it matters NOW.
-           - 4–6 BODY SECTIONS (H2 → H3 hierarchy): 
-             - Paragraphs: Max 4-5 lines.
-             - Implementation steps: Use numbered lists starting with imperative verbs.
-             - Callouts: Add 1–2 "Pro tip:" or "Key insight:" boxes.
-           - OPTIONAL MODULES (Use if relevant): "Why [topic] matters", "Key benefits", "Use cases", or "Challenges and considerations".
-           - CONCLUSION: Summarize impact. End with CTA: "Explore how 10xDS can help you implement this solution. Talk with our experts: https://10xds.com/ask-the-expert/"
-           - FAQ SECTION: 5–7 specific questions phrased for practitioners. Avoid "What is X?" basics.
-        
-        ━━━ FORBIDDEN FILLERS (DO NOT USE):
-        - "In today's rapidly evolving world"
-        - "As technology continues to advance"
-        - "It's no secret that"
-        - "In conclusion"
-        - "As we can see"
-        
-        ━━━ FORMATTING:
-        - Use <h2> and <h3> only.
-        - No Markdown headers (#). Use valid HTML tags inside <content>.
-        - First mention of a technology: provide a one-sentence context.
+        STRICT REQUIREMENTS:
+        1. BLOG TITLE (Meta Title): 50-60 characters.
+        2. META DESCRIPTION: STRICT ENFORCEMENT: Exactly 150-160 characters (including spaces). MUST include the primary keyword.
+        3. BLOG CONTENT: 1500 to 2000 words.
+        4. CLEAN FORMATTING (SCANNABLE BLOCKS): When listing benefits, use-cases, or steps, ALWAYS use standard Markdown bullet points (*). 
+        5. NO LIST STUFFING: Do not mix bold headers with long paragraphs for simple lists. Transition directly from a context sentence to a clean list of scannable points.
+        6. ZERO REDUNDANCY: If a sentence says "Consider these factors:", do NOT add a redundant <b>Factors to Consider:</b> header immediately after. Transition directly to the bulleted list.
+        7. TIGHT SPACING: Avoid empty <p>&nbsp;</p> tags or unnecessary <br> breaks between headings/text and lists. 
+        8. Use <h2> and <h3> for headings. 
+        9. NEVER use Markdown headers (#) for titles or headings. Use valid HTML for headings.
+        10. DO NOT repeat the blog title as an <h1> in the <content> tag. Start directly with an <h2>.
+
+        PERFECT FORMAT EXAMPLE:
+        <title>Professional Blog Title Here</title>
+        <meta>Engaging 155-character meta description goes here.</meta>
+        <content>
+          <h2>Primary Section Heading</h2>
+          <p>Introductory paragraph content...</p>
+          * Key Scannable Point 1
+          * Key Scannable Point 2
+        </content>
     `;
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
