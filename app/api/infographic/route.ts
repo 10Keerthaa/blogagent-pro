@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     try {
       const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
-      const aiPrompt = N && N >= 5 
+      const aiPrompt = N && N >= 5
         ? `Analyze this blog post and extract EXACTLY ${N} milestones for an 'Isometric Roadmap' infographic.
            Output ONLY a JSON object with: 
            "mode": "ROADMAP",
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
       try {
         const jsonMatch = rawText.match(/\{[\s\S]*\}/);
         let parsed = JSON.parse(jsonMatch ? jsonMatch[0] : rawText);
-        
+
         // --- TASK 1.5: ELITE SPELLING SANITY CHECK & CONDENSATION ---
         try {
           const sanityUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
@@ -139,7 +139,7 @@ export async function POST(req: Request) {
 
       // Clean visualPrompt of trailing semi-colons to prevent ghost nodes
       const cleanedPrompt = visualPrompt.replace(/[;,. ]+$/, '');
-      
+
       const response = await client.request({
         url: geminiImageUrl,
         method: 'POST',
@@ -154,12 +154,12 @@ export async function POST(req: Request) {
                     const mode = modeMatch ? modeMatch[1] : 'DASHBOARD';
 
                     if (mode === 'ROADMAP') {
-                        const countMatch = visualPrompt.match(/COUNT: (.*?) \|/);
-                        const stepsMatch = visualPrompt.match(/MILESTONES: (.*)/);
-                        const N = countMatch ? countMatch[1] : '8';
-                        const steps = stepsMatch ? stepsMatch[1] : 'Phase 1 > Phase 2';
+                      const countMatch = visualPrompt.match(/COUNT: (.*?) \|/);
+                      const stepsMatch = visualPrompt.match(/MILESTONES: (.*)/);
+                      const N = countMatch ? countMatch[1] : '8';
+                      const steps = stepsMatch ? stepsMatch[1] : 'Phase 1 > Phase 2';
 
-                        return `ISOMETRIC 3D TECHNICAL ROADMAP. 
+                      return `ISOMETRIC 3D TECHNICAL ROADMAP. 
 Layout: An elegant S-Curve winding pathway through a digital space.
 Containers: Render exactly ${N} distinct technical pods or glass bubbles along the path.
 Content: Each pod must contain a unique technical label from these steps: ${steps}.
@@ -181,7 +181,7 @@ PALETTE RULES (STRICT - NO EXCEPTIONS):
 - Accent Glows: Soft purple light halos around each pod node.
 Portrait 4:5 (800x1000).`;
                     } else {
-                        return `MASTER TECHNICAL DASHBOARD. 
+                      return `MASTER TECHNICAL DASHBOARD. 
 Layout: Central hexagonal thematic core connected to four peripheral quadrants.
 Data Highlights: ${visualPrompt.substring(0, 1000)}.
 
@@ -243,7 +243,7 @@ Portrait 4:5 (800x1000).`;
         // --- ELITE DASHBOARD CALIBRATION: 800x1000 Portrait ---
         const buffer = await sharp(rawBuffer)
           .resize(800, 1000, {
-            fit: 'contain', 
+            fit: 'contain',
             background: { r: 0, g: 0, b: 0, alpha: 1 }, // Pure Black background fill
             kernel: 'cubic'
           })
@@ -275,7 +275,7 @@ Portrait 4:5 (800x1000).`;
         status: vertexError?.response?.status,
         data: vertexError?.response?.data
       });
-      
+
       infographicUrl = `/10xds-placeholder.png`;
     }
 

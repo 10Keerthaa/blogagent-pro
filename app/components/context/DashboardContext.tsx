@@ -251,12 +251,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (Object.keys(phraseLookup).length === 0) return html;
 
         // ELITE: Filter out generic non-technical words to ensure strict Industry/Business/Tech relevance
-        const genericWords = /\b(strategies|solutions|benefits|growth|performance|results|guide|tips|tricks|help|improve|optimize|increase|effective|efficient|best|top|success|approach|methods|ways|need|want|ensure|provide|process|capabilities|industry)\b/i;
+        const genericWords = /\b(strategies|solutions|benefits|growth|performance|results|guide|tips|tricks|help|improve|optimize|increase|effective|efficient|best|top|success|approach|methods|ways|need|want|ensure|provide|process|capabilities|industry|here|we|are|this|that|their|there|these|from|with|about|using|made|make|gives|given)\b/i;
 
         const sortedKeywords = Object.keys(phraseLookup)
             .filter(phrase => 
                 phrase.length >= 4 && 
-                !/^(is|are|the|how|can|it|we)\s/i.test(phrase) &&
+                !/^(is|are|the|how|can|it|we|here|our|your)\s/i.test(phrase) &&
                 !genericWords.test(phrase) // Skip generic anchors
             )
             .sort((a, b) => b.length - a.length);
