@@ -82,10 +82,10 @@ export const TabNavigation = () => {
                                 disabled={isDisabled}
                                 className={`relative h-full flex items-center px-2 transition-all duration-300 group ${isDisabled ? 'opacity-30 cursor-not-allowed grayscale' : ''}`}
                             >
-                                <span className={`text-xs font-bold tracking-tight transition-colors duration-300 ${activeTab === tab.id ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}>
+                                <span className={`relative inline-flex items-center text-xs font-bold tracking-tight transition-colors duration-300 ${activeTab === tab.id ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}>
                                     {tab.label}
                                     {tab.count !== undefined && tab.count > 0 && (
-                                        <span className="absolute -top-1 -right-2 flex h-2 w-2">
+                                        <span className="absolute -top-1 -right-2.5 flex h-2 w-2">
                                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
                                             <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-600"></span>
                                         </span>
