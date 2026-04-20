@@ -243,7 +243,7 @@ export const ReviewList = () => {
                                 }}
                             />
                         )}
-                        <div className="max-w-[1000px] mx-auto space-y-12">
+                        <div className="max-w-[800px] mx-auto space-y-12">
                             <Input
                                 label="Editorial Title"
                                 value={selectedReviewDraft.title}
@@ -270,8 +270,8 @@ export const ReviewList = () => {
                                         className="absolute top-[40px] left-[40px] w-auto h-10 object-contain"
                                     />
                                     <div
-                                        className="absolute left-[40px] text-white flex flex-col gap-0 max-w-2xl drop-shadow-2xl"
-                                        style={{ top: '100px', lineHeight: '1.3' }}
+                                        className="absolute inset-0 flex flex-col items-center justify-center text-center text-white gap-0 drop-shadow-2xl px-10"
+                                        style={{ lineHeight: '1.2' }}
                                     >
                                         {selectedReviewDraft.title.includes(':') ? (
                                             <>
@@ -310,7 +310,7 @@ export const ReviewList = () => {
                                 setSelectedReviewDraft(updated);
                                 handleSaveManualEdits(updated);
                             }}
-                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px]
+                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert mx-auto px-4 lg:px-8 focus:outline-none min-h-[500px]
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
                             onMouseUp={updateSelectionRect}
                             onSelect={updateSelectionRect}
@@ -402,25 +402,28 @@ export const ReviewList = () => {
                                 </div>
                             </div>
                         )}
+
+                        {/* Review Actions (Relocated to bottom of post) */}
+                        {!isReadOnly && (
+                            <div className="mt-32 pt-16 border-t border-slate-100 dark:border-slate-800/50 flex flex-col items-center gap-10">
+                                <div className="flex flex-wrap items-center justify-center gap-6 w-full">
+                                    <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none uppercase font-black tracking-widest text-[10px]">
+                                        Save Edits
+                                    </Button>
+                                    <Button variant="secondary" onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)} disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]">
+                                        {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? <><CheckCircle className="w-4 h-4 mr-2 text-emerald-500" />Reviewed</> : <><Users className="w-4 h-4 mr-2" />Mark as Reviewed</>}
+                                    </Button>
+                                    <Button variant="danger" size="sm" onClick={() => handleRejectDraft(selectedReviewDraft.id)} isLoading={isRejecting} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] uppercase font-black tracking-widest text-[10px]">Reject</Button>
+                                    <Button variant="secondary" size="sm" onClick={() => setIsPreviewOpen(true)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors shadow-none font-bold uppercase tracking-widest text-[10px]">Preview</Button>
+                                </div>
+                                
+                                <Button variant="primary" size="sm" onClick={() => handleApproveDraft(selectedReviewDraft)} isLoading={isPublished} className="whitespace-nowrap px-10 py-4 bg-violet-600 hover:bg-violet-700 shadow-2xl shadow-violet-500/20 dark:shadow-none rounded-none h-16 min-w-[320px] text-white font-black tracking-[0.2em] uppercase text-[11px]">
+                                    <CheckCircle className="w-5 h-5 mr-3 shrink-0" />Approve & Publish Now
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </section>
-
-                {!isReadOnly && (
-                        <div className="sticky bottom-0 left-0 right-0 py-6 px-10 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-center gap-6 z-40 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
-                            <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none">
-                                Save Edits
-                            </Button>
-                            <Button variant="secondary" onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)} disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]">
-                                {selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email) ? <><CheckCircle className="w-4 h-4 mr-2 text-emerald-500" />Reviewed</> : <><Users className="w-4 h-4 mr-2" />Mark as Reviewed</>}
-                            </Button>
-                            <Button variant="danger" size="sm" onClick={() => handleRejectDraft(selectedReviewDraft.id)} isLoading={isRejecting} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px]">Reject</Button>
-                            <Button variant="secondary" size="sm" onClick={() => setIsPreviewOpen(true)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors shadow-none font-bold">Preview</Button>
-                            <Button variant="primary" size="sm" onClick={() => handleApproveDraft(selectedReviewDraft)} isLoading={isPublished} className="whitespace-nowrap px-10 py-4 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 dark:shadow-none rounded-none h-14 min-w-[220px]">
-                                <CheckCircle className="w-4 h-4 mr-2 shrink-0" />Approve & Publish Now
-                            </Button>
-                        </div>
-                    )}
-                </div>
             ) : (
                 <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
                     <div className="flex items-center justify-between mb-2 px-1">
