@@ -65,7 +65,11 @@ export async function POST(req: Request) {
         3. URL DATA: if LEARNED CONTEXT is provided, use its facts to inform your insertion.
         4. STRUCTURE: Maintain all <h2>, <h3>, and <ul> tags exactly as they appear in the GROUND TRUTH.
         5. FORMAT: Return the final, fully merged HTML within <content> tags. 
-        6. META/TITLE: Ensure the <title> and <meta> tags are also included and match the instruction if a change was requested there.
+        6. META/TITLE: Ensure the <title> and <meta> tags are also included. For meta descriptions, enforce 155 characters EXACTLY and include the primary keyword.
+        7. ELITE STANDARDS: 
+           - Every post MUST have an <h2> Conclusion. 
+           - The Conclusion MUST end with a purple link: <a href="#" style="color: #9333ea; font-weight: 700; text-decoration: none;">Ask our experts</a>.
+           - DELETE any existing [[CTA_LINK]] placeholders; they are now deprecated.
 
         RESULT FORMAT:
         <title>...</title>
@@ -99,7 +103,7 @@ export async function POST(req: Request) {
         
         ━━━ STRUCTURE (STRICT ORDER)
         1. BLOG TITLE: 50–60 characters.
-        2. META DESCRIPTION: ${description ? "DO NOT CHANGE. Keep exactly as provided: " + description : "150–160 characters. Must include primary keyword."}
+        2. META DESCRIPTION: 155 characters EXACTLY. Must include the primary keyword: ${primaryKeyword}. Ensure it is compelling and high-converting.
         3. <content> tag:
            - INTRODUCTION: 150–200 words. Open with a business problem or industry data point. 
            - 4–6 BODY SECTIONS (H2 → H3 hierarchy): 200–300 words each.
@@ -107,8 +111,8 @@ export async function POST(req: Request) {
              - Implementation steps: Use numbered lists starting with imperative verbs.
              - Callouts: Add 1–2 "Pro tip:" or "Key insight:" boxes.
            - OPTIONAL MODULES (Use if relevant): "Why [topic] matters", "Key benefits", "Use cases", or "Challenges and considerations".
-           - CONCLUSION: 100–150 words. Summarize impact. 
-           - CTA: End exactly with this placeholder: [[CTA_LINK]]
+           - CONCLUSION: Use an <h2> Conclusion header. 100-150 words summarizing the impact. Follow this immediately with a purple-colored link (using <a href="#" style="color: #9333ea; font-weight: 700; text-decoration: none;">Ask our experts</a>).
+           - NO CTA PLACEHOLDER: Do NOT use [[CTA_LINK]]. The "Ask our experts" link is the only CTA needed.
            - FAQ SECTION: 5–7 specific questions phrased for practitioners.
         
         ━━━ FORBIDDEN FILLERS:
@@ -117,7 +121,7 @@ export async function POST(req: Request) {
         ━━━ FORMATTING:
         - Use <h2> and <h3> only. No Markdown headers (#).
         - First mention of a technology: provide a one-sentence context.
-        - [[CTA_LINK]] MUST be the very last thing in the conclusion before the FAQ.
+        - The "Ask our experts" link must be the final sentence of the Conclusion.
     `;
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;

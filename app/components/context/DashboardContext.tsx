@@ -231,10 +231,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                      .replace(/[\u2018\u2019]/g, "'") // smart single quotes
                      .replace(/[\u201C\u201D]/g, '"'); // smart double quotes
 
-        // 5. UNBREAKABLE CTA: Replace placeholder with full purple link
-        const ctaHtml = `<a href="https://10xds.com/ask-the-expert/" target="_blank" style="color: #8b5cf6; font-weight: bold; text-decoration: underline;">Explore how 10xDS can help you implement this solution. Talk with our experts.</a>`;
-        clean = clean.replace(/\[\[CTA_LINK\]\]/g, ctaHtml);
-
+        // 5. CTA handling: AI now generates the purple link directly.
+        // Legacy [[CTA_LINK]] logic removed per user request.
+        
         return clean;
     }, []);
 
@@ -400,8 +399,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!text) return '';
         let cleaned = text.replace(/[\n\r]/g, '').replace(/\*/g, '').trim();
 
-        if (cleaned.length > 160) {
-            const trimmed = cleaned.slice(0, 160);
+        if (cleaned.length > 155) {
+            const trimmed = cleaned.slice(0, 155);
             const lastSpace = trimmed.lastIndexOf(' ');
             cleaned = lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
             cleaned = cleaned.trim();
@@ -409,11 +408,11 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
         if (primary && !cleaned.toLowerCase().includes(primary.toLowerCase())) {
             const withKeyword = `${primary}: ${cleaned}`;
-            if (withKeyword.length <= 160) {
+            if (withKeyword.length <= 155) {
                 cleaned = withKeyword;
             } else {
                 const prefix = `${primary}: `;
-                const remaining = cleaned.slice(0, 160 - prefix.length);
+                const remaining = cleaned.slice(0, 155 - prefix.length);
                 const lastSpace = remaining.lastIndexOf(' ');
                 cleaned = prefix + (lastSpace > 0 ? remaining.slice(0, lastSpace) : remaining);
                 cleaned = cleaned.trim();

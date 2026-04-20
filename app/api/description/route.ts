@@ -26,7 +26,7 @@ export async function POST(req: Request) {
         Supporting Keywords: ${keywords || "None"}
 
         STRICT REQUIREMENTS — VIOLATING ANY OF THESE IS A FAILURE:
-        1. Length: EXACTLY 150–160 characters (including spaces). Not less than 150. Not more than 160.
+        1. Length: EXACTLY 155 characters (including spaces). This is a hard requirement.
         2. Primary Keyword: You MUST include the exact phrase "${primaryKeyword || ""}" naturally within the text.
         3. Informative: Reference at least 2 specific technical concepts, outcomes, or sub-topics drawn directly from the Topic and Supporting Keywords. Do NOT use vague phrases like "Discover how", "Learn everything", "Unlock the power of".
         4. Tone: Expert and declarative — state what the post covers, not that it exists.
@@ -57,37 +57,37 @@ export async function POST(req: Request) {
 
         let cleanedDescription = responseText.replace(/[\n\r]/g, '').replace(/\*/g, '').trim();
 
-        // ── Hard-enforce 160-character limit ──────────────────────────────────
-        // If the AI returns more than 160 chars, trim at the last word boundary
-        // that still fits within 160 characters.
-        if (cleanedDescription.length > 160) {
-            const trimmed = cleanedDescription.slice(0, 160);
+        // ── Hard-enforce 155-character limit ──────────────────────────────────
+        // If the AI returns more than 155 chars, trim at the last word boundary
+        // that still fits within 155 characters.
+        if (cleanedDescription.length > 155) {
+            const trimmed = cleanedDescription.slice(0, 155);
             const lastSpace = trimmed.lastIndexOf(' ');
             cleanedDescription = lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
             cleanedDescription = cleanedDescription.trim();
         }
 
-        // ── Enforce minimum 150-character length ─────────────────────────────
+        // ── Enforce target 155-character length ─────────────────────────────
         // If the AI returns less than 150 chars, append a contextual filler using the topic.
         if (cleanedDescription.length < 150 && prompt) {
             const topicSnippet = prompt.length > 30 ? prompt.slice(0, 30).trim() : prompt;
             const filler = ` Explore key insights on ${topicSnippet}.`;
-            const extended = (cleanedDescription + filler).slice(0, 160);
+            const extended = (cleanedDescription + filler).slice(0, 155);
             const lastSpace = extended.lastIndexOf(' ');
             cleanedDescription = lastSpace > 0 ? extended.slice(0, lastSpace) : extended;
             cleanedDescription = cleanedDescription.trim();
         }
 
         // ── Ensure primary keyword is present after trimming ──────────────────
-        // If the keyword was cut off, prepend it + a separator and re-trim to 160.
+        // If the keyword was cut off, prepend it + a separator and re-trim to 155.
         if (primaryKeyword && !cleanedDescription.toLowerCase().includes(primaryKeyword.toLowerCase())) {
             const withKeyword = `${primaryKeyword}: ${cleanedDescription}`;
-            if (withKeyword.length <= 160) {
+            if (withKeyword.length <= 155) {
                 cleanedDescription = withKeyword;
             } else {
-                // Re-trim the rest of the description so keyword + text = ≤ 160
+                // Re-trim the rest of the description so keyword + text = ≤ 155
                 const prefix = `${primaryKeyword}: `;
-                const remaining = cleanedDescription.slice(0, 160 - prefix.length);
+                const remaining = cleanedDescription.slice(0, 155 - prefix.length);
                 const lastSpace = remaining.lastIndexOf(' ');
                 cleanedDescription = prefix + (lastSpace > 0 ? remaining.slice(0, lastSpace) : remaining);
                 cleanedDescription = cleanedDescription.trim();
