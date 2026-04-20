@@ -65,7 +65,8 @@ export async function POST(req: Request) {
         4. CLEAN FORMATTING: Use standard Markdown bullet points (*) for lists. 
         5. Use <h2> and <h3> for headings. NEVER use # markdown headers.
         6. NO REDUNDANCY: Do not repeat the blog title as an <h1>. Start with <h2>.
-        7. CONCLUSION: End with a professional wrap-up and a call to action.
+        7. CONCLUSION: End with a professional wrap-up and this purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
+        8. FAQ SECTION: Include 5–7 questions phrased as a practitioner would search for them. Each answer should be 2–3 sentences, direct and tied strictly to the topic.
     `;
 
     const PROMPT_V2_ELITE = `
