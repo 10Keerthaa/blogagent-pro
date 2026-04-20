@@ -192,10 +192,10 @@ export const ReviewList = () => {
     return (
         <div className="relative">
             {selectedReviewDraft ? (
-        <div ref={scrollContainerRef} className={`animate-fadeIn w-full transition-all duration-500 pb-24`}>
+        <div ref={scrollContainerRef} className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24`}>
                     {/* Part 3: Editorial Sub-Header (True Studio Strip) */}
                     <div className="sticky top-[-1px] bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
-                        <div className="w-full grid grid-cols-3 items-center h-16 px-6 lg:px-10">
+                        <div className="w-full grid grid-cols-3 items-center h-16 px-10">
                             {/* Left: Navigation */}
                             <div className="flex items-center">
                                 <button
@@ -230,7 +230,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="w-full relative">
+                    <section className="w-full space-y-12 relative">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
@@ -243,16 +243,16 @@ export const ReviewList = () => {
                                 }}
                             />
                         )}
-                        <div className="w-full space-y-12">
+                        <div className="max-w-[800px] mx-auto space-y-12">
                             <Input
                                 label="Editorial Title"
                                 value={selectedReviewDraft.title}
                                 onChange={(e) => setSelectedReviewDraft({ ...selectedReviewDraft, title: e.target.value })}
-                                className="text-4xl lg:text-5xl font-extrabold py-12 px-6 lg:px-10 border-none bg-transparent focus:ring-0 focus:border-violet-500 rounded-none border-b border-slate-100 dark:border-slate-800 tracking-tight text-center"
+                                className="text-4xl font-extrabold py-8 px-0 border-none bg-transparent focus:ring-0 focus:border-violet-500 rounded-none border-b border-slate-100 dark:border-slate-800 tracking-tight text-center"
                             />
 
                         {selectedReviewDraft.imageUrl && (
-                            <div className="relative mb-12 group overflow-hidden rounded-none shadow-none">
+                            <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl">
                                 <img
                                     src={selectedReviewDraft.imageUrl}
                                     alt={selectedReviewDraft.title}
@@ -310,7 +310,7 @@ export const ReviewList = () => {
                                 setSelectedReviewDraft(updated);
                                 handleSaveManualEdits(updated);
                             }}
-                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert w-full max-w-none px-6 lg:px-24 focus:outline-none min-h-[500px]
+                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert mx-auto px-4 lg:px-8 focus:outline-none min-h-[500px]
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
                             onMouseUp={updateSelectionRect}
                             onSelect={updateSelectionRect}

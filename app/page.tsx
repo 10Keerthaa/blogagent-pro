@@ -44,7 +44,7 @@ const DashboardContent = () => {
           ${showSidebar ? 'lg:w-[65%] xl:w-[70%]' : 'w-full'}`}>
 
           {/* Scrollable Workspace */}
-          <div className={`flex-1 overflow-y-auto custom-scrollbar scroll-smooth ${activeTab === 'review' && selectedReviewDraft ? 'p-0' : 'p-6 lg:p-10'}`}>
+          <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar scroll-smooth">
             {/* Elite Error Banner */}
             {error && (
               <div
