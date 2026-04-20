@@ -33,7 +33,8 @@ export const ReviewList = () => {
         user, role,
         handleRefineSelection, primaryKeyword,
         handleMarkAsReviewed, isPreviewOpen, setIsPreviewOpen,
-        selectedCategories, setSelectedCategories
+        selectedCategories, setSelectedCategories,
+        isGenerating
     } = useDashboard();
 
     const [selectionRect, setSelectionRect] = React.useState<DOMRect | null>(null);
@@ -401,11 +402,11 @@ export const ReviewList = () => {
                                     <Button
                                         variant="primary"
                                         onClick={handleApplyReviewFeedback}
-                                        isLoading={isApplyingFeedback}
-                                        disabled={!feedback}
+                                        isLoading={isGenerating}
+                                        disabled={!feedback || isGenerating}
                                         className="w-full h-14 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
                                     >
-                                        {isApplyingFeedback && feedback.match(/https?:\/\/[^\s]+/) ? 'Learning from URL...' : 'Apply AI Refinement'}
+                                        {isGenerating ? 'Processing...' : 'Apply AI Refinement'}
                                     </Button>
                                 </div>
                             </div>
