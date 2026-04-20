@@ -6,7 +6,7 @@ export const maxDuration = 60; // Set timeout for Vercel
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt, keywords, primaryKeyword, feedback, currentContent } = body;
+    const { prompt, keywords, primaryKeyword, feedback, currentContent, description } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -72,13 +72,12 @@ export async function POST(req: Request) {
         <meta>...</meta>
         <content>Full Updated HTML with surgical changes applied</content>
     ` : `
-        You are an expert SEO copywriter. Generate a high-quality, long-form blog post.
+        You are an expert Enterprise Content Strategist. Generate a high-quality, long-form blog post for a professional business audience.
         
         Topic: ${prompt}
         Keywords to include: ${keywords || "None"}
         Primary Keyword: ${primaryKeyword || "None"}
-        STRICT CONSTRAINT: Stay strictly focused on ${prompt}.
-
+        
         ${learnedContext ? `
         LEARNED CONTEXT FROM EXTERNAL URL:
         ---
@@ -86,27 +85,38 @@ export async function POST(req: Request) {
         ---
         ` : ""}
 
-        STRICT REQUIREMENTS:
-        1. BLOG TITLE (Meta Title): 50-60 characters.
-        2. META DESCRIPTION: STRICT ENFORCEMENT: Exactly 150-160 characters (including spaces). MUST include the primary keyword.
-        3. BLOG CONTENT: 1500 to 2000 words.
-        4. CLEAN FORMATTING (SCANNABLE BLOCKS): When listing benefits, use-cases, or steps, ALWAYS use standard Markdown bullet points (*). 
-        5. NO LIST STUFFING: Do not mix bold headers with long paragraphs for simple lists. Transition directly from a context sentence to a clean list of scannable points.
-        6. ZERO REDUNDANCY: If a sentence says "Consider these factors:", do NOT add a redundant <b>Factors to Consider:</b> header immediately after. Transition directly to the bulleted list.
-        7. TIGHT SPACING: Avoid empty <p>&nbsp;</p> tags or unnecessary <br> breaks between headings/text and lists. 
-        8. Use <h2> and <h3> for headings. 
-        9. NEVER use Markdown headers (#) for titles or headings. Use valid HTML for headings.
-        10. DO NOT repeat the blog title as an <h1> in the <content> tag. Start directly with an <h2>.
-
-        PERFECT FORMAT EXAMPLE:
-        <title>Professional Blog Title Here</title>
-        <meta>Engaging 155-character meta description goes here.</meta>
-        <content>
-          <h2>Primary Section Heading</h2>
-          <p>Introductory paragraph content...</p>
-          * Key Scannable Point 1
-          * Key Scannable Point 2
-        </content>
+        ━━━ AUDIENCE & TONE
+        - Target: CIOs, Operations Heads, Digital Transformation Leads.
+        - Tone: Authoritative, informative, and clinical. Assume technical familiarity but avoid unnecessary jargon.
+        - Voice: Strictly Active Voice.
+        
+        ━━━ WORD COUNT CALIBRATION (STRICT ENFORCEMENT)
+        - TOTAL: 1500–2000 words.
+        - INTRODUCTION: 150–200 words.
+        - BODY SECTIONS: 200–300 words each.
+        - CONCLUSION: 100–150 words.
+        - DO NOT HALLUCINATE LENGTH: Every sentence must add unique value to the technical discussion.
+        
+        ━━━ STRUCTURE (STRICT ORDER)
+        1. BLOG TITLE: 50–60 characters.
+        2. META DESCRIPTION: ${description ? "DO NOT CHANGE. Keep exactly as provided: " + description : "150–160 characters. Must include primary keyword."}
+        3. <content> tag:
+           - INTRODUCTION: Open with a business problem or industry data point. 
+           - 4–6 BODY SECTIONS (H2 → H3 hierarchy): 
+             - Paragraphs: Max 4-5 lines.
+             - Implementation steps: Use numbered lists starting with imperative verbs.
+             - Callouts: Add 1–2 "Pro tip:" or "Key insight:" boxes.
+           - OPTIONAL MODULES (Use if relevant): "Why [topic] matters", "Key benefits", "Use cases", or "Challenges and considerations".
+           - CONCLUSION: Summarize impact. 
+           - CTA: End with: "<a href='https://10xds.com/ask-the-expert/' target='_blank' style='color: #8b5cf6; font-weight: bold; text-decoration: underline;'>Explore how 10xDS can help you implement this solution. Talk with our experts.</a>"
+           - FAQ SECTION: 5–7 specific questions phrased for practitioners.
+        
+        ━━━ FORBIDDEN FILLERS:
+        - "In today's rapidly evolving world", "As technology continues to advance", "It's no secret that", "In conclusion", "As we can see".
+        
+        ━━━ FORMATTING:
+        - Use <h2> and <h3> only. No Markdown headers (#).
+        - First mention of a technology: provide a one-sentence context.
     `;
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
