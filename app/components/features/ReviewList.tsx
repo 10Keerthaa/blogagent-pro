@@ -243,7 +243,7 @@ export const ReviewList = () => {
                                 }}
                             />
                         )}
-                        <div className="max-w-[680px] mx-auto space-y-12">
+                        <div className="max-w-[1000px] mx-auto space-y-12">
                             <Input
                                 label="Editorial Title"
                                 value={selectedReviewDraft.title}

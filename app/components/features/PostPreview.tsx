@@ -212,7 +212,7 @@ export const PostPreview = () => {
     return (
         <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12">
             {/* MAIN EDITOR AREA - CENTERED COLUMN */}
-            <div className="w-full max-w-[680px] mx-auto px-6 pb-12 relative">
+            <div className="w-full max-w-[1000px] mx-auto px-6 pb-12 relative">
                 {selectionRect && (
                     <FloatingToolbar
                         isVisible={isToolbarVisible}
