@@ -62,14 +62,23 @@ export async function POST(req: Request) {
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
 
         STRICT REQUIREMENTS:
-        1. BLOG TITLE: 50-60 characters.
-        2. META DESCRIPTION: Exactly 155 characters. MUST include the primary keyword.
-        3. BLOG CONTENT: 1500 to 2000 words.
-        4. CLEAN FORMATTING: Use standard Markdown bullet points (*) for lists. 
+        1. BLOG TITLE: 50-60 characters inside <title> tags.
+        2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
+        3. BLOG CONTENT: 1500 to 2000 words inside <content> tags.
+        4. STRUCTURE (Inside <content>):
+           - Start with a strategic 1-paragraph introduction.
+           - Use 5–7 H2 sections. Headings should be direct questions or key statements (e.g., "What is [Topic]?", "Key Capabilities", "Challenges and Considerations").
+           - Formatting: Use **Bold Headers:** for specific use cases or sub-points within paragraphs to ensure scannability.
+           - Lists: Use standard Markdown bullets (*).
         5. Use <h2> and <h3> for headings. NEVER use # markdown headers.
-        6. NO REDUNDANCY: Do not repeat the blog title as an <h1>. Start with <h2>.
-        7. CONCLUSION: End with a professional wrap-up and this purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
-        8. FAQ SECTION: Include 5–7 questions phrased as a practitioner would search for them. Each answer should be 2–3 sentences, direct and tied strictly to the topic.
+        6. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
+        7. CONCLUSION (MANDATORY): End with a professional wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
+        8. FAQ SECTION (MANDATORY): Include 5–7 questions phrased for practitioners. Each answer: 2–3 sentences.
+
+        RESULT FORMAT:
+        <title>...</title>
+        <meta>...</meta>
+        <content>...</content>
     `;
 
     const aiPrompt = isSurgical ? `
