@@ -231,6 +231,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                      .replace(/[\u2018\u2019]/g, "'") // smart single quotes
                      .replace(/[\u201C\u201D]/g, '"'); // smart double quotes
 
+        // 5. UNBREAKABLE CTA: Replace placeholder with full purple link
+        const ctaHtml = `<a href="https://10xds.com/ask-the-expert/" target="_blank" style="color: #8b5cf6; font-weight: bold; text-decoration: underline;">Explore how 10xDS can help you implement this solution. Talk with our experts.</a>`;
+        clean = clean.replace(/\[\[CTA_LINK\]\]/g, ctaHtml);
+
         return clean;
     }, []);
 

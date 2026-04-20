@@ -101,14 +101,14 @@ export async function POST(req: Request) {
         1. BLOG TITLE: 50–60 characters.
         2. META DESCRIPTION: ${description ? "DO NOT CHANGE. Keep exactly as provided: " + description : "150–160 characters. Must include primary keyword."}
         3. <content> tag:
-           - INTRODUCTION: Open with a business problem or industry data point. 
-           - 4–6 BODY SECTIONS (H2 → H3 hierarchy): 
+           - INTRODUCTION: 150–200 words. Open with a business problem or industry data point. 
+           - 4–6 BODY SECTIONS (H2 → H3 hierarchy): 200–300 words each.
              - Paragraphs: Max 4-5 lines.
              - Implementation steps: Use numbered lists starting with imperative verbs.
              - Callouts: Add 1–2 "Pro tip:" or "Key insight:" boxes.
            - OPTIONAL MODULES (Use if relevant): "Why [topic] matters", "Key benefits", "Use cases", or "Challenges and considerations".
-           - CONCLUSION: Summarize impact. 
-           - CTA: End with: "<a href='https://10xds.com/ask-the-expert/' target='_blank' style='color: #8b5cf6; font-weight: bold; text-decoration: underline;'>Explore how 10xDS can help you implement this solution. Talk with our experts.</a>"
+           - CONCLUSION: 100–150 words. Summarize impact. 
+           - CTA: End exactly with this placeholder: [[CTA_LINK]]
            - FAQ SECTION: 5–7 specific questions phrased for practitioners.
         
         ━━━ FORBIDDEN FILLERS:
@@ -117,6 +117,7 @@ export async function POST(req: Request) {
         ━━━ FORMATTING:
         - Use <h2> and <h3> only. No Markdown headers (#).
         - First mention of a technology: provide a one-sentence context.
+        - [[CTA_LINK]] MUST be the very last thing in the conclusion before the FAQ.
     `;
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
