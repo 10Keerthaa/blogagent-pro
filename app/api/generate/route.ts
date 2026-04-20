@@ -94,34 +94,43 @@ export async function POST(req: Request) {
         - Tone: Authoritative, informative, and clinical. Assume technical familiarity but avoid unnecessary jargon.
         - Voice: Strictly Active Voice.
         
-        ━━━ WORD COUNT CALIBRATION (STRICT ENFORCEMENT)
-        - TOTAL: 1500–2000 words.
+        ━━━ WORD COUNT (STRICT ENFORCEMENT)
+        - TOTAL: 1500–2000 words (body content only, excluding FAQ and meta).
         - INTRODUCTION: 150–200 words.
-        - BODY SECTIONS: 200–300 words each.
+        - EACH BODY SECTION: 200–300 words.
         - CONCLUSION: 100–150 words.
-        - DO NOT HALLUCINATE LENGTH: Every sentence must add unique value to the technical discussion.
+        - DO NOT HALLUCINATE: Stick strictly to the Topic, Keywords, and Learned Context. Every sentence must add unique technical value.
+
+        ━━━ TONE & AUDIENCE
+        - TARGET: CIOs, Operations Heads, Digital Transformation Leads.
+        - TONE: Authoritative and informative. Authoritative, clinical, but not lecturing. 
+        - VOICE: Strictly Active Voice.
         
         ━━━ STRUCTURE (STRICT ORDER)
         1. BLOG TITLE: 50–60 characters.
-        2. META DESCRIPTION: 155 characters EXACTLY. Must include the primary keyword: ${primaryKeyword}. Ensure it is compelling and high-converting.
+        2. META DESCRIPTION: 155 characters EXACTLY. Must include the primary keyword: ${primaryKeyword}.
         3. <content> tag:
-           - INTRODUCTION: 150–200 words. Open with a business problem or industry data point. 
-           - 4–6 BODY SECTIONS (H2 → H3 hierarchy): 200–300 words each.
-             - Paragraphs: Max 4-5 lines.
-             - Implementation steps: Use numbered lists starting with imperative verbs.
+           - INTRODUCTION (150–200 words): Open with a business problem or industry shift—not a generic statement. State clearly what is covered.
+           - BODY SECTIONS (H2 → H3 hierarchy): 4–6 H2 sections. Use 2–3 H3 sub-topics per H2 where needed.
+             - Paragraphs: Max 4-5 lines, one idea each.
+             - Implementation: Use numbered lists starting with imperative verbs.
              - Callouts: Add 1–2 "Pro tip:" or "Key insight:" boxes.
-           - OPTIONAL MODULES (Use if relevant): "Why [topic] matters", "Key benefits", "Use cases", or "Challenges and considerations".
-           - CONCLUSION: Use an <h2> Conclusion header. 100-150 words summarizing the impact. Follow this immediately with a purple-colored link (using <a href="#" style="color: #9333ea; font-weight: 700; text-decoration: none;">Ask our experts</a>).
-           - NO CTA PLACEHOLDER: Do NOT use [[CTA_LINK]]. The "Ask our experts" link is the only CTA needed.
-           - FAQ SECTION: 5–7 specific questions phrased for practitioners.
-        
+           - OPTIONAL MODULES (Use only if relevant): 
+             - "Why [topic] matters for [industry/function]"
+             - "Key benefits of [topic]" (4–6 benefits with 2–3 sentences each)
+             - "Use cases of [topic] in [industry]" (Named scenarios with 2–4 sentences)
+             - "Challenges and considerations" (Implementation risks, privacy, etc.)
+           - CONCLUSION (100–150 words): Summarize 2–3 main points. Frame takeaways around business impact.
+           - CTA: End immediately with a purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Ask our experts</a>.
+           - FAQ SECTION: 5–7 specific practitioner questions (e.g., "How does CDA handle unstructured invoice data?"). No generic questions.
+
         ━━━ FORBIDDEN FILLERS:
         - "In today's rapidly evolving world", "As technology continues to advance", "It's no secret that", "In conclusion", "As we can see".
-        
-        ━━━ FORMATTING:
+
+        ━━━ FORMATTING RULES:
         - Use <h2> and <h3> only. No Markdown headers (#).
+        - Every major section needs its own H2.
         - First mention of a technology: provide a one-sentence context.
-        - The "Ask our experts" link must be the final sentence of the Conclusion.
     `;
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
@@ -133,7 +142,7 @@ export async function POST(req: Request) {
       data: {
         contents: [{ role: "user", parts: [{ text: aiPrompt }] }],
         generationConfig: {
-          temperature: 0.7,
+          temperature: 0.4,
           topP: 0.95,
           maxOutputTokens: 8192,
         }

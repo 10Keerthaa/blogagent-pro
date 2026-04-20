@@ -30,18 +30,18 @@ const DashboardContent = () => {
       {/* ELITE GLOBAL HEADER (Part 1 - App Name, Tabs, Admin Console, User Profile) */}
       <TabNavigation />
 
-      <div className="flex-1 flex overflow-hidden lg:flex-row flex-col bg-slate-50 dark:bg-[#0a0a0a]">
+      <div className="flex-1 flex overflow-hidden md:flex-row flex-col bg-slate-50 dark:bg-[#0a0a0a]">
         {/* LEFT PANEL: Sidebar Form (Part 2 - Topic, Keywords, Description) */}
         <div
           className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0 border-r border-slate-200 dark:border-slate-800
-            ${showSidebar ? 'w-full lg:w-[35%] xl:w-[30%] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
+            ${showSidebar ? 'w-full md:w-[32%] lg:w-[28%] xl:w-[25%] opacity-100 pointer-events-auto' : 'w-0 opacity-0 pointer-events-none'}`}
         >
           <SidebarForm />
         </div>
 
         {/* RIGHT PANEL: Dynamic Workspace (Part 3 - Editor Area) */}
         <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative transition-all duration-500 ease-in-out
-          ${showSidebar ? 'lg:w-[65%] xl:w-[70%]' : 'w-full'}`}>
+          ${showSidebar ? 'md:w-[68%] lg:w-[72%] xl:w-[75%]' : 'w-full'}`}>
 
           {/* Scrollable Workspace */}
           <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar scroll-smooth">

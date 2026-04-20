@@ -245,7 +245,7 @@ export const PostPreview = () => {
                         setPreview({ ...preview, title: newTitle });
                         handleAutoSave({ ...preview, title: newTitle });
                     }}
-                    className="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg pl-16 pr-10 transition-all"
+                    className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg lg:pl-16 lg:pr-10 pl-6 pr-6 transition-all"
                 >
                     {preview.title}
                 </h1>
@@ -260,19 +260,19 @@ export const PostPreview = () => {
                     />
                     <div className="absolute inset-0 bg-violet-950/40 pointer-events-none" />
 
-                    <div className="absolute inset-0 pointer-events-none">
-                        <img src="/Blog.png" alt="Blog" className="absolute top-[40px] left-[40px] h-10 w-auto" />
-                        <div className="absolute top-[100px] left-[40px] text-white max-w-[85%] font-sans drop-shadow-2xl" style={{ lineHeight: '1.3' }}>
+                        <div className="absolute inset-0 pointer-events-none">
+                        <img src="/Blog.png" alt="Blog" className="absolute top-[30px] lg:top-[40px] left-[30px] lg:left-[40px] h-8 lg:h-10 w-auto" />
+                        <div className="absolute top-[80px] lg:top-[100px] left-[30px] lg:left-[40px] text-white max-w-[85%] font-sans drop-shadow-2xl" style={{ lineHeight: '1.3' }}>
                             {preview.title.includes(':') ? (
                                 <>
-                                    <h1 className="text-[56px] font-bold m-0 p-0 leading-[1.3]">{preview.title.split(':')[0]}:</h1>
-                                    <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">{preview.title.split(':').slice(1).join(':').trim()}</p>
+                                    <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold m-0 p-0 leading-[1.3]">{preview.title.split(':')[0]}:</h1>
+                                    <p className="text-[24px] md:text-[32px] lg:text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">{preview.title.split(':').slice(1).join(':').trim()}</p>
                                 </>
                             ) : (
-                                <h1 className="text-[56px] font-bold m-0 p-0 leading-[1.3]">{preview.title}</h1>
+                                <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold m-0 p-0 leading-[1.3]">{preview.title}</h1>
                             )}
                         </div>
-                        <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[40px] right-[40px] h-14 w-auto" />
+                        <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] h-10 lg:h-14 w-auto" />
                     </div>
                 </div>
 
@@ -288,7 +288,7 @@ export const PostPreview = () => {
                         setPreview({ ...preview, content: newContent });
                         handleAutoSave({ ...preview, content: newContent });
                     }}
-                    className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif pl-16 pr-10"
+                    className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif lg:pl-16 lg:pr-10 pl-6 pr-6"
                     style={{ minHeight: '50vh' }}
                     onMouseUp={updateSelectionRect}
                     onSelect={updateSelectionRect}

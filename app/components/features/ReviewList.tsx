@@ -230,7 +230,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="w-full space-y-12 relative pl-16 pr-6">
+                    <section className="w-full space-y-12 relative lg:pl-16 lg:pr-6 pl-6 pr-4">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
@@ -267,23 +267,23 @@ export const ReviewList = () => {
                                     <img
                                         src="/Blog.png"
                                         alt="Blog Tag"
-                                        className="absolute top-[40px] left-[40px] w-auto h-10 object-contain"
+                                        className="absolute top-[30px] lg:top-[40px] left-[30px] lg:left-[40px] w-auto h-8 lg:h-10 object-contain"
                                     />
                                     <div
-                                        className="absolute inset-0 flex flex-col items-center justify-center text-center text-white gap-0 drop-shadow-2xl px-10"
+                                        className="absolute inset-x-10 top-[100px] lg:top-[120px] flex flex-col items-center justify-center text-center text-white gap-0 drop-shadow-2xl px-10"
                                         style={{ lineHeight: '1.2' }}
                                     >
                                         {selectedReviewDraft.title.includes(':') ? (
                                             <>
-                                                <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                                <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
                                                     {selectedReviewDraft.title.split(':')[0]}:
                                                 </h1>
-                                                <p className="text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
+                                                <p className="text-[24px] md:text-[32px] lg:text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">
                                                     {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
                                                 </p>
                                             </>
                                         ) : (
-                                            <h1 className="text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
+                                            <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.3]">
                                                 {selectedReviewDraft.title}
                                             </h1>
                                         )}
@@ -291,7 +291,7 @@ export const ReviewList = () => {
                                     <img
                                         src="/10xDS.png"
                                         alt="Brand Logo"
-                                        className="absolute bottom-[40px] right-[40px] w-auto h-14 object-contain"
+                                        className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] w-auto h-10 lg:h-14 object-contain"
                                     />
                                 </div>
                             </div>
