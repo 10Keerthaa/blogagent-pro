@@ -45,10 +45,8 @@ export async function POST(req: Request) {
     // Determine if we are in "Surgical Refinement" mode
     const isSurgical = !!(feedback && currentContent);
 
-    // --- GENERATION STRATEGY TOGGLE ---
-    const GENERATION_MODE: 'V1_STANDARD' | 'V2_ELITE' = 'V1_STANDARD'; 
-
-    const PROMPT_V1_STANDARD = `
+    // --- GENERATION STRATEGY ---
+    const BASE_PROMPT = `
         You are an expert SEO copywriter. Generate a high-quality, long-form blog post.
         
         Topic: ${prompt}
@@ -74,56 +72,8 @@ export async function POST(req: Request) {
         8. FAQ SECTION: Include 5–7 questions phrased as a practitioner would search for them. Each answer should be 2–3 sentences, direct and tied strictly to the topic.
     `;
 
-    const PROMPT_V2_ELITE = `
-        You are an expert Enterprise Content Strategist. Generate a high-quality, long-form blog post for a professional business audience.
-        
-        Topic: ${prompt}
-        Keywords to include: ${keywords || "None"}
-        Primary Keyword: ${primaryKeyword || "None"}
-        
-        ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
-
-        ━━━ WORD COUNT (STRICT ENFORCEMENT)
-        - TOTAL: 1500–2000 words (body content only, excluding FAQ and meta).
-        - INTRODUCTION: 150–200 words.
-        - EACH BODY SECTION: 200–300 words.
-        - CONCLUSION: 100–150 words.
-
-        ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
-        - DO NOT invent data, statistics, or specific business metrics.
-        - Stick strictly to the Topic and Learned Context. 
-        - Every sentence must add unique technical value to the discussion.
-
-        ━━━ TONE & AUDIENCE
-        - TARGET: CIOs, Operations Heads, Digital Transformation Leads.
-        - TONE: Authoritative and informative. Clinical and declarative.
-        - VOICE: Strictly Active Voice.
-        
-        ━━━ STRUCTURE (STRICT ORDER)
-        1. BLOG TITLE: 50–60 characters.
-        2. META DESCRIPTION: 155 characters EXACTLY. Must include the primary keyword: ${primaryKeyword}.
-        3. <content> tag:
-           - INTRODUCTION (150–200 words): Open with a business problem or industry shift.
-           - BODY SECTIONS (H2 → H3 hierarchy): 4–6 H2 sections.
-             - Paragraphs: Max 4-5 lines.
-             - Implementation: Use HTML ordered lists (<ol> and <li>) starting with imperative verbs.
-             - Callouts: Add 1–2 "Pro tip:" or "Key insight:" boxes.
-           - OPTIONAL MODULES: "Why [topic] matters", "Key benefits", "Use cases", "Challenges".
-           - CONCLUSION (100–150 words): Summarize business impact.
-           - CTA: End with: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Ask our experts</a>.
-           - FAQ SECTION: 5–7 specific practitioner questions.
-
-        ━━━ FORBIDDEN FILLERS:
-        - "In today's rapidly evolving world", "As technology continues to advance", "In conclusion".
-
-        ━━━ FORMATTING RULES:
-        - Use <h2> and <h3> only.
-        - Every major section needs its own H2.
-        - First mention of a technology: provide a one-sentence context.
-    `;
-
     const aiPrompt = isSurgical ? `
-        OBJECTIVE: Perform an ELITE SURGICAL REFINEMENT on an existing blog post.
+        OBJECTIVE: Perform a STRATEGIC SURGICAL REFINEMENT on an existing blog post.
         
         GROUND TRUTH HTML:
         ---
@@ -143,16 +93,16 @@ export async function POST(req: Request) {
         4. STRUCTURE: Maintain all <h2>, <h3>, and <ul> tags exactly as they appear in the GROUND TRUTH.
         5. FORMAT: Return the final, fully merged HTML within <content> tags. 
         6. META/TITLE: Ensure the <title> and <meta> tags are also included. For meta descriptions, enforce 155 characters EXACTLY and include the primary keyword.
-        7. ELITE STANDARDS: 
+        7. MANDATORY STANDARDS: 
            - Every post MUST have an <h2> Conclusion. 
-           - The Conclusion MUST end with a purple link: <a href="#" style="color: #9333ea; font-weight: 700; text-decoration: none;">Ask our experts</a>.
+           - The Conclusion MUST end with a purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
            - DELETE any existing [[CTA_LINK]] placeholders; they are now deprecated.
 
         RESULT FORMAT:
         <title>...</title>
         <meta>...</meta>
         <content>Full Updated HTML with surgical changes applied</content>
-    ` : (GENERATION_MODE === 'V1_STANDARD' ? PROMPT_V1_STANDARD : PROMPT_V2_ELITE);
+    ` : BASE_PROMPT;
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
 
