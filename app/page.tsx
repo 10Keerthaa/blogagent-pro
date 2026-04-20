@@ -14,9 +14,9 @@ const DashboardContent = () => {
   const { activeTab, error, setError, user, selectedReviewDraft, isPreviewOpen } = useDashboard();
 
   // Sidebar visibility rule:
-  // Show only on the 'create' tab (where the form is needed)
-  // OR when a review draft is actively open
-  // Hidden on bare review list & history tab (History is always full screen) — List-First experience
+  // Show on 'create' tab always (split screen preserved)
+  // Also show when a review draft is actively open
+  // Hidden on bare review list & history tab — List-First experience
   const showSidebar =
     activeTab === 'create' ||
     (activeTab === 'review' && !!selectedReviewDraft);
@@ -42,7 +42,7 @@ const DashboardContent = () => {
         {/* RIGHT PANEL: Dynamic Workspace (Part 3 - Editor Area) */}
         <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative transition-all duration-500 ease-in-out
           ${showSidebar ? 'lg:w-[65%] xl:w-[70%]' : 'w-full'}`}>
-          
+
           {/* Scrollable Workspace */}
           <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar scroll-smooth">
             {/* Elite Error Banner */}

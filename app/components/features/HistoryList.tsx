@@ -4,7 +4,7 @@ import React from 'react';
 import { useDashboard } from '../context/DashboardContext';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
-import { Globe, Calendar, ExternalLink } from 'lucide-react';
+import { Globe, Calendar } from 'lucide-react';
 
 const formatDate = (date: any) => {
     if (!date) return 'N/A';
@@ -93,18 +93,7 @@ export const HistoryList = () => {
                                         {selectedHistoryItem.metaDesc || "No meta description provided."}
                                     </div>
                                 </div>
-                                {selectedHistoryItem.url && (
-                                    <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
-                                        <a 
-                                            href={selectedHistoryItem.url} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 text-violet-500 hover:text-violet-600 font-bold transition-colors"
-                                        >
-                                            View Live Article <ExternalLink className="w-4 h-4" />
-                                        </a>
-                                    </div>
-                                )}
+
                             </div>
                         </div>
 
@@ -211,18 +200,7 @@ export const HistoryList = () => {
                                     </div>
                                 </div>
 
-                                {/* Right: The Action (ml-auto) */}
-                                <div className="shrink-0 ml-auto pl-10">
-                                    <a
-                                        href={item.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="inline-flex items-center justify-center px-10 h-14 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-[11px] font-black uppercase tracking-wider text-slate-800 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
-                                    >
-                                        View Live
-                                    </a>
-                                </div>
+
                             </div>
                         );
                     })

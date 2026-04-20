@@ -52,9 +52,16 @@ export const ReviewList = () => {
     const isReadOnly = role === 'editor';
 
     // Ensure we start at the top when a draft is selected
+    const scrollContainerRef = React.useRef<HTMLDivElement>(null);
     React.useEffect(() => {
         if (selectedReviewDraft) {
-            window.scrollTo({ top: 0, behavior: 'instant' });
+            // Scroll the panel's own scrollable ancestor to the top
+            const panel = scrollContainerRef.current?.closest('.overflow-y-auto');
+            if (panel) {
+                panel.scrollTop = 0;
+            } else {
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            }
         }
     }, [selectedReviewDraft?.id]);
 
@@ -185,7 +192,7 @@ export const ReviewList = () => {
     return (
         <div className="relative">
             {selectedReviewDraft ? (
-                <div className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24 pl-10`}>
+        <div ref={scrollContainerRef} className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24`}>
                     {/* Part 3: Editorial Sub-Header (True Studio Strip) */}
                     <div className="sticky top-[-1px] bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
                         <div className="w-full grid grid-cols-3 items-center h-16 px-10">
@@ -223,7 +230,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="w-full space-y-12 pr-10 relative">
+                    <section className="w-full space-y-12 relative">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
@@ -236,7 +243,7 @@ export const ReviewList = () => {
                                 }}
                             />
                         )}
-                        <div className="max-w-[850px] mx-auto space-y-12">
+                        <div className="max-w-[680px] mx-auto space-y-12">
                             <Input
                                 label="Editorial Title"
                                 value={selectedReviewDraft.title}

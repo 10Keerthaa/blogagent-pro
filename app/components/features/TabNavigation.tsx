@@ -54,17 +54,19 @@ export const TabNavigation = () => {
                 {/* CLINICAL SEPARATOR */}
                 <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-6 opacity-60" />
 
-                {/* NEW POST ACTION (Exact Image 4 Position) */}
-                <button
-                    onClick={() => {
-                        handleClearForm();
-                        setActiveTab('create');
-                    }}
-                    className="flex items-center gap-2 px-3 py-1.5 text-violet-600 hover:text-violet-700 dark:text-violet-400 text-[10px] font-black uppercase tracking-[0.3em] transition-all group/new"
-                >
-                    <Plus className="w-4 h-4 transition-transform group-hover/new:rotate-90" />
-                    New Post
-                </button>
+                {/* NEW POST ACTION — only visible on the Editor tab */}
+                {activeTab === 'create' && (
+                    <button
+                        onClick={() => {
+                            handleClearForm();
+                            setActiveTab('create');
+                        }}
+                        className="flex items-center gap-2 px-3 py-1.5 text-violet-600 hover:text-violet-700 dark:text-violet-400 text-[10px] font-black uppercase tracking-[0.3em] transition-all group/new"
+                    >
+                        <Plus className="w-4 h-4 transition-transform group-hover/new:rotate-90" />
+                        New Post
+                    </button>
+                )}
             </div>
 
             {/* WING 2: Underline Tabs (True Center Pillar) */}

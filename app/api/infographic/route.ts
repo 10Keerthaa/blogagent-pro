@@ -234,6 +234,7 @@ Portrait 4:5 (800x1000).`;
         const TARGET_LOGO_HEIGHT = 75;
         const resizedLogo = await sharp(logoBuffer)
           .resize({ height: TARGET_LOGO_HEIGHT })
+          .png()  // Preserve alpha channel — prevents white box artifact
           .toBuffer();
         const logoMeta = await sharp(resizedLogo).metadata();
         const logoW = logoMeta.width || 130;
@@ -251,6 +252,7 @@ Portrait 4:5 (800x1000).`;
               input: resizedLogo,
               left: 800 - logoW - MARGIN,
               top: 1000 - TARGET_LOGO_HEIGHT - MARGIN,
+              blend: 'over',  // Transparent alpha-composite — removes box
             }
           ])
           .png()
