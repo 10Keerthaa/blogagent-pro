@@ -63,7 +63,7 @@ export async function POST(req: Request) {
 
         STRICT REQUIREMENTS:
         1. BLOG TITLE: 50-60 characters inside <title> tags.
-        2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
+        2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be highly informative, action-oriented, and densely packed with keyword-rich insights. MUST include the primary keyword.
         3. BLOG CONTENT: 1600 to 2000 words inside <content> tags. Provide extreme technical depth and exhaustive detail in every section to ensure length.
         4. STRUCTURE (Inside <content>):
            - Start with a strategic 1-paragraph introduction.

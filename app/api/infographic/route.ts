@@ -180,30 +180,26 @@ PALETTE RULES (STRICT - NO EXCEPTIONS):
 - Accent Glows: Soft purple light halos around each pod node.
 Portrait 4:5 (800x1000).`;
                     } else {
-                      return `CINEMATIC 3D HOLOGRAPHIC DASHBOARD. 
+                      return `CINEMATIC 3D HOLOGRAPHIC DASHBOARD (INTEGRATED ICON STYLE). 
 Layout: Floating central hexagonal glass core connected to four peripheral frosted-glass modules. 
-IMPORTANT: Distribute the modules vertically to fill 85% of the frame height (reduce empty space at top and bottom).
+DISTRIBUTION: Use the full 800x1000 frame height. Modules must be large and spaced vertically.
 
-ICONOGRAPHY (MANDATORY):
-Inside or next to each of the 4 quadrant titles, you MUST render a contextually relevant, ultra-detailed 3D Glass Icon that represents the text (e.g., if the text is about 'Risk', draw a 3D Shield; if 'Data', draw a 3D Server Node; if 'Growth', draw a 3D Chart).
+ICONOGRAPHY (IMAGE-DOMINANT):
+For every one of the 4 quadrants, you MUST render a LARGE, DISTINCT 3D Glass Icon that FLOATS ABOVE or is INTEGRATED into the top of the module pod (exactly like a 3D shield, 3D gear, or 3D trophy). These icons must be the main visual focus.
 
 Data Highlights: ${visualPrompt.substring(0, 1000)}.
 
-STRICT ELITE MINIMALIST CONSTRAINTS:
-- PROMPT EXCLUSION: NEVER write ANY technical metadata, labels, or status text like "MODE: DISPLAY", "VERSION", "DASHBOARD", or "QUADRANT".
-- CLEANLINESS: The image must be purely artistic. DO NOT draw any ornamental vertical lines, cursors, or markers at the top or bottom edges.
-- VISUAL HIERARCHY: Dominate with large Titles. Use significantly smaller, clean font for bullet points.
-- HYPER-ACCURATE SPELLING: You MUST verify the spelling of EVERY SINGLE CHARACTER you draw. ZERO tolerance for spelling errors in technical terms. (Example: Ensure 'Cybersecurity' is not 'Cybecurriucity').
-- MIRROR RULE: You must copy the text from the data highlights EXACTLY. Flawless spelling is the highest priority.
+STRICT ELITE CONSTRAINTS:
+- ZERO TYPO TOLERANCE: You MUST verify the spelling of every single character. NO errors like "Enhahements" or "Mainteniarce". Spelling must be FLAWLESS.
+- PROMPT EXCLUSION: NEVER write ANY technical metadata, labels, or status text like "MODE: DISPLAY", "MODE - CENTRAL", "VERSION", or "DASHBOARD".
+- CLEANLINESS: The bottom of the image must be PURE. NO vertical lines, NO cursors, NO ornamental markers.
+- MIRROR RULE: Copy the text from the data highlights EXACTLY.
 
 ENVIRONMENT & COLORS:
-- BACKGROUND: Deep Midnight Purple Gradient (#1A0B2E to #0A0412). Pure premium depth, no noise.
-- CENTRAL HEXAGON: Translucent refractive glass with a glowing violet (#7B2FBE) aura. Label in YELLOW (#FFD700).
-- QUADRANT MODULES: Use ONLY these four purple variants — Deep Purple (#3A0CA3), Royal Violet (#7B2FBE), Soft Lavender (#C77DFF), Mauve (#9D4EDD).
-- MATERIALS: Render as FROSTED GLASS with realistic thickness and refractive edges.
+- BACKGROUND: Deep Midnight Purple Gradient (#1A0B2E to #0A0412). 
+- MATERIALS: Refractive FROSTED GLASS with realistic thickness.
 - TEXT: YELLOW (#FFD700) for titles, WHITE (#FFFFFF) for bullet points.
-- CONNECTION LINES: Glowing data-pulse streams in violet (#9D4EDD).
-- LIGHTING: Cinematic global illumination, soft neon auras, and subtle anamorphic lens flares.
+- LIGHTING: Cinematic global illumination, soft neon auras.
 
 STYLE: Photorealistic 3D Render (Cinema4D/Octane Quality). 
 Portrait 4:5 (800x1000).`;
