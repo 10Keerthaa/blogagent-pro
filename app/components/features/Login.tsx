@@ -81,12 +81,12 @@ export const Login = () => {
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F9FAFB] dark:bg-slate-950 flex shadow-[inset_1px_0_0_0_rgba(0,0,0,0.05)] dark:shadow-[inset_1px_0_0_0_rgba(255,255,255,0.05)] items-center justify-center p-6 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
-                <div className="w-full max-w-[420px] bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-8 lg:p-10 animate-fadeIn relative z-10 transition-all">
-                    <div className="mb-10 text-center lg:text-left">
-                        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3 transition-all duration-300">
+                <div className="w-full max-w-[480px] bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-10 lg:p-14 animate-fadeIn relative z-10 transition-all">
+                    <div className="mb-12 text-center lg:text-left">
+                        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 transition-all duration-300">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
                         </h2>
-                        <p className="text-slate-500 dark:text-slate-400 font-medium text-[13px] leading-relaxed">
+                        <p className="text-slate-500 dark:text-slate-400 font-medium text-[14px] leading-relaxed">
                             {isSignUp 
                                 ? 'Join the elite editorial platform today.' 
                                 : 'Please enter your credentials to access the platform.'}
@@ -94,22 +94,22 @@ export const Login = () => {
                     </div>
 
                     {signUpSuccess && (
-                        <div className="mb-10 p-5 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-xl flex items-center gap-3 animate-fadeIn uppercase tracking-wider leading-relaxed">
+                        <div className="mb-12 p-6 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-xl flex items-center gap-3 animate-fadeIn uppercase tracking-wider leading-relaxed">
                             <Zap className="w-5 h-5 shrink-0 text-emerald-500" />
                             Success! Please check your email to confirm your account before logging in.
                         </div>
                     )}
 
                     {error && (
-                        <div className="mb-10 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-xl flex items-center gap-3 animate-shake uppercase tracking-wider">
+                        <div className="mb-12 p-5 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-xl flex items-center gap-3 animate-shake uppercase tracking-wider">
                             <Lock className="w-4 h-4 shrink-0 text-red-500" />
                             {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleAuthAction} className="space-y-8">
+                    <form onSubmit={handleAuthAction} className="space-y-10">
                         {isSignUp && (
-                            <div className="space-y-3 animate-fadeIn">
+                            <div className="space-y-4 animate-fadeIn">
                                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 mb-2">
                                     <Sparkles className="w-3.5 h-3.5" />
                                     Full Name
@@ -124,7 +124,7 @@ export const Login = () => {
                                 />
                             </div>
                         )}
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 mb-2">
                                 <Mail className="w-3.5 h-3.5" />
                                 Work Email
@@ -139,7 +139,7 @@ export const Login = () => {
                             />
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 mb-1">
                                 <Lock className="w-3.5 h-3.5" />
                                 Access Code
@@ -154,19 +154,19 @@ export const Login = () => {
                             />
                         </div>
 
-                        <div className="mt-8 space-y-8">
+                        <div className="mt-12 space-y-10">
                             <Button
                                 type="submit"
                                 variant="primary"
                                 isLoading={loading}
-                                className="w-full h-14 rounded-xl bg-violet-600 hover:bg-violet-700 shadow-xl shadow-violet-600/10 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:scale-[1.01]"
+                                className="w-full h-15 rounded-xl bg-violet-600 hover:bg-violet-700 shadow-xl shadow-violet-600/10 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:scale-[1.01] py-4"
                             >
                                 {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                             </Button>
 
-                            <div className="space-y-4">
+                            <div className="space-y-6">
                                 <div className="text-center">
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 dark:text-slate-600 inline-block mb-3">
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 dark:text-slate-600 inline-block mb-4">
                                         {isSignUp ? 'Already Joined?' : 'New User?'}
                                     </span>
                                     
@@ -178,7 +178,7 @@ export const Login = () => {
                                             setSignUpSuccess(false);
                                             setError(null);
                                         }}
-                                        className="w-full h-14 rounded-xl bg-violet-600 hover:bg-violet-700 shadow-xl shadow-violet-600/10 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:scale-[1.01]"
+                                        className="w-full h-15 rounded-xl bg-violet-600 hover:bg-violet-700 shadow-xl shadow-violet-600/10 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:scale-[1.01] py-4"
                                     >
                                         {isSignUp ? 'Back to Sign In' : 'Create Account'}
                                     </Button>
