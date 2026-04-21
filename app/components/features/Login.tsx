@@ -98,105 +98,112 @@ export const Login = () => {
 
                 {/* RIGHT SECTION: LOGIN FORM (50%) */}
                 <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex flex-col items-center justify-center p-8 lg:p-12 overflow-hidden shrink-0 transition-all duration-700">
-                    {/* Floating Portrait Card - Symmetrical Compact Match with Bottom Air */}
-                    <div className="w-full max-w-[480px] rounded-[32px] pt-0 pb-0 px-[48px] bg-white shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] flex flex-col items-center relative z-10 transition-all">
+                    
+                    {/* Centered Wrapper for Title + Card Alignment */}
+                    <div className="w-full max-w-[480px] flex flex-col items-center">
+                        
+                        {/* HEADER: Outside the card for better visual hierarchy */}
+                        <div className="mb-10 text-left w-full px-4">
+                            <h2 className="text-[32px] lg:text-[40px] font-bold text-[#0F172A] dark:text-white mb-[12px] tracking-tight leading-tight">
+                                {isSignUp ? 'Create Profile' : 'Welcome Back'}
+                            </h2>
+                            <p className="text-[14px] lg:text-[16px] text-[#64748B] dark:text-slate-400 font-medium">
+                                {isSignUp
+                                    ? 'Join the elite editorial platform today.'
+                                    : 'Please enter your credentials to access the platform.'}
+                            </p>
+                        </div>
 
-                        {/* Internal Container - Focused Width */}
-                        <div className="w-full flex flex-col items-center">
-                            <div className="mb-0 text-left w-full">
-                                <h2 className="text-[32px] font-bold text-[#0F172A] mb-[12px]">
-                                    {isSignUp ? 'Create Profile' : 'Welcome Back'}
-                                </h2>
-                                <p className="text-[14px] text-[#64748B] mb-[12px]">
-                                    {isSignUp
-                                        ? 'Join the elite editorial platform today.'
-                                        : 'Please enter your credentials to access the platform.'}
-                                </p>
-                            </div>
+                        {/* Floating Portrait Card - Unified Workstation */}
+                        <div className="w-full rounded-[32px] pt-12 pb-12 px-[48px] bg-white dark:bg-slate-900 shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col items-center relative z-10 transition-all">
 
-                            {error && (
-                                <div className="w-full mb-8 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-2xl flex items-center justify-center gap-3 animate-shake uppercase tracking-wider">
-                                    <Lock className="w-4 h-4 shrink-0 text-red-500" />
-                                    {error}
-                                </div>
-                            )}
+                            {/* Internal Container - Focused Width */}
+                            <div className="w-full flex flex-col items-center">
+                                
+                                {error && (
+                                    <div className="w-full mb-8 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-2xl flex items-center justify-center gap-3 animate-shake uppercase tracking-wider">
+                                        <Lock className="w-4 h-4 shrink-0 text-red-500" />
+                                        {error}
+                                    </div>
+                                    )}
 
-                            <form onSubmit={handleAuthAction} className="w-full">
-                                {isSignUp && (
-                                    <div className="gap-[12px] flex flex-col mb-[24px]">
+                                <form onSubmit={handleAuthAction} className="w-full">
+                                    {isSignUp && (
+                                        <div className="gap-[12px] flex flex-col mb-[24px]">
+                                            <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
+                                                <Sparkles className="w-3.5 h-3.5" />
+                                                Full Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={fullName}
+                                                onChange={(e) => setFullName(e.target.value)}
+                                                placeholder="Your Full Name"
+                                                className="w-full h-[56px] bg-white border border-[#E2E8F0] rounded-[12px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="gap-[12px] flex flex-col mb-[32px]">
                                         <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
-                                            <Sparkles className="w-3.5 h-3.5" />
-                                            Full Name
+                                            <Mail className="w-3.5 h-3.5" />
+                                            Work Email
                                         </label>
                                         <input
-                                            type="text"
+                                            type="email"
                                             required
-                                            value={fullName}
-                                            onChange={(e) => setFullName(e.target.value)}
-                                            placeholder="Your Full Name"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="name@company.com"
                                             className="w-full h-[56px] bg-white border border-[#E2E8F0] rounded-[12px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
                                         />
                                     </div>
-                                )}
-                                <div className="gap-[12px] flex flex-col mb-[32px]">
-                                    <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
-                                        <Mail className="w-3.5 h-3.5" />
-                                        Work Email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        required
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="name@company.com"
-                                        className="w-full h-[56px] bg-white border border-[#E2E8F0] rounded-[12px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
-                                    />
-                                </div>
 
-                                <div className="gap-[12px] flex flex-col mb-[32px]">
-                                    <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
-                                        <Lock className="w-3.5 h-3.5" />
-                                        Access Code
-                                    </label>
-                                    <input
-                                        type="password"
-                                        required
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="••••••••"
-                                        className="w-full h-[56px] bg-white border border-[#E2E8F0] rounded-[12px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
-                                    />
-                                </div>
-
-                                <div className="mt-8">
-                                    <Button
-                                        type="submit"
-                                        variant="primary"
-                                        isLoading={loading}
-                                        className="w-full h-[56px] rounded-[12px] bg-[#8424FF] hover:bg-[#7215e8] text-[14px] font-bold tracking-[0.5px] uppercase text-white"
-                                    >
-                                        {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
-                                    </Button>
-
-                                    <div className="flex flex-col items-center">
-                                        <span className="text-[10px] text-[#CBD5E1] uppercase tracking-[3px] mt-[40px] mb-[40px]">
-                                            {isSignUp ? 'Already Joined?' : 'New User?'}
-                                        </span>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setIsSignUp(!isSignUp);
-                                                setSignUpSuccess(false);
-                                                setError(null);
-                                            }}
-                                            className="w-full h-[56px] rounded-[12px] bg-[#F1F5F9] border border-[#E2E8F0] text-[#475569] text-[14px] font-bold uppercase tracking-[0.5px] transition-all hover:bg-[#E2E8F0]"
-                                        >
-                                            {isSignUp ? 'Back to Sign In' : 'Create Account'}
-                                        </button>
+                                    <div className="gap-[12px] flex flex-col mb-[32px]">
+                                        <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
+                                            <Lock className="w-3.5 h-3.5" />
+                                            Access Code
+                                        </label>
+                                        <input
+                                            type="password"
+                                            required
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="••••••••"
+                                            className="w-full h-[56px] bg-white border border-[#E2E8F0] rounded-[12px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
+                                        />
                                     </div>
-                                </div>
-                            </form>
+
+                                    <div className="mt-8">
+                                        <Button
+                                            type="submit"
+                                            variant="primary"
+                                            isLoading={loading}
+                                            className="w-full h-[56px] rounded-[12px] bg-[#8424FF] hover:bg-[#7215e8] text-[14px] font-bold tracking-[0.5px] uppercase text-white"
+                                        >
+                                            {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
+                                        </Button>
+
+                                        <div className="flex flex-col items-center">
+                                            <span className="text-[10px] text-[#CBD5E1] uppercase tracking-[3px] mt-[40px] mb-[40px]">
+                                                {isSignUp ? 'Already Joined?' : 'New User?'}
+                                            </span>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsSignUp(!isSignUp);
+                                                    setSignUpSuccess(false);
+                                                    setError(null);
+                                                }}
+                                                className="w-full h-[56px] rounded-[12px] bg-[#F1F5F9] border border-[#E2E8F0] text-[#475569] text-[14px] font-bold uppercase tracking-[0.5px] transition-all hover:bg-[#E2E8F0]"
+                                            >
+                                                {isSignUp ? 'Back to Sign In' : 'Create Account'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
