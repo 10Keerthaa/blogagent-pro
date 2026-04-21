@@ -910,7 +910,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 setPrompt(draft.prompt || ''); setDescription(draft.metaDesc || '');
                 if (Array.isArray(draft.keywords)) setKeywords(draft.keywords);
                 else if (typeof draft.keywords === 'string') setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
-                setInfographicUrl(draft.infographicUrl || null); setActiveTab('create');
+                setInfographicUrl(draft.infographicUrl || null); 
+                setPrimaryKeyword(draft.primaryKeyword || null);
+                setActiveTab('create');
                 
                 // Load categories
                 const cats = draft.categories;

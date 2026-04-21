@@ -181,7 +181,8 @@ PALETTE RULES (STRICT - NO EXCEPTIONS):
 Portrait 4:5 (800x1000).`;
                     } else {
                       return `CINEMATIC 3D HOLOGRAPHIC DASHBOARD. 
-Layout: Floating central hexagonal glass core connected to four peripheral frosted-glass modules.
+Layout: Floating central hexagonal glass core connected to four peripheral frosted-glass modules. 
+IMPORTANT: Distribute the modules vertically to fill 85% of the frame height (reduce empty space at top and bottom).
 
 ICONOGRAPHY (MANDATORY):
 Inside or next to each of the 4 quadrant titles, you MUST render a contextually relevant, ultra-detailed 3D Glass Icon that represents the text (e.g., if the text is about 'Risk', draw a 3D Shield; if 'Data', draw a 3D Server Node; if 'Growth', draw a 3D Chart).
@@ -189,9 +190,10 @@ Inside or next to each of the 4 quadrant titles, you MUST render a contextually 
 Data Highlights: ${visualPrompt.substring(0, 1000)}.
 
 STRICT ELITE MINIMALIST CONSTRAINTS:
-- PROMPT EXCLUSION: NEVER write the words "MODE", "DASHBOARD", "MASTER", or "QUADRANT" in the image.
+- PROMPT EXCLUSION: NEVER write ANY technical metadata, labels, or status text like "MODE: DISPLAY", "VERSION", "DASHBOARD", or "QUADRANT".
+- CLEANLINESS: The image must be purely artistic. DO NOT draw any ornamental vertical lines, cursors, or markers at the top or bottom edges.
 - VISUAL HIERARCHY: Dominate with large Titles. Use significantly smaller, clean font for bullet points.
-- MANDATORY DICTIONARY SPELLING: You MUST verify the spelling of EVERY SINGLE WORD you draw. ZERO tolerance for gibberish, mashed letters, or typos. Every letter must be perfectly legible and correctly spelled in English.
+- HYPER-ACCURATE SPELLING: You MUST verify the spelling of EVERY SINGLE CHARACTER you draw. ZERO tolerance for spelling errors in technical terms. (Example: Ensure 'Cybersecurity' is not 'Cybecurriucity').
 - MIRROR RULE: You must copy the text from the data highlights EXACTLY. Flawless spelling is the highest priority.
 
 ENVIRONMENT & COLORS:
