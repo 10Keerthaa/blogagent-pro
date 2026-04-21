@@ -85,7 +85,7 @@ export const Login = () => {
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex items-center justify-center p-8 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
                 {/* Floating Portrait Card - Flat Elite Match */}
                 <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-10 relative z-10 transition-all">
-                    <div className="mb-8">
+                    <div className="mb-10">
                         <h2 className="text-[36px] font-bold text-slate-900 dark:text-white tracking-tight mb-3">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
                         </h2>
@@ -103,7 +103,7 @@ export const Login = () => {
                         </div>
                     )}
 
-                    <form onSubmit={handleAuthAction} className="space-y-5">
+                    <form onSubmit={handleAuthAction} className="space-y-6">
                         {isSignUp && (
                             <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2 px-1">
@@ -160,8 +160,8 @@ export const Login = () => {
                                 {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                             </Button>
 
-                            <div className="flex flex-col items-center">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-2">
+                            <div className="flex flex-col items-center mt-6">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-4">
                                     {isSignUp ? 'Already Joined?' : 'New User?'}
                                 </span>
                                 
