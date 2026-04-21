@@ -54,13 +54,13 @@ export const Login = () => {
     return (
         <div className="min-h-screen w-full flex flex-col lg:flex-row bg-slate-50 dark:bg-[#060606] transition-colors duration-500 overflow-hidden font-sans">
             {/* LEFT SECTION: BRAND PANEL (50%) */}
-            <div className="hidden lg:flex lg:w-1/2 min-h-screen bg-violet-600 dark:bg-violet-950 p-20 flex-col relative overflow-hidden shrink-0">
+            <div className="hidden lg:flex lg:w-1/2 min-h-screen bg-violet-600 dark:bg-violet-950 p-20 pt-24 flex-col relative overflow-hidden shrink-0">
                 {/* Visual Grid & Glow */}
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-500/30 to-purple-800/40 blur-3xl pointer-events-none" />
 
-                {/* Brand Identity: Pushed to Absolute Top */}
-                <div className="relative z-10">
+                {/* Brand Identity: With Space at the Top */}
+                <div className="relative z-10 mb-32">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xl overflow-hidden shrink-0">
                             <Zap className="w-5 h-5 text-white fill-current" />
@@ -69,11 +69,13 @@ export const Login = () => {
                     </div>
                 </div>
 
-                {/* Main Headline Block: Pushed to Optical Center of remaining space */}
-                <div className="relative z-10 flex-1 flex flex-col justify-center">
+                {/* Main Headline Block: Structured with 3 Lines */}
+                <div className="relative z-10">
                     <div className="max-w-3xl">
-                        <h1 className="text-[84px] font-bold text-white leading-[0.95] tracking-[-0.03em] mb-8 italic" style={{ fontFamily: "'Playfair Display', serif" }}>
-                            Elevate Your <br />Content Engine.
+                        <h1 className="text-[84px] font-bold text-white leading-[0.9] tracking-[-0.03em] mb-10 italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+                            Elevate <br />
+                            Your Content <br />
+                            Engine.
                         </h1>
                         <p className="text-lg text-violet-100/90 leading-relaxed font-medium max-w-md">
                             The elite editorial platform for high-intent SaaS teams and creators.
@@ -81,8 +83,8 @@ export const Login = () => {
                     </div>
                 </div>
 
-                {/* Bottom Anchor (Empty to balance flex-1) */}
-                <div className="relative z-10 h-10" />
+                {/* Bottom Anchor */}
+                <div className="mt-auto relative z-10 h-10" />
             </div>
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
