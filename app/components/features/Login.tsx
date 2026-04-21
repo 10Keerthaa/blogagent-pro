@@ -83,16 +83,16 @@ export const Login = () => {
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex flex-col items-center justify-center p-8 lg:p-12 overflow-hidden shrink-0 transition-all duration-700">
-                {/* Floating Portrait Card - Compact Center Box (No Scroll) */}
-                <div className="w-full max-w-[500px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-10 flex flex-col items-center justify-center relative z-10 transition-all">
+                {/* Floating Portrait Card - Exact 'Black Box' Drawing Match */}
+                <div className="w-full max-w-[580px] bg-white dark:bg-[#0a0a0a] rounded-[3rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-20 flex flex-col items-center justify-center relative z-10 transition-all">
                     
-                    {/* Internal Container - Red Line Width */}
+                    {/* Internal Container - Red Line Width Match */}
                     <div className="w-full max-w-[340px] mx-auto flex flex-col items-center">
-                        <div className="mb-8 text-center">
+                        <div className="mb-10 text-center">
                             <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
                                 {isSignUp ? 'Create Profile' : 'Welcome Back'}
                             </h2>
-                            <p className="text-slate-500 dark:text-slate-400 font-medium text-[15px] leading-relaxed mx-auto max-w-[280px]">
+                            <p className="text-slate-500 dark:text-slate-400 font-medium text-[15px] leading-relaxed mx-auto">
                                 {isSignUp 
                                     ? 'Join the elite editorial platform today.' 
                                     : 'Please enter your credentials to access the platform.'}
@@ -100,13 +100,13 @@ export const Login = () => {
                         </div>
 
                         {error && (
-                            <div className="w-full mb-6 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-2xl flex items-center justify-center gap-3 animate-shake uppercase tracking-wider">
+                            <div className="w-full mb-8 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-2xl flex items-center justify-center gap-3 animate-shake uppercase tracking-wider">
                                 <Lock className="w-4 h-4 shrink-0 text-red-500" />
                                 {error}
                             </div>
                         )}
 
-                        <form onSubmit={handleAuthAction} className="w-full space-y-4">
+                        <form onSubmit={handleAuthAction} className="w-full space-y-5">
                             {isSignUp && (
                                 <div className="space-y-2 pb-1">
                                     <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-2 px-1">
@@ -153,7 +153,7 @@ export const Login = () => {
                                 />
                             </div>
 
-                            <div className="mt-6">
+                            <div className="mt-8">
                                 <Button
                                     type="submit"
                                     variant="primary"
@@ -163,8 +163,8 @@ export const Login = () => {
                                     {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                                 </Button>
 
-                                <div className="flex flex-col items-center mt-8">
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-4">
+                                <div className="flex flex-col items-center mt-10">
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-6">
                                         {isSignUp ? 'Already Joined?' : 'New User?'}
                                     </span>
                                     
