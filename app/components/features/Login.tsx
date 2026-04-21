@@ -83,8 +83,8 @@ export const Login = () => {
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex flex-col items-center justify-center p-8 lg:p-12 overflow-hidden shrink-0 transition-all duration-700">
-                {/* Floating Portrait Card - Symmetrical Compact Match */}
-                <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-12 flex flex-col items-center justify-center relative z-10 transition-all">
+                {/* Floating Portrait Card - Symmetrical Compact Match with Bottom Air */}
+                <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 px-12 pt-12 pb-20 flex flex-col items-center justify-center relative z-10 transition-all">
                     
                     {/* Internal Container - Focused Width */}
                     <div className="w-full flex flex-col items-center">
