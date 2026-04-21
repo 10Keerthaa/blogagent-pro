@@ -88,9 +88,9 @@ export const Login = () => {
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F3F4F9] dark:bg-slate-950 flex items-center justify-center p-6 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
                 {/* Floating Executive Card */}
-                <div className="w-full max-w-[460px] bg-white dark:bg-[#0a0a0a] rounded-[40px] shadow-2xl shadow-slate-200/60 dark:shadow-none border border-white/50 dark:border-slate-800 p-10 lg:p-14 animate-fadeIn relative z-10 transition-all">
-                    <div className="mb-12">
-                        <h2 className="text-[32px] font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
+                <div className="w-full max-w-[460px] bg-white dark:bg-[#0a0a0a] rounded-[40px] shadow-2xl shadow-slate-200/60 dark:shadow-none border border-white/50 dark:border-slate-800 p-12 lg:p-16 animate-fadeIn relative z-10 transition-all">
+                    <div className="mb-14">
+                        <h2 className="text-[32px] font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
                         </h2>
                         <p className="text-slate-500 dark:text-slate-400 font-medium text-[14px] leading-relaxed max-w-[280px]">
@@ -107,9 +107,9 @@ export const Login = () => {
                         </div>
                     )}
 
-                    <form onSubmit={handleAuthAction} className="space-y-6">
+                    <form onSubmit={handleAuthAction} className="space-y-8">
                         {isSignUp && (
-                            <div className="space-y-3 pb-2">
+                            <div className="space-y-3 pb-4">
                                 <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
                                     <Sparkles className="w-3.5 h-3.5" />
                                     Full Name
@@ -120,11 +120,11 @@ export const Login = () => {
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
                                     placeholder="Your Full Name"
-                                    className="w-full h-12 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-xl px-5 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
+                                    className="w-full h-14 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-xl px-6 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
                                 />
                             </div>
                         )}
-                        <div className="space-y-3 pb-2">
+                        <div className="space-y-3 pb-4">
                             <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
                                 <Mail className="w-3.5 h-3.5" />
                                 Work Email
@@ -135,11 +135,11 @@ export const Login = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="name@company.com"
-                                className="w-full h-12 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-xl px-5 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
+                                className="w-full h-14 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-xl px-6 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
                             />
                         </div>
 
-                        <div className="space-y-3 pb-4">
+                        <div className="space-y-3 pb-6">
                             <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
                                 <Lock className="w-3.5 h-3.5" />
                                 Access Code
@@ -150,11 +150,11 @@ export const Login = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="w-full h-12 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-xl px-5 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
+                                className="w-full h-14 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-xl px-6 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
                             />
                         </div>
 
-                        <div className="mt-12 space-y-10">
+                        <div className="mt-16 space-y-12">
                             <Button
                                 type="submit"
                                 variant="primary"
@@ -164,8 +164,8 @@ export const Login = () => {
                                 {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                             </Button>
 
-                            <div className="flex flex-col items-center">
-                                <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-6">
+                            <div className="flex flex-col items-center pt-4">
+                                <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400 dark:text-slate-700 mb-8">
                                     {isSignUp ? 'Already Joined?' : 'New User?'}
                                 </span>
                                 
@@ -176,7 +176,7 @@ export const Login = () => {
                                         setSignUpSuccess(false);
                                         setError(null);
                                     }}
-                                    className="w-full h-14 rounded-xl bg-white dark:bg-transparent border border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:border-violet-500 hover:text-violet-600"
+                                    className="w-full h-14 rounded-xl bg-white dark:bg-transparent border-2 border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:border-violet-500 hover:text-violet-600"
                                 >
                                     {isSignUp ? 'Back to Sign In' : 'Create Account'}
                                 </button>
