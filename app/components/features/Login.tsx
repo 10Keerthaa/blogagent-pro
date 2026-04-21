@@ -115,7 +115,7 @@ export const Login = () => {
                         </div>
 
                         {/* Floating Portrait Card - Unified Workstation */}
-                        <div className="w-full rounded-[32px] pt-24 pb-16 px-[48px] bg-white dark:bg-slate-900 shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col items-center relative z-10 transition-all">
+                        <div className="w-full rounded-none pt-20 pb-16 px-[48px] bg-white dark:bg-slate-900 shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col items-center relative z-10 transition-all">
 
                             {/* Internal Container - Focused Width */}
                             <div className="w-full flex flex-col items-center">
