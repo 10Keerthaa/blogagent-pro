@@ -196,7 +196,7 @@ export const ReviewList = () => {
         <div ref={scrollContainerRef} className={`animate-fadeIn w-full transition-all duration-500 space-y-12 pb-24`}>
                     {/* Part 3: Editorial Sub-Header (True Studio Strip) */}
                     <div className="sticky top-[-1px] bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
-                        <div className="w-full grid grid-cols-3 items-center h-20 px-10">
+                        <div className="w-full grid grid-cols-3 items-center h-20 px-6">
                             {/* Left: Navigation */}
                             <div className="flex items-center">
                                 <button
@@ -231,7 +231,7 @@ export const ReviewList = () => {
                     </div>
 
                     {/* Content Section */}
-                    <section className="w-full space-y-12 relative lg:px-24 pl-6 pr-6">
+                    <section className="w-full space-y-12 relative px-0">
                         {selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
@@ -253,7 +253,7 @@ export const ReviewList = () => {
                             />
 
                         {selectedReviewDraft.imageUrl && (
-                            <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl max-w-4xl mx-auto">
+                            <div className="relative mb-12 group overflow-hidden rounded-none shadow-2xl w-full">
                                 <img
                                     src={selectedReviewDraft.imageUrl}
                                     alt={selectedReviewDraft.title}
@@ -311,7 +311,7 @@ export const ReviewList = () => {
                                 setSelectedReviewDraft(updated);
                                 handleSaveManualEdits(updated);
                             }}
-                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-4xl mx-auto focus:outline-none min-h-[500px] w-full
+                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px] w-full
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
                             onMouseUp={updateSelectionRect}
                             onSelect={updateSelectionRect}
