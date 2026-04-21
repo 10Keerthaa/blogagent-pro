@@ -326,6 +326,16 @@ export const ReviewList = () => {
                                     if (url) handleToolbarAction('link', url);
                                 }
                             }}
+                            onMouseDown={(e) => {
+                                // If we click a link, handle special interactions (Ctrl+Click or Double-Click)
+                                const target = (e.target as HTMLElement).closest('a');
+                                if (target) {
+                                    if (e.ctrlKey || e.metaKey || e.detail === 2) {
+                                        e.preventDefault();
+                                        window.open(target.href, '_blank');
+                                    }
+                                }
+                            }}
                         />
 
                         {selectedReviewDraft.infographicUrl && (

@@ -16,7 +16,7 @@ export const PostPreview = () => {
         user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft,
         description, primaryKeyword, prompt: mainTopic, keywords,
         handleRefineSelection, infographicFeedback, setInfographicFeedback, isInfographicRefining,
-        isGenerating
+        isGenerating, deleteInProgressDraft, checkForResumeDraft
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
@@ -445,6 +445,13 @@ export const PostPreview = () => {
                                     keywords: keywords.length > 0 ? keywords : (preview.keywords || []),
                                     primaryKeyword: primaryKeyword
                                 });
+
+                                // Clean up the in-progress draft after successful save to review
+                                if (user?.uid) {
+                                    await deleteInProgressDraft(user.uid);
+                                    await checkForResumeDraft();
+                                }
+
                                 if (result?.id) {
                                     setCurrentPostId(result.id);
                                     setSelectedReviewDraft(result);

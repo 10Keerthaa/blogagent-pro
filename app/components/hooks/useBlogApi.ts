@@ -496,7 +496,22 @@ export const useBlogApi = () => {
         }
     }, []);
 
+    const deleteInProgressDraft = useCallback(async (userId: string) => {
+        try {
+            const r = await fetch('/api/drafts/delete-in-progress', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId })
+            });
+            return await r.json();
+        } catch (error) {
+            console.error('Delete in-progress draft error:', error);
+            return { error: 'Failed to delete' };
+        }
+    }, []);
+
     return {
+        deleteInProgressDraft,
         isFetchingDrafts,
         isGenerating,
         isHumanizing,
