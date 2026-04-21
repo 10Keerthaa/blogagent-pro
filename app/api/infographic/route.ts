@@ -180,8 +180,8 @@ PALETTE RULES (STRICT - NO EXCEPTIONS):
 - Accent Glows: Soft purple light halos around each pod node.
 Portrait 4:5 (800x1000).`;
                     } else {
-                      return `MASTER TECHNICAL DASHBOARD. 
-Layout: Central hexagonal thematic core connected to four peripheral quadrants.
+                      return `CINEMATIC 3D HOLOGRAPHIC DASHBOARD. 
+Layout: Floating central hexagonal glass core connected to four peripheral frosted-glass modules.
 Data Highlights: ${visualPrompt.substring(0, 1000)}.
 
 STRICT ELITE MINIMALIST CONSTRAINTS:
@@ -191,15 +191,16 @@ STRICT ELITE MINIMALIST CONSTRAINTS:
 - MIRROR RULE: You must copy the text from the data highlights EXACTLY. If a word is provided to you, render it character-for-character. Flawless spelling is the highest priority.
 
 PALETTE RULES (STRICT - NO EXCEPTIONS):
-- Background: Pure deep BLACK (#000000). No noise, no gradients on the base layer.
-- Central Hexagon: Deep purple (#3A0CA3) with a glowing violet (#7B2FBE) border. Label in YELLOW (#FFD700).
+- Background: Polished Obsidian BLACK (#000000). Deep depth, no noise.
+- Central Hexagon: Translucent refractive glass with a glowing violet (#7B2FBE) aura. Label in YELLOW (#FFD700).
 - Quadrant Modules: Use ONLY these four purple variants — Deep Purple (#3A0CA3), Royal Violet (#7B2FBE), Soft Lavender (#C77DFF), Mauve (#9D4EDD). One per quadrant.
+- Materials: Render as FROSTED GLASS with realistic thickness and refractive edges.
 - Quadrant Titles: YELLOW (#FFD700), bold.
 - Quadrant Bullet Points: WHITE (#FFFFFF), clean and small.
-- Connection Lines: White (#FFFFFF) or glowing violet (#9D4EDD).
-- Sidebar icons or accent elements: White or pale lavender (#E0AAFF).
+- Connection Lines: Glowing data-pulse streams in violet (#9D4EDD).
+- Accent Glows: Cinematic lighting, soft global illumination, and subtle anamorphic lens flares.
 
-STYLE: Flat 2.5D Vector Illustration. 
+STYLE: Photorealistic 3D Render (Cinema4D Quality). 
 Portrait 4:5 (800x1000).`;
                     }
                   })()
