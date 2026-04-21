@@ -83,10 +83,10 @@ export const Login = () => {
                     {/* Main Headline Block: Responsive & Fluid */}
                     <div className="relative z-10">
                         <div className="max-w-3xl">
-                            <h1 className="text-[4rem] md:text-[5.5rem] lg:text-[6rem] font-bold text-white leading-[1.05] tracking-tight mb-20 italic font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+                            <h1 className="text-[4rem] md:text-[5.5rem] lg:text-[6rem] font-bold text-white leading-[1.05] tracking-tight mb-32 italic font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
                                 Elevate Your Content Engine.
                             </h1>
-                            <p className="text-lg text-white/90 leading-relaxed font-medium max-w-md">
+                            <p className="text-xl text-white/90 leading-relaxed font-medium max-w-lg">
                                 The elite editorial platform for high-intent SaaS teams and creators.
                             </p>
                         </div>
@@ -103,7 +103,7 @@ export const Login = () => {
                     <div className="w-full max-w-[480px] flex flex-col items-center">
                         
                         {/* HEADER: Outside the card for better visual hierarchy */}
-                        <div className="mb-10 text-left w-full px-4">
+                        <div className="mb-14 text-left w-full px-4">
                             <h2 className="text-[32px] lg:text-[40px] font-bold text-[#0F172A] dark:text-white mb-[12px] tracking-tight leading-tight">
                                 {isSignUp ? 'Create Profile' : 'Welcome Back'}
                             </h2>
@@ -115,7 +115,7 @@ export const Login = () => {
                         </div>
 
                         {/* Floating Portrait Card - Unified Workstation */}
-                        <div className="w-full rounded-[32px] pt-16 pb-16 px-[48px] bg-white dark:bg-slate-900 shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col items-center relative z-10 transition-all">
+                        <div className="w-full rounded-[32px] pt-24 pb-16 px-[48px] bg-white dark:bg-slate-900 shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col items-center relative z-10 transition-all">
 
                             {/* Internal Container - Focused Width */}
                             <div className="w-full flex flex-col items-center">
@@ -127,9 +127,9 @@ export const Login = () => {
                                     </div>
                                     )}
 
-                                <form onSubmit={handleAuthAction} className="w-full">
+                                <form onSubmit={handleAuthAction} className="w-full mt-4">
                                     {isSignUp && (
-                                        <div className="gap-2 flex flex-col mb-[24px]">
+                                        <div className="gap-2 flex flex-col mb-10">
                                             <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
                                                 <Sparkles className="w-3.5 h-3.5" />
                                                 Full Name
