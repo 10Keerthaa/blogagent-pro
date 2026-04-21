@@ -99,7 +99,7 @@ export const Login = () => {
                 {/* RIGHT SECTION: LOGIN FORM (50%) */}
                 <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex flex-col items-center justify-center p-8 lg:p-12 overflow-hidden shrink-0 transition-all duration-700">
                     {/* Floating Portrait Card - Symmetrical Compact Match with Bottom Air */}
-                    <div className="w-full max-w-[480px] rounded-[32px] p-[56px] bg-white shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] flex flex-col items-center relative z-10 transition-all">
+                    <div className="w-full max-w-[480px] rounded-[32px] pt-0 pb-0 px-[48px] bg-white shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] flex flex-col items-center relative z-10 transition-all">
 
                         {/* Internal Container - Focused Width */}
                         <div className="w-full flex flex-col items-center">
@@ -190,7 +190,7 @@ export const Login = () => {
                                                 setSignUpSuccess(false);
                                                 setError(null);
                                             }}
-                                            className="w-full h-[56px] rounded-[12px] bg-white border border-[#E2E8F0] text-[#0F172A] text-[14px] font-bold uppercase tracking-[0.5px]"
+                                            className="w-full h-[56px] rounded-[12px] bg-[#F1F5F9] border border-[#E2E8F0] text-[#475569] text-[14px] font-bold uppercase tracking-[0.5px] transition-all hover:bg-[#E2E8F0]"
                                         >
                                             {isSignUp ? 'Back to Sign In' : 'Create Account'}
                                         </button>
