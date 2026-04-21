@@ -99,7 +99,7 @@ export const Login = () => {
                 {/* RIGHT SECTION: LOGIN FORM (50%) */}
                 <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex flex-col items-center justify-center p-8 lg:p-12 overflow-hidden shrink-0 transition-all duration-700">
                     {/* Floating Portrait Card - Symmetrical Compact Match with Bottom Air */}
-                    <div className="w-full max-w-[480px] rounded-[32px] p-[48px] bg-white shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] flex flex-col items-center relative z-10 transition-all">
+                    <div className="w-full max-w-[480px] rounded-[32px] p-[56px] bg-white shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] flex flex-col items-center relative z-10 transition-all">
 
                         {/* Internal Container - Focused Width */}
                         <div className="w-full flex flex-col items-center">
@@ -138,7 +138,7 @@ export const Login = () => {
                                         />
                                     </div>
                                 )}
-                                <div className="gap-[12px] flex flex-col mb-[12px]">
+                                <div className="gap-[12px] flex flex-col mb-[32px]">
                                     <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
                                         <Mail className="w-3.5 h-3.5" />
                                         Work Email
@@ -153,7 +153,7 @@ export const Login = () => {
                                     />
                                 </div>
 
-                                <div className="gap-[12px] flex flex-col mb-[12px]">
+                                <div className="gap-[12px] flex flex-col mb-[32px]">
                                     <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
                                         <Lock className="w-3.5 h-3.5" />
                                         Access Code
@@ -179,7 +179,7 @@ export const Login = () => {
                                     </Button>
 
                                     <div className="flex flex-col items-center">
-                                        <span className="text-[10px] text-[#CBD5E1] uppercase tracking-[3px] mt-[12px] mb-[12px]">
+                                        <span className="text-[10px] text-[#CBD5E1] uppercase tracking-[3px] mt-[40px] mb-[40px]">
                                             {isSignUp ? 'Already Joined?' : 'New User?'}
                                         </span>
 
