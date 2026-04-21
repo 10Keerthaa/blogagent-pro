@@ -84,7 +84,7 @@ export const Login = () => {
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex items-center justify-center p-8 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
                 {/* Floating Portrait Card - Flat Elite Match */}
-                <div className="w-full max-w-[420px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-12 lg:p-14 relative z-10 transition-all">
+                <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-10 relative z-10 transition-all">
                     <div className="mb-12">
                         <h2 className="text-[36px] font-bold text-slate-900 dark:text-white tracking-tight mb-3">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
@@ -103,7 +103,7 @@ export const Login = () => {
                         </div>
                     )}
 
-                    <form onSubmit={handleAuthAction} className="space-y-8">
+                    <form onSubmit={handleAuthAction} className="space-y-5">
                         {isSignUp && (
                             <div className="space-y-3 pb-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2 px-1">
@@ -150,18 +150,18 @@ export const Login = () => {
                             />
                         </div>
 
-                        <div className="mt-14">
+                        <div className="mt-8">
                             <Button
                                 type="submit"
                                 variant="primary"
                                 isLoading={loading}
-                                className="w-full h-16 rounded-2xl bg-violet-600 hover:bg-violet-700 shadow-[0_15px_40px_rgba(132,36,255,0.35)] uppercase tracking-wide text-sm font-bold transition-all hover:scale-[1.01] mb-20"
+                                className="w-full h-16 rounded-2xl bg-[#8424FF] hover:bg-[#7215e8] shadow-lg uppercase tracking-wide text-sm font-bold transition-all hover:scale-[1.01]"
                             >
                                 {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                             </Button>
 
                             <div className="flex flex-col items-center">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-10">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-2">
                                     {isSignUp ? 'Already Joined?' : 'New User?'}
                                 </span>
                                 
