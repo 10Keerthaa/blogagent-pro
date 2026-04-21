@@ -84,7 +84,7 @@ export const Login = () => {
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex items-center justify-center p-8 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
                 {/* Floating Portrait Card - Image 2 Precision Match */}
-                <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 px-10 py-12 relative z-10 transition-all">
+                <div className="w-full max-w-[440px] min-h-[640px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 px-10 py-12 flex flex-col justify-center relative z-10 transition-all">
                     <div className="mb-12">
                         <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
