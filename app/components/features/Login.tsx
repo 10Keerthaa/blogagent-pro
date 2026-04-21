@@ -83,10 +83,10 @@ export const Login = () => {
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex flex-col items-center justify-center p-8 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
-                {/* Floating Portrait Card - Fully Centered Elite Match */}
-                <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 px-10 py-14 flex flex-col items-center justify-center relative z-10 transition-all">
-                    <div className="mb-12 text-center">
-                        <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
+                {/* Floating Portrait Card - Roomy Centered Elite Match */}
+                <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 px-14 py-16 flex flex-col items-center justify-center relative z-10 transition-all">
+                    <div className="mb-14 text-center">
+                        <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-4">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
                         </h2>
                         <p className="text-slate-500 dark:text-slate-400 font-medium text-[15px] leading-relaxed mx-auto max-w-[280px]">
@@ -97,15 +97,15 @@ export const Login = () => {
                     </div>
 
                     {error && (
-                        <div className="w-full mb-10 p-5 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-2xl flex items-center justify-center gap-3 animate-shake uppercase tracking-wider">
+                        <div className="w-full mb-12 p-5 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-2xl flex items-center justify-center gap-3 animate-shake uppercase tracking-wider">
                             <Lock className="w-4 h-4 shrink-0 text-red-500" />
                             {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleAuthAction} className="w-full space-y-6">
+                    <form onSubmit={handleAuthAction} className="w-full space-y-8">
                         {isSignUp && (
-                            <div className="space-y-2 pb-2">
+                            <div className="space-y-3 pb-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-2 px-1">
                                     <Sparkles className="w-3.5 h-3.5" />
                                     Full Name
@@ -120,7 +120,7 @@ export const Login = () => {
                                 />
                             </div>
                         )}
-                        <div className="space-y-2 pb-2">
+                        <div className="space-y-3 pb-2">
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-2 px-1">
                                 <Mail className="w-3.5 h-3.5" />
                                 Work Email
@@ -135,7 +135,7 @@ export const Login = () => {
                             />
                         </div>
 
-                        <div className="space-y-2 pb-4">
+                        <div className="space-y-3 pb-4">
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-2 px-1">
                                 <Lock className="w-3.5 h-3.5" />
                                 Access Code
@@ -150,7 +150,7 @@ export const Login = () => {
                             />
                         </div>
 
-                        <div className="mt-8">
+                        <div className="mt-12">
                             <Button
                                 type="submit"
                                 variant="primary"
@@ -160,8 +160,8 @@ export const Login = () => {
                                 {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                             </Button>
 
-                            <div className="flex flex-col items-center mt-12">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-6">
+                            <div className="flex flex-col items-center mt-16">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-8">
                                     {isSignUp ? 'Already Joined?' : 'New User?'}
                                 </span>
                                 
