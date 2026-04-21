@@ -85,7 +85,7 @@ export const Login = () => {
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex items-center justify-center p-8 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
                 {/* Floating Portrait Card - Flat Elite Match */}
                 <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-10 relative z-10 transition-all">
-                    <div className="mb-12">
+                    <div className="mb-8">
                         <h2 className="text-[36px] font-bold text-slate-900 dark:text-white tracking-tight mb-3">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
                         </h2>
@@ -105,7 +105,7 @@ export const Login = () => {
 
                     <form onSubmit={handleAuthAction} className="space-y-5">
                         {isSignUp && (
-                            <div className="space-y-3 pb-2">
+                            <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2 px-1">
                                     <Sparkles className="w-3.5 h-3.5" />
                                     Full Name
@@ -120,7 +120,7 @@ export const Login = () => {
                                 />
                             </div>
                         )}
-                        <div className="space-y-3 pb-2">
+                        <div className="space-y-2">
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2 px-1">
                                 <Mail className="w-3.5 h-3.5" />
                                 Work Email
@@ -135,7 +135,7 @@ export const Login = () => {
                             />
                         </div>
 
-                        <div className="space-y-3 pb-4">
+                        <div className="space-y-2">
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2 px-1">
                                 <Lock className="w-3.5 h-3.5" />
                                 Access Code
@@ -150,7 +150,7 @@ export const Login = () => {
                             />
                         </div>
 
-                        <div className="mt-8">
+                        <div className="mt-6">
                             <Button
                                 type="submit"
                                 variant="primary"
