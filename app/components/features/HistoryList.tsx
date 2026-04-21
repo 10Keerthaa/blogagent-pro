@@ -218,7 +218,7 @@ export const HistoryList = () => {
                                                         <span className="text-[9px] font-black text-slate-400 uppercase tracking-executive leading-none shrink-0">
                                                             PUBLISHED BY:
                                                         </span>
-                                                        <span className="text-[10px] font-medium text-rose-500 dark:text-rose-400 lowercase italic">
+                                                        <span className="text-[10px] font-medium text-orange-500 dark:text-orange-400 lowercase italic">
                                                             {item.publishedBy?.email || item.authorEmail}
                                                         </span>
                                                     </div>
