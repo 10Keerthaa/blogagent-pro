@@ -182,37 +182,48 @@ export const HistoryList = () => {
                                         <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-none group-hover:text-violet-600 transition-colors">
                                             {item.title}
                                         </h3>
-                                        {/* Bottom Row: Single horizontal flex-line */}
-                                        <div className="flex flex-wrap items-center gap-y-4 gap-x-8">
-                                            <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-none">
-                                                <Calendar className="w-3.5 h-3.5" />
-                                                {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
-                                            </div>
-                                            <div className="px-4 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-100/50 dark:border-emerald-900/50 leading-none">
-                                                Published
-                                            </div>
-                                            
-                                            {/* Reviewers List */}
-                                            {item.auditLog && item.auditLog.filter((log: any) => log.action === 'reviewed').length > 0 && (
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-executive leading-none">
-                                                        REVIEWED BY:
-                                                    </span>
-                                                    <div className="flex -space-x-2">
-                                                        {Array.from(new Set(item.auditLog.filter((log: any) => log.action === 'reviewed').map((log: any) => log.email))).map((email: any, i) => (
-                                                            <div key={i} title={email} className="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900 border-2 border-white dark:border-slate-900 flex items-center justify-center overflow-hidden">
-                                                                <span className="text-[8px] font-bold text-violet-600 dark:text-violet-300 uppercase">{email.charAt(0)}</span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
+                                        {/* Bottom Row: Editorial Journey */}
+                                        <div className="flex flex-col space-y-4 pt-1">
+                                            {/* Status Row */}
+                                            <div className="flex items-center gap-6">
+                                                <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+                                                    <Calendar className="w-3.5 h-3.5" />
+                                                    {formatDate(item.date || item.published_at || item.last_edited_at || item.createdAt)}
                                                 </div>
-                                            )}
+                                                <div className="px-4 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-100/50 dark:border-emerald-900/50 leading-none">
+                                                    Published
+                                                </div>
+                                            </div>
 
-                                            {(item.publishedBy?.email || item.authorEmail) && (
-                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-executive leading-none">
-                                                    PUBLISHED BY: <span className="text-slate-500 dark:text-slate-200">{item.publishedBy?.email || item.authorEmail}</span>
-                                                </span>
-                                            )}
+                                            {/* Stacked details for Reviewer and Publisher */}
+                                            <div className="space-y-2 border-t border-slate-50 dark:border-slate-800/50 pt-4">
+                                                {/* Reviewers List */}
+                                                {item.auditLog && item.auditLog.filter((log: any) => log.action === 'reviewed').length > 0 && (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-executive leading-none shrink-0">
+                                                            REVIEWED BY:
+                                                        </span>
+                                                        <div className="flex flex-wrap gap-x-3 gap-y-1">
+                                                            {Array.from(new Set(item.auditLog.filter((log: any) => log.action === 'reviewed').map((log: any) => log.email))).map((email: any, i) => (
+                                                                <span key={i} className="text-[10px] font-medium text-violet-500 dark:text-violet-400 lowercase italic">
+                                                                    {email}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {(item.publishedBy?.email || item.authorEmail) && (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-executive leading-none shrink-0">
+                                                            PUBLISHED BY:
+                                                        </span>
+                                                        <span className="text-[10px] font-medium text-rose-500 dark:text-rose-400 lowercase italic">
+                                                            {item.publishedBy?.email || item.authorEmail}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
