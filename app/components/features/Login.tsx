@@ -54,25 +54,24 @@ export const Login = () => {
     return (
         <div className="min-h-screen w-full flex flex-col lg:flex-row bg-slate-50 dark:bg-[#060606] transition-colors duration-500 overflow-hidden font-sans">
             {/* LEFT SECTION: BRAND PANEL (50%) */}
-            <div className="hidden lg:flex lg:w-1/2 min-h-screen bg-violet-600 dark:bg-violet-950 p-24 flex-col justify-between relative overflow-hidden shrink-0">
+            <div className="hidden lg:flex lg:w-1/2 min-h-screen bg-violet-600 dark:bg-violet-950 p-32 flex-col justify-between relative overflow-hidden shrink-0">
                 {/* Visual Grid & Glow */}
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-500/30 to-purple-800/40 blur-3xl pointer-events-none" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-400/20 rounded-full blur-[120px] pointer-events-none" />
 
                 <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-24">
+                    <div className="flex items-center gap-3 mb-32">
                         <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xl">
                             <Zap className="w-7 h-7 text-white fill-current" />
                         </div>
                         <span className="text-2xl font-black text-white tracking-tighter uppercase">10x<span className="text-violet-200">Blogagent</span></span>
                     </div>
 
-                    <div className="max-w-xl">
-                        <h1 className="text-7xl font-extrabold text-white leading-[1.05] tracking-tight mb-10">
+                    <div className="max-w-2xl pt-10">
+                        <h1 className="text-7xl font-bold text-white leading-[1.05] tracking-tight mb-10 italic" style={{ fontFamily: "'Playfair Display', serif" }}>
                             Elevate Your <br />Content Engine.
                         </h1>
-                        <p className="text-xl text-violet-100/80 leading-relaxed font-medium max-w-md">
+                        <p className="text-xl text-violet-100/80 leading-relaxed font-medium max-w-lg">
                             The elite editorial platform for high-intent SaaS teams and creators.
                         </p>
                     </div>
@@ -81,13 +80,13 @@ export const Login = () => {
             </div>
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
-            <div className="w-full lg:w-1/2 min-h-screen bg-slate-50/50 dark:bg-slate-950 flex items-center justify-center p-8 lg:p-16 overflow-y-auto shrink-0 transition-all duration-700">
-                <div className="w-full max-w-[460px] bg-white dark:bg-[#0a0a0a] rounded-[2rem] shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-800 p-12 lg:p-14 animate-fadeIn relative z-10 transition-all">
-                    <div className="mb-10">
-                        <h2 className="text-[28px] font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
+            <div className="w-full lg:w-1/2 min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex items-center justify-center p-12 overflow-y-auto shrink-0 transition-all duration-700">
+                <div className="w-full max-w-[450px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-2xl shadow-slate-200/40 dark:shadow-none border border-slate-100/50 dark:border-slate-800 p-12 lg:p-14 animate-fadeIn relative z-10">
+                    <div className="mb-12">
+                        <h2 className="text-[32px] font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
                         </h2>
-                        <p className="text-slate-400 dark:text-slate-500 font-medium text-[14px] leading-relaxed max-w-[300px]">
+                        <p className="text-slate-400 dark:text-slate-500 font-medium text-[14px] leading-relaxed max-w-[280px]">
                             {isSignUp 
                                 ? 'Join the elite editorial platform today.' 
                                 : 'Please enter your credentials to access the platform.'}
@@ -95,15 +94,15 @@ export const Login = () => {
                     </div>
 
                     {error && (
-                        <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-[11px] font-bold rounded-xl flex items-center gap-3 animate-shake uppercase tracking-wider">
+                        <div className="mb-10 p-5 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-2xl flex items-center gap-3 animate-shake uppercase tracking-wider">
                             <Lock className="w-4 h-4 shrink-0 text-red-500" />
                             {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleAuthAction} className="space-y-8">
+                    <form onSubmit={handleAuthAction} className="space-y-6">
                         {isSignUp && (
-                            <div className="space-y-3">
+                            <div className="space-y-3 pb-4">
                                 <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
                                     <Sparkles className="w-3.5 h-3.5" />
                                     Full Name
@@ -114,11 +113,11 @@ export const Login = () => {
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
                                     placeholder="Your Full Name"
-                                    className="w-full h-13 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl px-5 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
+                                    className="w-full h-14 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl px-6 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
                                 />
                             </div>
                         )}
-                        <div className="space-y-3">
+                        <div className="space-y-3 pb-4">
                             <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
                                 <Mail className="w-3.5 h-3.5" />
                                 Work Email
@@ -129,11 +128,11 @@ export const Login = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="name@company.com"
-                                className="w-full h-13 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl px-5 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
+                                className="w-full h-14 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl px-6 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
                             />
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-3 pb-8">
                             <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
                                 <Lock className="w-3.5 h-3.5" />
                                 Access Code
@@ -144,7 +143,7 @@ export const Login = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="w-full h-13 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl px-5 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
+                                className="w-full h-14 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl px-6 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
                             />
                         </div>
 
@@ -170,7 +169,7 @@ export const Login = () => {
                                         setSignUpSuccess(false);
                                         setError(null);
                                     }}
-                                    className="w-full h-14 rounded-xl bg-white dark:bg-transparent border border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:border-violet-500 hover:text-violet-600"
+                                    className="w-full h-14 rounded-xl bg-white dark:bg-transparent border border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:border-violet-500 hover:text-violet-600"
                                 >
                                     {isSignUp ? 'Back to Sign In' : 'Create Account'}
                                 </button>
