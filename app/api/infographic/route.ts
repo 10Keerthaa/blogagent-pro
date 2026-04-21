@@ -182,25 +182,28 @@ Portrait 4:5 (800x1000).`;
                     } else {
                       return `CINEMATIC 3D HOLOGRAPHIC DASHBOARD. 
 Layout: Floating central hexagonal glass core connected to four peripheral frosted-glass modules.
+
+ICONOGRAPHY (MANDATORY):
+Inside or next to each of the 4 quadrant titles, you MUST render a contextually relevant, ultra-detailed 3D Glass Icon that represents the text (e.g., if the text is about 'Risk', draw a 3D Shield; if 'Data', draw a 3D Server Node; if 'Growth', draw a 3D Chart).
+
 Data Highlights: ${visualPrompt.substring(0, 1000)}.
 
 STRICT ELITE MINIMALIST CONSTRAINTS:
 - PROMPT EXCLUSION: NEVER write the words "MODE", "DASHBOARD", "MASTER", or "QUADRANT" in the image.
 - VISUAL HIERARCHY: Dominate with large Titles. Use significantly smaller, clean font for bullet points.
-- MANDATORY DICTIONARY SPELLING: You MUST verify the spelling of EVERY SINGLE WORD you draw. ZERO tolerance for gibberish, mashed letters, or typos (e.g., no 'Mususegpureidal', 'Prolonrud', or 'Subotmal'). Every letter must be perfectly legible and correctly spelled in English.
-- MIRROR RULE: You must copy the text from the data highlights EXACTLY. If a word is provided to you, render it character-for-character. Flawless spelling is the highest priority.
+- MANDATORY DICTIONARY SPELLING: You MUST verify the spelling of EVERY SINGLE WORD you draw. ZERO tolerance for gibberish, mashed letters, or typos. Every letter must be perfectly legible and correctly spelled in English.
+- MIRROR RULE: You must copy the text from the data highlights EXACTLY. Flawless spelling is the highest priority.
 
-PALETTE RULES (STRICT - NO EXCEPTIONS):
-- Background: Polished Obsidian BLACK (#000000). Deep depth, no noise.
-- Central Hexagon: Translucent refractive glass with a glowing violet (#7B2FBE) aura. Label in YELLOW (#FFD700).
-- Quadrant Modules: Use ONLY these four purple variants — Deep Purple (#3A0CA3), Royal Violet (#7B2FBE), Soft Lavender (#C77DFF), Mauve (#9D4EDD). One per quadrant.
-- Materials: Render as FROSTED GLASS with realistic thickness and refractive edges.
-- Quadrant Titles: YELLOW (#FFD700), bold.
-- Quadrant Bullet Points: WHITE (#FFFFFF), clean and small.
-- Connection Lines: Glowing data-pulse streams in violet (#9D4EDD).
-- Accent Glows: Cinematic lighting, soft global illumination, and subtle anamorphic lens flares.
+ENVIRONMENT & COLORS:
+- BACKGROUND: Deep Midnight Purple Gradient (#1A0B2E to #0A0412). Pure premium depth, no noise.
+- CENTRAL HEXAGON: Translucent refractive glass with a glowing violet (#7B2FBE) aura. Label in YELLOW (#FFD700).
+- QUADRANT MODULES: Use ONLY these four purple variants — Deep Purple (#3A0CA3), Royal Violet (#7B2FBE), Soft Lavender (#C77DFF), Mauve (#9D4EDD).
+- MATERIALS: Render as FROSTED GLASS with realistic thickness and refractive edges.
+- TEXT: YELLOW (#FFD700) for titles, WHITE (#FFFFFF) for bullet points.
+- CONNECTION LINES: Glowing data-pulse streams in violet (#9D4EDD).
+- LIGHTING: Cinematic global illumination, soft neon auras, and subtle anamorphic lens flares.
 
-STYLE: Photorealistic 3D Render (Cinema4D Quality). 
+STYLE: Photorealistic 3D Render (Cinema4D/Octane Quality). 
 Portrait 4:5 (800x1000).`;
                     }
                   })()
