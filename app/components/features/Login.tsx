@@ -54,11 +54,7 @@ export const Login = () => {
     return (
         <div className="min-h-screen w-full flex flex-col lg:flex-row bg-slate-50 dark:bg-[#060606] transition-colors duration-500 overflow-hidden font-sans">
             {/* LEFT SECTION: BRAND PANEL (50%) */}
-            <div className="hidden lg:flex lg:w-1/2 min-h-screen bg-violet-600 dark:bg-violet-950 p-20 pt-24 flex-col relative overflow-hidden shrink-0">
-                {/* Visual Grid & Glow */}
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/30 to-purple-800/40 blur-3xl pointer-events-none" />
-
+            <div className="hidden lg:flex lg:w-1/2 min-h-screen bg-[#8424FF] p-20 pt-24 flex-col relative overflow-hidden shrink-0">
                 {/* Brand Identity: With Space at the Top */}
                 <div className="relative z-10 mb-32">
                     <div className="flex items-center gap-4">
@@ -69,15 +65,13 @@ export const Login = () => {
                     </div>
                 </div>
 
-                {/* Main Headline Block: Structured with 3 Lines */}
+                {/* Main Headline Block: Responsive & Fluid */}
                 <div className="relative z-10">
                     <div className="max-w-3xl">
-                        <h1 className="text-[84px] font-bold text-white leading-[0.9] tracking-[-0.03em] mb-10 italic" style={{ fontFamily: "'Playfair Display', serif" }}>
-                            Elevate <br />
-                            Your Content <br />
-                            Engine.
+                        <h1 className="text-[4rem] md:text-[5.5rem] lg:text-[6rem] font-bold text-white leading-[1.05] tracking-tight mb-10 italic font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+                            Elevate Your Content Engine.
                         </h1>
-                        <p className="text-lg text-violet-100/90 leading-relaxed font-medium max-w-md">
+                        <p className="text-lg text-white/90 leading-relaxed font-medium max-w-md">
                             The elite editorial platform for high-intent SaaS teams and creators.
                         </p>
                     </div>
@@ -88,9 +82,9 @@ export const Login = () => {
             </div>
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
-            <div className="w-full lg:w-1/2 min-h-screen bg-[#F3F4F9] dark:bg-slate-950 flex items-center justify-center p-8 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
-                {/* Floating Portrait Card - Image 2 Match */}
-                <div className="w-full max-w-[420px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-12 lg:p-14 animate-fadeIn relative z-10 transition-all">
+            <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex items-center justify-center p-8 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
+                {/* Floating Portrait Card - Flat Elite Match */}
+                <div className="w-full max-w-[420px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-12 lg:p-14 relative z-10 transition-all">
                     <div className="mb-12">
                         <h2 className="text-[36px] font-bold text-slate-900 dark:text-white tracking-tight mb-3">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
@@ -112,7 +106,7 @@ export const Login = () => {
                     <form onSubmit={handleAuthAction} className="space-y-8">
                         {isSignUp && (
                             <div className="space-y-3 pb-2">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2 px-1">
                                     <Sparkles className="w-3.5 h-3.5" />
                                     Full Name
                                 </label>
@@ -127,7 +121,7 @@ export const Login = () => {
                             </div>
                         )}
                         <div className="space-y-3 pb-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
+                            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2 px-1">
                                 <Mail className="w-3.5 h-3.5" />
                                 Work Email
                             </label>
@@ -142,7 +136,7 @@ export const Login = () => {
                         </div>
 
                         <div className="space-y-3 pb-4">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
+                            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2 px-1">
                                 <Lock className="w-3.5 h-3.5" />
                                 Access Code
                             </label>
@@ -161,7 +155,7 @@ export const Login = () => {
                                 type="submit"
                                 variant="primary"
                                 isLoading={loading}
-                                className="w-full h-16 rounded-2xl bg-violet-600 hover:bg-violet-700 shadow-[0_15px_40px_rgba(132,36,255,0.35)] uppercase tracking-[0.2em] text-[11px] font-black transition-all hover:scale-[1.01] mb-20"
+                                className="w-full h-16 rounded-2xl bg-violet-600 hover:bg-violet-700 shadow-[0_15px_40px_rgba(132,36,255,0.35)] uppercase tracking-wide text-sm font-bold transition-all hover:scale-[1.01] mb-20"
                             >
                                 {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                             </Button>
