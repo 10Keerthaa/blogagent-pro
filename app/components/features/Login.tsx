@@ -83,7 +83,7 @@ export const Login = () => {
                     {/* Main Headline Block: Responsive & Fluid */}
                     <div className="relative z-10">
                         <div className="max-w-3xl">
-                            <h1 className="text-[4rem] md:text-[5.5rem] lg:text-[6rem] font-bold text-white leading-[1.05] tracking-tight mb-10 italic font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+                            <h1 className="text-[4rem] md:text-[5.5rem] lg:text-[6rem] font-bold text-white leading-[1.05] tracking-tight mb-20 italic font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
                                 Elevate Your Content Engine.
                             </h1>
                             <p className="text-lg text-white/90 leading-relaxed font-medium max-w-md">
@@ -115,7 +115,7 @@ export const Login = () => {
                         </div>
 
                         {/* Floating Portrait Card - Unified Workstation */}
-                        <div className="w-full rounded-[32px] pt-12 pb-12 px-[48px] bg-white dark:bg-slate-900 shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col items-center relative z-10 transition-all">
+                        <div className="w-full rounded-[32px] pt-16 pb-16 px-[48px] bg-white dark:bg-slate-900 shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col items-center relative z-10 transition-all">
 
                             {/* Internal Container - Focused Width */}
                             <div className="w-full flex flex-col items-center">
@@ -129,7 +129,7 @@ export const Login = () => {
 
                                 <form onSubmit={handleAuthAction} className="w-full">
                                     {isSignUp && (
-                                        <div className="gap-[12px] flex flex-col mb-[24px]">
+                                        <div className="gap-2 flex flex-col mb-[24px]">
                                             <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
                                                 <Sparkles className="w-3.5 h-3.5" />
                                                 Full Name
@@ -144,7 +144,7 @@ export const Login = () => {
                                             />
                                         </div>
                                     )}
-                                    <div className="gap-[12px] flex flex-col mb-[32px]">
+                                    <div className="gap-2 flex flex-col mb-10">
                                         <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
                                             <Mail className="w-3.5 h-3.5" />
                                             Work Email
@@ -159,7 +159,7 @@ export const Login = () => {
                                         />
                                     </div>
 
-                                    <div className="gap-[12px] flex flex-col mb-[32px]">
+                                    <div className="gap-2 flex flex-col mb-8">
                                         <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
                                             <Lock className="w-3.5 h-3.5" />
                                             Access Code
