@@ -88,14 +88,14 @@ export const Login = () => {
             </div>
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
-            <div className="w-full lg:w-1/2 min-h-screen bg-[#F3F4F9] dark:bg-slate-950 flex items-center justify-center p-6 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
-                {/* Floating Executive Card - AI Studio Measurements */}
-                <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2rem] shadow-2xl shadow-slate-200/60 dark:shadow-none border border-white/50 dark:border-slate-800 p-10 animate-fadeIn relative z-10 transition-all">
-                    <div className="mb-8">
-                        <h2 className="text-[2rem] font-bold text-slate-900 dark:text-white tracking-tight mb-2">
+            <div className="w-full lg:w-1/2 min-h-screen bg-[#F3F4F9] dark:bg-slate-950 flex items-center justify-center p-8 lg:p-12 overflow-y-auto shrink-0 transition-all duration-700">
+                {/* Floating Portrait Card - Image 2 Match */}
+                <div className="w-full max-w-[420px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-12 lg:p-14 animate-fadeIn relative z-10 transition-all">
+                    <div className="mb-12">
+                        <h2 className="text-[36px] font-bold text-slate-900 dark:text-white tracking-tight mb-3">
                             {isSignUp ? 'Create Profile' : 'Welcome Back'}
                         </h2>
-                        <p className="text-slate-500 dark:text-slate-400 font-medium text-[14px] leading-relaxed">
+                        <p className="text-slate-500 dark:text-slate-400 font-medium text-[15px] leading-relaxed max-w-[280px]">
                             {isSignUp 
                                 ? 'Join the elite editorial platform today.' 
                                 : 'Please enter your credentials to access the platform.'}
@@ -109,9 +109,9 @@ export const Login = () => {
                         </div>
                     )}
 
-                    <form onSubmit={handleAuthAction} className="space-y-5">
+                    <form onSubmit={handleAuthAction} className="space-y-8">
                         {isSignUp && (
-                            <div className="space-y-2">
+                            <div className="space-y-3 pb-2">
                                 <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
                                     <Sparkles className="w-3.5 h-3.5" />
                                     Full Name
@@ -122,11 +122,11 @@ export const Login = () => {
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
                                     placeholder="Your Full Name"
-                                    className="w-full py-4 px-5 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
+                                    className="w-full h-14 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-2xl px-6 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
                                 />
                             </div>
                         )}
-                        <div className="space-y-2">
+                        <div className="space-y-3 pb-2">
                             <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
                                 <Mail className="w-3.5 h-3.5" />
                                 Work Email
@@ -137,11 +137,11 @@ export const Login = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="name@company.com"
-                                className="w-full py-4 px-5 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
+                                className="w-full h-14 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-2xl px-6 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-3 pb-4">
                             <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2 px-1">
                                 <Lock className="w-3.5 h-3.5" />
                                 Access Code
@@ -152,22 +152,22 @@ export const Login = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="w-full py-4 px-5 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
+                                className="w-full h-14 bg-[#F8FAFC] dark:bg-slate-900/50 rounded-2xl px-6 border border-slate-100 dark:border-slate-800 focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all outline-none font-medium placeholder:text-slate-300 text-sm"
                             />
                         </div>
 
-                        <div className="mt-8">
+                        <div className="mt-14">
                             <Button
                                 type="submit"
                                 variant="primary"
                                 isLoading={loading}
-                                className="w-full h-14 rounded-xl bg-violet-600 hover:bg-violet-700 shadow-xl shadow-violet-600/30 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:scale-[1.01]"
+                                className="w-full h-16 rounded-2xl bg-violet-600 hover:bg-violet-700 shadow-[0_15px_40px_rgba(132,36,255,0.35)] uppercase tracking-[0.2em] text-[11px] font-black transition-all hover:scale-[1.01] mb-20"
                             >
                                 {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                             </Button>
 
-                            <div className="flex flex-col items-center pt-6">
-                                <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400 dark:text-slate-700 pb-2">
+                            <div className="flex flex-col items-center">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300 dark:text-slate-700 mb-10">
                                     {isSignUp ? 'Already Joined?' : 'New User?'}
                                 </span>
                                 
@@ -178,7 +178,7 @@ export const Login = () => {
                                         setSignUpSuccess(false);
                                         setError(null);
                                     }}
-                                    className="w-full py-4 rounded-xl bg-white dark:bg-transparent border-2 border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:border-violet-500 hover:text-violet-600"
+                                    className="w-full h-14 rounded-2xl bg-white dark:bg-transparent border border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] text-[10px] font-black transition-all hover:border-violet-500 hover:text-violet-600"
                                 >
                                     {isSignUp ? 'Back to Sign In' : 'Create Account'}
                                 </button>
