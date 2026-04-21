@@ -83,16 +83,16 @@ export const Login = () => {
 
             {/* RIGHT SECTION: LOGIN FORM (50%) */}
             <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex flex-col items-center justify-center p-8 lg:p-12 overflow-hidden shrink-0 transition-all duration-700">
-                {/* Floating Portrait Card - Exact 'Black Box' Drawing Match */}
-                <div className="w-full max-w-[580px] bg-white dark:bg-[#0a0a0a] rounded-[3rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-20 flex flex-col items-center justify-center relative z-10 transition-all">
+                {/* Floating Portrait Card - Symmetrical Compact Match */}
+                <div className="w-full max-w-[440px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] dark:shadow-none border border-white/50 dark:border-slate-800 p-12 flex flex-col items-center justify-center relative z-10 transition-all">
                     
-                    {/* Internal Container - Red Line Width Match */}
-                    <div className="w-full max-w-[340px] mx-auto flex flex-col items-center">
+                    {/* Internal Container - Focused Width */}
+                    <div className="w-full flex flex-col items-center">
                         <div className="mb-10 text-center">
                             <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
                                 {isSignUp ? 'Create Profile' : 'Welcome Back'}
                             </h2>
-                            <p className="text-slate-500 dark:text-slate-400 font-medium text-[15px] leading-relaxed mx-auto">
+                            <p className="text-slate-500 dark:text-slate-400 font-medium text-[15px] leading-relaxed mx-auto max-w-[280px]">
                                 {isSignUp 
                                     ? 'Join the elite editorial platform today.' 
                                     : 'Please enter your credentials to access the platform.'}
