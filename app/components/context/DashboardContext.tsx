@@ -399,32 +399,28 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (!text) return '';
         let cleaned = text.replace(/[\n\r]/g, '').replace(/\*/g, '').trim();
 
-        if (cleaned.length > 155) {
-            // Try to find the last full sentence period before 155
-            const lastPeriod = cleaned.lastIndexOf('.', 155);
-            if (lastPeriod > 100) { // Only use period if it doesn't make it way too short
-                cleaned = cleaned.slice(0, lastPeriod + 1).trim();
-            } else {
-                // Fallback: word-boundary trim
-                const trimmed = cleaned.slice(0, 155);
-                const lastSpace = trimmed.lastIndexOf(' ');
-                cleaned = (lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed).trim();
-            }
+        // 1. Ensure primary keyword is included (prioritize front if missing)
+        if (primary && !cleaned.toLowerCase().includes(primary.toLowerCase())) {
+            cleaned = `${primary}: ${cleaned}`;
         }
 
-        if (primary && !cleaned.toLowerCase().includes(primary.toLowerCase())) {
-            const withKeyword = `${primary}: ${cleaned}`;
-            if (withKeyword.length <= 155) {
-                cleaned = withKeyword;
+        // 2. Strict Length Management (Target 150-155)
+        if (cleaned.length > 155) {
+            // Try to find the last full sentence period, but ONLY if it stays above 150 characters
+            const lastPeriod = cleaned.lastIndexOf('.', 155);
+            if (lastPeriod >= 150) { 
+                cleaned = cleaned.slice(0, lastPeriod + 1).trim();
             } else {
-                const prefix = `${primary}: `;
-                const remaining = cleaned.slice(0, 155 - prefix.length);
-                const lastSpace = remaining.lastIndexOf(' ');
-                cleaned = prefix + (lastSpace > 0 ? remaining.slice(0, lastSpace) : remaining);
-                cleaned = cleaned.trim();
+                // If period is too early (making it shorter than 150), 
+                // perform a word-boundary trim at exactly 155.
+                const trimmed = cleaned.slice(0, 155);
+                const lastSpace = trimmed.lastIndexOf(' ');
+                cleaned = (lastSpace > 145 ? trimmed.slice(0, lastSpace) : trimmed).trim();
             }
         }
-        return cleaned;
+        
+        // Final fallback: Ensure it never exceeds 155 but stays as long as possible
+        return cleaned.length > 155 ? cleaned.slice(0, 155).trim() : cleaned;
     }, []);
 
     // --- EFFECTS ---
