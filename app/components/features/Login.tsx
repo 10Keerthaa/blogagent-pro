@@ -56,8 +56,8 @@ export const Login = () => {
             <style>{`
         .login-input {
           border: 1px solid #E2E8F0 !important;
-          border-radius: 12px !important;
-          background-color: #ffffff !important;
+          border-radius: 16px !important;
+          background-color: #F8FAFC !important;
           padding-left: 20px !important;
           height: 56px !important;
         }
@@ -100,25 +100,25 @@ export const Login = () => {
                 <div className="w-full lg:w-1/2 min-h-screen bg-[#F8F9FB] dark:bg-slate-950 flex flex-col items-center justify-center p-8 lg:p-12 overflow-hidden shrink-0 transition-all duration-700">
                     
                     {/* Centered Wrapper for Title + Card Alignment */}
-                    <div className="w-full max-w-[480px] flex flex-col items-center">
+                    <div className="w-full max-w-[520px] flex flex-col items-center">
                         
-                        {/* HEADER: Outside the card for better visual hierarchy */}
-                        <div className="mb-14 text-left w-full px-4">
-                            <h2 className="text-[32px] lg:text-[40px] font-bold text-[#0F172A] dark:text-white mb-[12px] tracking-tight leading-tight">
-                                {isSignUp ? 'Create Profile' : 'Welcome Back'}
-                            </h2>
-                            <p className="text-[14px] lg:text-[16px] text-[#64748B] dark:text-slate-400 font-medium">
-                                {isSignUp
-                                    ? 'Join the elite editorial platform today.'
-                                    : 'Please enter your credentials to access the platform.'}
-                            </p>
-                        </div>
-
                         {/* Floating Portrait Card - Unified Workstation */}
-                        <div className="w-full rounded-none pt-20 pb-16 px-[48px] bg-white dark:bg-slate-900 shadow-[0px_20px_60px_rgba(0,0,0,0.05)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col items-center relative z-10 transition-all">
+                        <div className="w-full rounded-[40px] p-12 lg:p-16 bg-white dark:bg-slate-900 shadow-[0px_25px_70px_rgba(0,0,0,0.07)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col relative z-10 transition-all">
+
+                            {/* HEADER: Now inside the card for unified design */}
+                            <div className="mb-10 text-left w-full">
+                                <h2 className="text-[32px] lg:text-[36px] font-bold text-[#0F172A] dark:text-white mb-[10px] tracking-tight leading-tight">
+                                    {isSignUp ? 'Create Profile' : 'Welcome Back'}
+                                </h2>
+                                <p className="text-[14px] lg:text-[15px] text-[#64748B] dark:text-slate-400 font-medium leading-relaxed">
+                                    {isSignUp
+                                        ? 'Join the elite editorial platform today.'
+                                        : 'Please enter your credentials to access the platform.'}
+                                </p>
+                            </div>
 
                             {/* Internal Container - Focused Width */}
-                            <div className="w-full flex flex-col items-center">
+                            <div className="w-full flex flex-col">
                                 
                                 {error && (
                                     <div className="w-full mb-8 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-xs font-bold rounded-2xl flex items-center justify-center gap-3 animate-shake uppercase tracking-wider">
@@ -127,10 +127,10 @@ export const Login = () => {
                                     </div>
                                     )}
 
-                                <form onSubmit={handleAuthAction} className="w-full mt-4">
+                                <form onSubmit={handleAuthAction} className="w-full">
                                     {isSignUp && (
-                                        <div className="gap-2 flex flex-col mb-10">
-                                            <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
+                                        <div className="gap-2 flex flex-col mb-8">
+                                            <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2 mb-1">
                                                 <Sparkles className="w-3.5 h-3.5" />
                                                 Full Name
                                             </label>
@@ -140,12 +140,12 @@ export const Login = () => {
                                                 value={fullName}
                                                 onChange={(e) => setFullName(e.target.value)}
                                                 placeholder="Your Full Name"
-                                                className="w-full h-[56px] bg-white border border-[#E2E8F0] rounded-[12px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
+                                                className="w-full h-[56px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-[16px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
                                             />
                                         </div>
                                     )}
-                                    <div className="gap-2 flex flex-col mb-10">
-                                        <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
+                                    <div className="gap-2 flex flex-col mb-8">
+                                        <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2 mb-1">
                                             <Mail className="w-3.5 h-3.5" />
                                             Work Email
                                         </label>
@@ -155,12 +155,12 @@ export const Login = () => {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="name@company.com"
-                                            className="w-full h-[56px] bg-white border border-[#E2E8F0] rounded-[12px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
+                                            className="w-full h-[56px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-[16px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
                                         />
                                     </div>
 
-                                    <div className="gap-2 flex flex-col mb-8">
-                                        <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2">
+                                    <div className="gap-2 flex flex-col mb-10">
+                                        <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2 mb-1">
                                             <Lock className="w-3.5 h-3.5" />
                                             Access Code
                                         </label>
@@ -170,22 +170,22 @@ export const Login = () => {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="••••••••"
-                                            className="w-full h-[56px] bg-white border border-[#E2E8F0] rounded-[12px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
+                                            className="w-full h-[56px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-[16px] px-[20px] text-[14px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
                                         />
                                     </div>
 
-                                    <div className="mt-8">
+                                    <div className="mt-4">
                                         <Button
                                             type="submit"
                                             variant="primary"
                                             isLoading={loading}
-                                            className="w-full h-[56px] rounded-[12px] bg-[#8424FF] hover:bg-[#7215e8] text-[14px] font-bold tracking-[0.5px] uppercase text-white"
+                                            className="w-full h-[56px] rounded-[16px] bg-[#8424FF] hover:bg-[#7215e8] text-[14px] font-bold tracking-[0.5px] uppercase text-white shadow-lg shadow-violet-500/20 transition-all active:scale-[0.98]"
                                         >
                                             {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                                         </Button>
 
                                         <div className="flex flex-col items-center">
-                                            <span className="text-[10px] text-[#CBD5E1] uppercase tracking-[3px] mt-[40px] mb-[40px]">
+                                            <span className="text-[11px] text-[#94A3B8] font-bold uppercase tracking-[2px] mt-10 mb-6">
                                                 {isSignUp ? 'Already Joined?' : 'New User?'}
                                             </span>
 
@@ -196,7 +196,7 @@ export const Login = () => {
                                                     setSignUpSuccess(false);
                                                     setError(null);
                                                 }}
-                                                className="w-full h-[56px] rounded-[12px] bg-[#F1F5F9] border border-[#E2E8F0] text-[#475569] text-[14px] font-bold uppercase tracking-[0.5px] transition-all hover:bg-[#E2E8F0]"
+                                                className="w-full h-[56px] rounded-[16px] bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 text-[#475569] dark:text-slate-300 text-[14px] font-bold uppercase tracking-[0.5px] transition-all hover:bg-[#F8FAFC] dark:hover:bg-slate-800"
                                             >
                                                 {isSignUp ? 'Back to Sign In' : 'Create Account'}
                                             </button>
