@@ -106,7 +106,10 @@ export const Login = () => {
                     <div className="w-full max-w-[480px] flex flex-col items-center">
                         
                         {/* Floating Portrait Card - The 'Monolithic Tall Pill' Look */}
-                        <div className="w-full min-h-[85vh] rounded-[48px] px-[64px] py-[56px] bg-white dark:bg-slate-900 shadow-[0px_40px_120px_rgba(0,0,0,0.03)] border border-[#F8FAFC]/50 dark:border-slate-800 flex flex-col justify-center items-center relative z-10 transition-all">
+                        <div className="w-full min-h-[85vh] rounded-[48px] bg-white dark:bg-slate-900 shadow-[0px_40px_120px_rgba(0,0,0,0.03)] border border-[#F8FAFC]/50 dark:border-slate-800 flex flex-col justify-center items-center relative z-10 transition-all" style={{ padding: '56px 0' }}>
+
+                            {/* ALL inner content — constrained to 80% width, centered, with space from both card edges */}
+                            <div style={{ width: '80%', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
 
                             {/* HEADER: Centered and floating in the middle family */}
                             <div className="text-center w-full">
@@ -120,7 +123,7 @@ export const Login = () => {
                                 </p>
                             </div>
 
-                            {/* Internal Container - Tucked deep inside the card */}
+                            {/* Internal Container */}
                             <div className="w-full flex flex-col mt-[32px]">
                                 
                                 {error && (
@@ -207,6 +210,7 @@ export const Login = () => {
                                     </div>
                                 </form>
                             </div>
+                            </div>{/* end 80% inner wrapper */}
                         </div>
                     </div>
                 </div>
