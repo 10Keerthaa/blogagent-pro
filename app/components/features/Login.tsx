@@ -69,10 +69,10 @@ export const Login = () => {
       `}</style>
             <div className="min-h-screen w-full flex flex-col lg:flex-row bg-slate-50 dark:bg-[#060606] transition-colors duration-500 overflow-hidden font-sans">
                 {/* LEFT SECTION: BRAND PANEL (50%) */}
-                <div className="hidden lg:flex lg:w-1/2 h-screen bg-[#8424FF] flex-col relative overflow-hidden shrink-0" style={{ paddingTop: '10%', paddingBottom: '10%' }}>
+                <div className="hidden lg:flex lg:w-1/2 h-screen bg-[#8424FF] flex-col justify-center relative overflow-hidden shrink-0" style={{ paddingTop: '10%', paddingBottom: '10%' }}>
 
-                    {/* Block 1: Logo + App Name — 5% from left, top aligned */}
-                    <div className="relative z-10 shrink-0" style={{ paddingLeft: '5%', paddingRight: '5%' }}>
+                    {/* Block 1: Logo + App Name — Absolute positioned to the top */}
+                    <div className="absolute z-20 shrink-0" style={{ top: '6%', left: '8%' }}>
                         <div className="flex items-center gap-4">
                             <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xl overflow-hidden shrink-0">
                                 <Zap className="w-7 h-7 text-white fill-current" />
@@ -81,8 +81,8 @@ export const Login = () => {
                         </div>
                     </div>
 
-                    {/* Grouped Headline and Subtitle — Starts below logo with a gap */}
-                    <div className="mt-20 flex flex-col gap-6">
+                    {/* Grouped Headline and Subtitle — Vertically centered */}
+                    <div className="flex flex-col gap-6">
                         {/* Block 2: Headline — 10% from left, very large font */}
                         <div className="relative z-10 shrink-0" style={{ paddingLeft: '10%', paddingRight: '10%' }}>
                             <h1 className="font-bold text-white leading-[1.05] tracking-tight italic font-serif" style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(3.5rem, 7vw, 6.5rem)' }}>
