@@ -56,9 +56,9 @@ export const Login = () => {
             <style>{`
         .login-input {
           border: 1px solid #E2E8F0 !important;
-          border-radius: 24px !important;
+          border-radius: 9999px !important;
           background-color: #F8FAFC !important;
-          padding-left: 24px !important;
+          padding-left: 32px !important;
           height: 60px !important;
         }
         .login-input:focus {
@@ -99,28 +99,28 @@ export const Login = () => {
                 {/* RIGHT SECTION: LOGIN FORM (50%) */}
                 <div 
                     className="w-full lg:w-1/2 min-h-screen flex flex-col items-center justify-center p-8 lg:p-12 overflow-hidden shrink-0 transition-all duration-700"
-                    style={{ background: 'radial-gradient(circle at 70% 50%, #FFFFFF 0%, #F1F5F9 100%)' }}
+                    style={{ background: 'radial-gradient(circle at 70% 50%, #FFFFFF 0%, #F5F7FA 100%)' }}
                 >
                     
                     {/* Centered Wrapper for Title + Card Alignment */}
-                    <div className="w-full max-w-[540px] flex flex-col items-center">
+                    <div className="w-full max-w-[460px] flex flex-col items-center">
                         
-                        {/* Floating Portrait Card - Extreme Roundness & Airy Spacing */}
-                        <div className="w-full rounded-[64px] pt-24 pb-20 px-12 lg:px-16 bg-white dark:bg-slate-900 shadow-[0px_40px_100px_rgba(0,0,0,0.06)] border border-[#F8FAFC]/50 dark:border-slate-800 flex flex-col relative z-10 transition-all">
+                        {/* Floating Portrait Card - Ultra-Slim & Airy */}
+                        <div className="w-full rounded-[64px] pt-32 pb-24 px-12 lg:px-14 bg-white dark:bg-slate-900 shadow-[0px_40px_100px_rgba(0,0,0,0.04)] border border-[#F8FAFC] dark:border-slate-800 flex flex-col relative z-10 transition-all">
 
-                            {/* HEADER: Deep vertical offset for airy feel */}
+                            {/* HEADER: Massive vertical offset for the 'floating' feel */}
                             <div className="mb-14 text-left w-full">
                                 <h2 className="text-[36px] lg:text-[40px] font-bold text-[#0F172A] dark:text-white mb-[12px] tracking-tight leading-tight">
                                     {isSignUp ? 'Create Profile' : 'Welcome Back'}
                                 </h2>
-                                <p className="text-[15px] lg:text-[16px] text-[#64748B] dark:text-slate-400 font-medium leading-relaxed max-w-[340px]">
+                                <p className="text-[15px] lg:text-[16px] text-[#64748B] dark:text-slate-400 font-medium leading-relaxed">
                                     {isSignUp
                                         ? 'Join the elite editorial platform today.'
                                         : 'Please enter your credentials to access the platform.'}
                                 </p>
                             </div>
 
-                            {/* Internal Container - Focused Width */}
+                            {/* Internal Container - Focused Slim Width */}
                             <div className="w-full flex flex-col">
                                 
                                 {error && (
@@ -132,8 +132,8 @@ export const Login = () => {
 
                                 <form onSubmit={handleAuthAction} className="w-full">
                                     {isSignUp && (
-                                        <div className="gap-2 flex flex-col mb-10">
-                                            <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[2px] flex items-center gap-2 mb-2 ml-1">
+                                        <div className="gap-2 flex flex-col mb-12">
+                                            <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[2px] flex items-center gap-2 mb-2 ml-4">
                                                 <Sparkles className="w-3.5 h-3.5" />
                                                 Work Name
                                             </label>
@@ -143,12 +143,12 @@ export const Login = () => {
                                                 value={fullName}
                                                 onChange={(e) => setFullName(e.target.value)}
                                                 placeholder="Your Full Name"
-                                                className="w-full h-[60px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-[24px] px-[24px] text-[15px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
+                                                className="w-full h-[60px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-full px-[32px] text-[15px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
                                             />
                                         </div>
                                     )}
-                                    <div className="gap-2 flex flex-col mb-10">
-                                        <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[2px] flex items-center gap-2 mb-2 ml-1">
+                                    <div className="gap-2 flex flex-col mb-12">
+                                        <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[2px] flex items-center gap-2 mb-2 ml-4">
                                             <Mail className="w-3.5 h-3.5" />
                                             Work Email
                                         </label>
@@ -158,12 +158,12 @@ export const Login = () => {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="name@company.com"
-                                            className="w-full h-[60px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-[24px] px-[24px] text-[15px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
+                                            className="w-full h-[60px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-full px-[32px] text-[15px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
                                         />
                                     </div>
 
-                                    <div className="gap-2 flex flex-col mb-12">
-                                        <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[2px] flex items-center gap-2 mb-2 ml-1">
+                                    <div className="gap-2 flex flex-col mb-14">
+                                        <label className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-[2px] flex items-center gap-2 mb-2 ml-4">
                                             <Lock className="w-3.5 h-3.5" />
                                             Access Code
                                         </label>
@@ -173,7 +173,7 @@ export const Login = () => {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="••••••••"
-                                            className="w-full h-[60px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-[24px] px-[24px] text-[15px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
+                                            className="w-full h-[60px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-full px-[32px] text-[15px] placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
                                         />
                                     </div>
 
@@ -182,13 +182,13 @@ export const Login = () => {
                                             type="submit"
                                             variant="primary"
                                             isLoading={loading}
-                                            className="w-full h-[60px] rounded-[24px] bg-[#8424FF] hover:bg-[#7215e8] text-[14px] font-bold tracking-[1px] uppercase text-white shadow-xl shadow-violet-500/25 transition-all active:scale-[0.97]"
+                                            className="w-full h-[60px] rounded-full bg-[#8424FF] hover:bg-[#7215e8] text-[14px] font-bold tracking-[1px] uppercase text-white shadow-xl shadow-violet-500/20 transition-all active:scale-[0.97]"
                                         >
                                             {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                                         </Button>
 
                                         <div className="flex flex-col items-center">
-                                            <span className="text-[11px] text-[#94A3B8] font-bold uppercase tracking-[3px] mt-12 mb-8 opacity-60">
+                                            <span className="text-[11px] text-[#94A3B8] font-bold uppercase tracking-[4px] mt-16 mb-10 opacity-50">
                                                 {isSignUp ? 'Already Joined?' : 'New User?'}
                                             </span>
 
@@ -199,7 +199,7 @@ export const Login = () => {
                                                     setSignUpSuccess(false);
                                                     setError(null);
                                                 }}
-                                                className="w-full h-[60px] rounded-[24px] bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 text-[#475569] dark:text-slate-300 text-[14px] font-bold uppercase tracking-[1px] transition-all hover:bg-[#F8FAFC] dark:hover:bg-slate-800"
+                                                className="w-full h-[60px] rounded-full bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 text-[#475569] dark:text-slate-300 text-[14px] font-bold uppercase tracking-[1px] transition-all hover:bg-[#F8FAFC] dark:hover:bg-slate-800"
                                             >
                                                 {isSignUp ? 'Back to Sign In' : 'Create Account'}
                                             </button>
