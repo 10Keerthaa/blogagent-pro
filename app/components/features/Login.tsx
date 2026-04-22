@@ -103,10 +103,10 @@ export const Login = () => {
                 >
                     
                     {/* Centered Wrapper for Title + Card Alignment */}
-                    <div className="w-full max-w-[420px] flex flex-col items-center">
+                    <div className="w-full max-w-[520px] flex flex-col items-center">
                         
-                        {/* Floating Portrait Card - The 'Slender Vertical Pill' Look */}
-                        <div className="w-full rounded-[32px] pt-[100px] pb-[100px] px-[56px] bg-white dark:bg-slate-900 shadow-[0px_40px_120px_rgba(0,0,0,0.03)] border border-[#F8FAFC]/50 dark:border-slate-800 flex flex-col relative z-10 transition-all">
+                        {/* Floating Portrait Card - Ultra-Slender & Tall */}
+                        <div className="w-full rounded-[32px] pt-[120px] pb-[120px] px-[80px] bg-white dark:bg-slate-900 shadow-[0px_40px_120px_rgba(0,0,0,0.03)] border border-[#F8FAFC]/50 dark:border-slate-800 flex flex-col relative z-10 transition-all">
 
                             {/* HEADER: Centered and airy */}
                             <div className="text-center w-full">
