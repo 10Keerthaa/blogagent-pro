@@ -124,7 +124,7 @@ export const Login = () => {
                             </div>
 
                             {/* Internal Container */}
-                            <div className="w-full flex flex-col mt-[32px]">
+                            <div className="w-full flex flex-col mt-[28px]">
                                 
                                 {error && (
                                     <div className="w-full mb-10 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-[11px] font-bold rounded-xl flex items-center justify-center gap-3 animate-shake uppercase tracking-[1.5px]">
@@ -133,9 +133,9 @@ export const Login = () => {
                                     </div>
                                     )}
 
-                                <form onSubmit={handleAuthAction} className="w-full">
+                                <form onSubmit={handleAuthAction} className="w-full flex flex-col" style={{ gap: '20px' }}>
                                     {isSignUp && (
-                                        <div className="gap-1.5 flex flex-col mb-[20px]">
+                                        <div className="gap-1.5 flex flex-col">
                                             <label className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2 mb-1">
                                                 <Sparkles className="w-3 h-3" />
                                                 Full Name
@@ -150,7 +150,7 @@ export const Login = () => {
                                             />
                                         </div>
                                     )}
-                                    <div className="gap-1.5 flex flex-col mb-[20px]">
+                                    <div className="gap-1.5 flex flex-col">
                                         <label className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2 mb-1">
                                             <Mail className="w-3 h-3" />
                                             Work Email
@@ -165,7 +165,7 @@ export const Login = () => {
                                         />
                                     </div>
 
-                                    <div className="gap-1.5 flex flex-col mb-[20px]">
+                                    <div className="gap-1.5 flex flex-col">
                                         <label className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2 mb-1">
                                             <Lock className="w-3 h-3" />
                                             Access Code
@@ -180,7 +180,7 @@ export const Login = () => {
                                         />
                                     </div>
 
-                                    <div className="mt-6">
+                                    <div className="flex flex-col" style={{ gap: '16px' }}>
                                         <Button
                                             type="submit"
                                             variant="primary"
@@ -190,8 +190,8 @@ export const Login = () => {
                                             {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
                                         </Button>
 
-                                        <div className="flex flex-col items-center">
-                                            <span className="text-[9px] text-[#94A3B8] font-bold uppercase tracking-[4px] mt-6 mb-4">
+                                        <div className="flex flex-col items-center" style={{ gap: '12px' }}>
+                                            <span className="text-[9px] text-[#94A3B8] font-bold uppercase tracking-[4px]">
                                                 {isSignUp ? 'Already Joined?' : 'New User?'}
                                             </span>
 
