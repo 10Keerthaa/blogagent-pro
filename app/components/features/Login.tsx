@@ -69,9 +69,9 @@ export const Login = () => {
       `}</style>
             <div className="min-h-screen w-full flex flex-col lg:flex-row bg-slate-50 dark:bg-[#060606] transition-colors duration-500 overflow-hidden font-sans">
                 {/* LEFT SECTION: BRAND PANEL (50%) */}
-                <div className="hidden lg:flex lg:w-1/2 h-screen bg-[#8424FF] flex-col relative overflow-hidden shrink-0" style={{ padding: '10%' }}>
+                <div className="hidden lg:flex lg:w-1/2 h-screen bg-[#8424FF] flex-col relative overflow-hidden shrink-0 justify-between" style={{ padding: '10%' }}>
 
-                    {/* Block 1: Logo + App Name — anchored at top */}
+                    {/* Block 1: Logo + App Name — top-left within 10% padding */}
                     <div className="relative z-10 shrink-0">
                         <div className="flex items-center gap-4">
                             <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xl overflow-hidden shrink-0">
@@ -81,11 +81,15 @@ export const Login = () => {
                         </div>
                     </div>
 
-                    {/* Block 2+3: Headline + Subtitle — vertically centered in remaining space */}
-                    <div className="relative z-10 my-auto">
-                        <h1 className="font-bold text-white leading-[1.05] tracking-tight italic font-serif mb-6" style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem, 5vw, 4.5rem)' }}>
+                    {/* Block 2: Headline — middle (equal gap above & below via justify-between) */}
+                    <div className="relative z-10 shrink-0">
+                        <h1 className="font-bold text-white leading-[1.05] tracking-tight italic font-serif" style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem, 5vw, 4.5rem)' }}>
                             Elevate Your Content Engine.
                         </h1>
+                    </div>
+
+                    {/* Block 3: Subtitle — bottom (same gap as logo↔headline) */}
+                    <div className="relative z-10 shrink-0">
                         <p className="text-lg text-white/90 leading-relaxed font-medium max-w-sm">
                             The elite editorial platform for high-intent SaaS teams and creators.
                         </p>
