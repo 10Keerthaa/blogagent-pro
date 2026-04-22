@@ -69,31 +69,28 @@ export const Login = () => {
       `}</style>
             <div className="min-h-screen w-full flex flex-col lg:flex-row bg-slate-50 dark:bg-[#060606] transition-colors duration-500 overflow-hidden font-sans">
                 {/* LEFT SECTION: BRAND PANEL (50%) */}
-                <div className="hidden lg:flex lg:w-1/2 min-h-screen bg-[#8424FF] flex-col relative overflow-hidden shrink-0 justify-between" style={{ padding: '10%' }}>
+                <div className="hidden lg:flex lg:w-1/2 h-screen bg-[#8424FF] flex-col relative overflow-hidden shrink-0" style={{ padding: '10%' }}>
 
-                    {/* Block 1: Brand Identity — Logo + App Name */}
-                    <div className="relative z-10">
+                    {/* Block 1: Logo + App Name — anchored at top */}
+                    <div className="relative z-10 shrink-0">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xl overflow-hidden shrink-0">
-                                <Zap className="w-5 h-5 text-white fill-current" />
+                            <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xl overflow-hidden shrink-0">
+                                <Zap className="w-7 h-7 text-white fill-current" />
                             </div>
                             <span className="text-xl font-black text-white tracking-tighter uppercase">10x<span className="text-violet-200">Blogagent</span></span>
                         </div>
                     </div>
 
-                    {/* Block 2: Main Headline */}
-                    <div className="relative z-10">
-                        <h1 className="text-[4rem] md:text-[5.5rem] lg:text-[5rem] font-bold text-white leading-[1.05] tracking-tight italic font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {/* Block 2+3: Headline + Subtitle — vertically centered in remaining space */}
+                    <div className="relative z-10 my-auto">
+                        <h1 className="font-bold text-white leading-[1.05] tracking-tight italic font-serif mb-6" style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem, 5vw, 4.5rem)' }}>
                             Elevate Your Content Engine.
                         </h1>
-                    </div>
-
-                    {/* Block 3: Subtitle */}
-                    <div className="relative z-10">
-                        <p className="text-xl text-white/90 leading-relaxed font-medium max-w-lg">
+                        <p className="text-lg text-white/90 leading-relaxed font-medium max-w-sm">
                             The elite editorial platform for high-intent SaaS teams and creators.
                         </p>
                     </div>
+
                 </div>
 
                 {/* RIGHT SECTION: LOGIN FORM (50%) */}
