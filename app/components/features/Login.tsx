@@ -109,7 +109,7 @@ export const Login = () => {
                         <div className="w-full rounded-[32px] pt-[80px] pb-[80px] px-[80px] bg-white dark:bg-slate-900 shadow-[0px_40px_120px_rgba(0,0,0,0.03)] border border-[#F8FAFC]/50 dark:border-slate-800 flex flex-col relative z-10 transition-all">
 
                             {/* HEADER: Massive 80px pillows (padding) keeping it away from edges */}
-                            <div className="text-left w-full">
+                            <div className="text-center w-full">
                                 <h2 className="text-[32px] font-bold text-[#0F172A] dark:text-white mb-[12px] tracking-tight leading-tight">
                                     {isSignUp ? 'Create Profile' : 'Welcome Back'}
                                 </h2>
