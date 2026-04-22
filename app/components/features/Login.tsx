@@ -98,17 +98,17 @@ export const Login = () => {
 
                 {/* RIGHT SECTION: LOGIN FORM (50%) */}
                 <div 
-                    className="w-full lg:w-1/2 min-h-screen flex flex-col items-center justify-center p-8 lg:p-12 overflow-hidden shrink-0 transition-all duration-700"
+                    className="w-full lg:w-1/2 min-h-screen flex flex-col items-center justify-center p-12 lg:p-20 overflow-hidden shrink-0 transition-all duration-700"
                     style={{ background: 'radial-gradient(circle at 70% 50%, #FFFFFF 0%, #F5F7FA 100%)' }}
                 >
                     
                     {/* Centered Wrapper for Title + Card Alignment */}
-                    <div className="w-full max-w-[540px] flex flex-col items-center">
+                    <div className="w-full max-w-[420px] flex flex-col items-center">
                         
-                        {/* Floating Portrait Card - The 'Vast White Ocean' Look */}
-                        <div className="w-full rounded-[32px] pt-[80px] pb-[80px] px-[80px] bg-white dark:bg-slate-900 shadow-[0px_40px_120px_rgba(0,0,0,0.03)] border border-[#F8FAFC]/50 dark:border-slate-800 flex flex-col relative z-10 transition-all">
+                        {/* Floating Portrait Card - The 'Slender Vertical Pill' Look */}
+                        <div className="w-full rounded-[32px] pt-[100px] pb-[100px] px-[56px] bg-white dark:bg-slate-900 shadow-[0px_40px_120px_rgba(0,0,0,0.03)] border border-[#F8FAFC]/50 dark:border-slate-800 flex flex-col relative z-10 transition-all">
 
-                            {/* HEADER: Massive 80px pillows (padding) keeping it away from edges */}
+                            {/* HEADER: Centered and airy */}
                             <div className="text-center w-full">
                                 <h2 className="text-[32px] font-bold text-[#0F172A] dark:text-white mb-[12px] tracking-tight leading-tight">
                                     {isSignUp ? 'Create Profile' : 'Welcome Back'}
@@ -120,7 +120,7 @@ export const Login = () => {
                                 </p>
                             </div>
 
-                            {/* Internal Container - Spaced by 'Moats' and 'Tiny Hops' */}
+                            {/* Internal Container - Spaced and Slim */}
                             <div className="w-full flex flex-col mt-[48px]">
                                 
                                 {error && (
