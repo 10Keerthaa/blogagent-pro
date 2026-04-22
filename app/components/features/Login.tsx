@@ -69,9 +69,10 @@ export const Login = () => {
       `}</style>
             <div className="min-h-screen w-full flex flex-col lg:flex-row bg-slate-50 dark:bg-[#060606] transition-colors duration-500 overflow-hidden font-sans">
                 {/* LEFT SECTION: BRAND PANEL (50%) */}
-                <div className="hidden lg:flex lg:w-1/2 min-h-screen bg-[#8424FF] p-[48px] flex-col relative overflow-hidden shrink-0">
-                    {/* Brand Identity: Natural flow with 48px alignment */}
-                    <div className="relative z-10 mb-20">
+                <div className="hidden lg:flex lg:w-1/2 min-h-screen bg-[#8424FF] flex-col relative overflow-hidden shrink-0 justify-between" style={{ padding: '10%' }}>
+
+                    {/* Block 1: Brand Identity — Logo + App Name */}
+                    <div className="relative z-10">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xl overflow-hidden shrink-0">
                                 <Zap className="w-5 h-5 text-white fill-current" />
@@ -80,20 +81,19 @@ export const Login = () => {
                         </div>
                     </div>
 
-                    {/* Main Headline Block: Responsive & Fluid */}
+                    {/* Block 2: Main Headline */}
                     <div className="relative z-10">
-                        <div className="max-w-3xl">
-                            <h1 className="text-[4rem] md:text-[5.5rem] lg:text-[6rem] font-bold text-white leading-[1.05] tracking-tight mb-32 italic font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
-                                Elevate Your Content Engine.
-                            </h1>
-                            <p className="text-xl text-white/90 leading-relaxed font-medium max-w-lg">
-                                The elite editorial platform for high-intent SaaS teams and creators.
-                            </p>
-                        </div>
+                        <h1 className="text-[4rem] md:text-[5.5rem] lg:text-[5rem] font-bold text-white leading-[1.05] tracking-tight italic font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+                            Elevate Your Content Engine.
+                        </h1>
                     </div>
 
-                    {/* Bottom Anchor */}
-                    <div className="mt-auto relative z-10 h-10" />
+                    {/* Block 3: Subtitle */}
+                    <div className="relative z-10">
+                        <p className="text-xl text-white/90 leading-relaxed font-medium max-w-lg">
+                            The elite editorial platform for high-intent SaaS teams and creators.
+                        </p>
+                    </div>
                 </div>
 
                 {/* RIGHT SECTION: LOGIN FORM (50%) */}
@@ -124,7 +124,7 @@ export const Login = () => {
                             </div>
 
                             {/* Internal Container */}
-                            <div className="w-full flex flex-col" style={{ marginTop: '48px' }}>
+                            <div className="w-full flex flex-col" style={{ marginTop: '14px' }}>
                                 
                                 {error && (
                                     <div className="w-full mb-10 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-[11px] font-bold rounded-xl flex items-center justify-center gap-3 animate-shake uppercase tracking-[1.5px]">
