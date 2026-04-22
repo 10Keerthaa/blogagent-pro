@@ -113,7 +113,7 @@ export const Login = () => {
 
                             {/* HEADER: Centered and floating in the middle family */}
                             <div className="text-center w-full">
-                                <h2 className="text-[26px] font-bold text-[#0F172A] dark:text-white mb-[8px] tracking-tight leading-tight">
+                                <h2 className="text-[26px] font-bold text-[#0F172A] dark:text-white mb-[14px] tracking-tight leading-tight">
                                     {isSignUp ? 'Create Profile' : 'Welcome Back'}
                                 </h2>
                                 <p className="text-[12px] text-[#64748B] dark:text-slate-400 font-medium leading-relaxed">
@@ -124,7 +124,7 @@ export const Login = () => {
                             </div>
 
                             {/* Internal Container */}
-                            <div className="w-full flex flex-col mt-[28px]">
+                            <div className="w-full flex flex-col mt-[40px]">
                                 
                                 {error && (
                                     <div className="w-full mb-10 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-[11px] font-bold rounded-xl flex items-center justify-center gap-3 animate-shake uppercase tracking-[1.5px]">
