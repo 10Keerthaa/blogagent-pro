@@ -36,6 +36,7 @@ export async function POST(req: Request) {
 
       const aiPrompt = N && N >= 5
         ? `Analyze this blog post and extract EXACTLY ${N} milestones for an 'Isometric Roadmap' infographic.
+           STRICT RULE: Milestones MUST be 1 or 2 words MAXIMUM (e.g., "Data Ingestion", "Model Training"). No full sentences.
            Output ONLY a JSON object with: 
            "mode": "ROADMAP",
            "count": ${N},
@@ -45,8 +46,8 @@ export async function POST(req: Request) {
            STRICT CONSTRAINTS:
            - Max 4 Quadrants.
            - Max 3 bullet points per section.
-           - Max 40 characters per bullet point.
-           - Terminology: Use high-impact, single-word or short-phrase terminology (e.g., 'Scalability' instead of 'Ability to scale').
+           - AGGRESSIVE CONDENSATION: Every bullet point MUST be 1 to 3 words maximum (e.g., 'Zero-Trust Pipeline', 'Automated Audits'). No sentences. No verbs.
+           - Terminology: Use high-impact, single-word or short-phrase terminology.
            
            Output ONLY a JSON object with: 
            "mode": "DASHBOARD",
@@ -69,7 +70,7 @@ export async function POST(req: Request) {
       const data = resp.data as any;
       let rawText = '';
       if (Array.isArray(data)) {
-        rawText = data.map(chunk => (chunk.candidates && chunk.candidates[0] && chunk.candidates[0].content.parts[0].text) || '').join('');
+        rawText = data.map((chunk: any) => (chunk.candidates && chunk.candidates[0] && chunk.candidates[0].content.parts[0].text) || '').join('');
       } else if (data.candidates) {
         rawText = data.candidates[0].content.parts[0].text;
       }
@@ -85,7 +86,7 @@ export async function POST(req: Request) {
           STRICT RULES:
           1. PROOFREAD EVERYTHING: Correct spelling of all technical headers and EVERY single bullet point word.
           2. BRANDING: Ensure terms like 'Document AI', 'OCR', 'No-Code Orchestration', and 'Hyperautomation' are correctly cased.
-          3. HARD CONDENSATION: If any bullet point exceeds 40 characters, surgically condense it into a high-impact phrase. 
+          3. BRUTAL CONDENSATION: To prevent Image AI typos, you MUST aggressively shrink every bullet point or milestone to 1, 2, or 3 words MAXIMUM. If a point is "Implementing secure access controls", change it to "Access Controls". NO EXCEPTIONS.
           4. NO HALLUCINATIONS: Do not add any text not present in the original data or related to the blog content.
           5. EXCLUDE SYSTEM TERMS: Never use words like 'MODE', 'DASHBOARD', 'MASTER', or 'QUADRANT' in the output JSON values.
           
@@ -181,23 +182,24 @@ PALETTE RULES (STRICT - NO EXCEPTIONS):
 Portrait 4:5 (800x1000).`;
                     } else {
                       return `CINEMATIC 3D HOLOGRAPHIC DASHBOARD (INTEGRATED ICON STYLE). 
-Layout: Floating central hexagonal glass core connected to four peripheral frosted-glass modules. 
+Layout: Floating central hexagonal glass core connected to four peripheral clear reflective glass modules. 
 DISTRIBUTION: Use the full 800x1000 frame height. Modules must be large and spaced vertically.
 
 ICONOGRAPHY (IMAGE-DOMINANT):
-For every one of the 4 quadrants, you MUST render a LARGE, DISTINCT 3D Glass Icon that FLOATS ABOVE or is INTEGRATED into the top of the module pod (exactly like a 3D shield, 3D gear, or 3D trophy). These icons must be the main visual focus.
+For every one of the 4 quadrants, you MUST render a LARGE, DISTINCT 3D Glass Icon that FLOATS ABOVE or is INTEGRATED into the top of the module pod.
+CRITICAL ICON RULE: Each of the 4 icons MUST be a completely DIFFERENT vibrant neon color (e.g., Cyan, Emerald Green, Magenta, Amber). Do not use the same color for all icons.
 
 Data Highlights: ${visualPrompt.substring(0, 1000)}.
 
 STRICT ELITE CONSTRAINTS:
 - ZERO TYPO TOLERANCE: You MUST verify the spelling of every single character. NO errors like "Enhahements" or "Mainteniarce". Spelling must be FLAWLESS.
 - PROMPT EXCLUSION: NEVER write ANY technical metadata, labels, or status text like "MODE: DISPLAY", "MODE - CENTRAL", "VERSION", or "DASHBOARD".
-- CLEANLINESS: The bottom of the image must be PURE. NO vertical lines, NO cursors, NO ornamental markers.
+- CLEANLINESS: The bottom of the image must be PURE. Ignore any '|' characters in the Data Highlights, DO NOT draw vertical lines or cursors anywhere.
 - MIRROR RULE: Copy the text from the data highlights EXACTLY.
 
 ENVIRONMENT & COLORS:
 - BACKGROUND: Deep Midnight Purple Gradient (#1A0B2E to #0A0412). 
-- MATERIALS: Refractive FROSTED GLASS with realistic thickness.
+- MATERIALS: CLEAR REFLECTIVE GLASS with glossy acrylic finish and realistic thickness.
 - TEXT: YELLOW (#FFD700) for titles, WHITE (#FFFFFF) for bullet points.
 - LIGHTING: Cinematic global illumination, soft neon auras.
 
