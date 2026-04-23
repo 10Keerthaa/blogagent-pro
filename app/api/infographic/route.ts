@@ -84,7 +84,7 @@ export async function POST(req: Request) {
           STRICT RULES:
           1. PROOFREAD EVERYTHING: Correct spelling of all technical headers and EVERY single bullet point word.
           2. BRANDING: Ensure terms like 'Document AI', 'OCR', 'No-Code Orchestration', and 'Hyperautomation' are correctly cased.
-          3. BRUTAL CONDENSATION & SIMPLIFICATION: To prevent Image AI typos, you MUST aggressively shrink every bullet point to 1 or 2 simple words MAXIMUM. You MUST replace long, complex words with short, simple equivalents (e.g., replace "Vulnerabilities" with "Risks", replace "Standardized" with "Rules", replace "Unsanctioned" with "Rogue"). Use elementary, highly legible words whenever possible. NO EXCEPTIONS.
+          3. BRUTAL CONDENSATION & FORMALITY: To prevent Image AI typos, you MUST aggressively shrink every bullet point to 1 or 2 simple words MAXIMUM. You MUST use Formal Enterprise Business Terminology. Replace long, complex words with short, professional equivalents (e.g., replace "Vulnerabilities" with "Risk Data", replace "Standardized" with "Rules"). Maintain a highly professional tone. NO EXCEPTIONS.
           4. NO HALLUCINATIONS: Do not add any text not present in the original data or related to the blog content.
           5. EXCLUDE SYSTEM TERMS: Never use words like 'MODE', 'DASHBOARD', 'MASTER', or 'QUADRANT' in the output JSON values.
           
@@ -121,14 +121,14 @@ export async function POST(req: Request) {
         } else {
           const central = parsed.central_theme || prompt;
           const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}: ${q.points.join(', ')}`).join('. ');
-          visualPrompt = `Title: ${central}. Quadrants: ${quadrants}`;
+          visualPrompt = `Central Core: ${central}. Quadrants: ${quadrants}`;
         }
       } catch (e) {
-        visualPrompt = `Title: ${prompt}. Fallback.`;
+        visualPrompt = `Central Core: ${prompt}. Fallback.`;
       }
     } catch (designerError: any) {
       console.error("Vertex AI Designer Error:", designerError);
-      visualPrompt = `Title: ${prompt}. Elite Gradient.`;
+      visualPrompt = `Central Core: ${prompt}. Elite Gradient.`;
     }
 
     // TASK 2: Restored High-Fidelity Generation via Gemini 2.5 Flash Image
