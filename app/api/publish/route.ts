@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/firebaseAdmin";
+import sharp from "sharp";
 
 export async function POST(req: Request) {
   try {
@@ -38,20 +39,8 @@ export async function POST(req: Request) {
       const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
       const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
 
-      finalContent += `
-      <div class="featured-image-wrapper" style="position: relative; margin-bottom: 40px; overflow: hidden; border-radius: 0;">
-        <img src="${imageUrl}" alt="${title}" style="width: 100%; height: auto; display: block; object-fit: cover; max-height: 580px;" />
-        <div style="position: absolute; inset: 0; background-color: rgba(126, 87, 194, 0.45); z-index: 1; pointer-events: none;"></div>
-        <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none;">
-          <img src="${blogTagUrl}" alt="Blog" style="position: absolute; top: 40px; left: 40px; height: 40px; width: auto;" />
-          <div style="position: absolute; top: 100px; left: 40px; color: #ffffff; max-width: 85%; font-family: sans-serif; line-height: 1.3;">
-             <h1 style="font-size: 56px; font-weight: 700; margin: 0; padding: 0; line-height: 1.3; text-shadow: 0 4px 20px rgba(0,0,0,0.4);">${mainTitle}</h1>
-             ${subtitle ? `<p style="font-size: 44px; font-weight: 400; margin: 0; padding: 0; line-height: 1.3; opacity: 0.95; text-shadow: 0 4px 15px rgba(0,0,0,0.3);">${subtitle}</p>` : ''}
-          </div>
-          <img src="${logoUrl}" alt="10xDS" style="position: absolute; bottom: 40px; right: 40px; height: 56px; width: auto;" />
-        </div>
-      </div>
-      `;
+      // Removed HTML injection for the featured image to allow WordPress themes 
+      // to natively handle the thumbnail display.
     }
 
     finalContent += content;
@@ -64,16 +53,93 @@ export async function POST(req: Request) {
       </div>`;
     }
 
-    // Step 2: Sideload Featured Image to WordPress Media Library (for Thumbnails/Featured slot)
+    // Step 2: Burn text and overlays into the image, then sideload to WordPress
     let featuredMediaId = null;
     if (imageUrl) {
       try {
-        console.log("Sideloading Featured Image to WordPress...");
-        const imgRes = await fetch(imageUrl);
-        if (imgRes.ok) {
-          const imgBuffer = await imgRes.arrayBuffer();
-          const filename = `featured-${Date.now()}.png`;
+        console.log("Compositing and Sideloading Featured Image to WordPress...");
+        const origin = new URL(req.url).origin;
+        const blogTagUrl = `${origin}/Blog.png`;
+        const logoUrl = `${origin}/10xDS.png`;
 
+        const titleParts = title.split(':');
+        const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
+        const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
+
+        const escapeXml = (unsafe: string) => unsafe.replace(/[<>&"']/g, (c) => {
+          switch (c) {
+            case '<': return '&lt;'; case '>': return '&gt;';
+            case '&': return '&amp;'; case '"': return '&quot;';
+            case "'": return '&apos;'; default: return c;
+          }
+        });
+
+        const wrapText = (text: string, maxChars: number) => {
+          const words = text.split(' ');
+          const lines = [];
+          let currentLine = '';
+          for (const word of words) {
+            if ((currentLine + word).length > maxChars) {
+              lines.push(currentLine.trim());
+              currentLine = word + ' ';
+            } else {
+              currentLine += word + ' ';
+            }
+          }
+          if (currentLine) lines.push(currentLine.trim());
+          return lines;
+        };
+
+        const imgRes = await fetch(imageUrl);
+        const blogTagRes = await fetch(blogTagUrl);
+        const logoRes = await fetch(logoUrl);
+
+        if (imgRes.ok && blogTagRes.ok && logoRes.ok) {
+          const imgBuffer = Buffer.from(await imgRes.arrayBuffer());
+          const blogTagBuffer = Buffer.from(await blogTagRes.arrayBuffer());
+          const logoBuffer = Buffer.from(await logoRes.arrayBuffer());
+
+          const targetWidth = 1200;
+          const targetHeight = 630;
+
+          const resizedBase = await sharp(imgBuffer)
+            .resize(targetWidth, targetHeight, { fit: 'cover' })
+            .toBuffer();
+
+          const resizedBlogTag = await sharp(blogTagBuffer).resize({ height: 40 }).toBuffer();
+          const resizedLogo = await sharp(logoBuffer).resize({ height: 56 }).toBuffer();
+          
+          const logoMeta = await sharp(resizedLogo).metadata();
+          const logoWidth = logoMeta.width || 180;
+
+          const titleLines = wrapText(mainTitle, 35);
+          const subtitleLines = subtitle ? wrapText(subtitle, 45) : [];
+
+          let svgText = `<svg width="${targetWidth}" height="${targetHeight}">`;
+          svgText += `<rect width="100%" height="100%" fill="rgba(126, 87, 194, 0.45)" />`;
+          
+          let currentY = 160;
+          for (const line of titleLines) {
+            svgText += `<text x="50" y="${currentY}" font-family="sans-serif" font-size="56" font-weight="bold" fill="#ffffff" filter="drop-shadow(0px 4px 10px rgba(0,0,0,0.5))">${escapeXml(line)}</text>`;
+            currentY += 65;
+          }
+          currentY += 15;
+          for (const line of subtitleLines) {
+            svgText += `<text x="50" y="${currentY}" font-family="sans-serif" font-size="44" fill="#ffffff" opacity="0.95" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.4))">${escapeXml(line)}</text>`;
+            currentY += 55;
+          }
+          svgText += `</svg>`;
+
+          const compositedImage = await sharp(resizedBase)
+            .composite([
+              { input: Buffer.from(svgText), top: 0, left: 0 },
+              { input: resizedBlogTag, top: 40, left: 50 },
+              { input: resizedLogo, top: targetHeight - 56 - 40, left: targetWidth - logoWidth - 40 }
+            ])
+            .png()
+            .toBuffer();
+
+          const filename = `featured-${Date.now()}.png`;
           const mediaResponse = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
             method: 'POST',
             headers: {
@@ -81,20 +147,20 @@ export async function POST(req: Request) {
               'Content-Type': 'image/png',
               'Content-Disposition': `attachment; filename="${filename}"`,
             },
-            body: Buffer.from(imgBuffer)
+            body: compositedImage as any
           });
 
           if (mediaResponse.ok) {
             const mediaData = await mediaResponse.json();
             featuredMediaId = mediaData.id;
-            console.log(`✅ Media Sideloaded: ID ${featuredMediaId}`);
+            console.log(`✅ Media Composited & Sideloaded: ID ${featuredMediaId}`);
           } else {
              const mediaErr = await mediaResponse.text();
              console.error("❌ WordPress Media Upload Failed:", mediaErr.substring(0, 500));
           }
         }
       } catch (sideloadErr) {
-        console.error("⚠️ Sideloading failed (continuing without ID):", sideloadErr);
+        console.error("⚠️ Sideloading/Compositing failed (continuing without ID):", sideloadErr);
       }
     }
 
