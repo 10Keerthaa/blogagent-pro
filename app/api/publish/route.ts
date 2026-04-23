@@ -66,83 +66,20 @@ export async function POST(req: Request) {
         const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
         const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
 
-        const escapeXml = (unsafe: string) => unsafe.replace(/[<>&"']/g, (c) => {
-          switch (c) {
-            case '<': return '&lt;'; case '>': return '&gt;';
-            case '&': return '&amp;'; case '"': return '&quot;';
-            case "'": return '&apos;'; default: return c;
-          }
-        });
+        const ogUrl = new URL(`${origin}/api/banner`);
+        ogUrl.searchParams.set('title', title);
+        ogUrl.searchParams.set('bg', imageUrl);
+        ogUrl.searchParams.set('logo', logoUrl);
+        ogUrl.searchParams.set('tag', blogTagUrl);
 
-        const wrapText = (text: string, maxChars: number) => {
-          const words = text.split(' ');
-          const lines = [];
-          let currentLine = '';
-          for (const word of words) {
-            if ((currentLine + word).length > maxChars) {
-              lines.push(currentLine.trim());
-              currentLine = word + ' ';
-            } else {
-              currentLine += word + ' ';
-            }
-          }
-          if (currentLine) lines.push(currentLine.trim());
-          return lines;
-        };
+        const imgRes = await fetch(ogUrl.toString());
 
-        const imgRes = await fetch(imageUrl);
-        const blogTagRes = await fetch(blogTagUrl);
-        const logoRes = await fetch(logoUrl);
-
-        if (imgRes.ok && blogTagRes.ok && logoRes.ok) {
-          const imgBuffer = Buffer.from(await imgRes.arrayBuffer());
-          const blogTagBuffer = Buffer.from(await blogTagRes.arrayBuffer());
-          const logoBuffer = Buffer.from(await logoRes.arrayBuffer());
-
-          const targetWidth = 1200;
-          const targetHeight = 630;
-
-          const resizedBase = await sharp(imgBuffer)
-            .resize(targetWidth, targetHeight, { fit: 'cover' })
-            .toBuffer();
-
-          const resizedBlogTag = await sharp(blogTagBuffer).resize({ height: 40 }).toBuffer();
-          const resizedLogo = await sharp(logoBuffer).resize({ height: 56 }).toBuffer();
-          
-          const logoMeta = await sharp(resizedLogo).metadata();
-          const logoWidth = logoMeta.width || 180;
-
-          const titleLines = wrapText(mainTitle, 35);
-          const subtitleLines = subtitle ? wrapText(subtitle, 45) : [];
-
-          let svgText = `<svg width="${targetWidth}" height="${targetHeight}">`;
-          svgText += `<rect width="100%" height="100%" fill="rgba(126, 87, 194, 0.45)" />`;
-          
-          let currentY = 160;
-          for (const line of titleLines) {
-            svgText += `<text x="50" y="${currentY}" font-family="sans-serif" font-size="56" font-weight="bold" fill="#ffffff" filter="drop-shadow(0px 4px 10px rgba(0,0,0,0.5))">${escapeXml(line)}</text>`;
-            currentY += 65;
-          }
-          currentY += 15;
-          for (const line of subtitleLines) {
-            svgText += `<text x="50" y="${currentY}" font-family="sans-serif" font-size="44" fill="#ffffff" opacity="0.95" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.4))">${escapeXml(line)}</text>`;
-            currentY += 55;
-          }
-          svgText += `</svg>`;
-
-          const compositedImage = await sharp(resizedBase)
-            .composite([
-              { input: Buffer.from(svgText), top: 0, left: 0 },
-              { input: resizedBlogTag, top: 40, left: 50 },
-              { input: resizedLogo, top: targetHeight - 56 - 40, left: targetWidth - logoWidth - 40 }
-            ])
-            .png()
-            .toBuffer();
+        if (imgRes.ok) {
+          const imgBuffer = await imgRes.arrayBuffer();
 
           const filename = `featured-${Date.now()}.png`;
-          
           const formData = new FormData();
-          const blob = new Blob([new Uint8Array(compositedImage)], { type: 'image/png' });
+          const blob = new Blob([new Uint8Array(imgBuffer)], { type: 'image/png' });
           formData.append('file', blob, filename);
 
           const mediaResponse = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
@@ -163,6 +100,8 @@ export async function POST(req: Request) {
              const mediaErr = await mediaResponse.text();
              console.error("❌ WordPress Media Upload Failed:", mediaErr.substring(0, 500));
           }
+        } else {
+          console.error("❌ Vercel OG Banner Generation Failed:", await imgRes.text());
         }
       } catch (sideloadErr) {
         console.error("⚠️ Sideloading/Compositing failed (continuing without ID):", sideloadErr);
