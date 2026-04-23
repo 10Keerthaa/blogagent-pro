@@ -2,17 +2,18 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const title = searchParams.get('title') || 'Blog Title';
-    const bgUrl = searchParams.get('bg') || '';
-    const logoUrl = searchParams.get('logo') || '';
-    const tagUrl = searchParams.get('tag') || '';
+    const { title = 'Blog Title', bgUrl = '', logoBase64 = '', tagBase64 = '' } = await request.json();
 
     const titleParts = title.split(':');
     const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
     const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
+
+    // Fetch a premium Bold font for the title to fix the Vercel default font issue
+    const fontUrl = 'https://github.com/google/fonts/raw/main/ofl/inter/Inter-Bold.ttf';
+    const fontRes = await fetch(fontUrl);
+    const fontData = await fontRes.arrayBuffer();
 
     return new ImageResponse(
       (
@@ -62,7 +63,7 @@ export async function GET(request: Request) {
             }}
           >
             <div style={{ display: 'flex', marginBottom: '20px' }}>
-              {tagUrl && <img src={tagUrl} style={{ height: '40px', width: 'auto' }} />}
+              {tagBase64 && <img src={`data:image/png;base64,${tagBase64}`} style={{ height: '40px', width: 'auto' }} />}
             </div>
 
             <div
@@ -80,7 +81,7 @@ export async function GET(request: Request) {
                   color: 'white',
                   lineHeight: 1.2,
                   margin: 0,
-                  fontFamily: 'sans-serif',
+                  fontFamily: '"Inter"',
                   textShadow: '0 4px 10px rgba(0,0,0,0.5)',
                 }}
               >
@@ -94,7 +95,7 @@ export async function GET(request: Request) {
                     opacity: 0.95,
                     lineHeight: 1.2,
                     marginTop: '15px',
-                    fontFamily: 'sans-serif',
+                    fontFamily: '"Inter"',
                     textShadow: '0 2px 8px rgba(0,0,0,0.4)',
                   }}
                 >
@@ -111,7 +112,7 @@ export async function GET(request: Request) {
                 right: '40px',
               }}
             >
-              {logoUrl && <img src={logoUrl} style={{ height: '56px', width: 'auto' }} />}
+              {logoBase64 && <img src={`data:image/png;base64,${logoBase64}`} style={{ height: '56px', width: 'auto' }} />}
             </div>
           </div>
         </div>
@@ -119,6 +120,14 @@ export async function GET(request: Request) {
       {
         width: 1200,
         height: 630,
+        fonts: [
+          {
+            name: 'Inter',
+            data: fontData,
+            style: 'normal',
+            weight: 700,
+          },
+        ],
       }
     );
   } catch (e: any) {

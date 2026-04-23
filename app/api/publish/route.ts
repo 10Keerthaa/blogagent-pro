@@ -59,20 +59,29 @@ export async function POST(req: Request) {
       try {
         console.log("Compositing and Sideloading Featured Image to WordPress...");
         const origin = new URL(req.url).origin;
-        const blogTagUrl = `${origin}/Blog.png`;
-        const logoUrl = `${origin}/10xDS.png`;
+        const fs = require('fs');
+        const path = require('path');
+        const blogTagPath = path.join(process.cwd(), 'public', 'Blog.png');
+        const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
+        const blogTagBase64 = fs.existsSync(blogTagPath) ? fs.readFileSync(blogTagPath, 'base64') : '';
+        const logoBase64 = fs.existsSync(logoPath) ? fs.readFileSync(logoPath, 'base64') : '';
 
         const titleParts = title.split(':');
         const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
         const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
 
         const ogUrl = new URL(`${origin}/api/banner`);
-        ogUrl.searchParams.set('title', title);
-        ogUrl.searchParams.set('bg', imageUrl);
-        ogUrl.searchParams.set('logo', logoUrl);
-        ogUrl.searchParams.set('tag', blogTagUrl);
 
-        const imgRes = await fetch(ogUrl.toString());
+        const imgRes = await fetch(ogUrl.toString(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            bgUrl: imageUrl,
+            logoBase64: logoBase64,
+            tagBase64: blogTagBase64
+          })
+        });
 
         if (imgRes.ok) {
           const imgBuffer = await imgRes.arrayBuffer();

@@ -84,7 +84,7 @@ export async function POST(req: Request) {
           STRICT RULES:
           1. PROOFREAD EVERYTHING: Correct spelling of all technical headers and EVERY single bullet point word.
           2. BRANDING: Ensure terms like 'Document AI', 'OCR', 'No-Code Orchestration', and 'Hyperautomation' are correctly cased.
-          3. BRUTAL CONDENSATION: To prevent Image AI typos, you MUST aggressively shrink every bullet point or milestone to 1, 2, or 3 words MAXIMUM. If a point is "Implementing secure access controls", change it to "Access Controls". NO EXCEPTIONS.
+          3. BRUTAL CONDENSATION & SIMPLIFICATION: To prevent Image AI typos, you MUST aggressively shrink every bullet point to 1 or 2 simple words MAXIMUM. You MUST replace long, complex words with short, simple equivalents (e.g., replace "Vulnerabilities" with "Risks", replace "Standardized" with "Rules", replace "Unsanctioned" with "Rogue"). Use elementary, highly legible words whenever possible. NO EXCEPTIONS.
           4. NO HALLUCINATIONS: Do not add any text not present in the original data or related to the blog content.
           5. EXCLUDE SYSTEM TERMS: Never use words like 'MODE', 'DASHBOARD', 'MASTER', or 'QUADRANT' in the output JSON values.
           
@@ -116,19 +116,19 @@ export async function POST(req: Request) {
         // --- END SANITY CHECK ---
 
         if (parsed.mode === 'ROADMAP') {
-          const milestones = (parsed.milestones || []).join(' > ');
-          visualPrompt = `MODE: ROADMAP | COUNT: ${parsed.count} | MILESTONES: ${milestones}`;
+          const milestones = (parsed.milestones || []).join(', ');
+          visualPrompt = `Roadmap with ${parsed.count} steps: ${milestones}`;
         } else {
           const central = parsed.central_theme || prompt;
-          const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}: ${q.points.join(', ')}`).join(' | ');
-          visualPrompt = `MODE: DASHBOARD | CENTRAL: ${central} | QUADRANTS: ${quadrants}`;
+          const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}: ${q.points.join(', ')}`).join('. ');
+          visualPrompt = `Title: ${central}. Quadrants: ${quadrants}`;
         }
       } catch (e) {
-        visualPrompt = `MODE: DASHBOARD | CENTRAL: ${prompt}. Fallback.`;
+        visualPrompt = `Title: ${prompt}. Fallback.`;
       }
     } catch (designerError: any) {
       console.error("Vertex AI Designer Error:", designerError);
-      visualPrompt = `MODE: DASHBOARD | CENTRAL: ${prompt}. Elite Gradient.`;
+      visualPrompt = `Title: ${prompt}. Elite Gradient.`;
     }
 
     // TASK 2: Restored High-Fidelity Generation via Gemini 2.5 Flash Image
@@ -149,14 +149,12 @@ export async function POST(req: Request) {
               parts: [
                 {
                   text: (() => {
-                    const modeMatch = visualPrompt.match(/MODE: (.*?) \|/);
-                    const mode = modeMatch ? modeMatch[1] : 'DASHBOARD';
+                    const isRoadmap = visualPrompt.startsWith('Roadmap with');
 
-                    if (mode === 'ROADMAP') {
-                      const countMatch = visualPrompt.match(/COUNT: (.*?) \|/);
-                      const stepsMatch = visualPrompt.match(/MILESTONES: (.*)/);
+                    if (isRoadmap) {
+                      const countMatch = visualPrompt.match(/Roadmap with (\d+) steps:/);
                       const N = countMatch ? countMatch[1] : '8';
-                      const steps = stepsMatch ? stepsMatch[1] : 'Phase 1 > Phase 2';
+                      const steps = visualPrompt.replace(/Roadmap with \d+ steps:/, '').trim();
 
                       return `ISOMETRIC 3D TECHNICAL ROADMAP. 
 Layout: An elegant S-Curve winding pathway through a digital space.
