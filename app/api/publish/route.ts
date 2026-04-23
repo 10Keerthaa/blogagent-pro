@@ -72,6 +72,18 @@ export async function POST(req: Request) {
 
         const ogUrl = new URL(`${origin}/api/banner`);
 
+        // Prepare Font: Read bundled TTF from next/dist for the banner
+        let fontBoldBase64 = '';
+        try {
+          const ttfPath = path.join(process.cwd(), 'node_modules', 'next', 'dist', 'compiled', '@vercel', 'og', 'noto-sans-v27-latin-regular.ttf');
+          if (fs.existsSync(ttfPath)) {
+            const ttfBuf = fs.readFileSync(ttfPath);
+            fontBoldBase64 = ttfBuf.toString('base64');
+          }
+        } catch (fontErr) {
+          console.warn('Font read failed, using Edge default:', fontErr);
+        }
+
         const imgRes = await fetch(ogUrl.toString(), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -79,7 +91,8 @@ export async function POST(req: Request) {
             title: title,
             bgUrl: imageUrl,
             logoBase64: logoBase64,
-            tagBase64: blogTagBase64
+            tagBase64: blogTagBase64,
+            fontBoldBase64: fontBoldBase64
           })
         });
 

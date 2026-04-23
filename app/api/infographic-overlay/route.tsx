@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
     if (mode === 'DASHBOARD' || !mode || mode !== 'ROADMAP') {
       const central = parsed.central_theme || 'Dashboard';
-      const quads = parsed.quadrants || [];
+      const quads = parsed.quadrants || parsed.modules || parsed.panels || parsed.items || [];
       const q1 = quads[0] || { title: '', points: [] };
       const q2 = quads[1] || { title: '', points: [] };
       const q3 = quads[2] || { title: '', points: [] };
