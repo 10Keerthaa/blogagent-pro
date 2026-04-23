@@ -140,14 +140,19 @@ export async function POST(req: Request) {
             .toBuffer();
 
           const filename = `featured-${Date.now()}.png`;
+          
+          const formData = new FormData();
+          const blob = new Blob([new Uint8Array(compositedImage)], { type: 'image/png' });
+          formData.append('file', blob, filename);
+
           const mediaResponse = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
             method: 'POST',
             headers: {
               'Authorization': authHeader,
-              'Content-Type': 'image/png',
-              'Content-Disposition': `attachment; filename="${filename}"`,
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+              'Accept': 'application/json, text/plain, */*'
             },
-            body: compositedImage as any
+            body: formData
           });
 
           if (mediaResponse.ok) {

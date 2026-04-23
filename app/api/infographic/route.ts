@@ -44,18 +44,16 @@ export async function POST(req: Request) {
            Blog: ${content.substring(0, 3500)}`
         : `Analyze this blog post and structure it for a 'Master Technical Dashboard'.
            STRICT CONSTRAINTS:
-           - Max 4 Quadrants.
-           - Max 3 bullet points per section.
+           - EXACTLY 4 Quadrants. You must NOT output more or less than 4 quadrants.
+           - STRICTLY FORBIDDEN: Do not add a 5th node, bottom section, or any external challenges. You must ONLY output the 4 quadrants.
+           - Max 3 bullet points per quadrant.
            - AGGRESSIVE CONDENSATION: Every bullet point MUST be 1 to 3 words maximum (e.g., 'Zero-Trust Pipeline', 'Automated Audits'). No sentences. No verbs.
            - Terminology: Use high-impact, single-word or short-phrase terminology.
            
            Output ONLY a JSON object with: 
            "mode": "DASHBOARD",
            "central_theme": string,
-           "quadrants": [{"title": string, "points": string[]}],
-           "milestones": string[],
-           "challenges": string[],
-           "future": string[]
+           "quadrants": [{"title": string, "points": string[]}]
            Blog: ${content.substring(0, 3500)}`;
 
       const resp = await client.request({
@@ -123,7 +121,7 @@ export async function POST(req: Request) {
         } else {
           const central = parsed.central_theme || prompt;
           const quadrants = (parsed.quadrants || []).slice(0, 4).map((q: any) => `${q.title}: ${q.points.join(', ')}`).join(' | ');
-          visualPrompt = `MODE: DASHBOARD | CENTRAL: ${central} | QUADRANTS: ${quadrants} | CHALLENGES: ${(parsed.challenges || []).join(', ')}`;
+          visualPrompt = `MODE: DASHBOARD | CENTRAL: ${central} | QUADRANTS: ${quadrants}`;
         }
       } catch (e) {
         visualPrompt = `MODE: DASHBOARD | CENTRAL: ${prompt}. Fallback.`;
@@ -194,7 +192,8 @@ Data Highlights: ${visualPrompt.substring(0, 1000)}.
 STRICT ELITE CONSTRAINTS:
 - ZERO TYPO TOLERANCE: You MUST verify the spelling of every single character. NO errors like "Enhahements" or "Mainteniarce". Spelling must be FLAWLESS.
 - PROMPT EXCLUSION: NEVER write ANY technical metadata, labels, or status text like "MODE: DISPLAY", "MODE - CENTRAL", "VERSION", or "DASHBOARD".
-- CLEANLINESS: The bottom of the image must be PURE. Ignore any '|' characters in the Data Highlights, DO NOT draw vertical lines or cursors anywhere.
+- EXACTLY 4 QUADRANTS: You must ONLY draw exactly 4 quadrants around the core. You are STRICTLY FORBIDDEN from adding a 5th node at the bottom, and strictly forbidden from drawing vertical lines that lead to nothing. The bottom of the image must be PURE and empty.
+- CLEANLINESS: Ignore any '|' characters in the Data Highlights, DO NOT draw vertical lines or cursors anywhere.
 - MIRROR RULE: Copy the text from the data highlights EXACTLY.
 
 ENVIRONMENT & COLORS:
