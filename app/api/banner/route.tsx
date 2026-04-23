@@ -10,9 +10,11 @@ export async function POST(request: Request) {
     const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
     const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
 
-    // Fetch a premium Bold font for the title to fix the Vercel default font issue
-    const fontUrl = 'https://raw.githubusercontent.com/google/fonts/main/ofl/inter/Inter-Bold.ttf';
-    const fontRes = await fetch(fontUrl);
+    // Load font from our own project public folder - avoids GitHub CDN blocks on Vercel Edge
+    const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || 'localhost:3000';
+    const proto = request.headers.get('x-forwarded-proto') || 'http';
+    const baseUrl = `${proto}://${host}`;
+    const fontRes = await fetch(`${baseUrl}/fonts/Inter-Bold.woff2`);
     const fontData = await fontRes.arrayBuffer();
 
     return new ImageResponse(

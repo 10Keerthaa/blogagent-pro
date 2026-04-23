@@ -7,13 +7,15 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { bgImageBase64, parsed, mode, logoBase64 } = body;
 
-    // Fetch premium fonts
-    const fontUrl = 'https://raw.githubusercontent.com/google/fonts/main/ofl/inter/Inter-Bold.ttf';
-    const fontRes = await fetch(fontUrl);
-    const fontData = await fontRes.arrayBuffer();
+    // Fetch fonts from our own project (bundled in /public/fonts) - avoids GitHub CDN blocks
+    const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || 'localhost:3000';
+    const proto = request.headers.get('x-forwarded-proto') || 'http';
+    const baseUrl = `${proto}://${host}`;
 
-    const fontRegUrl = 'https://raw.githubusercontent.com/google/fonts/main/ofl/inter/Inter-Regular.ttf';
-    const fontRegRes = await fetch(fontRegUrl);
+    const fontBoldRes = await fetch(`${baseUrl}/fonts/Inter-Bold.woff2`);
+    const fontData = await fontBoldRes.arrayBuffer();
+
+    const fontRegRes = await fetch(`${baseUrl}/fonts/Inter-Regular.woff2`);
     const fontRegData = await fontRegRes.arrayBuffer();
 
     const bgSrc = `data:image/jpeg;base64,${bgImageBase64}`;
