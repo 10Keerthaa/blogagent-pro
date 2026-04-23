@@ -29,12 +29,13 @@ export async function POST(req: Request) {
             Primary Keyword (REQUIRED): ${primaryKeyword || "None"}
 
             STRICT REQUIREMENTS — VIOLATING ANY OF THESE IS A FAILURE:
-            1. Length: MUST be strictly between 150 and 160 characters long (including spaces). Not 149. Not 161.
-            2. Primary Keyword: You MUST include the exact phrase "${primaryKeyword || ""}" naturally within the text.
-            3. Informative: Write a standalone, highly technical fact or insight about the Topic itself. DO NOT reference the blog post, and DO NOT use phrases like "This post covers", "Discover how", or "In this article".
-            4. Tone: Expert, authoritative, and declarative. Frame it as a direct business or technical insight.
-            5. Return ONLY the plain description text. No quotes, no labels, no intro phrases, no markdown.
-            ${attempt > 1 ? `\n\nWARNING: Your previous attempt was rejected because it did not meet the 150-160 character limit. You must adjust your length to be EXACTLY between 150 and 160 characters.` : ''}
+            1. Formula: You MUST use exactly this sentence structure: [Imperative Verb] how [Topic/Keyword] [Benefit verb] [Business Benefit] via [Technical Detail 1], [Technical Detail 2], and [Technical Detail 3].
+            2. Hook: You MUST start with an action verb like 'Explore', 'Discover', 'Learn', 'Master', or 'Understand'.
+            3. Length: MUST be strictly between 150 and 160 characters long (including spaces). Not 149. Not 161.
+            4. Primary Keyword: You MUST include the exact phrase "${primaryKeyword || ""}" naturally within the text.
+            5. Tone: Professional, authoritative B2B tech tone. No questions. No exclamation marks.
+            6. Return ONLY the plain description text. No quotes, no labels, no intro phrases, no markdown.
+            ${attempt > 1 ? `\n\nWARNING: Your previous attempt was rejected because it did not meet the 150-160 character limit. You must adjust your length to be EXACTLY between 150 and 160 characters while keeping the exact formula.` : ''}
             `;
 
             const response = await client.request({
