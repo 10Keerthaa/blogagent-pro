@@ -242,6 +242,20 @@ Portrait 4:5 (800x1000).`;
           logoBase64 = resizedLogo.toString('base64');
         }
 
+        // Prepare Font: Read bundled TTF from next/dist (guaranteed to exist, guaranteed to be valid TTF)
+        let fontBoldBase64 = '';
+        let fontRegBase64 = '';
+        try {
+          const ttfPath = path.join(process.cwd(), 'node_modules', 'next', 'dist', 'compiled', '@vercel', 'og', 'noto-sans-v27-latin-regular.ttf');
+          if (fs.existsSync(ttfPath)) {
+            const ttfBuf = fs.readFileSync(ttfPath);
+            fontBoldBase64 = ttfBuf.toString('base64');
+            fontRegBase64 = fontBoldBase64; // Use same file for both weights
+          }
+        } catch (fontErr) {
+          console.warn('Font read failed, using Edge default:', fontErr);
+        }
+
         const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
         const ogOverlayUrl = new URL(`${origin}/api/infographic-overlay`);
 
@@ -252,7 +266,9 @@ Portrait 4:5 (800x1000).`;
             bgImageBase64: bgBase64,
             parsed: parsedData,
             mode: parsedData.mode || 'DASHBOARD',
-            logoBase64: logoBase64
+            logoBase64: logoBase64,
+            fontBoldBase64: fontBoldBase64,
+            fontRegBase64: fontRegBase64
           })
         });
 
