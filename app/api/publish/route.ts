@@ -39,20 +39,8 @@ export async function POST(req: Request) {
       const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
       const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
 
-      finalContent += `
-      <div class="featured-image-wrapper" style="position: relative; margin-bottom: 40px; overflow: hidden; border-radius: 0;">
-        <img src="${imageUrl}" alt="${title}" style="width: 100%; height: auto; display: block; object-fit: cover; max-height: 580px;" />
-        <div style="position: absolute; inset: 0; background-color: rgba(126, 87, 194, 0.45); z-index: 1; pointer-events: none;"></div>
-        <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none;">
-          <img src="${blogTagUrl}" alt="Blog" style="position: absolute; top: 40px; left: 40px; height: 40px; width: auto;" />
-          <div style="position: absolute; top: 100px; left: 40px; color: #ffffff; max-width: 85%; font-family: sans-serif; line-height: 1.3;">
-             <h1 style="font-size: 56px; font-weight: 700; margin: 0; padding: 0; line-height: 1.3; text-shadow: 0 4px 20px rgba(0,0,0,0.4);">${mainTitle}</h1>
-             ${subtitle ? `<p style="font-size: 44px; font-weight: 400; margin: 0; padding: 0; line-height: 1.3; opacity: 0.95; text-shadow: 0 4px 15px rgba(0,0,0,0.3);">${subtitle}</p>` : ''}
-          </div>
-          <img src="${logoUrl}" alt="10xDS" style="position: absolute; bottom: 40px; right: 40px; height: 56px; width: auto;" />
-        </div>
-      </div>
-      `;
+      // Removed HTML injection for the featured image because the WordPress 
+      // theme natively displays the sideloaded featured_media as a hero banner.
     }
 
     finalContent += content;
