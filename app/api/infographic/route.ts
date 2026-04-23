@@ -48,7 +48,7 @@ export async function POST(req: Request) {
            - EXACTLY 4 Quadrants. You must NOT output more or less than 4 quadrants.
            - STRICTLY FORBIDDEN: Do not add a 5th node or bottom section.
            - Max 3 bullet points per quadrant.
-           - PROFESSIONAL TONE: Use formal, highly professional enterprise sentences and business terminology. You do NOT need to condense words. 
+           - PUNCHY PROFESSIONAL TONE: Use formal enterprise terminology, but keep it concise. Bullet points MUST be between 3 and 7 words MAXIMUM (e.g., 'Optimize resources with automated workload balancing'). NO long essays.
            
            Output ONLY a JSON object with: 
            "mode": "DASHBOARD",
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
           STRICT RULES:
           1. PROOFREAD EVERYTHING: Ensure impeccable grammar and spelling.
           2. BRANDING: Ensure terms like 'Document AI', 'OCR', 'No-Code Orchestration', and 'Hyperautomation' are correctly cased.
-          3. PROFESSIONAL FORMALITY: Use Formal Enterprise Business Terminology. You do NOT need to condense text. Full, rich professional bullet points are fully supported.
+          3. PUNCHY FORMALITY: Use Formal Enterprise Business Terminology. However, you MUST strictly condense each bullet point to a maximum of 3 to 7 words. Do not allow massive paragraphs.
           4. NO HALLUCINATIONS: Do not add any text not present in the original data or related to the blog content.
           5. EXCLUDE SYSTEM TERMS: Never use words like 'MODE', 'DASHBOARD', 'MASTER', or 'QUADRANT' in the output JSON values.
           
@@ -182,7 +182,7 @@ For every one of the 4 quadrants, you MUST render a LARGE, DISTINCT 3D Glass Ico
 CRITICAL ICON RULE: Each of the 4 icons MUST be a completely DIFFERENT vibrant neon color (e.g., Cyan, Emerald Green, Magenta, Amber). Do not use the same color for all icons. The icons should visually represent these concepts: ${visualPrompt.substring(0, 1000)}.
 
 STRICT ELITE CONSTRAINTS:
-- ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, or piece of text anywhere in the image. Do NOT attempt to write the titles or bullet points. The 3D glass pods MUST be completely empty inside so that text can be added programmatically later.
+- ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, or piece of text anywhere in the image. Do NOT attempt to write the central theme, titles, or bullet points. The central core AND the 4 3D glass pods MUST be 100% completely empty of any symbols, labels, or text so that typography can be added programmatically later.
 - EXACTLY 4 QUADRANTS: You must ONLY draw exactly 4 glass modules around the core. You are STRICTLY FORBIDDEN from adding a 5th node at the bottom.
 - CLEANLINESS: DO NOT draw any vertical lines, cursors, or weird UI artifacts.
 
