@@ -181,7 +181,7 @@ STRICT ELITE CONSTRAINTS:
 - EXACTLY 4 PANELS: You must ONLY draw exactly 4 glass panes around the core. You are STRICTLY FORBIDDEN from adding a 5th pane at the bottom.
 - CLEANLINESS: DO NOT draw any vertical lines, cursors, or weird UI artifacts.
 
-ART STYLE: Premium 3D glassmorphism, transparent glossy panels floating in deep space. Glowing fiber-optic connections linking the core to the 4 empty panes. Ultra-high resolution, ray-traced lighting, photorealistic cinematic rendering. Dark elegant background.`;
+ART STYLE: Premium 3D glassmorphism, transparent glossy panels floating in a completely empty, pure dark studio void. Glowing fiber-optic connections linking the core to the 4 empty panes. Ultra-high resolution, ray-traced lighting, photorealistic cinematic rendering. The background MUST be a solid, minimalist, dark elegant color with NO stars, NO galaxies, NO textures, and NO extra background elements.`;
                     }
                   })()
                 }
