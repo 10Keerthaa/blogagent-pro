@@ -173,26 +173,15 @@ PALETTE RULES (STRICT - NO EXCEPTIONS):
 - Accent Glows: Soft purple light halos around each pod node.
 Portrait 4:5 (800x1000).`;
                     } else {
-                      return `CINEMATIC 3D HOLOGRAPHIC DASHBOARD (INTEGRATED ICON STYLE). 
-Layout: Floating central hexagonal glass core connected to four peripheral clear reflective glass modules. 
-DISTRIBUTION: Use the full 800x1000 frame height. Modules must be large and spaced vertically.
-
-ICONOGRAPHY (IMAGE-DOMINANT):
-For every one of the 4 quadrants, you MUST render a LARGE, DISTINCT 3D Glass Icon that FLOATS ABOVE or is INTEGRATED into the top of the module pod.
-CRITICAL ICON RULE: Each of the 4 icons MUST be a completely DIFFERENT vibrant neon color (e.g., Cyan, Emerald Green, Magenta, Amber). Do not use the same color for all icons. The icons should visually represent these concepts: ${visualPrompt.substring(0, 1000)}.
+                      return `An abstract 3D geometric glass sculpture floating in deep space, featuring a central glowing core connected to exactly 4 large, completely blank transparent glass panels (quadrants) arranged around it.
+CRITICAL DESIGN RULE: The 4 glass panels MUST be completely blank and empty. Do not draw any UI elements, boxes, text, or labels inside them. In or near each blank pane, include a single glowing neon abstract icon in a DIFFERENT vibrant color (e.g., Cyan, Emerald Green, Magenta, Amber) representing these concepts: ${visualPrompt.substring(0, 1000)}.
 
 STRICT ELITE CONSTRAINTS:
-- ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, or piece of text anywhere in the image. Do NOT attempt to write the central theme, titles, or bullet points. The central core AND the 4 3D glass pods MUST be 100% completely empty of any symbols, labels, or text so that typography can be added programmatically later.
-- EXACTLY 4 QUADRANTS: You must ONLY draw exactly 4 glass modules around the core. You are STRICTLY FORBIDDEN from adding a 5th node at the bottom.
+- ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or piece of text anywhere in the image. This is an abstract art piece, NOT an infographic. The central core AND the 4 glass panels MUST be 100% completely empty of any text, labels, or UI mockups.
+- EXACTLY 4 PANELS: You must ONLY draw exactly 4 glass panes around the core. You are STRICTLY FORBIDDEN from adding a 5th pane at the bottom.
 - CLEANLINESS: DO NOT draw any vertical lines, cursors, or weird UI artifacts.
 
-ENVIRONMENT & COLORS:
-- BACKGROUND: Deep Midnight Purple Gradient (#1A0B2E to #0A0412). 
-- MATERIALS: CLEAR REFLECTIVE GLASS with glossy acrylic finish and realistic thickness.
-- LIGHTING: Cinematic global illumination, soft neon auras.
-
-STYLE: Photorealistic 3D Render (Cinema4D/Octane Quality). 
-Portrait 4:5 (800x1000).`;
+ART STYLE: Premium 3D glassmorphism, transparent glossy panels floating in deep space. Glowing fiber-optic connections linking the core to the 4 empty panes. Ultra-high resolution, ray-traced lighting, photorealistic cinematic rendering. Dark elegant background.`;
                     }
                   })()
                 }
