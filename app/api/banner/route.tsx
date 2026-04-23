@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
 
     // Fetch a premium Bold font for the title to fix the Vercel default font issue
-    const fontUrl = 'https://github.com/google/fonts/raw/main/ofl/inter/Inter-Bold.ttf';
+    const fontUrl = 'https://raw.githubusercontent.com/google/fonts/main/ofl/inter/Inter-Bold.ttf';
     const fontRes = await fetch(fontUrl);
     const fontData = await fontRes.arrayBuffer();
 
