@@ -98,7 +98,7 @@ export async function POST(request: Request) {
                     lineHeight: 1.2,
                     marginTop: '15px',
                     fontFamily: 'Inter',
-                    fontWeight: 700,
+                    fontWeight: 400,
                     textShadow: '0 2px 8px rgba(0,0,0,0.4)',
                   }}
                 >
