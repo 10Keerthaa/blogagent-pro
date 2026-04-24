@@ -225,7 +225,9 @@ export const ReviewList = () => {
 
                             {/* Right: Wordpress Controls */}
                             <div className="flex items-center justify-end gap-3 pr-2">
-                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1 opacity-70">Wordpress Category</span>
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1 opacity-70">
+                                    {targetPlatform === 'framer' ? 'Framer Category' : 'Wordpress Category'}
+                                </span>
                                 <div className="min-w-[180px]">
                                     <CategorySelector 
                                         selectedIds={selectedCategories}

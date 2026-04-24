@@ -55,7 +55,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
     return (
         <div className="space-y-3">
             <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 px-1">
-                {targetPlatform === 'framer' ? 'Framer Collection' : 'WordPress Categories'}
+                {targetPlatform === 'framer' ? 'Framer Category' : 'WordPress Categories'}
             </label>
             
             <div className="relative">
