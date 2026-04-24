@@ -56,7 +56,8 @@ export const useBlogApi = () => {
             wpUrl: data.wpUrl || data.wp_url || null,
             auditLog: data.auditLog || data.audit_log || [],
             publishedBy: data.publishedBy || data.published_by || null,
-            categories: data.categories || []
+            categories: data.categories || [],
+            platform: data.platform || null
         };
     }, []);
 
@@ -433,6 +434,7 @@ export const useBlogApi = () => {
                 wpUrl: data.wpUrl || data.wp_url || null,
                 user_email: data.user_email || data.authorEmail || null,
                 categories: data.categories || [],
+                platform: data.platform || null,
                 last_edited_at: serverTimestamp()
             };
 

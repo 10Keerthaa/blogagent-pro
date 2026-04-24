@@ -34,7 +34,7 @@ export const ReviewList = () => {
         handleRefineSelection, primaryKeyword,
         handleMarkAsReviewed, isPreviewOpen, setIsPreviewOpen,
         selectedCategories, setSelectedCategories,
-        isGenerating
+        isGenerating, targetPlatform
     } = useDashboard();
 
     const [selectionRect, setSelectionRect] = React.useState<DOMRect | null>(null);
@@ -186,9 +186,16 @@ export const ReviewList = () => {
 
     const filteredDrafts = React.useMemo(() => {
         if (!role || !user) return null;
-        if (role === 'admin') return reviewDrafts;
-        return reviewDrafts.filter(d => d.createdBy === user?.uid);
-    }, [reviewDrafts, role, user]);
+        
+        const platformBase = reviewDrafts.filter(d => {
+            if (targetPlatform === 'framer') return d.platform === 'framer';
+            // WordPress mode shows both wordpress-tagged and legacy (null) posts
+            return d.platform === 'wordpress' || !d.platform;
+        });
+
+        if (role === 'admin') return platformBase;
+        return platformBase.filter(d => d.createdBy === user?.uid);
+    }, [reviewDrafts, role, user, targetPlatform]);
 
     return (
         <div className="relative">
@@ -262,14 +269,16 @@ export const ReviewList = () => {
                                 />
                                 <div
                                     className="absolute inset-0 z-10 pointer-events-none"
-                                    style={{ backgroundColor: 'rgba(139, 92, 246, 0.45)' }}
+                                    style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
                                 />
                                 <div className="absolute inset-0 z-20 pointer-events-none">
-                                    <img
-                                        src="/Blog.png"
-                                        alt="Blog Tag"
-                                        className="absolute top-[30px] lg:top-[40px] left-[30px] lg:left-[40px] w-auto h-8 lg:h-10 object-contain"
-                                    />
+                                    {targetPlatform !== 'framer' && (
+                                        <img
+                                            src="/Blog.png"
+                                            alt="Blog Tag"
+                                            className="absolute top-[30px] lg:top-[40px] left-[30px] lg:left-[40px] w-auto h-8 lg:h-10 object-contain"
+                                        />
+                                    )}
                                     <div
                                         className="absolute inset-x-10 top-[100px] lg:top-[120px] flex flex-col items-center justify-center text-center text-white gap-0 drop-shadow-2xl px-10"
                                         style={{ lineHeight: '1.2' }}
@@ -289,11 +298,13 @@ export const ReviewList = () => {
                                             </h1>
                                         )}
                                     </div>
-                                    <img
-                                        src="/10xDS.png"
-                                        alt="Brand Logo"
-                                        className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] w-auto h-10 lg:h-14 object-contain"
-                                    />
+                                    {targetPlatform !== 'framer' && (
+                                        <img
+                                            src="/10xDS.png"
+                                            alt="Brand Logo"
+                                            className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] w-auto h-10 lg:h-14 object-contain"
+                                        />
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -379,9 +390,11 @@ export const ReviewList = () => {
 
                                     <div className="bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden shadow-2xl relative group">
                                         <img src={selectedReviewDraft.infographicUrl} alt="Infographic" className="w-full h-auto" />
-                                        <div className="absolute inset-0 pointer-events-none">
-                                            <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[20px] lg:bottom-[30px] right-[20px] lg:right-[30px] h-8 lg:h-12 w-auto drop-shadow-xl" />
-                                        </div>
+                                        {targetPlatform !== 'framer' && (
+                                            <div className="absolute inset-0 pointer-events-none">
+                                                <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[20px] lg:bottom-[30px] right-[20px] lg:right-[30px] h-8 lg:h-12 w-auto drop-shadow-xl" />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -516,9 +529,11 @@ export const ReviewList = () => {
                                     {selectedReviewDraft.imageUrl && (
                                         <div className="relative group overflow-hidden rounded-none shadow-2xl border border-slate-100 dark:border-slate-800 w-full">
                                             <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '4/3' }} />
-                                            <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(139, 92, 246, 0.45)' }} />
+                                            <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }} />
                                             <div className="absolute inset-0 pointer-events-none">
-                                                <img src="/Blog.png" className="absolute top-[40px] left-[40px] h-10 w-auto" alt="blog" />
+                                                {targetPlatform !== 'framer' && (
+                                                    <img src="/Blog.png" className="absolute top-[40px] left-[40px] h-10 w-auto" alt="blog" />
+                                                )}
                                                 
                                                 {/* Centered Title Group Overlay */}
                                                 <div className="absolute inset-x-10 text-white flex flex-col items-center text-center gap-0 drop-shadow-2xl" style={{ top: '120px', lineHeight: '1.2' }}>
@@ -537,7 +552,9 @@ export const ReviewList = () => {
                                                         </h1>
                                                     )}
                                                 </div>
-                                                <img src="/10xDS.png" className="absolute bottom-[40px] right-[40px] h-14 w-auto" alt="logo" />
+                                                {targetPlatform !== 'framer' && (
+                                                    <img src="/10xDS.png" className="absolute bottom-[40px] right-[40px] h-14 w-auto" alt="logo" />
+                                                )}
                                             </div>
                                         </div>
                                     )}

@@ -94,6 +94,7 @@ export const PostPreview = () => {
             status: 'in_progress',
             created_by: user.uid,
             authorEmail: user.email,
+            platform: targetPlatform,
             prompt: mainTopic || updatedPreview.prompt || '',
             keywords: keywords.length > 0 ? keywords : (updatedPreview.keywords || [])
         });
@@ -447,6 +448,7 @@ export const PostPreview = () => {
                                     infographic_url: infographicUrl,
                                     metaDesc: description || preview.meta || "",
                                     status: 'review',
+                                    platform: targetPlatform,
                                     created_by: user.uid,
                                     authorEmail: user.email,
                                     prompt: mainTopic || preview.prompt || '',

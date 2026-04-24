@@ -45,7 +45,15 @@ const formatDateTime = (date: any) => {
 };
 
 export const HistoryList = () => {
-    const { history, handleSelectHistoryItem, selectedHistoryItem } = useDashboard();
+    const { history, handleSelectHistoryItem, selectedHistoryItem, targetPlatform } = useDashboard();
+
+    const filteredHistory = React.useMemo(() => {
+        return history.filter(item => {
+            if (targetPlatform === 'framer') return item.platform === 'framer';
+            // WordPress mode shows both wordpress-tagged and legacy (null) posts
+            return item.platform === 'wordpress' || !item.platform;
+        });
+    }, [history, targetPlatform]);
 
     if (selectedHistoryItem) {
         return (
@@ -158,13 +166,13 @@ export const HistoryList = () => {
         <div className="animate-fadeIn w-full space-y-12 pb-24 transition-all duration-500 px-4 lg:px-12">
             <div className="flex items-center border-b border-slate-200/60 dark:border-slate-800 pb-6 mb-8">
                 <h2 className="text-[11px] font-bold tracking-executive text-slate-400 uppercase">
-                    Production History ({history.length})
+                    Production History ({filteredHistory.length})
                 </h2>
             </div>
 
             <div className="grid grid-cols-1 gap-8">
-                {history.length > 0 ? (
-                    history.map((item, idx) => {
+                {filteredHistory.length > 0 ? (
+                    filteredHistory.map((item, idx) => {
                         return (
                             <div
                                 key={idx}
@@ -238,7 +246,9 @@ export const HistoryList = () => {
                             <Globe className="w-12 h-12 text-slate-200 dark:text-slate-700" />
                         </div>
                         <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-4">Archive Protocol Empty</h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[360px] font-medium leading-relaxed">System is awaiting the initial production sync from your WordPress engine.</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[360px] font-medium leading-relaxed">
+                            System is awaiting the initial production sync from your {targetPlatform === 'framer' ? 'Framer CMS' : 'WordPress engine'}.
+                        </p>
                     </div>
                 )}
             </div>

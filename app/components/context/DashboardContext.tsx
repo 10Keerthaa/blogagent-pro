@@ -614,7 +614,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     status: 'in_progress',
                     isHumanized: false,
                     humanizationStatus: 'idle',
-                    categories: selectedCategories
+                    categories: selectedCategories,
+                    platform: targetPlatform
                 });
             } catch (err) {
                 console.warn("Post-generation sync failed:", err);
