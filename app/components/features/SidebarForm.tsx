@@ -37,17 +37,17 @@ export const SidebarForm = () => {
             <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
                     <label className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">Orchestration Target</label>
-                    <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner">
+                    <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner h-16">
                         <button
                             onClick={() => setTargetPlatform('wordpress')}
-                            className={`flex-1 flex items-center justify-center gap-3 py-6 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            className={`flex-1 flex items-center justify-center gap-3 h-full text-xs font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                             <Globe className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'wordpress' ? 'scale-110' : 'scale-100 opacity-70'}`} />
                             WordPress
                         </button>
                         <button
                             onClick={() => setTargetPlatform('framer')}
-                            className={`flex-1 flex items-center justify-center gap-3 py-6 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            className={`flex-1 flex items-center justify-center gap-3 h-full text-xs font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                             <Code className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'framer' ? 'scale-110' : 'scale-100 opacity-70'}`} />
                             Framer
@@ -184,7 +184,7 @@ export const SidebarForm = () => {
                     onClick={handleGenerate}
                     isLoading={isProcessingFullPost}
                     disabled={!prompt || keywords.length === 0 || !description}
-                    className="w-full text-[11px] font-bold uppercase tracking-widest bg-slate-900 dark:bg-violet-600 hover:bg-black dark:hover:bg-violet-700 text-white py-6 rounded-xl shadow-xl shadow-slate-900/10 dark:shadow-none transition-all active:scale-[0.98]"
+                    className="w-full text-[11px] font-bold uppercase tracking-widest bg-violet-600 hover:bg-violet-700 text-white py-6 rounded-xl shadow-xl shadow-violet-500/20 transition-all active:scale-[0.98]"
                 >
                     {isProcessingFullPost ? 'Processing...' : 'Generate Elite Post'}
                 </Button>
