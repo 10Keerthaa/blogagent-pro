@@ -37,7 +37,7 @@ export const SidebarForm = () => {
             <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
                     <label className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">Orchestration Target</label>
-                    <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner h-16">
+                    <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner h-14">
                         <button
                             onClick={() => setTargetPlatform('wordpress')}
                             className={`flex-1 flex items-center justify-center gap-3 h-full text-xs font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
