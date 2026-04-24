@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { ASSETS } from '@/lib/constants';
+import { NextResponse } from 'next/server';
+import { ASSETS, FONTS } from '@/lib/constants';
 import { db } from "@/lib/firebaseAdmin";
 import sharp from "sharp";
 
@@ -69,21 +69,9 @@ export async function POST(req: Request) {
 
         const ogUrl = new URL(`${origin}/api/banner`);
 
-        // Prepare Font: Fetch TTF from public folder for the banner
-        let fontBoldBase64 = '';
-        let fontRegBase64 = '';
-        try {
-          const fontRes = await fetch(`${origin}/fonts/Inter-Bold.ttf`);
-          if (fontRes.ok) {
-            fontBoldBase64 = Buffer.from(await fontRes.arrayBuffer()).toString('base64');
-          }
-          const fontRegRes = await fetch(`${origin}/fonts/Inter-Regular.ttf`);
-          if (fontRegRes.ok) {
-            fontRegBase64 = Buffer.from(await fontRegRes.arrayBuffer()).toString('base64');
-          }
-        } catch (fontErr) {
-          console.warn('Font HTTP fetch failed:', fontErr);
-        }
+        // Use Baked-in Fonts for the banner
+        const fontBoldBase64 = FONTS.bold;
+        const fontRegBase64 = FONTS.regular;
 
         const imgRes = await fetch(ogUrl.toString(), {
           method: 'POST',

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { uploadToGCS } from '@/lib/gcs';
 import { getGoogleAuth } from '@/lib/googleAuth';
 import sharp from 'sharp';
-import { ASSETS } from '@/lib/constants';
+import { ASSETS, FONTS } from '@/lib/constants';
 import fs from 'fs';
 import path from 'path';
 
@@ -235,18 +235,9 @@ ART STYLE: Premium 3D glassmorphism, transparent glossy panels floating in a com
           console.warn('Failed to process logo for infographic', e);
         }
 
-        // Prepare Font: Fetch TTF from public folder
-        let fontBoldBase64 = '';
-        let fontRegBase64 = '';
-        try {
-          const fontRes = await fetch(`${origin}/fonts/Inter-Bold.ttf`);
-          if (fontRes.ok) fontBoldBase64 = Buffer.from(await fontRes.arrayBuffer()).toString('base64');
-          
-          const fontRegRes = await fetch(`${origin}/fonts/Inter-Regular.ttf`);
-          if (fontRegRes.ok) fontRegBase64 = Buffer.from(await fontRegRes.arrayBuffer()).toString('base64');
-        } catch (fontErr) {
-          console.warn('Font HTTP fetch failed:', fontErr);
-        }
+        // Use Baked-in Fonts
+        const fontBoldBase64 = FONTS.bold;
+        const fontRegBase64 = FONTS.regular;
 
         const ogOverlayUrl = new URL(`${origin}/api/infographic-overlay`);
 
