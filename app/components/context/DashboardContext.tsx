@@ -97,6 +97,9 @@ interface DashboardContextType {
     hasResumeDraft: boolean;
     upsertPost: (data: any) => Promise<any>;
     isResuming: boolean;
+    isRefiningSelection: boolean;
+    resetEditorState: () => void;
+    handleRefineSelection: (text: string, action: string, onUpdate: (newText: string) => void) => Promise<void>;
     targetPlatform: 'wordpress' | 'framer';
     setTargetPlatform: (v: 'wordpress' | 'framer') => void;
     deleteInProgressDraft: (userId: string) => Promise<any>;
