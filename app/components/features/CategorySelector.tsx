@@ -3,10 +3,12 @@
 import React, { useState, useMemo } from 'react';
 import { Check, Search, X, ChevronDown, Lock } from 'lucide-react';
 import { CATEGORIES, LOCKED_CATEGORY_ID } from '@/lib/constants/categories';
+import { FRAMER_CATEGORIES, FRAMER_LOCKED_CATEGORY_ID } from '@/lib/constants/framer-categories';
+import { useDashboard } from '../context/DashboardContext';
 
 interface CategorySelectorProps {
-    selectedIds: number[];
-    onChange: (ids: number[]) => void;
+    selectedIds: any[];
+    onChange: (ids: any[]) => void;
     readOnly?: boolean;
 }
 
@@ -15,18 +17,22 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
     onChange,
     readOnly = false
 }) => {
+    const { targetPlatform } = useDashboard();
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
-    const filteredCategories = useMemo(() => {
-        return CATEGORIES.filter(cat =>
-            cat.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            cat.id !== LOCKED_CATEGORY_ID
-        );
-    }, [searchTerm]);
+    const activeCategories = targetPlatform === 'framer' ? FRAMER_CATEGORIES : CATEGORIES;
+    const lockedId = targetPlatform === 'framer' ? FRAMER_LOCKED_CATEGORY_ID : LOCKED_CATEGORY_ID;
 
-    const handleToggle = (id: number) => {
-        if (id === LOCKED_CATEGORY_ID || readOnly) return;
+    const filteredCategories = useMemo(() => {
+        return activeCategories.filter(cat =>
+            cat.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            cat.id !== lockedId
+        );
+    }, [searchTerm, activeCategories, lockedId]);
+
+    const handleToggle = (id: any) => {
+        if (id === lockedId || readOnly) return;
         
         if (selectedIds.includes(id)) {
             onChange(selectedIds.filter(selectedId => selectedId !== id));
@@ -36,18 +42,20 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
     };
 
     const selectedNames = useMemo(() => {
-        return CATEGORIES.filter(cat => selectedIds.includes(cat.id))
+        return activeCategories.filter(cat => selectedIds.includes(cat.id))
             .sort((a, b) => {
-                if (a.id === LOCKED_CATEGORY_ID) return -1;
-                if (b.id === LOCKED_CATEGORY_ID) return 1;
+                if (a.id === lockedId) return -1;
+                if (b.id === lockedId) return 1;
                 return a.name.localeCompare(b.name);
             });
-    }, [selectedIds]);
+    }, [selectedIds, activeCategories, lockedId]);
+
+    const lockedCategory = activeCategories.find(c => c.id === lockedId);
 
     return (
         <div className="space-y-3">
             <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 px-1">
-                WordPress Categories
+                {targetPlatform === 'framer' ? 'Framer Collection' : 'WordPress Categories'}
             </label>
             
             <div className="relative">
@@ -63,14 +71,14 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                             <span 
                                 key={cat.id}
                                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-[10px] font-bold transition-all ${
-                                    cat.id === LOCKED_CATEGORY_ID 
+                                    cat.id === lockedId 
                                         ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700' 
                                         : 'bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-800'
                                 }`}
                             >
-                                {cat.id === LOCKED_CATEGORY_ID && <Lock className="w-2.5 h-2.5 opacity-60" />}
+                                {cat.id === lockedId && <Lock className="w-2.5 h-2.5 opacity-60" />}
                                 {cat.name}
-                                {cat.id !== LOCKED_CATEGORY_ID && !readOnly && (
+                                {cat.id !== lockedId && !readOnly && (
                                     <button 
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -119,8 +127,8 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                             
                             {/* List of Categories */}
                             <div className="max-h-[320px] overflow-y-auto custom-scrollbar p-1">
-                                {/* Always show Blog at top if it matches search or search is empty */}
-                                {(searchTerm === '' || "blog".includes(searchTerm.toLowerCase())) && (
+                                {/* Always show Locked Category at top if it matches search or search is empty */}
+                                {(searchTerm === '' || lockedCategory?.name.toLowerCase().includes(searchTerm.toLowerCase())) && lockedCategory && (
                                     <div 
                                         className="flex items-center justify-between p-2.5 text-xs font-bold bg-slate-50 dark:bg-slate-800/30 opacity-60 cursor-not-allowed border-b border-slate-100 dark:border-slate-800"
                                     >
@@ -128,7 +136,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                                             <div className="w-4 h-4 rounded-none border border-slate-300 dark:border-slate-600 flex items-center justify-center bg-white dark:bg-slate-700">
                                                 <Check className="w-3 h-3 text-slate-400" />
                                             </div>
-                                            <span className="text-slate-500 underline decoration-slate-300 underline-offset-4">Blog</span>
+                                            <span className="text-slate-500 underline decoration-slate-300 underline-offset-4">{lockedCategory.name}</span>
                                         </div>
                                         <Lock className="w-3 h-3 text-slate-400" />
                                     </div>
@@ -171,3 +179,4 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
         </div>
     );
 };
+
