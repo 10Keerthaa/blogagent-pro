@@ -33,29 +33,6 @@ export const SidebarForm = () => {
 
     return (
         <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-screen border-r border-slate-200 dark:border-slate-800 transition-all duration-300">
-            {/* STICKY HEADER ZONE */}
-            <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center">
-                            <Zap className="w-5 h-5 text-white fill-current" />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-sm font-bold text-slate-900 dark:text-white leading-tight">10xBlogagent</span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-tight">Enterprise Engine</span>
-                        </div>
-                    </div>
-                    <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800" />
-                </div>
-                <button 
-                    onClick={handleClearForm}
-                    className="flex items-center gap-2 px-3 py-1.5 text-[11px] font-bold text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20 rounded-lg transition-all"
-                >
-                    <Plus className="w-3.5 h-3.5" />
-                    NEW POST
-                </button>
-            </div>
-
             {/* STICKY TARGET ZONE */}
             <div className="px-8 py-6 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
