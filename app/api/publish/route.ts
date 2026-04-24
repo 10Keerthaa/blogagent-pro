@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ASSETS } from '@/lib/constants';
 import { db } from "@/lib/firebaseAdmin";
 import sharp from "sharp";
 
@@ -59,25 +60,8 @@ export async function POST(req: Request) {
       try {
         console.log("Compositing and Sideloading Featured Image to WordPress...");
         const origin = new URL(req.url).origin;
-        let blogTagBase64 = '';
-        let logoBase64 = '';
-        try {
-          const blogTagRes = await fetch(`${origin}/Blog.png`);
-          if (blogTagRes.ok) {
-            blogTagBase64 = Buffer.from(await blogTagRes.arrayBuffer()).toString('base64');
-          } else {
-            console.warn(`Blog tag fetch failed: ${blogTagRes.status} ${blogTagRes.statusText}`);
-          }
-          
-          const logoRes = await fetch(`${origin}/10xDS.png`);
-          if (logoRes.ok) {
-            logoBase64 = Buffer.from(await logoRes.arrayBuffer()).toString('base64');
-          } else {
-            console.warn(`10xDS logo fetch failed: ${logoRes.status} ${logoRes.statusText}`);
-          }
-        } catch (e) {
-          console.warn('Failed to fetch logos via HTTP', e);
-        }
+        const blogTagBase64 = ASSETS.blogTag;
+        const logoBase64 = ASSETS.logo;
 
         const titleParts = title.split(':');
         const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { uploadToGCS } from '@/lib/gcs';
 import { getGoogleAuth } from '@/lib/googleAuth';
 import sharp from 'sharp';
+import { ASSETS } from '@/lib/constants';
 import fs from 'fs';
 import path from 'path';
 
@@ -220,21 +221,18 @@ ART STYLE: Premium 3D glassmorphism, transparent glossy panels floating in a com
         // Prepare Logo
         let logoBase64 = '';
         try {
-          const logoRes = await fetch(`${origin}/10xDS.png`);
-          if (logoRes.ok) {
-            const logoBuffer = Buffer.from(await logoRes.arrayBuffer());
-            const TARGET_LOGO_HEIGHT = 75;
-            const logoProcessor = sharp(logoBuffer);
-            const alphaMask = await logoProcessor.clone().greyscale().negate().linear(1.5, -40).toBuffer();
-            const resizedLogo = await sharp(logoBuffer)
-              .joinChannel(alphaMask)
-              .resize({ height: TARGET_LOGO_HEIGHT })
-              .png()
-              .toBuffer();
-            logoBase64 = resizedLogo.toString('base64');
-          }
+          const logoBuffer = Buffer.from(ASSETS.logo, 'base64');
+          const TARGET_LOGO_HEIGHT = 75;
+          const logoProcessor = sharp(logoBuffer);
+          const alphaMask = await logoProcessor.clone().greyscale().negate().linear(1.5, -40).toBuffer();
+          const resizedLogo = await sharp(logoBuffer)
+            .joinChannel(alphaMask)
+            .resize({ height: TARGET_LOGO_HEIGHT })
+            .png()
+            .toBuffer();
+          logoBase64 = resizedLogo.toString('base64');
         } catch (e) {
-          console.warn('Failed to fetch logo for infographic', e);
+          console.warn('Failed to process logo for infographic', e);
         }
 
         // Prepare Font: Fetch TTF from public folder
