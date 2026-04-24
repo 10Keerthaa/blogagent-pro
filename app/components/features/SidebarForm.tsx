@@ -63,7 +63,7 @@ export const SidebarForm = () => {
             <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-8 space-y-10">
                 {/* Blog Topic */}
                 <section className="space-y-4">
-                    <label className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Main Blog Topic</label>
+                    <label className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 pl-2">Main Blog Topic</label>
                     <Textarea
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
                         value={displayPrompt}
@@ -76,7 +76,7 @@ export const SidebarForm = () => {
                 {/* SEO Keywords */}
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Keywords</label>
+                        <label className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 pl-2">Keywords</label>
                         <button
                             onClick={handleFetchKeywords}
                             disabled={isFetchingKeywords || !prompt || isReadOnly}
@@ -137,7 +137,7 @@ export const SidebarForm = () => {
                 {/* Meta Description */}
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Description</label>
+                        <label className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 pl-2">Description</label>
                         <button
                             onClick={handleGenerateDescription}
                             disabled={isGeneratingDescription || !prompt || isReadOnly || !primaryKeyword}
