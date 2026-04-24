@@ -37,7 +37,7 @@ export const TabNavigation = () => {
     return (
         <nav
             aria-label="Dashboard Navigation"
-            className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 grid grid-cols-3 px-10 shrink-0 z-40 sticky top-0 transition-all duration-300"
+            className="h-16 border-b border-slate-400 dark:border-slate-800 bg-white dark:bg-slate-950 grid grid-cols-3 px-10 shrink-0 z-40 sticky top-0 transition-all duration-300"
         >
             {/* WING 1: Branding Logo (Left) */}
             <div className="flex items-center">
@@ -52,7 +52,7 @@ export const TabNavigation = () => {
                 </div>
 
                 {/* CLINICAL SEPARATOR */}
-                <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-6 opacity-60" />
+                <div className="h-8 w-px bg-slate-400 dark:bg-slate-800 mx-6 opacity-60" />
 
                 {/* NEW POST ACTION — only visible on the Editor tab */}
                 {activeTab === 'create' && (
