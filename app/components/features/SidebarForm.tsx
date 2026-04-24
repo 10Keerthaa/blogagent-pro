@@ -33,7 +33,7 @@ export const SidebarForm = () => {
 
     return (
         <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-full border-r border-slate-200 dark:border-slate-800 transition-all duration-300 relative">
-            {/* STICKY TARGET ZONE */}
+            {/* STICKY TARGET ZONE - Multi-Platform Orchestration Switch */}
             <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
                     <label className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">Orchestration Target</label>
