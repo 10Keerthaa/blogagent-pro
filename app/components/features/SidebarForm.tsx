@@ -32,7 +32,7 @@ export const SidebarForm = () => {
     const displayDescription = selectedReviewDraft?.metaDesc || description;
 
     return (
-        <aside className="w-full shrink-0 bg-slate-50 dark:bg-slate-900 flex flex-col h-full border-r border-slate-200 dark:border-slate-800 transition-all duration-300 relative overflow-hidden">
+        <aside className="w-full shrink-0 bg-slate-100 dark:bg-slate-900 flex flex-col h-full border-r border-slate-200 dark:border-slate-800 transition-all duration-300 relative overflow-hidden">
             {/* STICKY TARGET ZONE - Multi-Platform Orchestration Switch */}
             <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
