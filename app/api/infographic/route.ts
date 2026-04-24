@@ -215,37 +215,41 @@ ART STYLE: Premium 3D glassmorphism, transparent glossy panels floating in a com
 
         const bgBase64 = bgBuffer.toString('base64');
         
+        const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
+        
         // Prepare Logo
-        const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
         let logoBase64 = '';
-        if (fs.existsSync(logoPath)) {
-          const logoBuffer = fs.readFileSync(logoPath);
-          const TARGET_LOGO_HEIGHT = 75;
-          const logoProcessor = sharp(logoBuffer);
-          const alphaMask = await logoProcessor.clone().greyscale().negate().linear(1.5, -40).toBuffer();
-          const resizedLogo = await sharp(logoBuffer)
-            .joinChannel(alphaMask)
-            .resize({ height: TARGET_LOGO_HEIGHT })
-            .png()
-            .toBuffer();
-          logoBase64 = resizedLogo.toString('base64');
+        try {
+          const logoRes = await fetch(`${origin}/10xDS.png`);
+          if (logoRes.ok) {
+            const logoBuffer = Buffer.from(await logoRes.arrayBuffer());
+            const TARGET_LOGO_HEIGHT = 75;
+            const logoProcessor = sharp(logoBuffer);
+            const alphaMask = await logoProcessor.clone().greyscale().negate().linear(1.5, -40).toBuffer();
+            const resizedLogo = await sharp(logoBuffer)
+              .joinChannel(alphaMask)
+              .resize({ height: TARGET_LOGO_HEIGHT })
+              .png()
+              .toBuffer();
+            logoBase64 = resizedLogo.toString('base64');
+          }
+        } catch (e) {
+          console.warn('Failed to fetch logo for infographic', e);
         }
 
-        // Prepare Font: Read bundled TTF from next/dist (guaranteed to exist, guaranteed to be valid TTF)
+        // Prepare Font: Fetch TTF from public folder
         let fontBoldBase64 = '';
         let fontRegBase64 = '';
         try {
-          const ttfPath = path.join(process.cwd(), 'node_modules', 'next', 'dist', 'compiled', '@vercel', 'og', 'noto-sans-v27-latin-regular.ttf');
-          if (fs.existsSync(ttfPath)) {
-            const ttfBuf = fs.readFileSync(ttfPath);
-            fontBoldBase64 = ttfBuf.toString('base64');
-            fontRegBase64 = fontBoldBase64; // Use same file for both weights
-          }
+          const fontRes = await fetch(`${origin}/fonts/Inter-Bold.ttf`);
+          if (fontRes.ok) fontBoldBase64 = Buffer.from(await fontRes.arrayBuffer()).toString('base64');
+          
+          const fontRegRes = await fetch(`${origin}/fonts/Inter-Regular.ttf`);
+          if (fontRegRes.ok) fontRegBase64 = Buffer.from(await fontRegRes.arrayBuffer()).toString('base64');
         } catch (fontErr) {
-          console.warn('Font read failed, using Edge default:', fontErr);
+          console.warn('Font HTTP fetch failed:', fontErr);
         }
 
-        const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
         const ogOverlayUrl = new URL(`${origin}/api/infographic-overlay`);
 
         const overlayRes = await fetch(ogOverlayUrl.toString(), {

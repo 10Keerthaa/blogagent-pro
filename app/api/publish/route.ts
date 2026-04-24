@@ -59,12 +59,17 @@ export async function POST(req: Request) {
       try {
         console.log("Compositing and Sideloading Featured Image to WordPress...");
         const origin = new URL(req.url).origin;
-        const fs = require('fs');
-        const path = require('path');
-        const blogTagPath = path.join(process.cwd(), 'public', 'Blog.png');
-        const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
-        const blogTagBase64 = fs.existsSync(blogTagPath) ? fs.readFileSync(blogTagPath, 'base64') : '';
-        const logoBase64 = fs.existsSync(logoPath) ? fs.readFileSync(logoPath, 'base64') : '';
+        let blogTagBase64 = '';
+        let logoBase64 = '';
+        try {
+          const blogTagRes = await fetch(`${origin}/Blog.png`);
+          if (blogTagRes.ok) blogTagBase64 = Buffer.from(await blogTagRes.arrayBuffer()).toString('base64');
+          
+          const logoRes = await fetch(`${origin}/10xDS.png`);
+          if (logoRes.ok) logoBase64 = Buffer.from(await logoRes.arrayBuffer()).toString('base64');
+        } catch (e) {
+          console.warn('Failed to fetch logos via HTTP', e);
+        }
 
         const titleParts = title.split(':');
         const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
@@ -72,16 +77,15 @@ export async function POST(req: Request) {
 
         const ogUrl = new URL(`${origin}/api/banner`);
 
-        // Prepare Font: Read bundled TTF from next/dist for the banner
+        // Prepare Font: Fetch TTF from public folder for the banner
         let fontBoldBase64 = '';
         try {
-          const ttfPath = path.join(process.cwd(), 'node_modules', 'next', 'dist', 'compiled', '@vercel', 'og', 'noto-sans-v27-latin-regular.ttf');
-          if (fs.existsSync(ttfPath)) {
-            const ttfBuf = fs.readFileSync(ttfPath);
-            fontBoldBase64 = ttfBuf.toString('base64');
+          const fontRes = await fetch(`${origin}/fonts/Inter-Bold.ttf`);
+          if (fontRes.ok) {
+            fontBoldBase64 = Buffer.from(await fontRes.arrayBuffer()).toString('base64');
           }
         } catch (fontErr) {
-          console.warn('Font read failed, using Edge default:', fontErr);
+          console.warn('Font HTTP fetch failed:', fontErr);
         }
 
         const imgRes = await fetch(ogUrl.toString(), {

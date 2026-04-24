@@ -11,8 +11,8 @@ export async function POST(request: Request) {
     const fontData = fontBoldBase64 ? Buffer.from(fontBoldBase64, 'base64') : null;
     const fontRegData = fontRegBase64 ? Buffer.from(fontRegBase64, 'base64') : null;
     const fontsArr: any[] = [];
-    if (fontData && fontData.length > 100) fontsArr.push({ name: 'NotoSans', data: fontData, style: 'normal', weight: 700 });
-    if (fontRegData && fontRegData.length > 100) fontsArr.push({ name: 'NotoSans', data: fontRegData, style: 'normal', weight: 400 });
+    if (fontData && fontData.length > 100) fontsArr.push({ name: 'Inter', data: fontData, style: 'normal', weight: 700 });
+    if (fontRegData && fontRegData.length > 100) fontsArr.push({ name: 'Inter', data: fontRegData, style: 'normal', weight: 400 });
 
     const bgSrc = `data:image/jpeg;base64,${bgImageBase64}`;
 
@@ -42,36 +42,36 @@ export async function POST(request: Request) {
                {/* Top Row */}
                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '250px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '310px' }}>
-                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'NotoSans', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q1.title}</h3>
+                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'Inter', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q1.title}</h3>
                     {Array.isArray(q1.points) && q1.points.map((pt: string, i: number) => (
-                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'NotoSans', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
+                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'Inter', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
                     ))}
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '310px', alignItems: 'flex-end', textAlign: 'right' }}>
-                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'NotoSans', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q2.title}</h3>
+                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'Inter', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q2.title}</h3>
                     {Array.isArray(q2.points) && q2.points.map((pt: string, i: number) => (
-                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'NotoSans', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>{pt} •</p>
+                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'Inter', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
                     ))}
                   </div>
                </div>
 
                {/* Middle Row (Center Theme) */}
                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', flex: 1 }}>
-                  <h2 style={{ color: '#FFD700', fontSize: '26px', fontFamily: 'NotoSans', textAlign: 'center', width: '280px', textShadow: '0 4px 15px rgba(0,0,0,0.9)' }}>{central}</h2>
+                  <h2 style={{ color: '#FFD700', fontSize: '26px', fontFamily: 'Inter', textAlign: 'center', width: '280px', textShadow: '0 4px 15px rgba(0,0,0,0.9)' }}>{central}</h2>
                </div>
 
                {/* Bottom Row */}
                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '250px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '310px' }}>
-                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'NotoSans', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q3.title}</h3>
+                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'Inter', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q3.title}</h3>
                     {Array.isArray(q3.points) && q3.points.map((pt: string, i: number) => (
-                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'NotoSans', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
+                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'Inter', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
                     ))}
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '310px', alignItems: 'flex-end', textAlign: 'right' }}>
-                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'NotoSans', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q4.title}</h3>
+                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'Inter', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q4.title}</h3>
                     {Array.isArray(q4.points) && q4.points.map((pt: string, i: number) => (
-                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'NotoSans', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>{pt} •</p>
+                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'Inter', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
                     ))}
                   </div>
                </div>
