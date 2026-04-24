@@ -96,14 +96,14 @@ export const SidebarForm = () => {
                                 <span
                                     key={idx}
                                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold animate-fadeIn transition-all ${isPrimary
-                                        ? 'bg-violet-600 text-white shadow-md shadow-violet-500/20'
+                                        ? 'bg-slate-100 dark:bg-slate-800 text-violet-600 shadow-sm ring-1 ring-violet-200 dark:ring-violet-900/50'
                                         : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
                                         }`}
                                 >
                                     {!isReadOnly && (
                                         <button
                                             onClick={(e) => { e.stopPropagation(); setPrimaryKeyword(isPrimary ? null : tag); }}
-                                            className={`transition-colors ${isPrimary ? 'text-white/80 hover:text-white' : 'text-slate-400 hover:text-violet-500'}`}
+                                            className={`transition-colors ${isPrimary ? 'text-violet-500 hover:text-violet-600' : 'text-slate-400 hover:text-violet-500'}`}
                                         >
                                             <Star className={`w-3 h-3 ${isPrimary ? 'fill-current' : ''}`} />
                                         </button>
@@ -112,7 +112,7 @@ export const SidebarForm = () => {
                                     {!isReadOnly && (
                                         <button
                                             onClick={(e) => { e.stopPropagation(); removeKeyword(tag); if (isPrimary) setPrimaryKeyword(null); }}
-                                            className={`transition-colors ml-1 ${isPrimary ? 'text-white/80 hover:text-white' : 'hover:text-red-500'}`}
+                                            className={`transition-colors ml-1 ${isPrimary ? 'text-violet-400 hover:text-violet-600' : 'hover:text-red-500'}`}
                                         >
                                             <X className="w-3 h-3" />
                                         </button>
