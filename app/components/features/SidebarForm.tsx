@@ -32,7 +32,7 @@ export const SidebarForm = () => {
     const displayDescription = selectedReviewDraft?.metaDesc || description;
 
     return (
-        <aside className="w-full shrink-0 bg-slate-200 dark:bg-slate-900 flex flex-col h-full border-r border-slate-200 dark:border-slate-800 transition-all duration-300 relative overflow-hidden">
+        <aside className="w-full shrink-0 bg-slate-200 dark:bg-slate-900 flex flex-col h-full border-r border-slate-400 dark:border-slate-800 transition-all duration-300 relative overflow-hidden">
             {/* STICKY TARGET ZONE - Multi-Platform Orchestration Switch */}
             <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
@@ -52,7 +52,7 @@ export const SidebarForm = () => {
                             <Code className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'framer' ? 'scale-110' : 'scale-100 opacity-70'}`} />
                             Framer
                         </button>
-                        <div 
+                        <div
                             className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white dark:bg-slate-700 shadow-md rounded-xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${targetPlatform === 'framer' ? 'translate-x-full left-0 ml-1.5' : 'left-1.5'}`}
                         />
                     </div>
