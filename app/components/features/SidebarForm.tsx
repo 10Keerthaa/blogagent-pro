@@ -40,14 +40,14 @@ export const SidebarForm = () => {
                     <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner">
                         <button
                             onClick={() => setTargetPlatform('wordpress')}
-                            className={`flex-1 flex items-center justify-center gap-3 py-3.5 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            className={`flex-1 flex items-center justify-center gap-3 py-6 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                             <Globe className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'wordpress' ? 'scale-110' : 'scale-100 opacity-70'}`} />
                             WordPress
                         </button>
                         <button
                             onClick={() => setTargetPlatform('framer')}
-                            className={`flex-1 flex items-center justify-center gap-3 py-3.5 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            className={`flex-1 flex items-center justify-center gap-3 py-6 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                             <Code className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'framer' ? 'scale-110' : 'scale-100 opacity-70'}`} />
                             Framer
