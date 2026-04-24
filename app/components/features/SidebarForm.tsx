@@ -36,7 +36,7 @@ export const SidebarForm = () => {
             {/* STICKY TARGET ZONE - Multi-Platform Orchestration Switch */}
             <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
-                    <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 !pl-6">Orchestration Target</label>
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 !pl-4">Orchestration Target</label>
                     <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner h-14">
                         <button
                             onClick={() => setTargetPlatform('wordpress')}
@@ -63,31 +63,31 @@ export const SidebarForm = () => {
             <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-8 space-y-10">
                 {/* Blog Topic */}
                 <section className="space-y-4">
-                    <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 !pl-6">Main Blog Topic</label>
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 !pl-4">Main Blog Topic</label>
                     <Textarea
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
                         value={displayPrompt}
                         onChange={(e) => setPrompt(e.target.value)}
-                        className="!bg-transparent !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all"
+                        className="!bg-transparent !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !pl-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all"
                         readOnly={isReadOnly}
                     />
                 </section>
 
                 {/* SEO Keywords */}
                 <section className="space-y-4">
-                    <div className="flex items-center justify-between !pl-6">
+                    <div className="flex items-center justify-between !pl-4">
                         <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Keywords</label>
                         <button
                             onClick={handleFetchKeywords}
                             disabled={isFetchingKeywords || !prompt || isReadOnly}
-                            className="text-[10px] font-bold text-violet-600 hover:text-violet-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
+                            className="text-[10px] font-bold text-violet-600 hover:text-violet-700 disabled:opacity-30 flex items-center gap-1.5 transition-all mr-2"
                         >
                             {isFetchingKeywords ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                             AUTO FETCH
                         </button>
                     </div>
                     <div
-                        className={`flex flex-wrap items-center gap-2 min-h-[100px] p-4 bg-transparent border border-slate-200 dark:border-slate-800 rounded-xl transition-all ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/5 focus-within:border-violet-500'}`}
+                        className={`flex flex-wrap items-center gap-2 min-h-[100px] p-4 !pl-4 bg-transparent border border-slate-200 dark:border-slate-800 rounded-xl transition-all ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/5 focus-within:border-violet-500'}`}
                         onClick={() => !isReadOnly && inputRef.current?.focus()}
                     >
                         {displayKeywords.map((tag: string, idx: number) => {
@@ -136,19 +136,19 @@ export const SidebarForm = () => {
 
                 {/* Meta Description */}
                 <section className="space-y-4">
-                    <div className="flex items-center justify-between !pl-6">
+                    <div className="flex items-center justify-between !pl-4">
                         <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Description</label>
                         <button
                             onClick={handleGenerateDescription}
                             disabled={isGeneratingDescription || !prompt || isReadOnly || !primaryKeyword}
-                            className="text-[10px] font-bold text-violet-600 hover:text-violet-700 disabled:opacity-30 flex items-center gap-1.5 transition-all"
+                            className="text-[10px] font-bold text-violet-600 hover:text-violet-700 disabled:opacity-30 flex items-center gap-1.5 transition-all mr-2"
                         >
                             {isGeneratingDescription ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
                             REFINE
                         </button>
                     </div>
                     {!isReadOnly && displayKeywords.length > 0 && !primaryKeyword && (
-                        <div className="flex items-start gap-3 p-4 bg-amber-50/50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-xl">
+                        <div className="flex items-start gap-3 p-4 bg-amber-50/50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-xl mx-4">
                             <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
                             <p className="text-[10px] font-bold text-amber-700 dark:text-amber-400 leading-relaxed">
                                 Select a <span className="underline decoration-amber-500/30">primary keyword</span> to enable description generation.
@@ -159,7 +159,7 @@ export const SidebarForm = () => {
                         placeholder="SEO optimized summary..."
                         value={displayDescription}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="!min-h-[140px] !bg-transparent !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all"
+                        className="!min-h-[140px] !bg-transparent !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !pl-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all"
                         readOnly={isReadOnly}
                         maxLength={200}
                     />
