@@ -72,7 +72,7 @@ export async function POST(req: Request) {
            - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags.
         5. NEVER use <h2> or <h3> for subheadings. ONLY use <h4>.
         6. NO INTERNAL LINKS: DO NOT generate any <a> tags except for the expert CTA.
-        7. CONCLUSION (MANDATORY): Include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
+        7. CONCLUSION (MANDATORY): Include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://www.10xds.ai/contact/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
         8. FAQ SECTION (MANDATORY): Include an "<h2>FAQ Section</h2>" heading with 5–7 questions. Wrap each question in <b> tags and each answer in <p> tags.
 
         RESULT FORMAT:
