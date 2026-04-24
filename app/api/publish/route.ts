@@ -63,10 +63,18 @@ export async function POST(req: Request) {
         let logoBase64 = '';
         try {
           const blogTagRes = await fetch(`${origin}/Blog.png`);
-          if (blogTagRes.ok) blogTagBase64 = Buffer.from(await blogTagRes.arrayBuffer()).toString('base64');
+          if (blogTagRes.ok) {
+            blogTagBase64 = Buffer.from(await blogTagRes.arrayBuffer()).toString('base64');
+          } else {
+            console.warn(`Blog tag fetch failed: ${blogTagRes.status} ${blogTagRes.statusText}`);
+          }
           
           const logoRes = await fetch(`${origin}/10xDS.png`);
-          if (logoRes.ok) logoBase64 = Buffer.from(await logoRes.arrayBuffer()).toString('base64');
+          if (logoRes.ok) {
+            logoBase64 = Buffer.from(await logoRes.arrayBuffer()).toString('base64');
+          } else {
+            console.warn(`10xDS logo fetch failed: ${logoRes.status} ${logoRes.statusText}`);
+          }
         } catch (e) {
           console.warn('Failed to fetch logos via HTTP', e);
         }
@@ -79,10 +87,15 @@ export async function POST(req: Request) {
 
         // Prepare Font: Fetch TTF from public folder for the banner
         let fontBoldBase64 = '';
+        let fontRegBase64 = '';
         try {
           const fontRes = await fetch(`${origin}/fonts/Inter-Bold.ttf`);
           if (fontRes.ok) {
             fontBoldBase64 = Buffer.from(await fontRes.arrayBuffer()).toString('base64');
+          }
+          const fontRegRes = await fetch(`${origin}/fonts/Inter-Regular.ttf`);
+          if (fontRegRes.ok) {
+            fontRegBase64 = Buffer.from(await fontRegRes.arrayBuffer()).toString('base64');
           }
         } catch (fontErr) {
           console.warn('Font HTTP fetch failed:', fontErr);
@@ -96,7 +109,8 @@ export async function POST(req: Request) {
             bgUrl: imageUrl,
             logoBase64: logoBase64,
             tagBase64: blogTagBase64,
-            fontBoldBase64: fontBoldBase64
+            fontBoldBase64: fontBoldBase64,
+            fontRegBase64: fontRegBase64
           })
         });
 

@@ -4,13 +4,18 @@ export const runtime = 'edge';
 
 export async function POST(request: Request) {
   try {
-    const { title = 'Blog Title', bgUrl = '', logoBase64 = '', tagBase64 = '', fontBoldBase64 = '' } = await request.json();
+    const { title = 'Blog Title', bgUrl = '', logoBase64 = '', tagBase64 = '', fontBoldBase64 = '', fontRegBase64 = '' } = await request.json();
 
     const titleParts = title.split(':');
     const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
     const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
 
     const fontData = fontBoldBase64 ? Buffer.from(fontBoldBase64, 'base64') : null;
+    const fontRegData = fontRegBase64 ? Buffer.from(fontRegBase64, 'base64') : null;
+    
+    const fontsArr: any[] = [];
+    if (fontData) fontsArr.push({ name: 'Inter', data: fontData, style: 'normal', weight: 700 });
+    if (fontRegData) fontsArr.push({ name: 'Inter', data: fontRegData, style: 'normal', weight: 400 });
 
     return new ImageResponse(
       (
@@ -78,7 +83,7 @@ export async function POST(request: Request) {
                   color: 'white',
                   lineHeight: 1.2,
                   margin: 0,
-                  fontFamily: 'NotoSans',
+                  fontFamily: 'Inter',
                   textShadow: '0 4px 10px rgba(0,0,0,0.5)',
                 }}
               >
@@ -92,7 +97,8 @@ export async function POST(request: Request) {
                     opacity: 0.95,
                     lineHeight: 1.2,
                     marginTop: '15px',
-                    fontFamily: 'NotoSans',
+                    fontFamily: 'Inter',
+                    fontWeight: 700,
                     textShadow: '0 2px 8px rgba(0,0,0,0.4)',
                   }}
                 >
@@ -117,9 +123,7 @@ export async function POST(request: Request) {
       {
         width: 1200,
         height: 630,
-        fonts: fontData ? [
-          { name: 'NotoSans', data: fontData, style: 'normal', weight: 700 }
-        ] : undefined
+        fonts: fontsArr.length > 0 ? fontsArr : undefined
       }
     );
   } catch (e: any) {
