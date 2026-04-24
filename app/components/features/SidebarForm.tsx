@@ -37,24 +37,26 @@ export const SidebarForm = () => {
             <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
                     <label className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">Orchestration Target</label>
-                    <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner">
-                        <button
-                            onClick={() => setTargetPlatform('wordpress')}
-                            className={`flex-1 flex items-center justify-center gap-2.5 py-3.5 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
-                        >
-                            <Globe className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'wordpress' ? 'scale-110' : 'scale-100 opacity-70'}`} />
-                            WordPress
-                        </button>
-                        <button
-                            onClick={() => setTargetPlatform('framer')}
-                            className={`flex-1 flex items-center justify-center gap-2.5 py-3.5 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
-                        >
-                            <Code className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'framer' ? 'scale-110' : 'scale-100 opacity-70'}`} />
-                            Framer
-                        </button>
-                        <div 
-                            className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white dark:bg-slate-700 shadow-md rounded-xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${targetPlatform === 'framer' ? 'translate-x-full left-0 ml-1.5' : 'left-1.5'}`}
-                        />
+                    <div className="max-w-[200px]">
+                        <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner">
+                            <button
+                                onClick={() => setTargetPlatform('wordpress')}
+                                className={`flex-1 flex items-center justify-center gap-2.5 py-3.5 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            >
+                                <Globe className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'wordpress' ? 'scale-110' : 'scale-100 opacity-70'}`} />
+                                WP
+                            </button>
+                            <button
+                                onClick={() => setTargetPlatform('framer')}
+                                className={`flex-1 flex items-center justify-center gap-2.5 py-3.5 text-xs font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            >
+                                <Code className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'framer' ? 'scale-110' : 'scale-100 opacity-70'}`} />
+                                FR
+                            </button>
+                            <div 
+                                className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white dark:bg-slate-700 shadow-md rounded-xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${targetPlatform === 'framer' ? 'translate-x-full left-0 ml-1.5' : 'left-1.5'}`}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
