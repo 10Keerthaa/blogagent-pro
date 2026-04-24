@@ -16,7 +16,7 @@ export const PostPreview = () => {
         user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft,
         description, primaryKeyword, prompt: mainTopic, keywords,
         handleRefineSelection, infographicFeedback, setInfographicFeedback, isInfographicRefining,
-        isGenerating, deleteInProgressDraft, checkForResumeDraft
+        isGenerating, deleteInProgressDraft, checkForResumeDraft, targetPlatform
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
@@ -261,8 +261,15 @@ export const PostPreview = () => {
                     />
                     <div className="absolute inset-0 bg-violet-950/40 pointer-events-none" />
 
-                        <div className="absolute inset-0 pointer-events-none">
-                        <img src="/Blog.png" alt="Blog" className="absolute top-[30px] lg:top-[40px] left-[30px] lg:left-[40px] h-8 lg:h-10 w-auto" />
+                    <div className="absolute inset-0 pointer-events-none">
+                        {/* Only show branding for WordPress */}
+                        {targetPlatform !== 'framer' && (
+                            <>
+                                <img src="/Blog.png" alt="Blog" className="absolute top-[30px] lg:top-[40px] left-[30px] lg:left-[40px] h-8 lg:h-10 w-auto" />
+                                <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] h-10 lg:h-14 w-auto" />
+                            </>
+                        )}
+                        
                         <div className="absolute top-[80px] lg:top-[100px] left-[30px] lg:left-[40px] text-white max-w-[85%] font-sans drop-shadow-2xl" style={{ lineHeight: '1.3' }}>
                             {preview.title.includes(':') ? (
                                 <>
@@ -273,7 +280,6 @@ export const PostPreview = () => {
                                 <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold m-0 p-0 leading-[1.3]">{preview.title}</h1>
                             )}
                         </div>
-                        <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] h-10 lg:h-14 w-auto" />
                     </div>
                 </div>
 
@@ -340,9 +346,11 @@ export const PostPreview = () => {
                             <div className="mt-6 flex flex-col gap-4">
                                 <div className="bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden shadow-2xl relative group">
                                     <img src={infographicUrl} alt="Infographic" className="w-full h-auto" />
-                                    <div className="absolute inset-0 pointer-events-none">
-                                        <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[20px] lg:bottom-[30px] right-[20px] lg:right-[30px] h-8 lg:h-12 w-auto drop-shadow-xl" />
-                                    </div>
+                                    {targetPlatform !== 'framer' && (
+                                        <div className="absolute inset-0 pointer-events-none">
+                                            <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[20px] lg:bottom-[30px] right-[20px] lg:right-[30px] h-8 lg:h-12 w-auto drop-shadow-xl" />
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* REFINEMENT TOGGLE */}

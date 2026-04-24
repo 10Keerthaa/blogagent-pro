@@ -179,6 +179,35 @@ export const useBlogApi = () => {
         }
     }, []);
 
+    const generateFramerContent = useCallback(async (body: any, onChunk?: (chunk: string) => void) => {
+        setIsGenerating(true);
+        try {
+            const r = await fetch('/api/framer/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!r.ok) throw new Error('Framer Generation failed');
+
+            const reader = r.body?.getReader();
+            const decoder = new TextDecoder();
+            let fullText = '';
+
+            if (reader) {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value);
+                    fullText += chunk;
+                    if (onChunk) onChunk(chunk);
+                }
+            }
+            return fullText;
+        } finally {
+            setIsGenerating(false);
+        }
+    }, []);
+
     const humanizeContent = useCallback(async (body: any, onChunk?: (chunk: string) => void) => {
         setIsHumanizing(true);
         try {
@@ -533,6 +562,7 @@ export const useBlogApi = () => {
         fetchHistory,
         fetchDrafts,
         generateContent,
+        generateFramerContent,
         humanizeContent,
         fetchUsers,
         updateUserRole,

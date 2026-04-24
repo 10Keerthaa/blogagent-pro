@@ -551,7 +551,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setIsProcessingFullPost(true);
         setError(null); setInfographicUrl(null); setPreview(null);
         try {
-            const fullRawText = await api.generateContent(
+            const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : api.generateContent;
+            
+            const fullRawText = await generationFn(
                 { prompt, keywords: keywords.join(', '), primaryKeyword, description },
                 (chunk: string) => {
                     setPreview((prev: any) => {
