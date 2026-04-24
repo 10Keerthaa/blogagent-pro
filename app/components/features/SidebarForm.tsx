@@ -32,7 +32,7 @@ export const SidebarForm = () => {
     const displayDescription = selectedReviewDraft?.metaDesc || description;
 
     return (
-        <aside className="w-full shrink-0 bg-slate-200 dark:bg-slate-900 flex flex-col h-full border-r border-slate-400 dark:border-slate-800 transition-all duration-300 relative overflow-hidden">
+        <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-full border-r border-slate-400 dark:border-slate-800 transition-all duration-300 relative overflow-hidden">
             {/* STICKY TARGET ZONE - Multi-Platform Orchestration Switch */}
             <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
@@ -68,7 +68,7 @@ export const SidebarForm = () => {
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
                         value={displayPrompt}
                         onChange={(e) => setPrompt(e.target.value)}
-                        className="!bg-white dark:!bg-slate-900 !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !pl-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all shadow-sm"
+                        className="!bg-slate-50/50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !pl-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all"
                         readOnly={isReadOnly}
                     />
                 </section>
@@ -87,7 +87,7 @@ export const SidebarForm = () => {
                         </button>
                     </div>
                     <div
-                        className={`flex flex-wrap items-center gap-2 min-h-[100px] p-4 !pl-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl transition-all shadow-sm ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/5 focus-within:border-violet-500'}`}
+                        className={`flex flex-wrap items-center gap-2 min-h-[100px] p-4 !pl-4 bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl transition-all ${isReadOnly ? 'cursor-default opacity-80' : 'cursor-text focus-within:ring-4 focus-within:ring-violet-500/5 focus-within:border-violet-500'}`}
                         onClick={() => !isReadOnly && inputRef.current?.focus()}
                     >
                         {displayKeywords.map((tag: string, idx: number) => {
@@ -159,7 +159,7 @@ export const SidebarForm = () => {
                         placeholder="SEO optimized summary..."
                         value={displayDescription}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="!min-h-[140px] !bg-white dark:!bg-slate-900 !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !pl-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all shadow-sm"
+                        className="!min-h-[140px] !bg-slate-50/50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !pl-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all"
                         readOnly={isReadOnly}
                         maxLength={200}
                     />
