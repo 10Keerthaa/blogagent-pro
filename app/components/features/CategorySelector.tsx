@@ -10,12 +10,14 @@ interface CategorySelectorProps {
     selectedIds: any[];
     onChange: (ids: any[]) => void;
     readOnly?: boolean;
+    hideLabel?: boolean;
 }
 
 export const CategorySelector: React.FC<CategorySelectorProps> = ({
     selectedIds,
     onChange,
-    readOnly = false
+    readOnly = false,
+    hideLabel = false
 }) => {
     const { targetPlatform } = useDashboard();
     const [isOpen, setIsOpen] = useState(false);
@@ -54,9 +56,11 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
 
     return (
         <div className="space-y-3">
-            <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 px-1">
-                {targetPlatform === 'framer' ? 'Framer Category' : 'WordPress Categories'}
-            </label>
+            {!hideLabel && (
+                <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400 px-1">
+                    {targetPlatform === 'framer' ? 'Framer Category' : 'WordPress Categories'}
+                </label>
+            )}
             
             <div className="relative">
                 {/* Trigger Button */}

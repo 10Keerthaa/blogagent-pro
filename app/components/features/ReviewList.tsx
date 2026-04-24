@@ -233,6 +233,7 @@ export const ReviewList = () => {
                                         selectedIds={selectedCategories}
                                         onChange={setSelectedCategories}
                                         readOnly={isReadOnly}
+                                        hideLabel={true}
                                     />
                                 </div>
                             </div>
