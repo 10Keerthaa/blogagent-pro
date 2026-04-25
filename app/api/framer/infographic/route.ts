@@ -74,20 +74,18 @@ export async function POST(req: Request) {
     const imageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
     
     const visualPrompt = `
-      ULTRA-HIGH RESOLUTION TECHNICAL INFOGRAPHIC BACKGROUND.
-      LAYOUT: Multi-tier structured grid for a 800x1000 vertical design.
+      ULTRA-HIGH RESOLUTION PREMIUM TECHNICAL INFOGRAPHIC BACKGROUND.
+      LAYOUT: Vertical 800x1000 grid with a clear multi-tier structure.
+      THEME: Deep Electric Purple (#1A0B2E) and Violet monochromatic gradients. Subtle Metallic Gold highlights.
       ELEMENTS:
-      - Deep Royal Purple (#2D1B69) background with a radial center glow.
-      - 6 circular glassmorphism nodes at the top.
-      - 4-5 semi-transparent glowing lavender boxes in a dual-column grid.
-      - A solid footer bar at the bottom.
-      
+      - 6 circular Glassmorphism nodes arranged in a perfect horizontal row in the upper third.
+      - INSIDE NODES: Draw 6 distinct, high-contrast white 3D technical icons (e.g., neural chip, holographic shield, glowing gear, data node) based on: ${parsedData.pillars.join(', ')}.
+      - CONTENT AREA: 4-5 semi-transparent 'Deep Purple' frosted glass boxes in the middle section.
+      - FOOTER: A solid dark purple bar at the very bottom.
       STRICT CONSTRAINTS:
-      - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing any text, letters, or numbers.
-      - ICONS: Draw 6 high-contrast white 3D technical line icons inside the top circular nodes based on these pillars: ${parsedData.pillars.join(', ')}.
-      - IMAGERY: Subtly integrate abstract technical imagery (neural networks, robotic limbs, or digital nodes) into the background based on: ${prompt}.
-      - STYLE: Premium 3D Glassmorphism, ray-traced lighting, cinematic rendering.
-      - Aspect Ratio 4:5.
+      - BLANK TEXT RULE: You are FORBIDDEN from drawing any letters, numbers, or words.
+      - ALL-PURPLE: The entire image must feel like a cohesive purple technical ecosystem.
+      - STYLE: Premium 3D Glassmorphism, ray-traced lighting, 8k cinematic rendering.
     `;
 
     const imageResp = await client.request({

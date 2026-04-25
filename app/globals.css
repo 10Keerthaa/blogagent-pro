@@ -90,12 +90,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8; /* Slate-400 for high visibility */
+  background: #cbd5e1; /* Slate-300 for subtle visibility */
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b; /* Slate-500 on hover */
+  background: #94a3b8; /* Slate-400 on hover */
 }
 
 /* Dark Mode Scrollbar */
@@ -104,10 +104,10 @@ body {
     background: rgba(255, 255, 255, 0.02);
   }
   ::-webkit-scrollbar-thumb {
-    background: #475569; /* Slate-600 */
+    background: #64748b; /* Slate-500 */
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
+    background: #94a3b8;
   }
 }
 

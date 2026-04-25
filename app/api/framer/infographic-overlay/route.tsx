@@ -84,14 +84,26 @@ export async function POST(request: Request) {
             width: '100%', 
             marginBottom: '40px',
             padding: '20px',
-            backgroundColor: 'rgba(183, 148, 244, 0.1)',
+            backgroundColor: 'rgba(183, 148, 244, 0.05)',
             borderRadius: '12px',
-            border: '1px solid rgba(183, 148, 244, 0.2)'
+            border: '1px solid rgba(183, 148, 244, 0.15)',
+            height: '120px',
+            alignItems: 'flex-start'
           }}>
             {data.pillars.map((pillar: string, i: number) => (
               <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100px' }}>
-                <div style={{ width: '30px', height: '30px', backgroundColor: '#B794F4', borderRadius: '50%', marginBottom: '8px' }} />
-                <span style={{ fontSize: '10px', color: '#FFF', textTransform: 'uppercase', textAlign: 'center', fontFamily: 'EliteBold', display: 'flex' }}>
+                {/* Space for the 3D icon generated in the background */}
+                <div style={{ width: '45px', height: '45px', marginBottom: '10px' }} /> 
+                <span style={{ 
+                  fontSize: '9px', 
+                  color: '#B794F4', 
+                  textTransform: 'uppercase', 
+                  textAlign: 'center', 
+                  fontFamily: 'EliteBold', 
+                  display: 'flex',
+                  fontWeight: 900,
+                  letterSpacing: '0.5px'
+                }}>
                   {pillar}
                 </span>
               </div>
@@ -99,22 +111,23 @@ export async function POST(request: Request) {
           </div>
 
           {/* Main Content Grid (4-5 Blocks) */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', flex: 1 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', flex: 1, alignContent: 'flex-start' }}>
             {data.blocks.map((block: any, i: number) => (
               <div key={i} style={{ 
                 width: '330px', 
-                backgroundColor: 'rgba(26, 11, 46, 0.7)',
+                backgroundColor: 'rgba(26, 11, 46, 0.6)',
                 padding: '20px',
                 borderRadius: '12px',
                 borderLeft: '4px solid #B794F4',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                minHeight: '140px'
               }}>
-                <h3 style={{ fontSize: '18px', color: '#B794F4', margin: '0 0 12px 0', textTransform: 'uppercase', fontFamily: 'EliteBold', display: 'flex' }}>
+                <h3 style={{ fontSize: '18px', color: '#B794F4', margin: '0 0 10px 0', textTransform: 'uppercase', fontFamily: 'EliteBold', display: 'flex' }}>
                   {block.title}
                 </h3>
                 {block.items.map((item: string, j: number) => (
-                  <p key={j} style={{ fontSize: '14px', color: '#FFF', margin: '4px 0', fontFamily: 'EliteReg', display: 'flex' }}>
+                  <p key={j} style={{ fontSize: '13px', color: '#FFF', margin: '3px 0', fontFamily: 'EliteReg', display: 'flex', opacity: 0.9 }}>
                     • {item}
                   </p>
                 ))}
@@ -124,14 +137,22 @@ export async function POST(request: Request) {
 
           {/* Footer Bar */}
           <div style={{ 
-            marginTop: '40px',
-            padding: '20px',
-            borderTop: '2px solid rgba(255, 215, 0, 0.3)',
+            marginTop: 'auto',
+            padding: '30px 20px 0 20px',
+            borderTop: '1px solid rgba(255, 215, 0, 0.2)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'
           }}>
-            <span style={{ fontSize: '18px', color: '#FFD700', textTransform: 'uppercase', letterSpacing: '4px', fontFamily: 'EliteBold', display: 'flex' }}>
+            <span style={{ 
+              fontSize: '16px', 
+              color: '#FFD700', 
+              textTransform: 'uppercase', 
+              letterSpacing: '3px', 
+              fontFamily: 'EliteBold', 
+              display: 'flex',
+              textAlign: 'center'
+            }}>
               {data.footer_summary}
             </span>
           </div>
