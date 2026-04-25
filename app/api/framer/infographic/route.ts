@@ -75,17 +75,16 @@ export async function POST(req: Request) {
     
     const visualPrompt = `
       ULTRA-HIGH RESOLUTION MONOCHROMATIC PURPLE TECHNICAL INFOGRAPHIC BACKGROUND.
-      THEME: 100% Deep Electric Purple Ecosystem. NO DARK BLUE. NO BLACK.
-      COLORS: Use only variations of Deep Violet (#1A0B2E), Royal Purple (#2D1B69), and Glowing Lavender (#B794F4). Subtle Metallic Gold accents for highlights only.
-      LAYOUT: Vertical 800x1000 grid with a clear multi-tier structure.
+      THEME: 100% Solid, Uniform Deep Electric Purple Canvas. NO GRADIENTS. NO DARK BLUE. NO BLACK.
+      COLORS: Use only variations of Deep Violet (#1A0B2E) and Royal Purple (#2D1B69). NO SPLIT BACKGROUND. NO FOOTER BAR.
+      LAYOUT: A clean, flat 800x1000 vertical canvas.
       ELEMENTS:
-      - 6 circular Glassmorphism nodes arranged in a perfect horizontal row in the upper third.
+      - 6 circular Glassmorphism nodes arranged in a perfect horizontal row in the upper third (Center Y-coordinate: 260px).
       - INSIDE NODES: Draw 6 distinct, high-contrast white 3D technical icons (e.g., neural chip, holographic shield, glowing gear, data node) based on: ${parsedData.pillars.join(', ')}.
       - CONTENT AREA: 4-5 semi-transparent 'Deep Purple' frosted glass boxes in the middle section.
-      - FOOTER: A solid dark purple bar at the very bottom.
       STRICT CONSTRAINTS:
       - BLANK TEXT RULE: You are FORBIDDEN from drawing any letters, numbers, or words.
-      - PURPLE RULE: The entire image base must be shades of PURPLE ONLY. No split background.
+      - PURPLE RULE: The entire image base must be one consistent shade of PURPLE from edge to edge.
       - STYLE: Premium 3D Glassmorphism, ray-traced lighting, 8k cinematic rendering.
     `;
 

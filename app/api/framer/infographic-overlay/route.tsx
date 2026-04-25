@@ -77,18 +77,20 @@ export async function POST(request: Request) {
             </p>
           </div>
 
-          {/* Pillar Icons Bar (6 Pillars) */}
+          {/* Pillar Icons Bar (6 Pillars) - UNIFIED GLASS BOX */}
           <div style={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
             width: '100%', 
             marginBottom: '40px',
-            padding: '25px 20px',
-            backgroundColor: 'rgba(183, 148, 244, 0.05)',
-            borderRadius: '12px',
-            border: '1px solid rgba(183, 148, 244, 0.15)',
-            height: '140px',
-            alignItems: 'center'
+            padding: '20px',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            height: '180px',
+            alignItems: 'center',
+            position: 'relative'
           }}>
             {data.pillars.map((pillar: string, i: number) => (
               <div key={i} style={{ 
@@ -96,21 +98,21 @@ export async function POST(request: Request) {
                 flexDirection: 'column', 
                 alignItems: 'center', 
                 justifyContent: 'center',
-                width: '100px',
+                width: '110px',
                 height: '100%'
               }}>
-                {/* Space for the 3D icon generated in the background - Centered perfectly */}
-                <div style={{ width: '50px', height: '50px', marginBottom: '15px' }} /> 
+                {/* Icons will be drawn behind this empty space in the base image */}
+                <div style={{ width: '80px', height: '80px', marginBottom: '10px' }} /> 
                 <span style={{ 
-                  fontSize: '9px', 
-                  color: '#B794F4', 
+                  fontSize: '10px', 
+                  color: '#FFFFFF', 
                   textTransform: 'uppercase', 
                   textAlign: 'center', 
                   fontFamily: 'EliteBold', 
                   display: 'flex',
                   fontWeight: 900,
-                  letterSpacing: '0.8px',
-                  width: '90px',
+                  letterSpacing: '1px',
+                  width: '100%',
                   justifyContent: 'center'
                 }}>
                   {pillar}
