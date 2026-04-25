@@ -14,12 +14,12 @@ export const PerformanceManagement = () => {
         handleFetchUsers, 
         isFetchingUsers,
         reportData,
-        handleFetchReport
+        handleFetchReport,
+        targetPlatform
     } = useDashboard();
     
     // Use reportData from context instead of local state
     const isLoading = isFetchingUsers; // Simplified loading state proxy or add isFetchingReport to context if needed
-
 
     useEffect(() => {
         if (isPerformanceOpen && role === 'admin') {
@@ -45,7 +45,7 @@ export const PerformanceManagement = () => {
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
                             <BarChart2 className="w-4 h-4 text-emerald-500" />
-                            <h2 className="text-[11px] font-bold tracking-[0.2em] text-emerald-500 uppercase">Intelligence Reports</h2>
+                            <h2 className="text-[11px] font-bold tracking-[0.2em] text-emerald-500 uppercase">Intelligence Reports &bull; {targetPlatform} focus</h2>
                         </div>
                         <h3 className="text-2xl font-bold text-slate-900 dark:text-white leading-tight font-serif">Performance Analytics</h3>
                     </div>
@@ -65,42 +65,48 @@ export const PerformanceManagement = () => {
                                 <div key={i} className="h-28 bg-slate-50 dark:bg-slate-900 animate-pulse border border-slate-100 dark:border-slate-800" />
                             ))
                         ) : reportData.length > 0 ? (
-                            reportData.map((row, idx) => (
-                                <div 
-                                    key={idx}
-                                    className="group p-8 bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-8"
-                                >
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-sm transition-transform group-hover:scale-110">
-                                            <User className="w-7 h-7" />
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <span className="text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-emerald-500 transition-colors">{row.email}</span>
-                                            <div className="flex items-center gap-3 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                                                <span>Active</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                            reportData.map((row, idx) => {
+                                // Dynamic metric extraction based on global targetPlatform
+                                const created = targetPlatform === 'framer' ? row.framer_created : row.wordpress_created;
+                                const published = targetPlatform === 'framer' ? row.framer_published : row.wordpress_published;
 
-                                    <div className="flex items-center gap-8 lg:gap-16">
-                                        <div className="flex items-center gap-12">
-                                            <div className="text-center">
-                                                <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-black mb-2">Drafts Created</div>
-                                                <div className="text-2xl font-black text-slate-900 dark:text-white">{row.total_created || 0}</div>
+                                return (
+                                    <div 
+                                        key={idx}
+                                        className="group p-8 bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-8"
+                                    >
+                                        <div className="flex items-center gap-6">
+                                            <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-sm transition-transform group-hover:scale-110">
+                                                <User className="w-7 h-7" />
                                             </div>
-                                            <div className="text-center">
-                                                <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-black mb-2">Live Posts</div>
-                                                <div className="text-2xl font-black text-emerald-500">{row.total_published || 0}</div>
+                                            <div className="space-y-1.5">
+                                                <span className="text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-emerald-500 transition-colors">{row.email}</span>
+                                                <div className="flex items-center gap-3 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                                                    <span>Active &bull; {targetPlatform} specialist</span>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="px-6 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 flex items-center gap-3">
-                                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Live Session</span>
+                                        <div className="flex items-center gap-8 lg:gap-16">
+                                            <div className="flex items-center gap-12">
+                                                <div className="text-center">
+                                                    <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-black mb-2">{targetPlatform} Drafts</div>
+                                                    <div className="text-2xl font-black text-slate-900 dark:text-white">{created || 0}</div>
+                                                </div>
+                                                <div className="text-center">
+                                                    <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-black mb-2">Live {targetPlatform}</div>
+                                                    <div className="text-2xl font-black text-emerald-500">{published || 0}</div>
+                                                </div>
+                                            </div>
+
+                                            <div className="px-6 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Live Session</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))
+                                );
+                            })
                         ) : (
                             <div className="py-24 text-center space-y-6">
                                 <div className="w-20 h-20 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto text-slate-200">

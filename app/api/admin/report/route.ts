@@ -36,7 +36,8 @@ export async function GET(req: Request) {
         const postsSnap = await db.collection('blog_posts').get();
         const posts = postsSnap.docs.map(doc => ({
             status: doc.data().status,
-            created_by: doc.data().created_by
+            created_by: doc.data().created_by,
+            platform: doc.data().platform || 'wordpress' // Fallback to wordpress for legacy posts
         }));
 
         // 3. Aggregate results
@@ -48,7 +49,12 @@ export async function GET(req: Request) {
                 full_name: profile.full_name,
                 total_created: userPosts.length,
                 total_published: userPosts.filter(p => p.status === 'published').length,
-                role: profile.role
+                role: profile.role,
+                // Add split counts
+                wordpress_created: userPosts.filter(p => p.platform === 'wordpress').length,
+                wordpress_published: userPosts.filter(p => p.platform === 'wordpress' && p.status === 'published').length,
+                framer_created: userPosts.filter(p => p.platform === 'framer').length,
+                framer_published: userPosts.filter(p => p.platform === 'framer' && p.status === 'published').length
             };
         });
 
