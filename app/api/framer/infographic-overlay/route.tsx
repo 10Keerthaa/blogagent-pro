@@ -6,7 +6,7 @@ export const runtime = 'edge';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { bgImageBase64, data, fontBold, fontReg } = body;
+    const { bgImageBase64, logoBase64, data, fontBold, fontReg } = body;
 
     // Convert base64 fonts to ArrayBuffers for Edge compatibility
     const fontBoldArray = fontBold ? Uint8Array.from(atob(fontBold), c => c.charCodeAt(0)) : null;
@@ -167,6 +167,22 @@ export async function POST(request: Request) {
               {data.footer_summary}
             </span>
           </div>
+
+          {/* 10xDS Brand Logo - Bottom Right */}
+          {logoBase64 && (
+            <img 
+              src={`data:image/png;base64,${logoBase64}`}
+              alt="10xDS Logo"
+              style={{
+                position: 'absolute',
+                bottom: '30px',
+                right: '30px',
+                height: '40px',
+                width: 'auto',
+                opacity: 0.9
+              }}
+            />
+          )}
         </div>
       ),
       {

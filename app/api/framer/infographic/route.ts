@@ -117,11 +117,23 @@ export async function POST(req: Request) {
     const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
     const overlayUrl = new URL(`${origin}/api/framer/infographic-overlay`);
 
+    // Fetch the 10xDS logo for branding
+    let logoBase64 = '';
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
+      logoBase64 = fs.readFileSync(logoPath, { encoding: 'base64' });
+    } catch (err) {
+      console.error("Failed to load logo for infographic:", err);
+    }
+
     const compositeResp = await fetch(overlayUrl.toString(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         bgImageBase64: base64Image,
+        logoBase64: logoBase64,
         data: parsedData,
         fontBold: FONTS.bold,
         fontReg: FONTS.regular
