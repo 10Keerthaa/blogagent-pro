@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import React from 'react';
 
 export const runtime = 'edge';
 
@@ -7,12 +8,27 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { bgImageBase64, data, fontBold, fontReg } = body;
 
-    const fontBoldData = fontBold ? Buffer.from(fontBold, 'base64') : null;
-    const fontRegData = fontReg ? Buffer.from(fontReg, 'base64') : null;
+    // Convert base64 fonts to ArrayBuffers for Edge compatibility
+    const fontBoldArray = fontBold ? Uint8Array.from(atob(fontBold), c => c.charCodeAt(0)) : null;
+    const fontRegArray = fontReg ? Uint8Array.from(atob(fontReg), c => c.charCodeAt(0)) : null;
 
     const fonts: any[] = [];
-    if (fontBoldData) fonts.push({ name: 'EliteBold', data: fontBoldData, style: 'normal', weight: 900 });
-    if (fontRegData) fonts.push({ name: 'EliteReg', data: fontRegData, style: 'normal', weight: 400 });
+    if (fontBoldArray) {
+      fonts.push({ 
+        name: 'EliteBold', 
+        data: fontBoldArray.buffer, 
+        style: 'normal', 
+        weight: 900 
+      });
+    }
+    if (fontRegArray) {
+      fonts.push({ 
+        name: 'EliteReg', 
+        data: fontRegArray.buffer, 
+        style: 'normal', 
+        weight: 400 
+      });
+    }
 
     const bgSrc = `data:image/png;base64,${bgImageBase64}`;
 
@@ -26,11 +42,13 @@ export async function POST(request: Request) {
           backgroundColor: '#0A0118',
           position: 'relative',
           overflow: 'hidden',
-          padding: '60px'
+          padding: '60px',
+          color: 'white'
         }}>
           {/* Background Image */}
           <img 
             src={bgSrc} 
+            alt="background"
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
           />
 
@@ -42,7 +60,8 @@ export async function POST(request: Request) {
               color: '#FFD700',
               textTransform: 'uppercase',
               margin: '0 0 10px 0',
-              lineHeight: 1.1
+              lineHeight: 1.1,
+              display: 'flex'
             }}>
               {data.title}
             </h1>
@@ -51,7 +70,8 @@ export async function POST(request: Request) {
               fontFamily: 'EliteReg',
               color: '#FFFFFF',
               margin: 0,
-              opacity: 0.9
+              opacity: 0.9,
+              display: 'flex'
             }}>
               {data.subtitle}
             </p>
@@ -71,7 +91,7 @@ export async function POST(request: Request) {
             {data.pillars.map((pillar: string, i: number) => (
               <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100px' }}>
                 <div style={{ width: '30px', height: '30px', backgroundColor: '#B794F4', borderRadius: '50%', marginBottom: '8px' }} />
-                <span style={{ fontSize: '10px', color: '#FFF', textTransform: 'uppercase', textAlign: 'center', fontFamily: 'EliteBold' }}>
+                <span style={{ fontSize: '10px', color: '#FFF', textTransform: 'uppercase', textAlign: 'center', fontFamily: 'EliteBold', display: 'flex' }}>
                   {pillar}
                 </span>
               </div>
@@ -90,11 +110,11 @@ export async function POST(request: Request) {
                 display: 'flex',
                 flexDirection: 'column'
               }}>
-                <h3 style={{ fontSize: '18px', color: '#B794F4', margin: '0 0 12px 0', textTransform: 'uppercase', fontFamily: 'EliteBold' }}>
+                <h3 style={{ fontSize: '18px', color: '#B794F4', margin: '0 0 12px 0', textTransform: 'uppercase', fontFamily: 'EliteBold', display: 'flex' }}>
                   {block.title}
                 </h3>
                 {block.items.map((item: string, j: number) => (
-                  <p key={j} style={{ fontSize: '14px', color: '#FFF', margin: '4px 0', fontFamily: 'EliteReg' }}>
+                  <p key={j} style={{ fontSize: '14px', color: '#FFF', margin: '4px 0', fontFamily: 'EliteReg', display: 'flex' }}>
                     • {item}
                   </p>
                 ))}
@@ -111,7 +131,7 @@ export async function POST(request: Request) {
             justifyContent: 'center',
             alignItems: 'center'
           }}>
-            <span style={{ fontSize: '18px', color: '#FFD700', textTransform: 'uppercase', letterSpacing: '4px', fontFamily: 'EliteBold' }}>
+            <span style={{ fontSize: '18px', color: '#FFD700', textTransform: 'uppercase', letterSpacing: '4px', fontFamily: 'EliteBold', display: 'flex' }}>
               {data.footer_summary}
             </span>
           </div>
