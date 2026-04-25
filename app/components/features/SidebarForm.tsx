@@ -36,7 +36,7 @@ export const SidebarForm = () => {
             {/* STICKY TARGET ZONE - Multi-Platform Orchestration Switch */}
             <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
-                    <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 !pl-4">Orchestration Target</label>
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 !pl-4">Target Platform</label>
                     <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner h-14">
                         <button
                             onClick={() => setTargetPlatform('wordpress')}

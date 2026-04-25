@@ -1,85 +1,129 @@
-import { NextResponse } from "next/server";
-import sharp from 'sharp';
+import { ImageResponse } from 'next/og';
 
-export async function POST(req: Request) {
+export const runtime = 'edge';
+
+export async function POST(request: Request) {
   try {
-    const { bgImageBase64, data, fontBold, fontReg } = await req.json();
+    const body = await request.json();
+    const { bgImageBase64, data, fontBold, fontReg } = body;
 
-    if (!bgImageBase64 || !data) {
-      return NextResponse.json({ error: "Missing data" }, { status: 400 });
-    }
+    const fontBoldData = fontBold ? Buffer.from(fontBold, 'base64') : null;
+    const fontRegData = fontReg ? Buffer.from(fontReg, 'base64') : null;
 
-    const width = 800;
-    const height = 1000;
+    const fonts: any[] = [];
+    if (fontBoldData) fonts.push({ name: 'EliteBold', data: fontBoldData, style: 'normal', weight: 900 });
+    if (fontRegData) fonts.push({ name: 'EliteReg', data: fontRegData, style: 'normal', weight: 400 });
 
-    // SVG Construction for "Zero-Error" Spelling
-    const svg = `
-      <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <style>
-            @font-face {
-              font-family: 'EliteBold';
-              src: url(data:font/woff2;base64,${fontBold});
-            }
-            @font-face {
-              font-family: 'EliteReg';
-              src: url(data:font/woff2;base64,${fontReg});
-            }
-            .title { fill: #FFD700; font-family: 'EliteBold', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 38px; text-transform: uppercase; font-weight: 900; }
-            .subtitle { fill: #FFFFFF; font-family: 'EliteReg', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 22px; font-weight: 500; opacity: 0.9; }
-            .pillar-text { fill: #FFFFFF; font-family: 'EliteBold', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; text-anchor: middle; }
-            .block-title { fill: #B794F4; font-family: 'EliteBold', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 18px; text-transform: uppercase; }
-            .block-item { fill: #FFFFFF; font-family: 'EliteReg', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 14px; }
-            .footer { fill: #FFFFFF; font-family: 'EliteBold', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 16px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; }
-          </style>
-        </defs>
+    const bgSrc = `data:image/png;base64,${bgImageBase64}`;
 
-        <!-- Tier 1: Header -->
-        <text x="400" y="60" text-anchor="middle" class="title">${data.title}</text>
-        <text x="400" y="100" text-anchor="middle" class="subtitle">${data.subtitle}</text>
+    return new ImageResponse(
+      (
+        <div style={{
+          height: '1000px',
+          width: '800px',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: '#0A0118',
+          position: 'relative',
+          overflow: 'hidden',
+          padding: '60px'
+        }}>
+          {/* Background Image */}
+          <img 
+            src={bgSrc} 
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
+          />
 
-        <!-- Tier 2: Icon Pillars labels -->
-        ${(data.pillars || []).map((text: string, i: number) => {
-          const x = 80 + (i * 128); // Evenly spaced 6 icons
-          return `<text x="${x}" y="240" class="pillar-text">${text}</text>`;
-        }).join('')}
+          {/* Header Section */}
+          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '40px', position: 'relative' }}>
+            <h1 style={{
+              fontSize: '42px',
+              fontFamily: 'EliteBold',
+              color: '#FFD700',
+              textTransform: 'uppercase',
+              margin: '0 0 10px 0',
+              lineHeight: 1.1
+            }}>
+              {data.title}
+            </h1>
+            <p style={{
+              fontSize: '24px',
+              fontFamily: 'EliteReg',
+              color: '#FFFFFF',
+              margin: 0,
+              opacity: 0.9
+            }}>
+              {data.subtitle}
+            </p>
+          </div>
 
-        <!-- Tier 3: Data Grid (Dual Column) -->
-        ${(data.blocks || []).map((block: any, i: number) => {
-          const isLeft = i % 2 === 0;
-          const x = isLeft ? 60 : 420;
-          const y = 320 + (Math.floor(i / 2) * 220);
-          
-          return `
-            <g transform="translate(${x}, ${y})">
-              <text x="0" y="0" class="block-title">${block.title}</text>
-              ${(block.items || []).map((item: string, j: number) => `
-                <text x="0" y="${30 + (j * 25)}" class="block-item">• ${item}</text>
-              `).join('')}
-            </g>
-          `;
-        }).join('')}
+          {/* Pillar Icons Bar (6 Pillars) */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            width: '100%', 
+            marginBottom: '40px',
+            padding: '20px',
+            backgroundColor: 'rgba(183, 148, 244, 0.1)',
+            borderRadius: '12px',
+            border: '1px solid rgba(183, 148, 244, 0.2)'
+          }}>
+            {data.pillars.map((pillar: string, i: number) => (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100px' }}>
+                <div style={{ width: '30px', height: '30px', backgroundColor: '#B794F4', borderRadius: '50%', marginBottom: '8px' }} />
+                <span style={{ fontSize: '10px', color: '#FFF', textTransform: 'uppercase', textAlign: 'center', fontFamily: 'EliteBold' }}>
+                  {pillar}
+                </span>
+              </div>
+            ))}
+          </div>
 
-        <!-- Tier 4: Footer -->
-        <text x="400" y="960" text-anchor="middle" class="footer">${data.footer_summary}</text>
-      </svg>
-    `;
+          {/* Main Content Grid (4-5 Blocks) */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', flex: 1 }}>
+            {data.blocks.map((block: any, i: number) => (
+              <div key={i} style={{ 
+                width: '330px', 
+                backgroundColor: 'rgba(26, 11, 46, 0.7)',
+                padding: '20px',
+                borderRadius: '12px',
+                borderLeft: '4px solid #B794F4',
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <h3 style={{ fontSize: '18px', color: '#B794F4', margin: '0 0 12px 0', textTransform: 'uppercase', fontFamily: 'EliteBold' }}>
+                  {block.title}
+                </h3>
+                {block.items.map((item: string, j: number) => (
+                  <p key={j} style={{ fontSize: '14px', color: '#FFF', margin: '4px 0', fontFamily: 'EliteReg' }}>
+                    • {item}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </div>
 
-    const svgBuffer = Buffer.from(svg);
-    const bgBuffer = Buffer.from(bgImageBase64, 'base64');
-
-    const finalImage = await sharp(bgBuffer)
-      .resize(width, height)
-      .composite([{ input: svgBuffer, top: 0, left: 0 }])
-      .png()
-      .toBuffer();
-
-    return new Response(new Uint8Array(finalImage), {
-      headers: { 'Content-Type': 'image/png' }
-    });
-
-  } catch (error: any) {
-    console.error("Overlay Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+          {/* Footer Bar */}
+          <div style={{ 
+            marginTop: '40px',
+            padding: '20px',
+            borderTop: '2px solid rgba(255, 215, 0, 0.3)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <span style={{ fontSize: '18px', color: '#FFD700', textTransform: 'uppercase', letterSpacing: '4px', fontFamily: 'EliteBold' }}>
+              {data.footer_summary}
+            </span>
+          </div>
+        </div>
+      ),
+      {
+        width: 800,
+        height: 1000,
+        fonts: fonts
+      }
+    );
+  } catch (e: any) {
+    return new Response(`Failed to generate overlay: ${e.message}`, { status: 500 });
   }
 }
