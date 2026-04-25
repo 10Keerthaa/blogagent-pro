@@ -81,9 +81,9 @@ export const PerformanceManagement = () => {
                                             </div>
                                             <div className="space-y-1.5">
                                                 <span className="text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-emerald-500 transition-colors">{row.email}</span>
-                                                <div className="flex items-center gap-3 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                                                    <span>Active &bull; {targetPlatform} specialist</span>
-                                                </div>
+                                            <div className="flex items-center gap-3 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                                                <span>Active</span>
+                                            </div>
                                             </div>
                                         </div>
 
