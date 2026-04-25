@@ -158,3 +158,10 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out forwards;
 }
+
+/* === FAQ Visual Spacing === */
+/* Adds balanced vertical separation between Q&A pairs in the blog content */
+.editor-content b + p,
+.prose b + p {
+  margin-bottom: 2.25rem !important; /* Equates to roughly mb-9 for clear separation */
+}

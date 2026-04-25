@@ -75,7 +75,7 @@ export async function POST(req: Request) {
         6. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content (except for the expert CTA).
         7. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
         8. CONCLUSION (MANDATORY): You MUST include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
-        9. FAQ SECTION (MANDATORY): You MUST include an "<h2>FAQ Section</h2>" heading with 5–7 questions. Wrap each question in <b> tags and each answer in <p> tags.
+        9. FAQ SECTION (MANDATORY): You MUST include an "<h2>FAQ Section</h2>" heading with 5–7 questions. Wrap each question in <b> tags and each answer in <p> tags. Do not nest them; they must be sequential blocks.
 
         RESULT FORMAT:
         <title>...</title>
