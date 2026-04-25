@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       3. Items per block must be exactly 2-3.
       4. Use extremely formal enterprise terminology.
       5. SPELLING MUST BE PERFECT.
+      6. DATA SOURCE RULE: Only analyze the core technical body of the post. IGNORE the Conclusion and FAQ sections entirely as they are repetitive summary information. Focus only on the unique technical insights.
     `;
 
     const analysisResp = await client.request({
