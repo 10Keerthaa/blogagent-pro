@@ -6,7 +6,7 @@ export const runtime = 'edge';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { bgImageBase64, logoBase64, data, fontBold, fontReg } = body;
+    const { iconStripBase64, logoUrl, data, fontBold, fontReg } = body;
 
     // Convert base64 fonts to ArrayBuffers for Edge compatibility
     const fontBoldArray = fontBold ? Uint8Array.from(atob(fontBold), c => c.charCodeAt(0)) : null;
@@ -30,8 +30,6 @@ export async function POST(request: Request) {
       });
     }
 
-    const bgSrc = `data:image/png;base64,${bgImageBase64}`;
-
     return new ImageResponse(
       (
         <div style={{
@@ -39,18 +37,13 @@ export async function POST(request: Request) {
           width: '800px',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0A0118',
+          backgroundColor: '#1A0B2E',
           position: 'relative',
           overflow: 'hidden',
           padding: '60px',
           color: 'white'
         }}>
-          {/* Background Image */}
-          <img 
-            src={bgSrc} 
-            alt="background"
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
-          />
+
 
           {/* Header Section */}
           <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '40px', position: 'relative' }}>
@@ -77,48 +70,61 @@ export async function POST(request: Request) {
             </p>
           </div>
 
-          {/* Pillar Icons Bar (6 Pillars) - UNIFIED GLASS BOX */}
+          {/* Pillar Icons Bar - UNIFIED GLASS BOX */}
           <div style={{ 
             display: 'flex', 
-            justifyContent: 'space-between', 
+            justifyContent: 'center',
+            alignItems: 'center',
             width: '100%', 
             marginBottom: '40px',
-            padding: '20px',
             backgroundColor: 'rgba(255, 255, 255, 0.12)',
             backdropFilter: 'blur(15px)',
             borderRadius: '20px',
             border: '1px solid rgba(255, 255, 255, 0.15)',
-            height: '200px',
-            alignItems: 'center',
-            position: 'relative'
+            height: '240px',
+            position: 'relative',
+            overflow: 'hidden'
           }}>
-            {data.pillars.map((pillar: string, i: number) => (
-              <div key={i} style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                width: '110px',
-                height: '100%'
-              }}>
-                {/* Icons will be drawn behind this empty space in the base image */}
-                <div style={{ width: '90px', height: '90px', marginBottom: '15px' }} /> 
-                <span style={{ 
+            {/* The AI Generated Icon Strip */}
+            {iconStripBase64 && (
+              <img 
+                src={`data:image/png;base64,${iconStripBase64}`}
+                alt="Icons"
+                style={{
+                  position: 'absolute',
+                  top: '15px',
+                  left: '20px',
+                  width: 'calc(100% - 40px)',
+                  height: 'auto',
+                  objectFit: 'contain'
+                }}
+              />
+            )}
+
+            {/* Labels placed precisely below icons */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              padding: '0 30px',
+              position: 'absolute',
+              bottom: '25px'
+            }}>
+              {data.pillars.map((pillar: string, i: number) => (
+                <span key={i} style={{ 
                   fontSize: '11px', 
                   color: '#FFFFFF', 
                   textTransform: 'uppercase', 
                   textAlign: 'center', 
                   fontFamily: 'EliteBold', 
-                  display: 'flex',
                   fontWeight: 900,
                   letterSpacing: '1.2px',
-                  width: '100%',
-                  justifyContent: 'center'
+                  width: '110px'
                 }}>
                   {pillar}
                 </span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* Main Content Grid (4-5 Blocks) */}
@@ -126,7 +132,7 @@ export async function POST(request: Request) {
             {data.blocks.map((block: any, i: number) => (
               <div key={i} style={{ 
                 width: '330px', 
-                backgroundColor: 'rgba(26, 11, 46, 0.6)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 padding: '20px',
                 borderRadius: '12px',
                 borderLeft: '4px solid #B794F4',
@@ -153,7 +159,8 @@ export async function POST(request: Request) {
             borderTop: '1px solid rgba(255, 215, 0, 0.2)',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            position: 'relative'
           }}>
             <span style={{ 
               fontSize: '16px', 
@@ -169,14 +176,14 @@ export async function POST(request: Request) {
           </div>
 
           {/* 10xDS Brand Logo - Bottom Right */}
-          {logoBase64 && (
+          {logoUrl && (
             <img 
-              src={`data:image/png;base64,${logoBase64}`}
+              src={logoUrl}
               alt="10xDS Logo"
               style={{
                 position: 'absolute',
                 bottom: '30px',
-                right: '30px',
+                right: '40px',
                 height: '40px',
                 width: 'auto',
                 opacity: 0.9
