@@ -74,9 +74,10 @@ export async function POST(req: Request) {
     const imageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
     
     const visualPrompt = `
-      ULTRA-HIGH RESOLUTION PREMIUM TECHNICAL INFOGRAPHIC BACKGROUND.
+      ULTRA-HIGH RESOLUTION MONOCHROMATIC PURPLE TECHNICAL INFOGRAPHIC BACKGROUND.
+      THEME: 100% Deep Electric Purple Ecosystem. NO DARK BLUE. NO BLACK.
+      COLORS: Use only variations of Deep Violet (#1A0B2E), Royal Purple (#2D1B69), and Glowing Lavender (#B794F4). Subtle Metallic Gold accents for highlights only.
       LAYOUT: Vertical 800x1000 grid with a clear multi-tier structure.
-      THEME: Deep Electric Purple (#1A0B2E) and Violet monochromatic gradients. Subtle Metallic Gold highlights.
       ELEMENTS:
       - 6 circular Glassmorphism nodes arranged in a perfect horizontal row in the upper third.
       - INSIDE NODES: Draw 6 distinct, high-contrast white 3D technical icons (e.g., neural chip, holographic shield, glowing gear, data node) based on: ${parsedData.pillars.join(', ')}.
@@ -84,7 +85,7 @@ export async function POST(req: Request) {
       - FOOTER: A solid dark purple bar at the very bottom.
       STRICT CONSTRAINTS:
       - BLANK TEXT RULE: You are FORBIDDEN from drawing any letters, numbers, or words.
-      - ALL-PURPLE: The entire image must feel like a cohesive purple technical ecosystem.
+      - PURPLE RULE: The entire image base must be shades of PURPLE ONLY. No split background.
       - STYLE: Premium 3D Glassmorphism, ray-traced lighting, 8k cinematic rendering.
     `;
 

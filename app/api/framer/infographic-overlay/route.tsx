@@ -83,17 +83,24 @@ export async function POST(request: Request) {
             justifyContent: 'space-between', 
             width: '100%', 
             marginBottom: '40px',
-            padding: '20px',
+            padding: '25px 20px',
             backgroundColor: 'rgba(183, 148, 244, 0.05)',
             borderRadius: '12px',
             border: '1px solid rgba(183, 148, 244, 0.15)',
-            height: '120px',
-            alignItems: 'flex-start'
+            height: '140px',
+            alignItems: 'center'
           }}>
             {data.pillars.map((pillar: string, i: number) => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100px' }}>
-                {/* Space for the 3D icon generated in the background */}
-                <div style={{ width: '45px', height: '45px', marginBottom: '10px' }} /> 
+              <div key={i} style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                width: '100px',
+                height: '100%'
+              }}>
+                {/* Space for the 3D icon generated in the background - Centered perfectly */}
+                <div style={{ width: '50px', height: '50px', marginBottom: '15px' }} /> 
                 <span style={{ 
                   fontSize: '9px', 
                   color: '#B794F4', 
@@ -102,7 +109,9 @@ export async function POST(request: Request) {
                   fontFamily: 'EliteBold', 
                   display: 'flex',
                   fontWeight: 900,
-                  letterSpacing: '0.5px'
+                  letterSpacing: '0.8px',
+                  width: '90px',
+                  justifyContent: 'center'
                 }}>
                   {pillar}
                 </span>

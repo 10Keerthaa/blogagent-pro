@@ -51,8 +51,8 @@ export const TabNavigation = () => {
                     </div>
                 </div>
 
-                {/* CLINICAL SEPARATOR */}
-                <div className="h-8 w-px bg-slate-400 dark:bg-slate-800 mx-6 opacity-60" />
+                {/* CLINICAL SEPARATOR REMOVED */}
+                <div className="mx-3" />
 
                 {/* NEW POST ACTION — only visible on the Editor tab */}
                 {activeTab === 'create' && (
