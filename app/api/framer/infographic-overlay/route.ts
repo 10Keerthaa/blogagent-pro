@@ -25,12 +25,12 @@ export async function POST(req: Request) {
               font-family: 'EliteReg';
               src: url(data:font/woff2;base64,${fontReg});
             }
-            .title { fill: #FFD700; font-family: 'EliteBold'; font-size: 38px; text-transform: uppercase; font-weight: 900; }
-            .subtitle { fill: #FFFFFF; font-family: 'EliteReg'; font-size: 22px; font-weight: 500; opacity: 0.9; }
-            .pillar-text { fill: #FFFFFF; font-family: 'EliteBold'; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; text-anchor: middle; }
-            .block-title { fill: #B794F4; font-family: 'EliteBold'; font-size: 18px; text-transform: uppercase; }
-            .block-item { fill: #FFFFFF; font-family: 'EliteReg'; font-size: 14px; }
-            .footer { fill: #FFFFFF; font-family: 'EliteBold'; font-size: 16px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; }
+            .title { fill: #FFD700; font-family: 'EliteBold', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 38px; text-transform: uppercase; font-weight: 900; }
+            .subtitle { fill: #FFFFFF; font-family: 'EliteReg', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 22px; font-weight: 500; opacity: 0.9; }
+            .pillar-text { fill: #FFFFFF; font-family: 'EliteBold', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; text-anchor: middle; }
+            .block-title { fill: #B794F4; font-family: 'EliteBold', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 18px; text-transform: uppercase; }
+            .block-item { fill: #FFFFFF; font-family: 'EliteReg', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 14px; }
+            .footer { fill: #FFFFFF; font-family: 'EliteBold', ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 16px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; }
           </style>
         </defs>
 
