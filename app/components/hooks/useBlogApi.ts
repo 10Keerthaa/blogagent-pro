@@ -399,10 +399,11 @@ export const useBlogApi = () => {
         }
     }, []);
 
-    const generateInfographic = useCallback(async (body: any) => {
+    const generateInfographic = useCallback(async (body: any, targetPlatform?: string) => {
         setIsGeneratingInfographic(true);
         try {
-            const r = await fetch('/api/infographic', {
+            const endpoint = targetPlatform === 'framer' ? '/api/framer/infographic' : '/api/infographic';
+            const r = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)

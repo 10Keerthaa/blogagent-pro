@@ -875,7 +875,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 content: target.content, 
                 title: target.title,
                 refinement: refinement || ''
-            });
+            }, targetPlatform);
             if (url) {
                 setInfographicUrl(url);
                 setPreview((prev: any) => prev ? { ...prev, infographicUrl: url } : prev);
