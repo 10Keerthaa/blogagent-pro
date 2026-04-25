@@ -75,17 +75,18 @@ export async function POST(req: Request) {
     
     const visualPrompt = `
       ULTRA-HIGH RESOLUTION MONOCHROMATIC PURPLE TECHNICAL INFOGRAPHIC BACKGROUND.
-      THEME: 100% Solid, Uniform Deep Electric Purple Canvas. NO GRADIENTS. NO DARK BLUE. NO BLACK.
-      COLORS: Use only variations of Deep Violet (#1A0B2E) and Royal Purple (#2D1B69). NO SPLIT BACKGROUND. NO FOOTER BAR.
-      LAYOUT: A clean, flat 800x1000 vertical canvas.
+      THEME: 100% Flat, Solid Deep Electric Purple Canvas (#1A0B2E).
+      STRICT BACKGROUND RULE: DISABLE ALL 3D LIGHTING, SHADOWS, AND GRADIENTS ON THE BACKGROUND CANVAS. 
+      The entire background MUST be one consistent, solid color from edge to edge.
+      LAYOUT: A clean horizontal row of icons in the upper third.
       ELEMENTS:
-      - 6 circular Glassmorphism nodes arranged in a perfect horizontal row in the upper third (Center Y-coordinate: 260px).
-      - INSIDE NODES: Draw 6 distinct, high-contrast white 3D technical icons (e.g., neural chip, holographic shield, glowing gear, data node) based on: ${parsedData.pillars.join(', ')}.
-      - CONTENT AREA: 4-5 semi-transparent 'Deep Purple' frosted glass boxes in the middle section.
+      - 6 circular Glassmorphism nodes arranged in a perfect horizontal row (Center Y-coordinate: 260px).
+      - INSIDE NODES: Draw 6 distinct, high-contrast white 3D technical icons based on: ${parsedData.pillars.join(', ')}.
+      - CONTENT AREA: Leave the middle and bottom sections mostly empty for the text overlay.
       STRICT CONSTRAINTS:
       - BLANK TEXT RULE: You are FORBIDDEN from drawing any letters, numbers, or words.
-      - PURPLE RULE: The entire image base must be one consistent shade of PURPLE from edge to edge.
-      - STYLE: Premium 3D Glassmorphism, ray-traced lighting, 8k cinematic rendering.
+      - FLATNESS RULE: The background must be as flat as a digital wallpaper, no depth on the canvas itself.
+      - STYLE: Premium 3D Glassmorphism for ICONS ONLY. 8k cinematic rendering.
     `;
 
     const imageResp = await client.request({
@@ -110,9 +111,16 @@ export async function POST(req: Request) {
     const base64Image = imgPart.inlineData.data;
     const baseBuffer = Buffer.from(base64Image, 'base64');
 
+    // --- NEW: PIXEL-PERFECT RESIZING ---
+    // Force the AI image to be exactly 800x1000 to ensure icon-to-box alignment
+    const resizedBuffer = await sharp(baseBuffer)
+      .resize(800, 1000, { fit: 'fill' })
+      .toBuffer();
+    
+    const resizedBase64 = resizedBuffer.toString('base64');
+
     // --- PHASE 3: COMPOSITE ENGINE (SHARP) ---
     // Overlaying the "Pro-Approved" text with 100% spelling accuracy
-    // NOTE: This uses the existing overlay logic but customized for the 800x1000 Grid
     
     const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
     const overlayUrl = new URL(`${origin}/api/framer/infographic-overlay`);
@@ -132,7 +140,7 @@ export async function POST(req: Request) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        bgImageBase64: base64Image,
+        bgImageBase64: resizedBase64,
         logoBase64: logoBase64,
         data: parsedData,
         fontBold: FONTS.bold,

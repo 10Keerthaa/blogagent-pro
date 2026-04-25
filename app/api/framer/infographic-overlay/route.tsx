@@ -84,11 +84,11 @@ export async function POST(request: Request) {
             width: '100%', 
             marginBottom: '40px',
             padding: '20px',
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: '16px',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            height: '180px',
+            backgroundColor: 'rgba(255, 255, 255, 0.12)',
+            backdropFilter: 'blur(15px)',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            height: '200px',
             alignItems: 'center',
             position: 'relative'
           }}>
@@ -102,16 +102,16 @@ export async function POST(request: Request) {
                 height: '100%'
               }}>
                 {/* Icons will be drawn behind this empty space in the base image */}
-                <div style={{ width: '80px', height: '80px', marginBottom: '10px' }} /> 
+                <div style={{ width: '90px', height: '90px', marginBottom: '15px' }} /> 
                 <span style={{ 
-                  fontSize: '10px', 
+                  fontSize: '11px', 
                   color: '#FFFFFF', 
                   textTransform: 'uppercase', 
                   textAlign: 'center', 
                   fontFamily: 'EliteBold', 
                   display: 'flex',
                   fontWeight: 900,
-                  letterSpacing: '1px',
+                  letterSpacing: '1.2px',
                   width: '100%',
                   justifyContent: 'center'
                 }}>
