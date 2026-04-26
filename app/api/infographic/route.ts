@@ -90,14 +90,18 @@ export async function POST(req: Request) {
       A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, glowing violet cores.
-      LAYOUT: Draw 5 3D nodes in a single, perfectly straight horizontal row on a background of HEX COLOR #1A0B2E.
+      LAYOUT: Draw exactly 5 3D nodes in a single, perfectly straight horizontal row on a background of HEX COLOR #1A0B2E.
+      
+      STRICT COMPOSITION RULES:
+      - CENTER GROUPING: You MUST keep all 5 icons tightly grouped within the center 80% of the image width. 
+      - PADDING: Leave generous horizontal padding (empty space) on the far left and far right edges to ensure no icon is cut off.
+      - VERTICAL CENTERING: The icons must be perfectly centered vertically.
       
       STRICT ELITE MINIMALIST CONSTRAINTS:
-      - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element anywhere in the image. The 3D nodes MUST be 100% completely empty of any text.
-      - CLEANLINESS: No random lines, no labels, no icons inside the nodes. Just the 3D geometric shapes.
-      - COMPOSITION: The icons must be perfectly centered vertically and occupy the full width.
+      - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element. No text at all.
+      - CLEANLINESS: No random lines or labels. Just the 5 3D geometric shapes.
       
-      Aspect Ratio: 4:3 (Icons in center strip)`;
+      Aspect Ratio: 4:3`;
 
       const response = await client.request({
         url: geminiImageUrl,
