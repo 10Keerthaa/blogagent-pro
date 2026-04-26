@@ -104,22 +104,21 @@ export async function POST(request: Request) {
             {/* Labels placed precisely below icons */}
             <div style={{
               display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-              padding: '0 20px',
+              width: '620px', 
               position: 'absolute',
-              bottom: '20px'
+              bottom: '25px',
+              left: '30px' 
             }}>
               {data.pillars.map((pillar: string, i: number) => (
                 <span key={i} style={{ 
+                  flex: 1,
                   fontSize: '11px', 
                   color: '#FFFFFF', 
                   textTransform: 'uppercase', 
                   textAlign: 'center', 
                   fontFamily: 'EliteBold', 
                   fontWeight: 900,
-                  letterSpacing: '1.2px',
-                  width: '110px'
+                  letterSpacing: '1.2px'
                 }}>
                   {pillar}
                 </span>

@@ -32,8 +32,8 @@ export async function POST(req: Request) {
 
       STRICT OUTPUT: ONLY a JSON object with this structure:
       {
-        "title": "GOLDEN YELLOW MAIN TITLE (MAX 40 CHARS)",
-        "subtitle": "White Sub-headline explaining efficiency/safety",
+        "title": "EXACT MAIN TITLE (The part before the colon from the blog title)",
+        "subtitle": "EXACT SUBTITLE (The part after the colon from the blog title)",
         "pillars": ["6 technical icons labels, max 15 chars each"],
         "blocks": [
           { "title": "Category Title", "items": ["Key Point 1", "Key Point 2"] }
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         "footer_summary": "Pithy conclusion phrase"
       }
       RULES:
-      1. Pillars must be exactly 6.
+      1. TITLE SYNC: The 'title' and 'subtitle' MUST match the blog title provided in the topic (${prompt}). If the topic has a colon, split it into title and subtitle. If no colon, use the topic as title and create a professional executive subtitle.
       2. Blocks must be exactly 4-5.
       3. Items per block must be exactly 2-3.
       4. Use extremely formal enterprise terminology.

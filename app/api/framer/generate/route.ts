@@ -65,6 +65,7 @@ export async function POST(req: Request) {
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
         3. BLOG CONTENT: Your total visible word count — including all subheadings, bullet points, paragraph text, conclusion, and FAQ — must be MAXIMUM 1900 words. DO NOT exceed 1900 total visible words under any circumstances. Target 1700-1900 words.
         4. STRUCTURE (Inside <content>):
+           - **FORBIDDEN:** Do NOT wrap the content in markdown code blocks or fences like \`\`\`html. Start directly with the content.
            - Start with a strategic 2-paragraph introduction (minimum 80 words).
            - **HEADINGS:** For the body of the post, use **<h4>** for all section headings. This is a strict requirement for the Framer template.
            - Use 8–10 <h4> sections for maximum depth. Each section MUST contribute at least 150 words.
@@ -114,7 +115,7 @@ export async function POST(req: Request) {
         generationConfig: {
           temperature: 0.4,
           topP: 0.95,
-          maxOutputTokens: 3000, // Hard ceiling accounting for HTML tag overhead (~30% token cost)
+          maxOutputTokens: 4500, // Increased budget to ensure 1900-word posts can finish and close all HTML tags
         }
       }
     });
