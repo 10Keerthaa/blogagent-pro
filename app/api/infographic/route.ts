@@ -30,10 +30,10 @@ export async function POST(req: Request) {
     const numMatch = prompt.match(/(\d+)/);
     const N = numMatch ? parseInt(numMatch[1], 10) : null;
 
-    // TASK 1: Analysis Pass via Vertex AI Gemini 2.0 Flash
+    // TASK 1: Analysis Pass via Vertex AI Gemini 2.5 Pro
     let parsedData: any = {};
     try {
-      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
+      const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
       const aiPrompt = `
       Analyze this blog post and act as an Elite Visual Designer for a high-end technical infographic.
@@ -81,10 +81,10 @@ export async function POST(req: Request) {
       parsedData = { title: prompt.split(':')[0], subtitle: prompt.split(':')[1] || '', pillars: ['Strategy', 'Execution', 'Scale', 'Governance', 'Optimization'], blocks: [] };
     }
 
-    // TASK 2: 3D Technical Icon Generation (Imagen 3.0 via Gemini Flash Image)
+    // TASK 2: 3D Technical Icon Generation (Imagen 3.0 via Gemini 2.5 Flash Image)
     let infographicUrl = '';
     try {
-      const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash-image:generateContent`;
+      const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const imagePrompt = `A horizontal strip of 5 premium 3D technical icons arranged in a single row on a pure black background. 
       STYLE: Ray-traced 3D Glassmorphism. White glossy glass, glowing violet cores, ultra-high resolution. 
