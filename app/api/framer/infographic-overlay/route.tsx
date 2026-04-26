@@ -93,10 +93,10 @@ export async function POST(request: Request) {
                 style={{
                   position: 'absolute',
                   top: '15px',
-                  left: '20px',
-                  width: '720px',
+                  left: '30px',
+                  width: '620px', // 680px glass box - 30px left - 30px right = 620px (all 6 icons fully visible)
                   height: '160px',
-                  objectFit: 'cover' // Fill the full area so icons are clearly visible, not letterboxed
+                  objectFit: 'cover'
                 }}
               />
             )}
@@ -106,9 +106,9 @@ export async function POST(request: Request) {
               display: 'flex',
               justifyContent: 'space-between',
               width: '100%',
-              padding: '0 30px',
+              padding: '0 20px',
               position: 'absolute',
-              bottom: '25px'
+              bottom: '20px'
             }}>
               {data.pillars.map((pillar: string, i: number) => (
                 <span key={i} style={{ 
