@@ -95,8 +95,8 @@ export async function POST(request: Request) {
                   top: '15px',
                   left: '20px',
                   width: '720px',
-                  height: '160px', // Explicit px height required by Satori Edge runtime
-                  objectFit: 'contain'
+                  height: '160px',
+                  objectFit: 'cover' // Fill the full area so icons are clearly visible, not letterboxed
                 }}
               />
             )}
@@ -128,7 +128,7 @@ export async function POST(request: Request) {
           </div>
 
           {/* Main Content Grid (4-5 Blocks) */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', flex: 1, alignContent: 'flex-start' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', flex: 1, alignContent: 'flex-start', paddingBottom: '40px' }}>
             {data.blocks.map((block: any, i: number) => (
               <div key={i} style={{ 
                 width: '330px', 
