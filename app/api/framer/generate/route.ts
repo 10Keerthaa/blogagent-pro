@@ -63,13 +63,13 @@ export async function POST(req: Request) {
         STRICT REQUIREMENTS (FRAMER SPECIFIC):
         1. BLOG TITLE: Inside <title> tags. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title under any circumstances. If the topic is short and needs only one part, keep it as a single bold statement without a colon.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
-        3. BLOG CONTENT: 1600 to 2000 words inside <content> tags. Provide extreme technical depth.
+        3. BLOG CONTENT: MANDATORY MINIMUM 1600 words, target 2000 words inside <content> tags. DO NOT stop writing before reaching 1600 words. Count your words and continue expanding if short.
         4. STRUCTURE (Inside <content>):
-           - Start with a strategic 1-paragraph introduction.
+           - Start with a strategic 2-paragraph introduction (minimum 80 words).
            - **HEADINGS:** For the body of the post, use **<h4>** for all section headings. This is a strict requirement for the Framer template.
-           - Use 7–10 <h4> sections for maximum depth.
-           - **SECTION INTROS:** Every <h4> section MUST begin with exactly 3-4 sentences of introductory text.
-           - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags.
+           - Use 8–10 <h4> sections for maximum depth. Each section MUST contribute at least 150 words.
+           - **SECTION INTROS:** Every <h4> section MUST begin with exactly 3-4 sentences of introductory text before any list.
+           - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags. Every <li> MUST be at least 2 full sentences (minimum 25 words per point). Minimum 3 <li> items per section.
         5. NEVER use <h2> or <h3> for subheadings. ONLY use <h4>.
         6. NO INTERNAL LINKS: DO NOT generate any <a> tags except for the expert CTA.
         7. CONCLUSION (MANDATORY): Include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://www.10xds.ai/contact/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
