@@ -69,7 +69,7 @@ export async function POST(req: Request) {
            - **HEADINGS:** For the body of the post, use **<h4>** for all section headings. This is a strict requirement for the Framer template.
            - Use 8–10 <h4> sections for maximum depth. Each section MUST contribute at least 150 words.
            - **SECTION INTROS:** Every <h4> section MUST begin with exactly 3-4 sentences of introductory text before any list.
-           - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags. Every <li> MUST be at least 2 full sentences (minimum 25 words per point). Minimum 3 <li> items per section.
+           - **BULLET POINTS (OPTIONAL):** Use HTML <ul> and <li> tags only when bullet points are contextually appropriate for that section. Not every section requires bullets — some sections may flow better as prose paragraphs. When bullets ARE used, every <li> MUST contain a minimum of 2 full sentences with real technical depth. No shallow one-liners.
         5. NEVER use <h2> or <h3> for subheadings. ONLY use <h4>.
         6. NO INTERNAL LINKS: DO NOT generate any <a> tags except for the expert CTA.
         7. CONCLUSION (MANDATORY): Include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://www.10xds.ai/contact/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
         generationConfig: {
           temperature: 0.4,
           topP: 0.95,
-          maxOutputTokens: 8192,
+          maxOutputTokens: 3500, // Hard ceiling: prevents post from exceeding ~2000 words
         }
       }
     });

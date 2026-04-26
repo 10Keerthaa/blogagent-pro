@@ -94,8 +94,8 @@ export async function POST(request: Request) {
                   position: 'absolute',
                   top: '15px',
                   left: '20px',
-                  width: '720px', // Fixed px: Satori does NOT support calc() expressions
-                  height: 'auto',
+                  width: '720px',
+                  height: '160px', // Explicit px height required by Satori Edge runtime
                   objectFit: 'contain'
                 }}
               />
@@ -152,28 +152,7 @@ export async function POST(request: Request) {
             ))}
           </div>
 
-          {/* Footer Bar */}
-          <div style={{ 
-            marginTop: 'auto',
-            padding: '30px 20px 0 20px',
-            borderTop: '1px solid rgba(255, 215, 0, 0.2)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'relative'
-          }}>
-            <span style={{ 
-              fontSize: '16px', 
-              color: '#FFD700', 
-              textTransform: 'uppercase', 
-              letterSpacing: '3px', 
-              fontFamily: 'EliteBold', 
-              display: 'flex',
-              textAlign: 'center'
-            }}>
-              {data.footer_summary}
-            </span>
-          </div>
+          {/* Footer Bar removed as per design requirements */}
 
           {/* 10xDS Brand Logo - Bottom Right */}
           {logoUrl && (
