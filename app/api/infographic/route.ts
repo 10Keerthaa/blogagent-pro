@@ -90,7 +90,7 @@ export async function POST(req: Request) {
       A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, glowing violet cores.
-      LAYOUT: Draw 5 3D nodes in a single, perfectly straight horizontal row on a PURE BLACK background.
+      LAYOUT: Draw 5 3D nodes in a single, perfectly straight horizontal row on a background of HEX COLOR #1A0B2E.
       
       STRICT ELITE MINIMALIST CONSTRAINTS:
       - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element anywhere in the image. The 3D nodes MUST be 100% completely empty of any text.
@@ -118,7 +118,7 @@ export async function POST(req: Request) {
         // --- PHASE 4: PROGRAMMATIC OG TEXT OVERLAY ---
         // Tight-crop the middle strip to fit the 620x160 glass box perfectly
         const stripBuffer = await sharp(rawBuffer)
-          .extract({ left: 0, top: 220, width: 960, height: 280 }) // Tighter crop on the icon row
+          .extract({ left: 0, top: 240, width: 960, height: 240 }) // Even tighter crop for larger icons
           .resize(620, 160, { fit: 'cover' }) // Exact fit for the glass box
           .png()
           .toBuffer();

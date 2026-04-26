@@ -39,7 +39,7 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
 
     const overlay = Buffer.from(
       `<svg width="960" height="720">
-        <rect width="100%" height="100%" fill="#2e1065" fill-opacity="0.30" />
+      <rect width="100%" height="100%" fill="#8B5CF6" fill-opacity="0.35" />
       </svg>`
     );
 

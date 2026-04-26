@@ -260,7 +260,10 @@ export const PostPreview = () => {
                         className="w-full h-auto block object-cover"
                         style={{ aspectRatio: '4/3' }}
                     />
-                    <div className="absolute inset-0 bg-violet-950/60 pointer-events-none" />
+                    <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
+                    />
 
                     <div className="absolute inset-0 pointer-events-none">
                         {/* Only show branding for WordPress */}
