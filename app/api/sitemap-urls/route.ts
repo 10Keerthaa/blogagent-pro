@@ -12,7 +12,7 @@ const STOP_WORDS = new Set([
     'successfully', 'implementing', 'implementation', 'guide', 'essential', 'ways', 'tips', 'best', 'practices', 'top', 'complete', 'overview', 'explaining', 'understanding', 'using', 'towards', 'highly', 'actually', 'really', 'getting', 'started', 'assessing', 'challenges', 'benefits', 'importance', 'role', 'impact', 'future', 'expert', 'professional', 'leading', 'modern', 'new', 'latest', 'can', 'will', 'must', 'should', 'could', 'would', 'shall', 'may', 'might', 'done', 'doing', 'does', 'did', 'being', 'been', 'having', 'had', 'has', 'have', 'very', 'quite', 'just', 'only'
 ]);
 
-export async function GET() {
+export async function GET(request: Request) {
     const startTime = Date.now();
     const isProd = process.env.VERCEL === '1';
     const MAX_DURATION = isProd ? 8500 : 25000; // 8.5s for Vercel, 25s for Local
@@ -20,6 +20,14 @@ export async function GET() {
     const AI_BATCH_SIZE = isProd ? 2 : 5;
 
     try {
+        const { searchParams } = new URL(request.url);
+        const platform = searchParams.get('platform');
+
+        // STRICTOR ISOLATION: If platform is Framer, do not use WordPress links
+        if (platform === 'framer') {
+            return NextResponse.json({ keywordMap: {}, anchorMap: {} });
+        }
+
         const sitemapUrl = "https://10xds.com/sitemap.xml";
 
         // 1. Internal Helper: Fast Slug-based Map (Baseline Fallback)

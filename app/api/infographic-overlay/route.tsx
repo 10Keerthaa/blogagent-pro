@@ -1,118 +1,180 @@
 import { ImageResponse } from 'next/og';
+import React from 'react';
 
 export const runtime = 'edge';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { bgImageBase64, parsed, mode, logoBase64, fontBoldBase64, fontRegBase64 } = body;
+    const { iconStripBase64, logoUrl, data, fontBold, fontReg } = body;
 
-    // Decode pre-loaded TTF font data sent from the Node.js parent route
-    const fontData = fontBoldBase64 ? Buffer.from(fontBoldBase64, 'base64') : null;
-    const fontRegData = fontRegBase64 ? Buffer.from(fontRegBase64, 'base64') : null;
-    const fontsArr: any[] = [];
-    if (fontData && fontData.length > 100) fontsArr.push({ name: 'Inter', data: fontData, style: 'normal', weight: 700 });
-    if (fontRegData && fontRegData.length > 100) fontsArr.push({ name: 'Inter', data: fontRegData, style: 'normal', weight: 400 });
+    // Convert base64 fonts to ArrayBuffers for Edge compatibility
+    const fontBoldArray = fontBold ? Uint8Array.from(atob(fontBold), c => c.charCodeAt(0)) : null;
+    const fontRegArray = fontReg ? Uint8Array.from(atob(fontReg), c => c.charCodeAt(0)) : null;
 
-    const bgSrc = `data:image/jpeg;base64,${bgImageBase64}`;
+    const fonts: any[] = [];
+    if (fontBoldArray) {
+      fonts.push({ 
+        name: 'EliteBold', 
+        data: fontBoldArray.buffer, 
+        style: 'normal', 
+        weight: 900 
+      });
+    }
+    if (fontRegArray) {
+      fonts.push({ 
+        name: 'EliteReg', 
+        data: fontRegArray.buffer, 
+        style: 'normal', 
+        weight: 400 
+      });
+    }
 
-    if (mode === 'DASHBOARD' || !mode || mode !== 'ROADMAP') {
-      const central = parsed.central_theme || 'Dashboard';
-      const quads = parsed.quadrants || parsed.modules || parsed.panels || parsed.items || [];
-      const q1 = quads[0] || { title: '', points: [] };
-      const q2 = quads[1] || { title: '', points: [] };
-      const q3 = quads[2] || { title: '', points: [] };
-      const q4 = quads[3] || { title: '', points: [] };
+    return new ImageResponse(
+      (
+        <div style={{
+          height: '1000px',
+          width: '800px',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: '#1A0B2E',
+          position: 'relative',
+          overflow: 'hidden',
+          padding: '60px',
+          paddingBottom: '80px', 
+          color: 'white'
+        }}>
 
-      return new ImageResponse(
-        (
-          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', position: 'relative', backgroundColor: '#000' }}>
-            <img src={bgSrc} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-            
-            {/* Absolute Logo Placement */}
-            {logoBase64 && (
-              <img 
-                src={`data:image/png;base64,${logoBase64}`} 
-                style={{ position: 'absolute', bottom: '60px', right: '60px', height: '75px', width: 'auto' }} 
-              />
-            )}
 
-            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', padding: '140px 60px' }}>
-               
-               {/* Top Row */}
-               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '250px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '310px' }}>
-                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'Inter', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q1.title}</h3>
-                    {Array.isArray(q1.points) && q1.points.map((pt: string, i: number) => (
-                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'Inter', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
-                    ))}
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '310px', alignItems: 'flex-end', textAlign: 'right' }}>
-                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'Inter', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q2.title}</h3>
-                    {Array.isArray(q2.points) && q2.points.map((pt: string, i: number) => (
-                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'Inter', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
-                    ))}
-                  </div>
-               </div>
-
-               {/* Middle Row (Center Theme) */}
-               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', flex: 1 }}>
-                  <h2 style={{ color: '#FFD700', fontSize: '26px', fontFamily: 'Inter', textAlign: 'center', width: '280px', textShadow: '0 4px 15px rgba(0,0,0,0.9)' }}>{central}</h2>
-               </div>
-
-               {/* Bottom Row */}
-               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '250px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '310px' }}>
-                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'Inter', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q3.title}</h3>
-                    {Array.isArray(q3.points) && q3.points.map((pt: string, i: number) => (
-                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'Inter', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
-                    ))}
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '310px', alignItems: 'flex-end', textAlign: 'right' }}>
-                    <h3 style={{ color: '#FFD700', fontSize: '22px', fontFamily: 'Inter', marginBottom: '10px', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>{q4.title}</h3>
-                    {Array.isArray(q4.points) && q4.points.map((pt: string, i: number) => (
-                      <p key={i} style={{ color: '#FFFFFF', fontSize: '16px', fontFamily: 'Inter', margin: '3px 0', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>• {pt}</p>
-                    ))}
-                  </div>
-               </div>
-
-            </div>
+          {/* Header Section */}
+          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '40px', position: 'relative' }}>
+            <h1 style={{
+              fontSize: '42px',
+              fontFamily: 'EliteBold',
+              color: '#FFD700',
+              textTransform: 'uppercase',
+              margin: '0 0 10px 0',
+              lineHeight: 1.1,
+              display: 'flex'
+            }}>
+              {data.title}
+            </h1>
+            <p style={{
+              fontSize: '24px',
+              fontFamily: 'EliteReg',
+              color: '#FFFFFF',
+              margin: 0,
+              opacity: 0.9,
+              display: 'flex'
+            }}>
+              {data.subtitle}
+            </p>
           </div>
-        ),
-        { width: 800, height: 1000, fonts: fontsArr }
-      );
-    } else {
-      // ROADMAP MODE Overlay
-      const milestones = parsed.milestones || [];
-      return new ImageResponse(
-        (
-          <div style={{ display: 'flex', width: '100%', height: '100%', position: 'relative', backgroundColor: '#000' }}>
-            <img src={bgSrc} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-            
-            {/* Absolute Logo Placement */}
-            {logoBase64 && (
+
+          {/* Pillar Icons Bar - UNIFIED GLASS BOX */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%', 
+            marginBottom: '40px',
+            backgroundColor: 'rgba(255, 255, 255, 0.12)',
+            backdropFilter: 'blur(15px)',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            height: '240px',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            {/* The AI Generated Icon Strip */}
+            {iconStripBase64 && (
               <img 
-                src={`data:image/png;base64,${logoBase64}`} 
-                style={{ position: 'absolute', bottom: '60px', right: '60px', height: '75px', width: 'auto' }} 
+                src={`data:image/png;base64,${iconStripBase64}`}
+                alt="Icons"
+                style={{
+                  position: 'absolute',
+                  top: '15px',
+                  left: '30px',
+                  width: '620px', 
+                  height: '160px',
+                  objectFit: 'cover'
+                }}
               />
             )}
 
-            <div style={{ position: 'absolute', top: '60px', left: '0', width: '100%', display: 'flex', justifyContent: 'center' }}>
-               <h2 style={{ color: '#FFD700', fontSize: '36px', fontFamily: '"Inter"', textShadow: '0 4px 10px rgba(0,0,0,0.8)' }}>ROADMAP</h2>
-            </div>
-            
-            <div style={{ position: 'absolute', bottom: '150px', left: '0', width: '100%', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', padding: '0 40px' }}>
-              {Array.isArray(milestones) && milestones.map((m: string, i: number) => (
-                <div key={i} style={{ backgroundColor: 'rgba(26, 11, 46, 0.85)', padding: '12px 20px', margin: '8px', borderRadius: '8px', border: '1px solid #7B2FBE', boxShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
-                  <p style={{ color: '#FFF', fontSize: '18px', fontFamily: '"Inter"', margin: 0 }}>{i + 1}. {m}</p>
-                </div>
+            {/* Labels placed precisely below icons */}
+            <div style={{
+              display: 'flex',
+              width: '620px', 
+              position: 'absolute',
+              bottom: '25px',
+              left: '30px' 
+            }}>
+              {data.pillars.map((pillar: string, i: number) => (
+                <span key={i} style={{ 
+                  flex: 1,
+                  fontSize: '11px', 
+                  color: '#FFFFFF', 
+                  textTransform: 'uppercase', 
+                  textAlign: 'center', 
+                  fontFamily: 'EliteBold', 
+                  fontWeight: 900,
+                  letterSpacing: '1.2px'
+                }}>
+                  {pillar}
+                </span>
               ))}
             </div>
           </div>
-        ),
-        { width: 800, height: 1000, fonts: fontsArr }
-      );
-    }
+
+          {/* Main Content Grid (4-5 Blocks) */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', flex: 1, alignContent: 'flex-start', paddingBottom: '40px' }}>
+            {data.blocks.map((block: any, i: number) => (
+              <div key={i} style={{ 
+                width: '330px', 
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                padding: '20px',
+                borderRadius: '12px',
+                borderLeft: '4px solid #B794F4',
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '140px'
+              }}>
+                <h3 style={{ fontSize: '18px', color: '#B794F4', margin: '0 0 10px 0', textTransform: 'uppercase', fontFamily: 'EliteBold', display: 'flex' }}>
+                  {block.title}
+                </h3>
+                {block.items.map((item: string, j: number) => (
+                  <p key={j} style={{ fontSize: '13px', color: '#FFF', margin: '3px 0', fontFamily: 'EliteReg', display: 'flex', opacity: 0.9 }}>
+                    • {item}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {/* 10xDS Brand Logo - Bottom Right */}
+          {logoUrl && (
+            <img 
+              src={logoUrl}
+              alt="10xDS Logo"
+              style={{
+                position: 'absolute',
+                bottom: '40px', 
+                right: '60px',
+                height: '35px',
+                width: 'auto',
+                opacity: 0.8
+              }}
+            />
+          )}
+        </div>
+      ),
+      {
+        width: 800,
+        height: 1000,
+        fonts: fonts
+      }
+    );
   } catch (e: any) {
     return new Response(`Failed to generate overlay: ${e.message}`, { status: 500 });
   }

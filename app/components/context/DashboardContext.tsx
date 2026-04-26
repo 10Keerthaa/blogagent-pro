@@ -179,11 +179,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchSitemap = useCallback(async () => {
         try {
-            const data = await apiFetchSitemap();
-            setSitemapData(data.keywordMap || {});
-            setAnchorMap(data.anchorMap || {});
+            const r = await fetch(`/api/sitemap-urls?platform=${targetPlatform}`);
+            const d = await r.json();
+            setSitemapData(d.keywordMap || {});
+            setAnchorMap(d.anchorMap || {});
         } catch (e) { console.error('Sitemap fetch failed'); }
-    }, [apiFetchSitemap]);
+    }, [targetPlatform]);
 
     const fetchHistory = useCallback(async () => {
         try {

@@ -19,7 +19,10 @@ export async function POST(req: Request) {
         const projectId = await auth.getProjectId();
 
         const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
-        const imagePrompt = `A stunning, high-quality abstract professional background photograph thematically inspired by the concept of '${prompt}'. The image MUST be purely visual and atmospheric — absolutely NO text, NO letters, NO words, NO numbers, NO laptop screens, NO computer monitors, NO phone screens, NO digital displays showing any text. NO UI elements. Depict the theme using abstract shapes, lighting, color gradients, or symbolic visual metaphors only. Professional minimalist aesthetic, elegant dramatic lighting, premium corporate color palette. Clean composition suitable as a full-bleed background for white text overlays.`;
+        const imagePrompt = `A stunning, high-quality professional background photograph representing the technical concept of '${prompt}'. 
+        The image should feature concrete, high-authority architectural or technical metaphors (e.g., if the topic is Cloud, show a 3D server array; if Security, show holographic shields or biometric interfaces). 
+        The image MUST be purely visual — absolutely NO text, NO letters, NO words, NO numbers, NO screens showing text. 
+        Professional minimalist aesthetic, premium enterprise color palette. Clean composition suitable for a high-end technical publication. 8k photorealistic rendering.`;
 
         const response = await client.request({
             url,
