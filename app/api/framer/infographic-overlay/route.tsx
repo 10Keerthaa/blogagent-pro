@@ -94,7 +94,7 @@ export async function POST(request: Request) {
                   position: 'absolute',
                   top: '15px',
                   left: '20px',
-                  width: 'calc(100% - 40px)',
+                  width: '720px', // Fixed px: Satori does NOT support calc() expressions
                   height: 'auto',
                   objectFit: 'contain'
                 }}

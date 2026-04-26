@@ -63,7 +63,7 @@ export async function POST(req: Request) {
         STRICT REQUIREMENTS (FRAMER SPECIFIC):
         1. BLOG TITLE: Inside <title> tags. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title under any circumstances. If the topic is short and needs only one part, keep it as a single bold statement without a colon.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
-        3. BLOG CONTENT: MANDATORY MINIMUM 1600 words, target 2000 words inside <content> tags. DO NOT stop writing before reaching 1600 words. Count your words and continue expanding if short.
+        3. BLOG CONTENT: STRICT range of 1600 to 2000 words inside <content> tags. MINIMUM 1600 words — do not stop early. MAXIMUM 2000 words — STOP writing once you reach 2000 words.
         4. STRUCTURE (Inside <content>):
            - Start with a strategic 2-paragraph introduction (minimum 80 words).
            - **HEADINGS:** For the body of the post, use **<h4>** for all section headings. This is a strict requirement for the Framer template.
