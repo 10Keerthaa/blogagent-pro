@@ -90,7 +90,7 @@ export async function POST(req: Request) {
         contents: [{ role: 'user', parts: [{ text: visualPrompt }] }],
         generationConfig: {
           responseModalities: ['TEXT', 'IMAGE'],
-          imageConfig: { aspect_ratio: "3:1" } // Focused on the icon strip
+          imageConfig: { aspect_ratio: "4:5" } // Valid ratio - matches 800x1000 canvas
         }
       }
     });

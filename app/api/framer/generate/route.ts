@@ -61,7 +61,7 @@ export async function POST(req: Request) {
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
 
         STRICT REQUIREMENTS (FRAMER SPECIFIC):
-        1. BLOG TITLE: 50-60 characters inside <title> tags.
+        1. BLOG TITLE: Inside <title> tags. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title under any circumstances. If the topic is short and needs only one part, keep it as a single bold statement without a colon.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
         3. BLOG CONTENT: 1600 to 2000 words inside <content> tags. Provide extreme technical depth.
         4. STRUCTURE (Inside <content>):
