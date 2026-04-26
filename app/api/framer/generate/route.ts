@@ -61,7 +61,7 @@ export async function POST(req: Request) {
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
 
         STRICT REQUIREMENTS (FRAMER SPECIFIC):
-        1. BLOG TITLE: Inside <title> tags. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title under any circumstances. If the topic is short and needs only one part, keep it as a single bold statement without a colon.
+        1. BLOG TITLE: Inside <title> tags. Generate a fresh, high-authority, and catchy blog title BASED on the provided topic. Do NOT simply repeat the topic verbatim; instead, refine it for maximum impact. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title under any circumstances. If the topic is short and needs only one part, keep it as a single bold statement without a colon.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
         3. BLOG CONTENT: Your total visible word count — including all subheadings, bullet points, paragraph text, conclusion, and FAQ — must be MAXIMUM 1900 words. DO NOT exceed 1900 total visible words under any circumstances. Target 1700-1900 words.
         4. STRUCTURE (Inside <content>):
