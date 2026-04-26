@@ -86,12 +86,18 @@ export async function POST(req: Request) {
     try {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
-      const imagePrompt = `A horizontal strip of 5 premium 3D technical icons arranged in a single row on a pure black background. 
-      STYLE: Ray-traced 3D Glassmorphism. White glossy glass, glowing violet cores, ultra-high resolution. 
+      const imagePrompt = `
+      A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
-      COMPOSITION: All 5 icons must be clearly separated, perfectly centered horizontally, and occupy the full width of the strip. 
-      LIGHTING: Dramatic cinematic studio lighting, deep shadows, 8k photorealistic. NO TEXT, NO LABELS, NO UI.
-      Aspect Ratio: 4:3 (will be cropped for the strip)`;
+      STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, glowing violet cores.
+      LAYOUT: Draw 5 3D nodes in a single, perfectly straight horizontal row on a PURE BLACK background.
+      
+      STRICT ELITE MINIMALIST CONSTRAINTS:
+      - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element anywhere in the image. The 3D nodes MUST be 100% completely empty of any text.
+      - CLEANLINESS: No random lines, no labels, no icons inside the nodes. Just the 3D geometric shapes.
+      - COMPOSITION: The icons must be perfectly centered vertically and occupy the full width.
+      
+      Aspect Ratio: 4:3 (Icons in center strip)`;
 
       const response = await client.request({
         url: geminiImageUrl,
@@ -110,10 +116,10 @@ export async function POST(req: Request) {
       if (imagePart?.inlineData?.data) {
         const rawBuffer = Buffer.from(imagePart.inlineData.data, 'base64');
         // --- PHASE 4: PROGRAMMATIC OG TEXT OVERLAY ---
-        // Crop the 4:3 image into a narrow strip for the unified glass box
+        // Tight-crop the middle strip to fit the 620x160 glass box perfectly
         const stripBuffer = await sharp(rawBuffer)
-          .extract({ left: 0, top: 200, width: 960, height: 320 }) // Crop middle strip
-          .resize(620, 160) // Exact fit for the glass box
+          .extract({ left: 0, top: 220, width: 960, height: 280 }) // Tighter crop on the icon row
+          .resize(620, 160, { fit: 'cover' }) // Exact fit for the glass box
           .png()
           .toBuffer();
 
