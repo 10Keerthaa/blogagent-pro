@@ -41,6 +41,7 @@ export async function POST(request: Request) {
           position: 'relative',
           overflow: 'hidden',
           padding: '60px',
+          paddingBottom: '80px', // Extra padding to match top-space feel and clear logo
           color: 'white'
         }}>
 
@@ -160,11 +161,11 @@ export async function POST(request: Request) {
               alt="10xDS Logo"
               style={{
                 position: 'absolute',
-                bottom: '30px',
-                right: '40px',
-                height: '40px',
+                bottom: '40px', // Adjusted to sit better with 80px padding
+                right: '60px',
+                height: '35px',
                 width: 'auto',
-                opacity: 0.9
+                opacity: 0.8
               }}
             />
           )}

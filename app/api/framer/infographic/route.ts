@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       {
         "title": "EXACT MAIN TITLE (The part before the colon from the blog title)",
         "subtitle": "EXACT SUBTITLE (The part after the colon from the blog title)",
-        "pillars": ["6 technical icons labels, max 15 chars each"],
+        "pillars": ["5 technical icons labels, max 15 chars each"],
         "blocks": [
           { "title": "Category Title", "items": ["Key Point 1", "Key Point 2"] }
         ],
@@ -47,6 +47,7 @@ export async function POST(req: Request) {
       4. Use extremely formal enterprise terminology.
       5. SPELLING MUST BE PERFECT.
       6. DATA SOURCE RULE: Only analyze the core technical body of the post. IGNORE the Conclusion and FAQ sections entirely as they are repetitive summary information. Focus only on the unique technical insights.
+      7. PILLAR COUNT: You MUST provide exactly 5 pillars.
     `;
 
     const analysisResp = await client.request({
@@ -73,10 +74,10 @@ export async function POST(req: Request) {
     const imageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
     
     const visualPrompt = `
-      A horizontal strip of 6 premium 3D technical icons for an enterprise infographic.
+      A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
-      LAYOUT: Draw 6 circular glass nodes in a single, perfectly straight horizontal row.
+      LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
       STRICT CONSTRAINTS:
       - BLANK TEXT RULE: You are FORBIDDEN from drawing any letters, numbers, or words.
