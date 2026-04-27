@@ -200,9 +200,7 @@ export async function POST(request: Request) {
                 top: '914px', 
                 left: '640px',
                 height: '36px',
-                width: '120px',
-                objectFit: 'contain',
-                opacity: 0.8
+                width: '120px'
               }}
             />
           )}

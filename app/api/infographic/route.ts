@@ -95,8 +95,8 @@ export async function POST(req: Request) {
       
       STRICT COMPOSITION RULES:
       - CENTER GROUPING: Keep all 4 icons grouped within the center 80% of the width.
-      - VERTICAL SAFETY ZONE: The icons MUST be smaller vertically, occupying only 60% of the total image height. Leave clear empty space (padding) above and below the icons.
-      - VERTICAL CENTERING: The icons must be perfectly centered vertically.
+      - VERTICAL FLOATING: The icons MUST be perfectly centered vertically within the frame. Leave significant empty space (padding) above and below the icons.
+      - NO CUTOFFS: Ensure the entire 3D shape is visible.
       
       STRICT ELITE MINIMALIST CONSTRAINTS:
       - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element. NO TEXT, NO LABELS, NO WORDS.
@@ -127,15 +127,15 @@ export async function POST(req: Request) {
         const imgWidth = imageMetadata.width || 960;
         const imgHeight = imageMetadata.height || 720;
 
-        // Dynamic vertical alignment - 'Shaving' the bottom 15% to remove AI labels
+        // Dynamic vertical alignment - captures full 3D shape and shaves labels
         const stripBuffer = await sharp(rawBuffer)
           .extract({ 
             left: 0, 
-            top: Math.round(imgHeight * 0.20), // Start lower to avoid top artifacts
+            top: Math.round(imgHeight * 0.10), // Capture from higher up to avoid cutoff
             width: imgWidth, 
-            height: Math.round(imgHeight * 0.35) // Shorter height to cut off AI labels at the bottom
+            height: Math.round(imgHeight * 0.45) // Broader height for full 3D shape
           })
-          .resize(620, 110, { fit: 'fill' }) // Shorter height for the icons-only look
+          .resize(620, 110, { fit: 'contain', background: { r: 26, g: 11, b: 46, alpha: 0 } }) 
           .png()
           .toBuffer();
 
