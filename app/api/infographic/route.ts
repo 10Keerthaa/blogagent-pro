@@ -119,14 +119,15 @@ export async function POST(req: Request) {
         const imgWidth = imageMetadata.width || 1024;
         const imgHeight = imageMetadata.height || 768;
 
-        // Slicer: Physically cut off the bottom 25% of the image to guarantee 
-        // the deletion of any AI-generated ghost text or labels.
+        // Slicer: Extract the center "Safe Zone" (80%) of the image.
+        // This evenly shaves 10% off the top and 10% off the bottom to delete ghost text 
+        // without risking cutting the circular icons in half.
         const croppedBuffer = await sharp(rawBuffer)
           .extract({ 
             left: 0, 
-            top: 0, 
+            top: Math.round(imgHeight * 0.10), 
             width: imgWidth, 
-            height: Math.round(imgHeight * 0.75) 
+            height: Math.round(imgHeight * 0.80) 
           })
           .png()
           .toBuffer();
