@@ -45,7 +45,7 @@ export async function POST(request: Request) {
           {/* 1. Title + Subtitle */}
           <h1 style={{
             position: 'absolute',
-            top: '50px',
+            top: '40px',
             left: '40px',
             fontSize: '42px',
             fontFamily: 'EliteBold',
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
           </h1>
           <p style={{
             position: 'absolute',
-            top: '105px',
+            top: '95px',
             left: '40px',
             fontSize: '20px',
             fontFamily: 'EliteReg',
@@ -69,14 +69,14 @@ export async function POST(request: Request) {
             {data.subtitle}
           </p>
 
-          {/* 2. Glass Icon Box - Expanded to 180px for symmetry */}
+          {/* 2. Glass Icon Box - Matches AI Background to remove "Black Box" */}
           <div style={{
             position: 'absolute',
-            top: '145px',
+            top: '135px',
             left: '40px',
             width: '720px',
             height: '180px',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            backgroundColor: '#1A0B2E', // Seamless blend with AI Image
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '16px',
             display: 'flex',
@@ -90,19 +90,18 @@ export async function POST(request: Request) {
                 src={`data:image/png;base64,${iconStripBase64}`}
                 style={{
                   width: '620px',
-                  height: '110px',
-                  objectFit: 'contain',
-                  marginBottom: '15px'
+                  height: '130px',
+                  objectFit: 'contain'
                 }}
               />
             )}
             
-            {/* Pillar Labels - Restored and aligned under icons */}
+            {/* Pillar Labels - Perfectly aligned under floating icons */}
             <div style={{
               display: 'flex',
               width: '720px',
               position: 'absolute',
-              bottom: '15px'
+              bottom: '12px'
             }}>
               {data.pillars.map((pillar: string, i: number) => (
                 <span key={i} style={{
@@ -121,18 +120,18 @@ export async function POST(request: Request) {
             </div>
           </div>
 
-          {/* 3. Technical Cards Grid - Shifted for balance */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '355px', left: '40px', width: '720px' }}>
+          {/* 3. Technical Cards Grid - Expanded to 250px to prevent overflow */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '335px', left: '40px', width: '720px' }}>
             {data.blocks.slice(0, 4).map((block: any, idx: number) => {
               const isRightCol = idx % 2 !== 0;
               const isRow2 = idx >= 2;
               return (
                 <div key={idx} style={{
                   position: 'absolute',
-                  top: isRow2 ? '220px' : '0px', 
+                  top: isRow2 ? '265px' : '0px', 
                   left: isRightCol ? '376px' : '0px', 
                   width: '344px',
-                  height: '200px',
+                  height: '245px', // Increased to 245px for deep technical content
                   backgroundColor: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
@@ -145,13 +144,13 @@ export async function POST(request: Request) {
                     fontFamily: 'EliteBold',
                     color: '#A855F7',
                     textTransform: 'uppercase',
-                    marginBottom: '15px'
+                    marginBottom: '12px'
                   }}>
                     {block.title}
                   </span>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {block.items.slice(0, 3).map((item: string, i: number) => (
-                      <div key={i} style={{ display: 'flex', fontSize: '13px', color: '#E2E8F0', fontFamily: 'EliteReg', lineHeight: 1.4 }}>
+                      <div key={i} style={{ display: 'flex', fontSize: '12px', color: '#E2E8F0', fontFamily: 'EliteReg', lineHeight: 1.4 }}>
                         <span style={{ marginRight: '8px' }}>•</span>
                         <span style={{ flex: 1 }}>{item}</span>
                       </div>
@@ -162,14 +161,14 @@ export async function POST(request: Request) {
             })}
           </div>
 
-          {/* 4. Executive Summary Box - Purple Tint */}
+          {/* 4. Executive Summary Box - Shifted for new card height */}
           <div style={{
             position: 'absolute',
-            top: '805px',
+            top: '865px',
             left: '40px',
             width: '720px',
-            height: '80px',
-            backgroundColor: 'rgba(139, 92, 246, 0.12)', // Subtle Purple Tint
+            height: '75px',
+            backgroundColor: 'rgba(139, 92, 246, 0.12)', 
             border: '1px solid rgba(139, 92, 246, 0.25)',
             borderRadius: '16px',
             display: 'flex',
@@ -178,11 +177,11 @@ export async function POST(request: Request) {
             overflow: 'hidden'
           }}>
             <p style={{
-              fontSize: '14px',
+              fontSize: '13px',
               fontFamily: 'EliteReg',
               color: '#FFFFFF',
               margin: 0,
-              lineHeight: 1.5,
+              lineHeight: 1.4,
               fontStyle: 'italic',
               opacity: 0.95
             }}>
@@ -190,16 +189,16 @@ export async function POST(request: Request) {
             </p>
           </div>
 
-          {/* 5. 10xDS Brand Logo - Bottom Right (Fixed 50px gap) */}
+          {/* 5. 10xDS Brand Logo - Bottom Right (Perfectly Anchored) */}
           {logoBase64 && (
             <img 
               src={`data:image/png;base64,${logoBase64}`}
               alt="10xDS Logo"
               style={{
                 position: 'absolute',
-                top: '914px', 
+                top: '955px', 
                 left: '640px',
-                height: '36px',
+                height: '30px',
                 width: '120px'
               }}
             />

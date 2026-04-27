@@ -127,15 +127,15 @@ export async function POST(req: Request) {
         const imgWidth = imageMetadata.width || 960;
         const imgHeight = imageMetadata.height || 720;
 
-        // Dynamic vertical alignment - captures full 3D shape and shaves labels
+        // Dynamic vertical alignment - Captures full 3D shape with generous safety margins
         const stripBuffer = await sharp(rawBuffer)
           .extract({ 
             left: 0, 
-            top: Math.round(imgHeight * 0.10), // Capture from higher up to avoid cutoff
+            top: Math.round(imgHeight * 0.10), // Capture more of the top to prevent cutoff
             width: imgWidth, 
-            height: Math.round(imgHeight * 0.45) // Broader height for full 3D shape
+            height: Math.round(imgHeight * 0.50) // Capture 50% of height for full shape
           })
-          .resize(620, 110, { fit: 'contain', background: { r: 26, g: 11, b: 46, alpha: 0 } }) 
+          .resize(620, 130, { fit: 'contain', background: { r: 26, g: 11, b: 46, alpha: 1 } }) // Background matches #1A0B2E
           .png()
           .toBuffer();
 
