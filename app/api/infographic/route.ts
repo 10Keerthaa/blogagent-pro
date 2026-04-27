@@ -126,15 +126,15 @@ export async function POST(req: Request) {
         const imgWidth = imageMetadata.width || 960;
         const imgHeight = imageMetadata.height || 720;
 
-        // Dynamic vertical alignment - strict negative prompt in logic
+        // Dynamic vertical alignment - 'Shaving' the bottom 15% to remove AI labels
         const stripBuffer = await sharp(rawBuffer)
           .extract({ 
             left: 0, 
-            top: Math.round(imgHeight * 0.15), 
+            top: Math.round(imgHeight * 0.20), // Start lower to avoid top artifacts
             width: imgWidth, 
-            height: Math.round(imgHeight * 0.50) 
+            height: Math.round(imgHeight * 0.35) // Shorter height to cut off AI labels at the bottom
           })
-          .resize(620, 150, { fit: 'fill' }) // Expanded to 150px for the 180px glass box
+          .resize(620, 110, { fit: 'fill' }) // Shorter height for the icons-only look
           .png()
           .toBuffer();
 

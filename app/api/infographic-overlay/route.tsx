@@ -90,35 +90,11 @@ export async function POST(request: Request) {
                 src={`data:image/png;base64,${iconStripBase64}`}
                 style={{
                   width: '620px',
-                  height: '150px',
-                  objectFit: 'contain',
-                  marginBottom: '10px'
+                  height: '110px',
+                  objectFit: 'contain'
                 }}
               />
             )}
-            
-            {/* Pillar Labels inside glass box */}
-            <div style={{
-              display: 'flex',
-              width: '720px',
-              position: 'absolute',
-              bottom: '15px'
-            }}>
-              {data.pillars.map((pillar: string, i: number) => (
-                <span key={i} style={{
-                  flex: 1,
-                  fontSize: '11px',
-                  color: '#FFFFFF',
-                  textTransform: 'uppercase',
-                  textAlign: 'center',
-                  fontFamily: 'EliteBold',
-                  fontWeight: 900,
-                  letterSpacing: '1.2px'
-                }}>
-                  {pillar}
-                </span>
-              ))}
-            </div>
           </div>
 
           {/* 3. Technical Cards Grid - Shifted for balance */}
