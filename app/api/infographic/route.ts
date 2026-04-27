@@ -114,9 +114,24 @@ export async function POST(req: Request) {
 
       if (imagePart?.inlineData?.data) {
         // --- PHASE 4: PROGRAMMATIC OG TEXT OVERLAY ---
-        // Removed manual sharp cropping. By passing the full image, we allow the overlay's 
-        // objectFit: 'cover' to naturally zoom in and perfectly center the icons, matching the Framer logic exactly.
-        const stripBase64 = imagePart.inlineData.data;
+        const rawBuffer = Buffer.from(imagePart.inlineData.data, 'base64');
+        const imageMetadata = await sharp(rawBuffer).metadata();
+        const imgWidth = imageMetadata.width || 1024;
+        const imgHeight = imageMetadata.height || 768;
+
+        // Slicer: Physically cut off the bottom 25% of the image to guarantee 
+        // the deletion of any AI-generated ghost text or labels.
+        const croppedBuffer = await sharp(rawBuffer)
+          .extract({ 
+            left: 0, 
+            top: 0, 
+            width: imgWidth, 
+            height: Math.round(imgHeight * 0.75) 
+          })
+          .png()
+          .toBuffer();
+
+        const stripBase64 = croppedBuffer.toString('base64');
         const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
         
         // Pass Logo directly as base64 to avoid GCS delays/failures

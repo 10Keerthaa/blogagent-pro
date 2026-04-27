@@ -42,32 +42,38 @@ export async function POST(request: Request) {
           overflow: 'hidden',
           color: 'white'
         }}>
-          {/* 1. Title + Subtitle */}
-          <h1 style={{
+          {/* 1. Header Section - Flex Flow to completely prevent title overlapping subtitle */}
+          <div style={{
             position: 'absolute',
-            top: '40px',
+            top: '35px', // Shifted up slightly to give room for 2-line titles
             left: '40px',
-            fontSize: '42px',
-            fontFamily: 'EliteBold',
-            color: '#FFD700',
-            textTransform: 'uppercase',
-            margin: 0,
-            lineHeight: 1.1
+            display: 'flex',
+            flexDirection: 'column',
+            width: '720px',
+            gap: '8px'
           }}>
-            {data.title}
-          </h1>
-          <p style={{
-            position: 'absolute',
-            top: '95px',
-            left: '40px',
-            fontSize: '20px',
-            fontFamily: 'EliteReg',
-            color: '#FFFFFF',
-            margin: 0,
-            opacity: 0.9
-          }}>
-            {data.subtitle}
-          </p>
+            <h1 style={{
+              fontSize: '34px', // Shrunk slightly from 42px so it rarely wraps
+              fontFamily: 'EliteBold',
+              color: '#FFD700',
+              textTransform: 'uppercase',
+              margin: 0,
+              lineHeight: 1.1,
+              display: 'flex'
+            }}>
+              {data.title}
+            </h1>
+            <p style={{
+              fontSize: '18px', // Scaled perfectly with the new title size
+              fontFamily: 'EliteReg',
+              color: '#FFFFFF',
+              margin: 0,
+              opacity: 0.9,
+              display: 'flex'
+            }}>
+              {data.subtitle}
+            </p>
+          </div>
 
           {/* 2. Glass Icon Box - Matches AI Background to remove "Black Box" */}
           <div style={{
