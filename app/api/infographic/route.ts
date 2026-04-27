@@ -90,19 +90,13 @@ export async function POST(req: Request) {
       const imagePrompt = `
       A horizontal strip of 4 premium 3D technical icons for an enterprise infographic.
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
-      STYLE: Simple, clean 3D Geometric Shapes, high-contrast white Glassmorphism, ray-traced lighting, glowing violet cores.
-      LAYOUT: Draw exactly 4 3D nodes in a single, perfectly straight horizontal row on a background of HEX COLOR #1A0B2E.
-      
-      STRICT COMPOSITION RULES:
-      - CENTER GROUPING: Keep all 4 icons grouped within the center 80% of the width.
-      - VERTICAL FLOATING: The icons MUST be perfectly centered vertically within the frame. Leave 20% empty space (padding) above and below the icons.
-      - NO CUTOFFS: Ensure the entire 3D shape is visible and bold.
-      
-      STRICT ELITE MINIMALIST CONSTRAINTS:
-      - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element. NO TEXT, NO LABELS, NO WORDS.
-      - CLEANLINESS: No random lines, arrows, or dots. Just the 4 3D geometric shapes in a row.
-      
-      Aspect Ratio: 4:3`;
+      STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
+      LAYOUT: Draw 4 circular glass nodes in a single, perfectly straight horizontal row.
+      BACKGROUND: Solid deep purple background (#1A0B2E). 
+      STRICT CONSTRAINTS:
+      - BLANK TEXT RULE: You are FORBIDDEN from drawing any letters, numbers, or words.
+      - FOCUS RULE: Draw ONLY the icons. No other design elements on the canvas.
+      `;
 
       const response = await client.request({
         url: geminiImageUrl,
@@ -119,27 +113,10 @@ export async function POST(req: Request) {
       const imagePart = parts.find((p: any) => p.inlineData?.mimeType?.startsWith('image/'));
 
       if (imagePart?.inlineData?.data) {
-        const rawBuffer = Buffer.from(imagePart.inlineData.data, 'base64');
-        
         // --- PHASE 4: PROGRAMMATIC OG TEXT OVERLAY ---
-        // Use Dynamic Metadata (Claude Table Fixes)
-        const imageMetadata = await sharp(rawBuffer).metadata();
-        const imgWidth = imageMetadata.width || 960;
-        const imgHeight = imageMetadata.height || 720;
-
-        // Dynamic vertical alignment - 'Scale & Presence' fix for larger, bolder icons
-        const stripBuffer = await sharp(rawBuffer)
-          .extract({ 
-            left: 0, 
-            top: Math.round(imgHeight * 0.05), // Capture more of the image to get larger icons
-            width: imgWidth, 
-            height: Math.round(imgHeight * 0.65) // Wider height to avoid any clipping
-          })
-          .resize(620, 160, { fit: 'contain', background: { r: 26, g: 11, b: 46, alpha: 1 } }) // Larger 160px height
-          .png()
-          .toBuffer();
-
-        const stripBase64 = stripBuffer.toString('base64');
+        // Removed manual sharp cropping. By passing the full image, we allow the overlay's 
+        // objectFit: 'cover' to naturally zoom in and perfectly center the icons, matching the Framer logic exactly.
+        const stripBase64 = imagePart.inlineData.data;
         const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
         
         // Pass Logo directly as base64 to avoid GCS delays/failures

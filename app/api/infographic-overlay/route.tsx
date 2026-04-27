@@ -14,19 +14,19 @@ export async function POST(request: Request) {
 
     const fonts: any[] = [];
     if (fontBoldArray) {
-      fonts.push({ 
-        name: 'EliteBold', 
-        data: fontBoldArray.buffer, 
-        style: 'normal', 
-        weight: 900 
+      fonts.push({
+        name: 'EliteBold',
+        data: fontBoldArray.buffer,
+        style: 'normal',
+        weight: 900
       });
     }
     if (fontRegArray) {
-      fonts.push({ 
-        name: 'EliteReg', 
-        data: fontRegArray.buffer, 
-        style: 'normal', 
-        weight: 400 
+      fonts.push({
+        name: 'EliteReg',
+        data: fontRegArray.buffer,
+        style: 'normal',
+        weight: 400
       });
     }
 
@@ -91,11 +91,11 @@ export async function POST(request: Request) {
                 style={{
                   width: '620px',
                   height: '160px',
-                  objectFit: 'cover'
+                  objectFit: 'contain'
                 }}
               />
             )}
-            
+
             {/* Pillar Labels - Perfectly aligned under floating icons */}
             <div style={{
               display: 'flex',
@@ -128,8 +128,8 @@ export async function POST(request: Request) {
               return (
                 <div key={idx} style={{
                   position: 'absolute',
-                  top: isRow2 ? '265px' : '0px', 
-                  left: isRightCol ? '376px' : '0px', 
+                  top: isRow2 ? '265px' : '0px',
+                  left: isRightCol ? '376px' : '0px',
                   width: '344px',
                   height: '245px', // Increased to 245px for deep technical content
                   backgroundColor: 'rgba(255, 255, 255, 0.03)',
@@ -168,7 +168,7 @@ export async function POST(request: Request) {
             left: '40px',
             width: '720px',
             height: '75px',
-            backgroundColor: 'rgba(139, 92, 246, 0.12)', 
+            backgroundColor: 'rgba(139, 92, 246, 0.12)',
             border: '1px solid rgba(139, 92, 246, 0.25)',
             borderRadius: '16px',
             display: 'flex',
@@ -191,12 +191,12 @@ export async function POST(request: Request) {
 
           {/* 5. 10xDS Brand Logo - Bottom Right (Perfectly Anchored) */}
           {logoBase64 && (
-            <img 
+            <img
               src={`data:image/png;base64,${logoBase64}`}
               alt="10xDS Logo"
               style={{
                 position: 'absolute',
-                top: '955px', 
+                top: '955px',
                 left: '640px',
                 height: '30px',
                 width: '120px'
