@@ -45,13 +45,13 @@ export async function POST(req: Request) {
       {
         "title": "EXACT MAIN TITLE (The part before the colon from the blog title)",
         "subtitle": "EXACT SUBTITLE (The part after the colon from the blog title)",
-        "pillars": ["Exactly 5 short technical category names (1-2 words each)"],
+        "pillars": ["Exactly 4 short technical category names (1-2 words each)"],
         "blocks": [
           {
             "title": "Category Name",
             "items": ["Exactly 3 high-authority technical bullet points"]
           }
-        ] (Provide exactly 4 or 5 blocks)
+        ] (Provide exactly 4 blocks)
       }
 
       DATA SOURCE RULE: Focus only on the unique technical insights found in this specific blog post. Only analyze the core technical body of the post.
@@ -87,13 +87,13 @@ export async function POST(req: Request) {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const imagePrompt = `
-      A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
+      A horizontal strip of 4 premium 3D technical icons for an enterprise infographic.
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, glowing violet cores.
-      LAYOUT: Draw exactly 5 3D nodes in a single, perfectly straight horizontal row on a background of HEX COLOR #1A0B2E.
+      LAYOUT: Draw exactly 4 3D nodes in a single, perfectly straight horizontal row on a background of HEX COLOR #1A0B2E.
       
       STRICT COMPOSITION RULES:
-      - CENTER GROUPING: You MUST keep all 5 icons tightly grouped within the center 80% of the image width. 
+      - CENTER GROUPING: You MUST keep all 4 icons tightly grouped within the center 80% of the image width. 
       - PADDING: Leave generous horizontal padding (empty space) on the far left and far right edges to ensure no icon is cut off.
       - VERTICAL CENTERING: The icons must be perfectly centered vertically.
       
