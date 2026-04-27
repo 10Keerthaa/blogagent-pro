@@ -137,17 +137,6 @@ export const HistoryList = () => {
                         </div>
                     </section>
 
-                    {/* Featured Image Section */}
-                    {selectedHistoryItem.imageUrl && (
-                        <Card className="overflow-hidden border-none shadow-2xl">
-                             <img 
-                                src={selectedHistoryItem.imageUrl} 
-                                alt={selectedHistoryItem.title} 
-                                className="w-full aspect-[21/9] object-cover"
-                             />
-                        </Card>
-                    )}
-
                     {/* Content Section */}
                     <section className="prose prose-slate dark:prose-invert max-w-none">
                         <Card className="p-12 md:p-16 border-slate-100 dark:border-slate-800 shadow-xl bg-white dark:bg-[#0d0d0d]">

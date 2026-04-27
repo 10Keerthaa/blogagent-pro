@@ -130,11 +130,11 @@ export async function POST(req: Request) {
         const stripBuffer = await sharp(rawBuffer)
           .extract({ 
             left: 0, 
-            top: Math.round(imgHeight * 0.20), // Adjusted for 60% icon scale
+            top: Math.round(imgHeight * 0.15), 
             width: imgWidth, 
-            height: Math.round(imgHeight * 0.45) 
+            height: Math.round(imgHeight * 0.50) 
           })
-          .resize(620, 160, { fit: 'fill' }) // Use 'fill' to ensure icons occupy full box (Claude Fix)
+          .resize(620, 130, { fit: 'fill' }) // Matches new Glass Box dimensions (Claude Plan)
           .png()
           .toBuffer();
 
