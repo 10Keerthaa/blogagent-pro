@@ -33,15 +33,14 @@ export async function POST(request: Request) {
     return new ImageResponse(
       (
         <div style={{
-          height: '1000px',
           width: '800px',
+          height: '1100px',
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#1A0B2E',
           position: 'relative',
           overflow: 'hidden',
-          padding: '60px',
-          paddingBottom: '80px', 
+          padding: '60px 40px 80px 40px',
           color: 'white'
         }}>
 
@@ -171,7 +170,7 @@ export async function POST(request: Request) {
       ),
       {
         width: 800,
-        height: 1000,
+        height: 1100,
         fonts: fonts
       }
     );

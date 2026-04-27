@@ -93,13 +93,13 @@ export async function POST(req: Request) {
       LAYOUT: Draw exactly 4 3D nodes in a single, perfectly straight horizontal row on a background of HEX COLOR #1A0B2E.
       
       STRICT COMPOSITION RULES:
-      - CENTER GROUPING: You MUST keep all 4 icons tightly grouped within the center 80% of the image width. 
-      - PADDING: Leave generous horizontal padding (empty space) on the far left and far right edges to ensure no icon is cut off.
+      - CENTER GROUPING: Keep all 4 icons grouped within the center 80% of the width.
+      - VERTICAL SAFETY ZONE: The icons MUST be smaller vertically, occupying only 60% of the total image height. Leave clear empty space (padding) above and below the icons.
       - VERTICAL CENTERING: The icons must be perfectly centered vertically.
       
       STRICT ELITE MINIMALIST CONSTRAINTS:
       - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element. No text at all.
-      - CLEANLINESS: No random lines or labels. Just the 5 3D geometric shapes.
+      - CLEANLINESS: No random lines or labels. Just the 4 3D geometric shapes.
       
       Aspect Ratio: 4:3`;
 
@@ -120,9 +120,9 @@ export async function POST(req: Request) {
       if (imagePart?.inlineData?.data) {
         const rawBuffer = Buffer.from(imagePart.inlineData.data, 'base64');
         // --- PHASE 4: PROGRAMMATIC OG TEXT OVERLAY ---
-        // Tight-crop the middle strip to fit the 620x160 glass box perfectly
+        // Recalibrated crop for smaller, centered icons
         const stripBuffer = await sharp(rawBuffer)
-          .extract({ left: 0, top: 240, width: 960, height: 240 }) // Even tighter crop for larger icons
+          .extract({ left: 0, top: 200, width: 960, height: 320 }) // Balanced crop for 60% height icons
           .resize(620, 160, { fit: 'cover' }) // Exact fit for the glass box
           .png()
           .toBuffer();
