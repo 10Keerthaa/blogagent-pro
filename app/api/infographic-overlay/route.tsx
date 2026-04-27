@@ -69,13 +69,13 @@ export async function POST(request: Request) {
             {data.subtitle}
           </p>
 
-          {/* 2. Glass Icon Box */}
+          {/* 2. Glass Icon Box - Expanded to 180px for symmetry */}
           <div style={{
             position: 'absolute',
             top: '145px',
             left: '40px',
             width: '720px',
-            height: '160px',
+            height: '180px',
             backgroundColor: 'rgba(255, 255, 255, 0.05)',
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '16px',
@@ -90,8 +90,9 @@ export async function POST(request: Request) {
                 src={`data:image/png;base64,${iconStripBase64}`}
                 style={{
                   width: '620px',
-                  height: '130px',
-                  objectFit: 'contain'
+                  height: '150px',
+                  objectFit: 'contain',
+                  marginBottom: '10px'
                 }}
               />
             )}
@@ -101,7 +102,7 @@ export async function POST(request: Request) {
               display: 'flex',
               width: '720px',
               position: 'absolute',
-              bottom: '12px'
+              bottom: '15px'
             }}>
               {data.pillars.map((pillar: string, i: number) => (
                 <span key={i} style={{
@@ -120,16 +121,16 @@ export async function POST(request: Request) {
             </div>
           </div>
 
-          {/* 3. Technical Cards Grid */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '335px', left: '40px', width: '720px' }}>
+          {/* 3. Technical Cards Grid - Shifted for balance */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '355px', left: '40px', width: '720px' }}>
             {data.blocks.slice(0, 4).map((block: any, idx: number) => {
               const isRightCol = idx % 2 !== 0;
               const isRow2 = idx >= 2;
               return (
                 <div key={idx} style={{
                   position: 'absolute',
-                  top: isRow2 ? '216px' : '0px', // Gap calculation: Row 2 at 551 (335 + 216)
-                  left: isRightCol ? '376px' : '0px', // Gap calculation: Right Col at 416 (40 + 376)
+                  top: isRow2 ? '220px' : '0px', 
+                  left: isRightCol ? '376px' : '0px', 
                   width: '344px',
                   height: '200px',
                   backgroundColor: 'rgba(255, 255, 255, 0.03)',
@@ -161,15 +162,15 @@ export async function POST(request: Request) {
             })}
           </div>
 
-          {/* 4. 10xDS Brand Logo - Bottom Right */}
+          {/* 4. 10xDS Brand Logo - Bottom Right (Fixed 50px gap) */}
           {logoBase64 && (
             <img 
               src={`data:image/png;base64,${logoBase64}`}
               alt="10xDS Logo"
               style={{
                 position: 'absolute',
-                top: '955px', 
-                left: '660px',
+                top: '914px', 
+                left: '640px',
                 height: '36px',
                 width: '120px',
                 objectFit: 'contain',

@@ -98,8 +98,8 @@ export async function POST(req: Request) {
       - VERTICAL CENTERING: The icons must be perfectly centered vertically.
       
       STRICT ELITE MINIMALIST CONSTRAINTS:
-      - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element. No text at all.
-      - CLEANLINESS: No random lines or labels. Just the 4 3D geometric shapes.
+      - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element. NO TEXT, NO LABELS, NO WORDS.
+      - CLEANLINESS: No random lines, arrows, or dots. Just the 4 3D geometric shapes in a row.
       
       Aspect Ratio: 4:3`;
 
@@ -126,7 +126,7 @@ export async function POST(req: Request) {
         const imgWidth = imageMetadata.width || 960;
         const imgHeight = imageMetadata.height || 720;
 
-        // Dynamic vertical alignment (imgHeight * 0.15)
+        // Dynamic vertical alignment - strict negative prompt in logic
         const stripBuffer = await sharp(rawBuffer)
           .extract({ 
             left: 0, 
@@ -134,7 +134,7 @@ export async function POST(req: Request) {
             width: imgWidth, 
             height: Math.round(imgHeight * 0.50) 
           })
-          .resize(620, 130, { fit: 'fill' }) // Matches new Glass Box dimensions (Claude Plan)
+          .resize(620, 150, { fit: 'fill' }) // Expanded to 150px for the 180px glass box
           .png()
           .toBuffer();
 
