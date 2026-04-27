@@ -90,13 +90,13 @@ export async function POST(req: Request) {
       const imagePrompt = `
       A horizontal strip of 4 premium 3D technical icons for an enterprise infographic.
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
-      STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, glowing violet cores.
+      STYLE: Simple, clean 3D Geometric Shapes, high-contrast white Glassmorphism, ray-traced lighting, glowing violet cores.
       LAYOUT: Draw exactly 4 3D nodes in a single, perfectly straight horizontal row on a background of HEX COLOR #1A0B2E.
       
       STRICT COMPOSITION RULES:
       - CENTER GROUPING: Keep all 4 icons grouped within the center 80% of the width.
-      - VERTICAL FLOATING: The icons MUST be perfectly centered vertically within the frame. Leave significant empty space (padding) above and below the icons.
-      - NO CUTOFFS: Ensure the entire 3D shape is visible.
+      - VERTICAL FLOATING: The icons MUST be perfectly centered vertically within the frame. Leave 20% empty space (padding) above and below the icons.
+      - NO CUTOFFS: Ensure the entire 3D shape is visible and bold.
       
       STRICT ELITE MINIMALIST CONSTRAINTS:
       - ABSOLUTE BLANK CANVAS RULE: You are STRICTLY FORBIDDEN from drawing a single letter, word, number, or UI element. NO TEXT, NO LABELS, NO WORDS.
@@ -127,15 +127,15 @@ export async function POST(req: Request) {
         const imgWidth = imageMetadata.width || 960;
         const imgHeight = imageMetadata.height || 720;
 
-        // Dynamic vertical alignment - Captures full 3D shape with generous safety margins
+        // Dynamic vertical alignment - 'Scale & Presence' fix for larger, bolder icons
         const stripBuffer = await sharp(rawBuffer)
           .extract({ 
             left: 0, 
-            top: Math.round(imgHeight * 0.10), // Capture more of the top to prevent cutoff
+            top: Math.round(imgHeight * 0.05), // Capture more of the image to get larger icons
             width: imgWidth, 
-            height: Math.round(imgHeight * 0.50) // Capture 50% of height for full shape
+            height: Math.round(imgHeight * 0.65) // Wider height to avoid any clipping
           })
-          .resize(620, 130, { fit: 'contain', background: { r: 26, g: 11, b: 46, alpha: 1 } }) // Background matches #1A0B2E
+          .resize(620, 160, { fit: 'contain', background: { r: 26, g: 11, b: 46, alpha: 1 } }) // Larger 160px height
           .png()
           .toBuffer();
 
