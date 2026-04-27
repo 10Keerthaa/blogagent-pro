@@ -47,6 +47,10 @@ if (!admin.apps.length) {
 }
 
 db = admin.firestore();
-db.settings({ databaseId: 'blog-creation' });
+try {
+    db.settings({ databaseId: 'blog-creation' });
+} catch (e) {
+    // Settings already applied, safe to ignore in HMR
+}
 
 export { db };

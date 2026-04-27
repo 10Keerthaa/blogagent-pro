@@ -23,12 +23,10 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const platform = searchParams.get('platform');
 
-        // STRICTOR ISOLATION: If platform is Framer, do not use WordPress links
-        if (platform === 'framer') {
-            return NextResponse.json({ keywordMap: {}, anchorMap: {} });
-        }
-
-        const sitemapUrl = "https://10xds.com/sitemap.xml";
+        // DYNAMIC SITEMAP & DATABASE SWITCHER (Air-Gapped Isolation)
+        const isFramer = platform === 'framer';
+        const sitemapUrl = isFramer ? "https://www.10xds.ai/sitemap.xml" : "https://10xds.com/sitemap.xml";
+        const dbDocument = isFramer ? 'sitemap-cache-framer' : 'sitemap-cache';
 
         // 1. Internal Helper: Fast Slug-based Map (Baseline Fallback)
         function generateSlugMap(urls: string[]) {
@@ -51,8 +49,8 @@ export async function GET(request: Request) {
             return map;
         }
 
-        // 2. Load Firestore Cache first
-        const docRef = db.collection('config').doc('sitemap-cache');
+        // 2. Load Firestore Cache first (Isolated by Platform)
+        const docRef = db.collection('config').doc(dbDocument);
         let cachedData: any = {
             timestamp: 0,
             keywordMap: {},
@@ -67,7 +65,7 @@ export async function GET(request: Request) {
             const doc = await docRef.get();
             if (doc.exists) {
                 cachedData = { ...cachedData, ...doc.data() };
-            } else if (fs.existsSync(CACHE_FILE)) {
+            } else if (!isFramer && fs.existsSync(CACHE_FILE)) {
                 try {
                     const localData = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
                     cachedData = { ...cachedData, ...localData };
@@ -101,7 +99,7 @@ export async function GET(request: Request) {
 
             try {
                 const allLocs = await getLocs(sitemapUrl);
-                urls = [...new Set(allLocs)].filter(l => l.includes("10xds.com") && !l.endsWith(".xml"));
+                urls = [...new Set(allLocs)].filter(l => l.includes("10xds.") && !l.endsWith(".xml"));
                 cachedData.discoveredUrls = urls;
                 cachedData.lastDiscovery = Date.now();
             } catch (err: any) {
