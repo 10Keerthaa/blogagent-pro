@@ -119,26 +119,31 @@ export async function POST(req: Request) {
 
       if (imagePart?.inlineData?.data) {
         const rawBuffer = Buffer.from(imagePart.inlineData.data, 'base64');
+        
         // --- PHASE 4: PROGRAMMATIC OG TEXT OVERLAY ---
-        // Recalibrated crop for smaller, centered icons
+        // Use Dynamic Metadata (Claude Table Fixes)
+        const imageMetadata = await sharp(rawBuffer).metadata();
+        const imgWidth = imageMetadata.width || 960;
+        const imgHeight = imageMetadata.height || 720;
+
+        // Dynamic vertical alignment (imgHeight * 0.15)
         const stripBuffer = await sharp(rawBuffer)
-          .extract({ left: 0, top: 200, width: 960, height: 320 }) // Balanced crop for 60% height icons
-          .resize(620, 160, { fit: 'cover' }) // Exact fit for the glass box
+          .extract({ 
+            left: 0, 
+            top: Math.round(imgHeight * 0.20), // Adjusted for 60% icon scale
+            width: imgWidth, 
+            height: Math.round(imgHeight * 0.45) 
+          })
+          .resize(620, 160, { fit: 'fill' }) // Use 'fill' to ensure icons occupy full box (Claude Fix)
           .png()
           .toBuffer();
 
         const stripBase64 = stripBuffer.toString('base64');
         const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
         
-        // Prepare Logo
-        let logoUrl = '';
-        try {
-          const logoBuffer = Buffer.from(ASSETS.logo, 'base64');
-          const fileName = `logo-${Date.now()}.png`;
-          logoUrl = await uploadToGCS(logoBuffer, fileName, 'image/png');
-        } catch (e) {
-          console.warn('Failed to process logo for infographic', e);
-        }
+        // Pass Logo directly as base64 to avoid GCS delays/failures
+        const logoBase64 = ASSETS.logo; 
+
 
         const fontBold = FONTS.bold;
         const fontReg = FONTS.regular;
@@ -150,7 +155,7 @@ export async function POST(req: Request) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             iconStripBase64: stripBase64,
-            logoUrl: logoUrl,
+            logoBase64: logoBase64,
             data: parsedData,
             fontBold,
             fontReg
