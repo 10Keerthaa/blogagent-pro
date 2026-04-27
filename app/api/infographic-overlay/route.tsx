@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       (
         <div style={{
           width: '800px',
-          height: '1000px',
+          height: '1060px',
           backgroundColor: '#1A0B2E',
           display: 'flex',
           flexDirection: 'column',
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
             top: '135px',
             left: '40px',
             width: '720px',
-            height: '180px',
+            height: '240px', // Expanded to perfectly match Framer and allow label room
             backgroundColor: '#1A0B2E', // Seamless blend with AI Image
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '16px',
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
                 style={{
                   width: '620px',
                   height: '160px',
-                  objectFit: 'contain'
+                  objectFit: 'cover' // Stretches inner AI box to fill the glass box perfectly
                 }}
               />
             )}
@@ -101,7 +101,7 @@ export async function POST(request: Request) {
               display: 'flex',
               width: '720px',
               position: 'absolute',
-              bottom: '12px'
+              bottom: '15px' // Slightly lifted to give breathing room for 2-line wraps
             }}>
               {data.pillars.map((pillar: string, i: number) => (
                 <span key={i} style={{
@@ -112,7 +112,9 @@ export async function POST(request: Request) {
                   textAlign: 'center',
                   fontFamily: 'EliteBold',
                   fontWeight: 900,
-                  letterSpacing: '1.2px'
+                  letterSpacing: '1.2px',
+                  lineHeight: 1.3, // Added line height for clean 2-line wrapping
+                  padding: '0 8px' // Padding prevents long words from touching
                 }}>
                   {pillar}
                 </span>
@@ -120,8 +122,8 @@ export async function POST(request: Request) {
             </div>
           </div>
 
-          {/* 3. Technical Cards Grid - Expanded to 250px to prevent overflow */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '335px', left: '40px', width: '720px' }}>
+          {/* 3. Technical Cards Grid - Shifted down by 60px to accommodate taller 240px glass box */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '395px', left: '40px', width: '720px' }}>
             {data.blocks.slice(0, 4).map((block: any, idx: number) => {
               const isRightCol = idx % 2 !== 0;
               const isRow2 = idx >= 2;
@@ -161,10 +163,10 @@ export async function POST(request: Request) {
             })}
           </div>
 
-          {/* 4. Executive Summary Box - Shifted for new card height */}
+          {/* 4. Executive Summary Box - Shifted down by 60px for new layout */}
           <div style={{
             position: 'absolute',
-            top: '865px',
+            top: '925px',
             left: '40px',
             width: '720px',
             height: '75px',
@@ -189,25 +191,11 @@ export async function POST(request: Request) {
             </p>
           </div>
 
-          {/* 5. 10xDS Brand Logo - Bottom Right (Perfectly Anchored) */}
-          {logoBase64 && (
-            <img
-              src={`data:image/png;base64,${logoBase64}`}
-              alt="10xDS Logo"
-              style={{
-                position: 'absolute',
-                top: '955px',
-                left: '640px',
-                height: '30px',
-                width: '120px'
-              }}
-            />
-          )}
         </div>
       ),
       {
         width: 800,
-        height: 1000,
+        height: 1060,
         fonts: fonts
       }
     );
