@@ -91,7 +91,7 @@ export async function POST(request: Request) {
                 style={{
                   width: '620px',
                   height: '160px',
-                  objectFit: 'contain'
+                  objectFit: 'cover'
                 }}
               />
             )}
