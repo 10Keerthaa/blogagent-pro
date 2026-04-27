@@ -91,10 +91,34 @@ export async function POST(request: Request) {
                 style={{
                   width: '620px',
                   height: '110px',
-                  objectFit: 'contain'
+                  objectFit: 'contain',
+                  marginBottom: '15px'
                 }}
               />
             )}
+            
+            {/* Pillar Labels - Restored and aligned under icons */}
+            <div style={{
+              display: 'flex',
+              width: '720px',
+              position: 'absolute',
+              bottom: '15px'
+            }}>
+              {data.pillars.map((pillar: string, i: number) => (
+                <span key={i} style={{
+                  flex: 1,
+                  fontSize: '11px',
+                  color: '#FFFFFF',
+                  textTransform: 'uppercase',
+                  textAlign: 'center',
+                  fontFamily: 'EliteBold',
+                  fontWeight: 900,
+                  letterSpacing: '1.2px'
+                }}>
+                  {pillar}
+                </span>
+              ))}
+            </div>
           </div>
 
           {/* 3. Technical Cards Grid - Shifted for balance */}
@@ -138,7 +162,35 @@ export async function POST(request: Request) {
             })}
           </div>
 
-          {/* 4. 10xDS Brand Logo - Bottom Right (Fixed 50px gap) */}
+          {/* 4. Executive Summary Box - Purple Tint */}
+          <div style={{
+            position: 'absolute',
+            top: '805px',
+            left: '40px',
+            width: '720px',
+            height: '80px',
+            backgroundColor: 'rgba(139, 92, 246, 0.12)', // Subtle Purple Tint
+            border: '1px solid rgba(139, 92, 246, 0.25)',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 30px',
+            overflow: 'hidden'
+          }}>
+            <p style={{
+              fontSize: '14px',
+              fontFamily: 'EliteReg',
+              color: '#FFFFFF',
+              margin: 0,
+              lineHeight: 1.5,
+              fontStyle: 'italic',
+              opacity: 0.95
+            }}>
+              {data.executiveSummary || "Driving strategic value through autonomous integration and cognitive-first architectural standards."}
+            </p>
+          </div>
+
+          {/* 5. 10xDS Brand Logo - Bottom Right (Fixed 50px gap) */}
           {logoBase64 && (
             <img 
               src={`data:image/png;base64,${logoBase64}`}

@@ -46,6 +46,7 @@ export async function POST(req: Request) {
         "title": "EXACT MAIN TITLE (The part before the colon from the blog title)",
         "subtitle": "EXACT SUBTITLE (The part after the colon from the blog title)",
         "pillars": ["Exactly 4 short technical category names (1-2 words each)"],
+        "executiveSummary": "A concise, 1-sentence conclusion about the strategic value of the topic (max 25 words).",
         "blocks": [
           {
             "title": "Category Name",
