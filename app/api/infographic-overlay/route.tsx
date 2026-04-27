@@ -105,7 +105,7 @@ export async function POST(request: Request) {
             {/* Pillar Labels - Perfectly aligned under floating icons */}
             <div style={{
               display: 'flex',
-              width: '720px',
+              width: '620px', // Shrunk from 720px to exactly match the AI image width
               position: 'absolute',
               bottom: '15px' // Slightly lifted to give breathing room for 2-line wraps
             }}>
