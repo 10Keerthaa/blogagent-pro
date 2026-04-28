@@ -147,6 +147,7 @@ export async function POST(request: Request) {
                     • {item}
                   </p>
                 ))}
+              </div>
             ))}
           </div>
 

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { uploadToGCS } from '@/lib/gcs';
 import { getGoogleAuth } from '@/lib/googleAuth';
 import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
 import { FONTS } from '@/lib/constants';
 
 export const maxDuration = 300; 
