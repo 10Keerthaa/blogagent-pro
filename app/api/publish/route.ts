@@ -62,7 +62,6 @@ export async function POST(req: Request) {
         : 'Blog';
 
       // Connect to Framer via framer-api (WebSocket SDK)
-      console.log(`📡 Connecting to Framer: project=${framerProjectId}`);
       const { connect } = await import('framer-api');
       const framer = await connect(
         `https://framer.com/projects/${framerProjectId}`,
@@ -76,8 +75,6 @@ export async function POST(req: Request) {
         await framer.disconnect();
         throw new Error('Blogs collection not found in Framer project');
       }
-      
-      console.log(`✅ Using Collection: ${blogsCol.name} (ID: ${blogsCol.id})`);
 
       // Add item using the exact field keys from the live Blogs collection
       const newItems: any[] = await (blogsCol as any).addItems([{
@@ -88,7 +85,7 @@ export async function POST(req: Request) {
           "Content":    { type: "formattedText", value: framerContent },
           "Category":   { type: "string",        value: categoryName },
           "Description":{ type: "string",        value: metaDesc || '' },
-          "m8La9LqWO":  { type: "image",         value: { url: imageUrl || '', resolution: "auto" } } as any,
+          "m8La9LqWO":  { type: "string",        value: imageUrl || '' },
           "H2Goeekmd":  { type: "string",        value: title },
           "g6sVmWkbx":  { type: "string",        value: metaDesc || '' },
         }
