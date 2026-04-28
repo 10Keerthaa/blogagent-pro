@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
 
           {/* Header Section */}
-          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '40px', position: 'relative' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', position: 'relative' }}>
             <h1 style={{
               fontSize: '42px',
               fontFamily: 'EliteBold',
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%', 
-            marginBottom: '40px',
+            marginBottom: '25px',
             backgroundColor: 'rgba(255, 255, 255, 0.12)',
             backdropFilter: 'blur(15px)',
             borderRadius: '20px',
@@ -132,12 +132,12 @@ export async function POST(request: Request) {
               <div key={i} style={{ 
                 width: '330px', 
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                padding: '20px',
+                padding: '15px 20px',
                 borderRadius: '12px',
                 borderLeft: '4px solid #B794F4',
                 display: 'flex',
                 flexDirection: 'column',
-                minHeight: '140px'
+                minHeight: '120px'
               }}>
                 <h3 style={{ fontSize: '18px', color: '#B794F4', margin: '0 0 10px 0', textTransform: 'uppercase', fontFamily: 'EliteBold', display: 'flex' }}>
                   {block.title}
@@ -155,19 +155,20 @@ export async function POST(request: Request) {
           <div style={{
             display: 'flex',
             width: '100%',
-            height: '90px',
+            height: 'auto',
+            minHeight: '80px',
             backgroundColor: 'rgba(255, 255, 255, 0.08)',
             backdropFilter: 'blur(10px)',
             borderRadius: '15px',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             marginTop: '10px',
-            padding: '15px 40px',
+            padding: '15px 30px',
             alignItems: 'center',
             justifyContent: 'center',
             position: 'relative'
           }}>
              <p style={{ 
-               fontSize: '16px', 
+               fontSize: '14px', 
                color: '#FFFFFF', 
                fontFamily: 'EliteReg', 
                textAlign: 'center', 

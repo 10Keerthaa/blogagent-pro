@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         "blocks": [
           { "title": "Category Title", "items": ["Key Point 1", "Key Point 2"] }
         ],
-        "footer_summary": "Pithy conclusion phrase"
+        "footer_summary": "A comprehensive 2-3 sentence executive summary explaining the strategic business impact. (Minimum 30 words)."
       }
       RULES:
       1. TITLE SYNC: The 'title' and 'subtitle' MUST match the blog title provided in the topic (${prompt}). If the topic has a colon, split it into title and subtitle. If no colon, use the topic as title and create a professional executive subtitle.
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       Topic: ${prompt}
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
       Style: Translucent frosted glass, iridescent highlights, dark purple background, isometric 3D.
-      STRICT RULE: THE ICONS MUST BE PURELY GRAPHICAL SYMBOLS. DO NOT DRAW ANY TEXT, LETTERS, ALPHABETS, OR LABELS INSIDE OR BELOW THE ICONS. ZERO TEXT TOLERANCE.
+      STRICT RULE: THE ICONS MUST BE PURELY GRAPHICAL SYMBOLS. DO NOT DRAW ANY TEXT, LETTERS, ALPHABETS, OR LABELS **INSIDE**, ON, OR BELOW THE ICONS. ZERO TEXT TOLERANCE.
       LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
     `;
