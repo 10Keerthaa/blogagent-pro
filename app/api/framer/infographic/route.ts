@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         "blocks": [
           { "title": "Category Title", "items": ["Key Point 1", "Key Point 2"] }
         ],
-        "footer_summary": "A comprehensive 2-3 sentence executive summary explaining the strategic business impact. (Minimum 30 words)."
+        "footer_summary": "A concise exactly 2-sentence executive summary explaining the strategic business impact. (Maximum 25 words)."
       }
       RULES:
       1. TITLE SYNC: The 'title' and 'subtitle' MUST match the blog title provided in the topic (${prompt}). If the topic has a colon, split it into title and subtitle. If no colon, use the topic as title and create a professional executive subtitle.
@@ -116,7 +116,7 @@ export async function POST(req: Request) {
             left: 0, 
             top: Math.round(metadata.height * 0.1), 
             width: metadata.width, 
-            height: Math.round(metadata.height * 0.7) // Increased crop from bottom (20% removal)
+            height: Math.round(metadata.height * 0.76) // Calibrated crop: 10% top removal, 14% bottom removal
           })
           .toBuffer();
       });
@@ -127,8 +127,15 @@ export async function POST(req: Request) {
     const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
     const overlayUrl = new URL(`${origin}/api/framer/infographic-overlay`);
 
-    // Use URL for logo fetching for better Edge compatibility
-    const logoUrl = `${origin}/10xDS.png`;
+    // Use Base64 for logo to ensure rendering in Edge Runtime
+    const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
+    let logoBase64 = '';
+    try {
+        logoBase64 = fs.readFileSync(logoPath).toString('base64');
+    } catch (e) {
+        console.warn("Logo read failed:", e);
+    }
+    const logoUrl = logoBase64 ? `data:image/png;base64,${logoBase64}` : `${origin}/10xDS.png`;
 
     const compositeResp = await fetch(overlayUrl.toString(), {
       method: 'POST',

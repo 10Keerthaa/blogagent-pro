@@ -147,9 +147,11 @@ export async function POST(request: Request) {
                     • {item}
                   </p>
                 ))}
-              </div>
             ))}
           </div>
+
+          {/* Spacer to push summary and logo to the bottom */}
+          <div style={{ flexGrow: 1 }} />
 
           {/* Elite Summary Glass Box */}
           <div style={{
@@ -161,7 +163,6 @@ export async function POST(request: Request) {
             backdropFilter: 'blur(10px)',
             borderRadius: '15px',
             border: '1px solid rgba(255, 255, 255, 0.1)',
-            marginTop: '10px',
             padding: '15px 30px',
             alignItems: 'center',
             justifyContent: 'center',
@@ -181,22 +182,19 @@ export async function POST(request: Request) {
              </p>
           </div>
 
-          {/* Footer Bar removed as per design requirements */}
-
-          {/* 10xDS Brand Logo - Bottom Right */}
+          {/* 10xDS Brand Logo - In-Flow Positioning */}
           {logoUrl && (
-            <img 
-              src={logoUrl}
-              alt="10xDS Logo"
-              style={{
-                position: 'absolute',
-                bottom: '60px', 
-                right: '60px',
-                height: '32px',
-                width: 'auto',
-                opacity: 0.9
-              }}
-            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginTop: '20px' }}>
+              <img 
+                src={logoUrl}
+                alt="10xDS Logo"
+                style={{
+                  height: '32px',
+                  width: 'auto',
+                  opacity: 0.9
+                }}
+              />
+            </div>
           )}
         </div>
       ),
