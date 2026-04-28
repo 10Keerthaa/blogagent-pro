@@ -19,15 +19,17 @@ export async function POST(req: Request) {
         const projectId = await auth.getProjectId();
 
         const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
-        const imagePrompt = `A stunning, high-quality professional background photograph representing the technical concept of '${prompt}'. 
-        The image should feature concrete, high-authority architectural or technical metaphors (like glowing circuits, abstract nodes, or clean futuristic environments).
+        const imagePrompt = `A breathtaking, abstract, high-resolution digital art representing '${prompt}'.
+        Style: Glowing neon circuit patterns, flowing data streams, geometric particle fields, or luminous network nodes on a deep dark background.
+        Color palette: Deep navy, electric violet, and teal highlights.
         
-        STRICT ZERO-TEXT TOLERANCE:
-        - FORBIDDEN: NO text, NO letters, NO words, NO numbers anywhere in the image.
-        - BLACKOUT: No text on laptop screens, no characters on walls, no labels on gadgets.
-        - PURE VISUAL: The image must be 100% purely graphical and photorealistic.
+        ABSOLUTE RULES - ZERO EXCEPTIONS:
+        - NO laptops, NO phones, NO screens, NO monitors, NO devices of ANY kind.
+        - NO text, NO letters, NO words, NO numbers anywhere.
+        - NO people, NO faces, NO hands.
+        - ONLY abstract geometric patterns, light flows, and data visualizations.
         
-        Professional minimalist aesthetic, premium enterprise color palette. 8k photorealistic rendering.`;
+        8k photorealistic abstract digital art.`;
 
         const response = await client.request({
             url,

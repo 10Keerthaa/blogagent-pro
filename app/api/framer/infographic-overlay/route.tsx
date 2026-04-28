@@ -53,7 +53,6 @@ export async function POST(request: Request) {
           flexDirection: 'column',
           backgroundColor: '#1A0B2E',
           position: 'relative',
-          overflow: 'hidden',
           padding: '60px',
           color: 'white'
         }}>
@@ -195,20 +194,25 @@ export async function POST(request: Request) {
              </p>
           </div>
 
-          {/* 10xDS Brand Logo - Mandatory Anchor */}
+          {/* 10xDS Brand Logo - In-flow to bottom-right, immune to clipping */}
           {logoData && (
-            <img 
-              src={logoData}
-              alt="10xDS Logo"
-              style={{
-                position: 'absolute',
-                bottom: '60px', 
-                right: '60px',
-                height: '32px',
-                width: 'auto',
-                opacity: 0.9
-              }}
-            />
+            <div style={{ 
+              marginTop: 'auto',
+              display: 'flex', 
+              justifyContent: 'flex-end',
+              width: '100%',
+              paddingTop: '20px'
+            }}>
+              <img 
+                src={logoData}
+                alt="10xDS Logo"
+                style={{
+                  height: '32px',
+                  width: 'auto',
+                  opacity: 0.9
+                }}
+              />
+            </div>
           )}
         </div>
       ),
