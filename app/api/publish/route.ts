@@ -5,8 +5,99 @@ import sharp from "sharp";
 
 export async function POST(req: Request) {
   try {
-    const { id, title, content, metaDesc, imageUrl, infographicUrl, categories } = await req.json();
+    const { id, title, content, metaDesc, imageUrl, infographicUrl, categories, platform } = await req.json();
 
+    // ─────────────────────────────────────────────────────────────────────
+    // FRAMER PUBLISHING BRANCH (runs only when platform === 'framer')
+    // ─────────────────────────────────────────────────────────────────────
+    if (platform === 'framer') {
+      const framerApiKey = process.env.FRAMER_API_KEY;
+      const framerCollectionId = process.env.FRAMER_COLLECTION_ID;
+
+      if (!framerApiKey || !framerCollectionId) {
+        return NextResponse.json({
+          error: "Framer credentials missing",
+          details: "Please add FRAMER_API_KEY and FRAMER_COLLECTION_ID to your Vercel environment variables."
+        }, { status: 500 });
+      }
+
+      // Build the slug from the title
+      const slug = title.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .substring(0, 80);
+
+      // Build full HTML content with infographic embedded at the bottom
+      let framerContent = content || '';
+      if (infographicUrl) {
+        framerContent += `<hr style="margin: 40px 0;" />
+        <div class="visual-summary-container" style="text-align: center; padding: 20px 0;">
+          <h3 style="margin-bottom: 25px; color: #1e293b; font-family: sans-serif;">Visual Summary</h3>
+          <img src="${infographicUrl}" alt="Infographic Overview" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);" />
+        </div>`;
+      }
+
+      // POST to Framer CMS Collections API
+      const framerResponse = await fetch(
+        `https://api.framer.com/store/api/v1/collections/${framerCollectionId}/items`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${framerApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fieldData: {
+              title: title,
+              slug: slug,
+              description: metaDesc || '',
+              content: framerContent,
+              image: imageUrl || '',
+            }
+          })
+        }
+      );
+
+      if (!framerResponse.ok) {
+        const errText = await framerResponse.text();
+        console.error("❌ Framer CMS Publish Failed:", errText.substring(0, 500));
+        throw new Error(`Framer API Error: ${framerResponse.status} — ${errText.substring(0, 200)}`);
+      }
+
+      const framerData = await framerResponse.json();
+      const framerItemId = framerData?.id || framerData?.item?.id || null;
+      const framerItemUrl = `https://10xds.ai/blog/${slug}`;
+
+      console.log(`✅ Framer CMS item created: ${framerItemId}`);
+
+      // Update Firestore to mark as published
+      if (id) {
+        try {
+          await db.collection('blog_posts').doc(id).update({
+            status: 'published',
+            framerUrl: framerItemUrl,
+            framerItemId: framerItemId,
+            last_edited_at: new Date().toISOString(),
+            published_at: new Date().toISOString(),
+          });
+          console.log(`✅ Firestore updated: Post ${id} marked as Framer-published.`);
+        } catch (dbErr) {
+          console.error("⚠️ Failed to update Firestore after Framer publish:", dbErr);
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        platform: 'framer',
+        url: framerItemUrl,
+        id: framerItemId
+      });
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // WORDPRESS PUBLISHING BRANCH (unchanged — runs for all other requests)
+    // ─────────────────────────────────────────────────────────────────────
     let wpUrl = process.env.WORDPRESS_URL || '';
     if (wpUrl.endsWith('/')) wpUrl = wpUrl.slice(0, -1);
 
