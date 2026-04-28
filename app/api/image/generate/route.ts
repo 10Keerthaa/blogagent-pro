@@ -20,12 +20,12 @@ export async function POST(req: Request) {
 
         const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
         const imagePrompt = `A stunning, high-quality professional background photograph representing the technical concept of '${prompt}'. 
-        The image should feature concrete, high-authority architectural or technical metaphors.
+        The image should feature concrete, high-authority architectural or technical metaphors (like glowing circuits, abstract nodes, or clean futuristic environments).
         
-        STRICT TOTAL TEXT BLACKOUT RULE:
-        - ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, NO NUMBERS.
-        - FORBIDDEN from drawing any characters on screens, laptops, walls, or backgrounds.
-        - The image MUST be purely visual.
+        STRICT ZERO-TEXT TOLERANCE:
+        - FORBIDDEN: NO text, NO letters, NO words, NO numbers anywhere in the image.
+        - BLACKOUT: No text on laptop screens, no characters on walls, no labels on gadgets.
+        - PURE VISUAL: The image must be 100% purely graphical and photorealistic.
         
         Professional minimalist aesthetic, premium enterprise color palette. 8k photorealistic rendering.`;
 

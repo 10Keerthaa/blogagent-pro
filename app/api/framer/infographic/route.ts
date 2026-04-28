@@ -47,8 +47,9 @@ export async function POST(req: Request) {
       2. Blocks must be exactly 4-5.
       3. Items per block must be exactly 3.
       4. Use extremely formal enterprise terminology.
-      5. SPELLING MUST BE PERFECT.
-      6. DATA SOURCE RULE: Only analyze the core technical body of the post. IGNORE the Conclusion and FAQ sections entirely as they are repetitive summary information. Focus only on the unique technical insights.
+      5. ZERO TEXT ICON RULE: DO NOT draw any text, letters, or words INSIDE or BELOW the glass icons.
+      6. SPELLING MUST BE PERFECT.
+      7. DATA SOURCE RULE: Only analyze the core technical body of the post. IGNORE the Conclusion and FAQ sections entirely as they are repetitive summary information. Focus only on the unique technical insights.
       7. PILLAR COUNT: You MUST provide exactly 5 pillars.
     `;
 

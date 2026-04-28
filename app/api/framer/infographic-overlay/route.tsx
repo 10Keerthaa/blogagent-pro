@@ -1,12 +1,26 @@
 import { ImageResponse } from 'next/og';
 import React from 'react';
+import fs from 'fs';
+import path from 'path';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { iconStripBase64, logoUrl, data, fontBold, fontReg } = body;
+    const { iconStripBase64, logoUrl: passedLogoUrl, data, fontBold, fontReg } = body;
+
+    // Guaranteed Logo Fallback: Read local file if possible
+    let logoData = passedLogoUrl;
+    try {
+        const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
+        if (fs.existsSync(logoPath)) {
+            const base64 = fs.readFileSync(logoPath).toString('base64');
+            logoData = `data:image/png;base64,${base64}`;
+        }
+    } catch (e) {
+        console.warn("Overlay logo local read failed, using passed URL");
+    }
 
     // Convert base64 fonts to ArrayBuffers for Edge compatibility
     const fontBoldArray = fontBold ? Uint8Array.from(atob(fontBold), c => c.charCodeAt(0)) : null;
@@ -181,10 +195,10 @@ export async function POST(request: Request) {
              </p>
           </div>
 
-          {/* 10xDS Brand Logo - Mandatory Absolute Positioning */}
-          {logoUrl && (
+          {/* 10xDS Brand Logo - Mandatory Anchor */}
+          {logoData && (
             <img 
-              src={logoUrl}
+              src={logoData}
               alt="10xDS Logo"
               style={{
                 position: 'absolute',

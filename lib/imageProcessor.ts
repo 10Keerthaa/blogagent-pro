@@ -37,14 +37,9 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
       })
       .toBuffer();
 
-    const overlay = Buffer.from(
-      `<svg width="960" height="720">
-      <rect width="100%" height="100%" fill="#8B5CF6" fill-opacity="0.35" />
-      </svg>`
-    );
-
+    // CLEAN IMAGE: Removed purple overlay and text baking per user requirement.
+    // The image will now be returned as a clean photorealistic asset.
     return await sharp(resizedImage)
-      .composite([{ input: overlay, blend: 'over' }])
       .toBuffer();
 
   } catch (error) {
