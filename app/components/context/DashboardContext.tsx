@@ -436,7 +436,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             if (firebaseUser) {
                 fetchUserRole(firebaseUser.uid);
                 fetchHistory();
-                fetchSitemap();
                 fetchDrafts();
             } else {
                 setRole(null);
@@ -444,7 +443,14 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         });
 
         return () => unsubscribe();
-    }, [fetchUserRole, fetchHistory, fetchSitemap, fetchDrafts]);
+    }, [fetchUserRole, fetchHistory, fetchDrafts]);
+
+    // Re-fetch sitemap when platform or user changes
+    useEffect(() => {
+        if (user) {
+            fetchSitemap();
+        }
+    }, [user, targetPlatform, fetchSitemap]);
 
     const checkForResumeDraft = useCallback(async () => {
         if (!user) {
