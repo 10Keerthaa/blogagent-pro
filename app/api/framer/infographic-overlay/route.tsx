@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     return new ImageResponse(
       (
         <div style={{
-          height: '1000px',
+          height: '1200px',
           width: '800px',
           display: 'flex',
           flexDirection: 'column',
@@ -41,7 +41,6 @@ export async function POST(request: Request) {
           position: 'relative',
           overflow: 'hidden',
           padding: '60px',
-          paddingBottom: '80px', // Extra padding to match top-space feel and clear logo
           color: 'white'
         }}>
 
@@ -82,7 +81,7 @@ export async function POST(request: Request) {
             backdropFilter: 'blur(15px)',
             borderRadius: '20px',
             border: '1px solid rgba(255, 255, 255, 0.15)',
-            height: '240px',
+            height: '220px',
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -93,7 +92,7 @@ export async function POST(request: Request) {
                 alt="Icons"
                 style={{
                   position: 'absolute',
-                  top: '15px',
+                  top: '10px',
                   left: '30px',
                   width: '620px', // 680px glass box - 30px left - 30px right = 620px (all 6 icons fully visible)
                   height: '160px',
@@ -107,7 +106,7 @@ export async function POST(request: Request) {
               display: 'flex',
               width: '620px', 
               position: 'absolute',
-              bottom: '25px',
+              bottom: '15px',
               left: '30px' 
             }}>
               {data.pillars.map((pillar: string, i: number) => (
@@ -128,7 +127,7 @@ export async function POST(request: Request) {
           </div>
 
           {/* Main Content Grid (4-5 Blocks) */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', flex: 1, alignContent: 'flex-start', paddingBottom: '40px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', alignContent: 'flex-start', paddingBottom: '20px' }}>
             {data.blocks.map((block: any, i: number) => (
               <div key={i} style={{ 
                 width: '330px', 
@@ -161,11 +160,11 @@ export async function POST(request: Request) {
               alt="10xDS Logo"
               style={{
                 position: 'absolute',
-                bottom: '40px', // Adjusted to sit better with 80px padding
+                bottom: '60px', 
                 right: '60px',
-                height: '35px',
+                height: '32px',
                 width: 'auto',
-                opacity: 0.8
+                opacity: 0.9
               }}
             />
           )}
@@ -173,7 +172,7 @@ export async function POST(request: Request) {
       ),
       {
         width: 800,
-        height: 1000,
+        height: 1200,
         fonts: fonts
       }
     );

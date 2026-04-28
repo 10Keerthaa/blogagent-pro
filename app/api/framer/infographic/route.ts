@@ -104,7 +104,25 @@ export async function POST(req: Request) {
       throw new Error("Failed to generate icons");
     }
 
-    const iconStripBase64 = imgPart.inlineData.data;
+    const iconStripBuffer = Buffer.from(imgPart.inlineData.data, 'base64');
+    
+    // --- SAFE ZONE EXTRACTION (80% Center Crop) ---
+    // This removes AI-generated text from the bottom while keeping icons intact
+    const processedIcons = await sharp(iconStripBuffer)
+      .metadata()
+      .then(async (metadata) => {
+        if (!metadata.height || !metadata.width) return iconStripBuffer;
+        return sharp(iconStripBuffer)
+          .extract({ 
+            left: 0, 
+            top: Math.round(metadata.height * 0.1), 
+            width: metadata.width, 
+            height: Math.round(metadata.height * 0.8) 
+          })
+          .toBuffer();
+      });
+
+    const iconStripBase64 = processedIcons.toString('base64');
 
     // --- PHASE 3: COMPOSITE ENGINE ---
     const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
