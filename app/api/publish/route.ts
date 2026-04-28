@@ -12,16 +12,16 @@ export async function POST(req: Request) {
     // ─────────────────────────────────────────────────────────────────────
     if (platform === 'framer') {
       const framerApiKey = process.env.FRAMER_API_KEY;
-      const framerCollectionId = process.env.FRAMER_COLLECTION_ID;
+      const framerProjectId = process.env.FRAMER_PROJECT_ID;
 
-      if (!framerApiKey || !framerCollectionId) {
+      if (!framerApiKey || !framerProjectId) {
         return NextResponse.json({
           error: "Framer credentials missing",
-          details: "Please add FRAMER_API_KEY and FRAMER_COLLECTION_ID to your Vercel environment variables."
+          details: "Please add FRAMER_API_KEY and FRAMER_PROJECT_ID to your Vercel environment variables."
         }, { status: 500 });
       }
 
-      // Build the slug from the title
+      // Build slug from title
       const slug = title.toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
         .trim()
@@ -38,37 +38,55 @@ export async function POST(req: Request) {
         </div>`;
       }
 
-      // POST to Framer CMS Collections API
-      const framerResponse = await fetch(
-        `https://api.framer.com/store/api/v1/collections/${framerCollectionId}/items`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${framerApiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            fieldData: {
-              title: title,
-              slug: slug,
-              description: metaDesc || '',
-              content: framerContent,
-              image: imageUrl || '',
-            }
-          })
-        }
+      // Map Framer category ID → display name (as stored in Framer CMS "Category" field)
+      const FRAMER_CATEGORY_MAP: Record<string, string> = {
+        'framer-blog':     'Blog',
+        'computer-vision': 'Computer Vision',
+        'voice-ai':        'Voice AI',
+        'general':         'General',
+        'ai-assistant':    'AI Assistant',
+        'idr':             'IDR',
+        'case-studies':    'Case studies',
+        'vision-ai':       'Vision AI',
+        '10xclassify':     '10xClassify',
+      };
+      const nonLockedCat = (categories || []).find((c: string) => c !== 'framer-blog');
+      const categoryName = nonLockedCat ? (FRAMER_CATEGORY_MAP[nonLockedCat] || nonLockedCat) : 'Blog';
+
+      // Connect to Framer via framer-api (WebSocket SDK)
+      const { connect } = await import('framer-api');
+      const framer = await connect(
+        `https://framer.com/projects/${framerProjectId}`,
+        framerApiKey
       );
 
-      if (!framerResponse.ok) {
-        const errText = await framerResponse.text();
-        console.error("❌ Framer CMS Publish Failed:", errText.substring(0, 500));
-        throw new Error(`Framer API Error: ${framerResponse.status} — ${errText.substring(0, 200)}`);
+      const collections = await framer.getCollections();
+      const blogsCol = collections.find((c: any) => c.name === 'Blogs');
+
+      if (!blogsCol) {
+        await framer.disconnect();
+        throw new Error('Blogs collection not found in Framer project');
       }
 
-      const framerData = await framerResponse.json();
-      const framerItemId = framerData?.id || framerData?.item?.id || null;
-      const framerItemUrl = `https://10xds.ai/blog/${slug}`;
+      // Add item using the exact field keys from the live Blogs collection
+      const newItems: any[] = await (blogsCol as any).addItems([{
+        slug,
+        draft: false,
+        fieldData: {
+          "Blog Head":  { type: "string",        value: title },
+          "Content":    { type: "formattedText", value: framerContent },
+          "Category":   { type: "string",        value: categoryName },
+          "Description":{ type: "string",        value: metaDesc || '' },
+          "m8La9LqWO":  { type: "image",         value: { url: imageUrl || '', resolution: "auto" } } as any,
+          "H2Goeekmd":  { type: "string",        value: title },
+          "g6sVmWkbx":  { type: "string",        value: metaDesc || '' },
+        }
+      }]);
 
+      await framer.disconnect();
+
+      const framerItemId = (newItems?.[0] as any)?.id || null;
+      const framerItemUrl = `https://10xds.ai/blog/${slug}`;
       console.log(`✅ Framer CMS item created: ${framerItemId}`);
 
       // Update Firestore to mark as published
