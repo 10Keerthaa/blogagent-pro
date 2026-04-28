@@ -85,7 +85,7 @@ export async function POST(req: Request) {
           "Content":    { type: "formattedText", value: framerContent },
           "Category":   { type: "string",        value: categoryName },
           "Description":{ type: "string",        value: metaDesc || '' },
-          "m8La9LqWO":  { type: "image",         value: { url: imageUrl || '', resolution: "auto" } } as any,
+          "m8La9LqWO":  { type: "string",        value: imageUrl || '' },
           "H2Goeekmd":  { type: "string",        value: title },
           "g6sVmWkbx":  { type: "string",        value: metaDesc || '' },
         }
@@ -99,23 +99,22 @@ export async function POST(req: Request) {
 
       // Update Firestore to mark as published
       if (id) {
-        try {
-          await db.collection('blog_posts').doc(id).update({
-            status: 'published',
-            framerUrl: framerItemUrl,
-            framerItemId: framerItemId,
-            last_edited_at: new Date().toISOString(),
-            published_at: new Date().toISOString(),
-          });
-          console.log(`✅ Firestore updated: Post ${id} marked as Framer-published.`);
-        } catch (dbErr) {
-          console.error("⚠️ Failed to update Firestore after Framer publish:", dbErr);
-        }
+          try {
+              await db.collection('blog_posts').doc(id).update({
+                  status: 'published',
+                  framerUrl: framerItemUrl,
+                  last_edited_at: new Date().toISOString(),
+                  date: new Date().toISOString(),
+                  published_at: new Date().toISOString()
+              });
+              console.log(`✅ Firestore updated: Post ${id} marked as published.`);
+          } catch (dbErr) {
+              console.error("⚠️ Failed to update Firestore status after publish:", dbErr);
+          }
       }
 
       return NextResponse.json({
         success: true,
-        platform: 'framer',
         url: framerItemUrl,
         id: framerItemId
       });
@@ -286,7 +285,7 @@ export async function POST(req: Request) {
     });
 
   } catch (error: any) {
-    console.error("WordPress Publish Error:", error.message);
+    console.error("Publish Error:", error.message);
     return NextResponse.json({
       error: "Publishing Failed",
       details: error.message || String(error)
