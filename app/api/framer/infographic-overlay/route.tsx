@@ -1,26 +1,14 @@
 import { ImageResponse } from 'next/og';
 import React from 'react';
-import fs from 'fs';
-import path from 'path';
-
-export const runtime = 'nodejs';
+import { ASSETS } from '@/lib/constants';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { iconStripBase64, logoUrl: passedLogoUrl, data, fontBold, fontReg } = body;
 
-    // Guaranteed Logo Fallback: Read local file if possible
-    let logoData = passedLogoUrl;
-    try {
-        const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
-        if (fs.existsSync(logoPath)) {
-            const base64 = fs.readFileSync(logoPath).toString('base64');
-            logoData = `data:image/png;base64,${base64}`;
-        }
-    } catch (e) {
-        console.warn("Overlay logo local read failed, using passed URL");
-    }
+    // Use the pre-embedded ASSETS.logo — 100% reliable in all server environments
+    const logoData = ASSETS.logo ? `data:image/png;base64,${ASSETS.logo}` : (passedLogoUrl || null);
 
     // Convert base64 fonts to ArrayBuffers for Edge compatibility
     const fontBoldArray = fontBold ? Uint8Array.from(atob(fontBold), c => c.charCodeAt(0)) : null;
@@ -194,22 +182,24 @@ export async function POST(request: Request) {
              </p>
           </div>
 
-          {/* 10xDS Brand Logo - In-flow to bottom-right, immune to clipping */}
+          {/* Flex spacer - pushes logo to bottom (flexGrow IS supported in Satori) */}
+          <div style={{ flexGrow: 1 }} />
+
+          {/* 10xDS Brand Logo - Pinned to bottom-right */}
           {logoData && (
             <div style={{ 
-              marginTop: 'auto',
               display: 'flex', 
               justifyContent: 'flex-end',
               width: '100%',
-              paddingTop: '20px'
+              paddingBottom: '10px'
             }}>
               <img 
                 src={logoData}
                 alt="10xDS Logo"
                 style={{
-                  height: '32px',
+                  height: '36px',
                   width: 'auto',
-                  opacity: 0.9
+                  opacity: 1
                 }}
               />
             </div>
