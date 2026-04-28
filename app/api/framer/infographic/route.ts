@@ -4,7 +4,7 @@ import { getGoogleAuth } from '@/lib/googleAuth';
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
-import { FONTS } from '@/lib/constants';
+import { ASSETS, FONTS } from '@/lib/constants';
 
 export const maxDuration = 300; 
 
@@ -154,8 +154,24 @@ export async function POST(req: Request) {
       throw new Error("Composite engine failed: " + await compositeResp.text());
     }
 
-    const finalBuffer = Buffer.from(await compositeResp.arrayBuffer());
-    
+    let finalBuffer = Buffer.from(await compositeResp.arrayBuffer());
+
+    // LOGO COMPOSITE: Stamp 10xDS logo at bottom-right via Sharp (100% reliable vs Satori CSS)
+    try {
+      if (ASSETS.logo) {
+        const logoBuffer = Buffer.from(ASSETS.logo, 'base64');
+        const logoResized = await sharp(logoBuffer).resize({ height: 36 }).png().toBuffer();
+        const logoMeta = await sharp(logoResized).metadata();
+        const logoW = logoMeta.width || 120;
+        finalBuffer = await sharp(finalBuffer)
+          .composite([{ input: logoResized, left: 800 - 60 - logoW, top: 1200 - 30 - 36 }])
+          .png()
+          .toBuffer() as Buffer<ArrayBuffer>;
+      }
+    } catch (logoErr) {
+      console.warn("Logo composite skipped:", logoErr);
+    }
+
     // UPLOAD TO GCS
     const slug = prompt.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '');
     const fileName = `framer-infographic-${slug}-${Date.now()}.png`;

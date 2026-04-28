@@ -161,8 +161,24 @@ export async function POST(req: Request) {
            throw new Error("Overlay route failed to composite text.");
         }
 
-        const buffer = Buffer.from(await overlayRes.arrayBuffer());
+        let buffer = Buffer.from(await overlayRes.arrayBuffer());
         // --- END PROGRAMMATIC OVERLAY ---
+
+        // LOGO COMPOSITE: Stamp 10xDS logo at bottom-right via Sharp (100% reliable)
+        try {
+          if (ASSETS.logo) {
+            const logoBuffer = Buffer.from(ASSETS.logo, 'base64');
+            const logoResized = await sharp(logoBuffer).resize({ height: 36 }).png().toBuffer();
+            const logoMeta = await sharp(logoResized).metadata();
+            const logoW = logoMeta.width || 120;
+            buffer = await sharp(buffer)
+              .composite([{ input: logoResized, left: 800 - 60 - logoW, top: 1060 - 30 - 36 }])
+              .png()
+              .toBuffer() as Buffer<ArrayBuffer>;
+          }
+        } catch (logoErr) {
+          console.warn("Logo composite skipped:", logoErr);
+        }
 
         const slug = prompt.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '');
         const fileName = `${slug}-infographic-${Date.now()}.png`;
