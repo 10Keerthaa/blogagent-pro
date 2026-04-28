@@ -92,9 +92,7 @@ export async function POST(req: Request) {
       data: {
         contents: [{ role: 'user', parts: [{ text: visualPrompt }] }],
         generationConfig: {
-          responseModalities: ['TEXT', 'IMAGE']
-          // NOTE: imageConfig is NOT supported by gemini-2.5-flash-image (Imagen-only param)
-          // Removing it fixes the 400 Invalid Argument error permanently
+          responseModalities: ['IMAGE']
         }
       }
     });

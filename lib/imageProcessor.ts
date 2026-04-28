@@ -39,7 +39,8 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
 
     const escapedTitle = escapeXml(title.toUpperCase());
     
-    // Create a professional SVG overlay with the brand tint and title text
+    // Apply ONLY the purple brand gradient tint (no SVG text - server has no system fonts).
+    // Title text is properly rendered by the /api/banner route with embedded custom fonts.
     const overlay = Buffer.from(
       `<svg width="960" height="720">
         <defs>
@@ -49,18 +50,6 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
           </linearGradient>
         </defs>
         <rect width="100%" height="100%" fill="url(#grad)" />
-        <text 
-          x="50%" 
-          y="50%" 
-          text-anchor="middle" 
-          fill="white" 
-          font-family="sans-serif" 
-          font-size="42" 
-          font-weight="bold"
-          letter-spacing="1"
-        >
-          ${escapedTitle}
-        </text>
       </svg>`
     );
 
