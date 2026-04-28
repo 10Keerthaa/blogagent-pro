@@ -833,7 +833,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 imageUrl: draft.imageUrl, 
                 infographicUrl: draft.infographicUrl, 
                 slug: draft.title.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, ''),
-                categories: finalCategories
+                categories: finalCategories,
+                platform: targetPlatform   // ← passes 'framer' or 'wordpress' to /api/publish
             });
             
             const publishedBy = {
@@ -848,19 +849,20 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 publishedBy
             });
 
-            // ✅ Publish Success Message
+            // ✅ Publish Success Banner
+            const isFramer = targetPlatform === 'framer';
             const banner = document.createElement('div');
             banner.setAttribute('role', 'status');
             banner.style.cssText = `
                 position:fixed; top:0; left:0; right:0; z-index:99999;
-                background:#059669; color:#fff;
+                background:${isFramer ? '#4f46e5' : '#059669'}; color:#fff;
                 display:flex; align-items:center; justify-content:center; gap:10px;
                 padding:18px 24px; font-family:inherit;
                 box-shadow:0 4px 24px rgba(0,0,0,0.15);
             `;
             banner.innerHTML = `
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                <span style="font-size:15px; font-weight:600; letter-spacing:0.01em;">The post is published!</span>
+                <span style="font-size:15px; font-weight:600; letter-spacing:0.01em;">${isFramer ? 'Published to Framer CMS!' : 'The post is published!'}</span>
                 ${pubData.url ? `<a href="${pubData.url}" target="_blank" rel="noopener noreferrer" style="margin-left:16px;font-size:13px;font-weight:700;color:#fff;text-decoration:underline;underline-offset:4px;">View post →</a>` : ''}
             `;
             document.body.appendChild(banner);
@@ -869,6 +871,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             setSelectedReviewDraft(null); fetchDrafts(); fetchHistory(); setActiveTab('history');
         } catch (e: any) { setError(e.message); }
     };
+
 
     const handleGenerateInfographic = async (refinement?: string) => {
         const target = preview || selectedReviewDraft;
