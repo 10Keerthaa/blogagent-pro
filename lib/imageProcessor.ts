@@ -37,9 +37,35 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
       })
       .toBuffer();
 
-    // CLEAN IMAGE: Removed purple overlay and text baking per user requirement.
-    // The image will now be returned as a clean photorealistic asset.
+    const escapedTitle = escapeXml(title.toUpperCase());
+    
+    // Create a professional SVG overlay with the brand tint and title text
+    const overlay = Buffer.from(
+      `<svg width="960" height="720">
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:0.4" />
+            <stop offset="100%" style="stop-color:#4C1D95;stop-opacity:0.5" />
+          </linearGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grad)" />
+        <text 
+          x="50%" 
+          y="50%" 
+          text-anchor="middle" 
+          fill="white" 
+          font-family="sans-serif" 
+          font-size="42" 
+          font-weight="bold"
+          letter-spacing="1"
+        >
+          ${escapedTitle}
+        </text>
+      </svg>`
+    );
+
     return await sharp(resizedImage)
+      .composite([{ input: overlay, blend: 'over' }])
       .toBuffer();
 
   } catch (error) {
