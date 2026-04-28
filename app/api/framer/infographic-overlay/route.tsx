@@ -182,27 +182,20 @@ export async function POST(request: Request) {
              </p>
           </div>
 
-          {/* Flex spacer - pushes logo to bottom (flexGrow IS supported in Satori) */}
-          <div style={{ flexGrow: 1 }} />
-
-          {/* 10xDS Brand Logo - Pinned to bottom-right */}
+          {/* 10xDS Brand Logo - Absolutely pinned to bottom-right */}
           {logoData && (
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'flex-end',
-              width: '100%',
-              paddingBottom: '10px'
-            }}>
-              <img 
-                src={logoData}
-                alt="10xDS Logo"
-                style={{
-                  height: '36px',
-                  width: 'auto',
-                  opacity: 1
-                }}
-              />
-            </div>
+            <img
+              src={logoData}
+              alt="10xDS Logo"
+              style={{
+                position: 'absolute',
+                bottom: '30px',
+                right: '60px',
+                height: '36px',
+                width: 'auto',
+                opacity: 1
+              }}
+            />
           )}
         </div>
       ),
