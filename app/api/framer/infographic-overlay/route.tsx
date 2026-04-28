@@ -201,7 +201,7 @@ export async function POST(request: Request) {
       ),
       {
         width: 800,
-        height: 1200,
+        height: 1060,
         fonts: fonts
       }
     );

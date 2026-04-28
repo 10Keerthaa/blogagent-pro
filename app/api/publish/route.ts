@@ -38,8 +38,8 @@ export async function POST(req: Request) {
         </div>`;
       }
 
-      // Map Framer category ID → display name (as stored in Framer CMS "Category" field)
-      const FRAMER_CATEGORY_MAP: Record<string, string> = {
+      // Map Framer category ID or WP numeric ID → display name (as stored in Framer CMS "Category" field)
+      const FRAMER_CATEGORY_MAP: Record<string | number, string> = {
         'framer-blog':     'Blog',
         'computer-vision': 'Computer Vision',
         'voice-ai':        'Voice AI',
@@ -49,9 +49,17 @@ export async function POST(req: Request) {
         'case-studies':    'Case studies',
         'vision-ai':       'Vision AI',
         '10xclassify':     '10xClassify',
+        // WordPress numeric ID support
+        '1':               'Blog',
+        '101':             'Computer Vision',
       };
-      const nonLockedCat = (categories || []).find((c: string) => c !== 'framer-blog');
-      const categoryName = nonLockedCat ? (FRAMER_CATEGORY_MAP[nonLockedCat] || nonLockedCat) : 'Blog';
+
+      const nonLockedCat = (categories || []).find((c: string | number) => c !== 'framer-blog' && c !== 1);
+      
+      // Ensure categoryName is always a string for Framer SDK (typia assertion)
+      const categoryName = nonLockedCat 
+        ? (FRAMER_CATEGORY_MAP[nonLockedCat] || String(nonLockedCat)) 
+        : 'Blog';
 
       // Connect to Framer via framer-api (WebSocket SDK)
       const { connect } = await import('framer-api');

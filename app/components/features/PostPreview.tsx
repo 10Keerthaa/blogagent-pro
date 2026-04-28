@@ -266,11 +266,9 @@ export const PostPreview = () => {
                     />
 
                     <div className="absolute inset-0 pointer-events-none">
-                        {/* Only show branding for WordPress */}
                         {targetPlatform !== 'framer' && (
                             <>
                                 <img src="/Blog.png" alt="Blog" className="absolute top-[30px] lg:top-[40px] left-[30px] lg:left-[40px] h-8 lg:h-10 w-auto" />
-                                <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] h-10 lg:h-14 w-auto" />
                             </>
                         )}
                         
@@ -352,7 +350,7 @@ export const PostPreview = () => {
                                     <img src={infographicUrl} alt="Infographic" className="w-full h-auto" />
                                     {targetPlatform !== 'framer' && (
                                         <div className="absolute inset-0 pointer-events-none">
-                                            <img src="/10xDS.png" alt="10xDS" className="absolute bottom-[20px] lg:bottom-[30px] right-[20px] lg:right-[30px] h-8 lg:h-12 w-auto drop-shadow-xl" />
+                                            {/* Logo baked into PNG */}
                                         </div>
                                     )}
                                 </div>

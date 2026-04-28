@@ -301,13 +301,7 @@ export const ReviewList = () => {
                                             </h1>
                                         )}
                                     </div>
-                                    {targetPlatform !== 'framer' && (
-                                        <img
-                                            src="/10xDS.png"
-                                            alt="Brand Logo"
-                                            className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] w-auto h-10 lg:h-14 object-contain"
-                                        />
-                                    )}
+                                    {/* Logo baked into PNG */}
                                 </div>
                             </div>
                         )}
@@ -550,9 +544,7 @@ export const ReviewList = () => {
                                                         </h1>
                                                     )}
                                                 </div>
-                                                {targetPlatform !== 'framer' && (
-                                                    <img src="/10xDS.png" className="absolute bottom-[40px] right-[40px] h-14 w-auto" alt="logo" />
-                                                )}
+                                                {/* Logo baked into PNG */}
                                             </div>
                                         </div>
                                     )}

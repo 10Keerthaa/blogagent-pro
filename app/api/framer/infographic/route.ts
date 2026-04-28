@@ -164,7 +164,7 @@ export async function POST(req: Request) {
         const logoMeta = await sharp(logoResized).metadata();
         const logoW = logoMeta.width || 120;
         finalBuffer = await sharp(finalBuffer)
-          .composite([{ input: logoResized, left: 800 - 60 - logoW, top: 1200 - 30 - 36 }])
+          .composite([{ input: logoResized, left: 800 - 60 - logoW, top: 1060 - 30 - 36 }])
           .png()
           .toBuffer() as Buffer<ArrayBuffer>;
       }
