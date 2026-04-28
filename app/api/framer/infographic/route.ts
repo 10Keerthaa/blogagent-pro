@@ -74,14 +74,13 @@ export async function POST(req: Request) {
     const imageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
     
     const visualPrompt = `
-      A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
+      A high-fidelity horizontal strip of 5 minimalist 3D glass icons for an enterprise technology blog. 
+      Topic: ${prompt}
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
-      STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
+      Style: Translucent frosted glass, iridescent highlights, dark purple background, isometric 3D.
+      STRICT RULE: THE ICONS MUST BE PURELY GRAPHICAL SYMBOLS. DO NOT DRAW ANY TEXT, LETTERS, ALPHABETS, OR LABELS INSIDE OR BELOW THE ICONS. ZERO TEXT TOLERANCE.
       LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
-      STRICT CONSTRAINTS:
-      - BLANK TEXT RULE: You are FORBIDDEN from drawing any letters, numbers, or words.
-      - FOCUS RULE: Draw ONLY the icons. No other design elements on the canvas.
     `;
 
     const imageResp = await client.request({
@@ -117,7 +116,7 @@ export async function POST(req: Request) {
             left: 0, 
             top: Math.round(metadata.height * 0.1), 
             width: metadata.width, 
-            height: Math.round(metadata.height * 0.8) 
+            height: Math.round(metadata.height * 0.7) // Increased crop from bottom (20% removal)
           })
           .toBuffer();
       });

@@ -127,7 +127,7 @@ export async function POST(request: Request) {
           </div>
 
           {/* Main Content Grid (4-5 Blocks) */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', alignContent: 'flex-start', paddingBottom: '20px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', alignContent: 'flex-start' }}>
             {data.blocks.map((block: any, i: number) => (
               <div key={i} style={{ 
                 width: '330px', 
@@ -149,6 +149,35 @@ export async function POST(request: Request) {
                 ))}
               </div>
             ))}
+          </div>
+
+          {/* Elite Summary Glass Box */}
+          <div style={{
+            display: 'flex',
+            width: '100%',
+            height: '90px',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '15px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            marginTop: '10px',
+            padding: '15px 40px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative'
+          }}>
+             <p style={{ 
+               fontSize: '16px', 
+               color: '#FFFFFF', 
+               fontFamily: 'EliteReg', 
+               textAlign: 'center', 
+               margin: 0, 
+               lineHeight: 1.5,
+               fontStyle: 'italic',
+               opacity: 0.9
+             }}>
+               "{data.footer_summary}"
+             </p>
           </div>
 
           {/* Footer Bar removed as per design requirements */}

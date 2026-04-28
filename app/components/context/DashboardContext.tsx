@@ -324,9 +324,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                         const data = await resp.json();
                         
                         if (data.match) {
+                            const domain = targetPlatform === 'framer' ? 'https://www.10xds.ai' : 'https://10xds.com';
                             let targetUrl = data.match.url;
-                            if (targetUrl.startsWith('/') && !targetUrl.startsWith('//')) targetUrl = `https://10xds.com${targetUrl}`;
-                            else if (!targetUrl.startsWith('http')) targetUrl = `https://10xds.com/${targetUrl}`;
+                            if (targetUrl.startsWith('/') && !targetUrl.startsWith('//')) targetUrl = `${domain}${targetUrl}`;
+                            else if (!targetUrl.startsWith('http')) targetUrl = `${domain}/${targetUrl}`;
 
                             const matchText = candidatesInPart.find(c => part.toLowerCase().includes(c.toLowerCase()));
                             if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
