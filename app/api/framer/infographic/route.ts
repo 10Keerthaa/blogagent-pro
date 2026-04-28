@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       RULES:
       1. TITLE SYNC: The 'title' and 'subtitle' MUST match the blog title provided in the topic (${prompt}). If the topic has a colon, split it into title and subtitle. If no colon, use the topic as title and create a professional executive subtitle.
       2. Blocks must be exactly 4-5.
-      3. Items per block must be exactly 2-3.
+      3. Items per block must be exactly 3.
       4. Use extremely formal enterprise terminology.
       5. SPELLING MUST BE PERFECT.
       6. DATA SOURCE RULE: Only analyze the core technical body of the post. IGNORE the Conclusion and FAQ sections entirely as they are repetitive summary information. Focus only on the unique technical insights.
