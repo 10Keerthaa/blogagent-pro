@@ -87,32 +87,46 @@ export async function POST(req: Request) {
 
       const titleFieldId = findId("Head") || findId("Title") || "Blog Head";
       const contentFieldId = findId("Content") || findId("Body") || "Content";
-      const categoryFieldId = findId("Category") || "Category";
-      const descFieldId = findId("Description") || findId("Excerpt") || "Description";
 
-      console.log(`📡 Final Framer Payload Keys: Title=${titleFieldId}, Content=${contentFieldId}`);
-
-      // Build the item payload
-      const itemPayload = {
-        slug,
-        draft: true, // 📝 Keep as Draft for manual review
-        fieldData: {
-          [titleFieldId]:    { type: "string",        value: title },
-          [contentFieldId]:  { type: "formattedText", value: framerContent },
-          [categoryFieldId]: { type: "string",        value: categoryName },
-          [descFieldId]:     { type: "string",        value: metaDesc || '' },
-          
-          // Machine-ID Fields (Verified)
-          "m8La9LqWO": { type: "image",   value: imageUrl || '' },
-          "sDXBGwVwZ": { type: "date",    value: new Date().toISOString() },
-          "hiA2txbQU": { type: "boolean", value: false },
-          "H2Goeekmd": { type: "string",  value: title },
-          "g6sVmWkbx": { type: "string",  value: metaDesc || '' },
-        }
+      const tryPublish = async (tKey: string, cKey: string) => {
+        const itemPayload = {
+          slug,
+          draft: true,
+          fieldData: {
+            [tKey]: { type: "string",        value: title },
+            [cKey]: { type: "formattedText", value: framerContent },
+            "category": { type: "string",    value: categoryName },
+            "description": { type: "string", value: metaDesc || '' },
+            "m8La9LqWO": { type: "image",   value: imageUrl || '' },
+            "sDXBGwVwZ": { type: "date",    value: new Date().toISOString() },
+            "hiA2txbQU": { type: "boolean", value: false },
+            "H2Goeekmd": { type: "string",  value: title },
+            "g6sVmWkbx": { type: "string",  value: metaDesc || '' },
+          }
+        };
+        console.log(`📡 Trying Framer Keys: Title="${tKey}", Content="${cKey}"`);
+        return await (blogsCol as any).addItems([itemPayload]);
       };
 
-      console.log(`📝 Publishing item to Framer (as DRAFT): ${slug}`);
-      const newItems: any[] = await (blogsCol as any).addItems([itemPayload]);
+      let newItems: any[] = [];
+      try {
+        // Attempt 1: The IDs we found in the schema
+        newItems = await tryPublish(titleFieldId, contentFieldId);
+      } catch (err: any) {
+        console.warn(`⚠️ Attempt 1 failed (${titleFieldId}): ${err.message}. Trying Fallbacks...`);
+        try {
+          // Attempt 2: Universal Fallbacks
+          newItems = await tryPublish("title", "content");
+        } catch (err2: any) {
+          console.warn(`⚠️ Attempt 2 failed (title): ${err2.message}. Trying slugified...`);
+          // Attempt 3: Machine Fallbacks (slugified)
+          const slugTitle = titleFieldId.toLowerCase().replace(/\s+/g, '_');
+          const slugContent = contentFieldId.toLowerCase().replace(/\s+/g, '_');
+          newItems = await tryPublish(slugTitle, slugContent);
+        }
+      }
+
+      console.log(`✅ Final Success! Item created in Framer.`);
 
       // Automatic Site Republishing is DISABLED (User wants Drafts only)
       /*
