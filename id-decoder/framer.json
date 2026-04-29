@@ -1,9 +1,0 @@
-{
-  "id": "41bdc5",
-  "name": "Id Decoder",
-  "modes": [
-    "configureManagedCollection",
-    "syncManagedCollection"
-  ],
-  "icon": "/icon.svg"
-}
