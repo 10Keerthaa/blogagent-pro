@@ -88,21 +88,21 @@ export async function POST(req: Request) {
           slug,
           draft: true,
           fieldData: {
-            // Mandatory Fields (Trying RAW values instead of objects)
-            [tKey]: title, 
-            [cKey]: framerContent,
-            "category": categoryName,
-            "description": metaDesc || '',
+            // Mandatory Fields (Perfect Shape Fix)
+            [tKey]: { type: "string",        value: title,           valueByLocale: {} },
+            [cKey]: { type: "formattedText", value: framerContent,   valueByLocale: {} },
+            "Category": { type: "string",    value: categoryName,    valueByLocale: {} },
+            "Description": { type: "string", value: metaDesc || '',  valueByLocale: {} },
             
-            // Machine-ID Fields (Verified: These MUST be objects)
+            // Machine-ID Fields (Verified)
             "m8La9LqWO": { type: "image",   value: imageUrl || '' },
             "sDXBGwVwZ": { type: "date",    value: new Date().toISOString() },
             "hiA2txbQU": { type: "boolean", value: false },
-            "H2Goeekmd": { type: "string",  value: title },
-            "g6sVmWkbx": { type: "string",  value: metaDesc || '' },
+            "H2Goeekmd": { type: "string",  value: title,           valueByLocale: {} },
+            "g6sVmWkbx": { type: "string",  value: metaDesc || '',  valueByLocale: {} },
           }
         };
-        console.log(`📡 Trying Mixed Packaging: Title Key="${tKey}"`);
+        console.log(`📡 Trying Perfect Shape: Title Key="${tKey}"`);
         return await (blogsCol as any).addItems([itemPayload]);
       };
 
