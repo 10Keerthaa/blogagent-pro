@@ -88,8 +88,8 @@ export async function POST(req: Request) {
         slug,
         draft: true, // 📝 Keep as Draft for manual review
         fieldData: {
-          // Mandatory Fields (Using the exact format required by the SDK)
-          [fm["Blog Head"] || "Blog Head"]:   { type: "string",        value: title },
+          // Mandatory Fields (Temporarily ignoring Blog Head to diagnose error)
+          // [fm["Blog Head"] || "Blog Head"]:   { type: "string",        value: title },
           [fm["Content"] || "Content"]:       { type: "formattedText", value: framerContent },
           [fm["Category"] || "Category"]:     { type: "string",        value: categoryName },
           [fm["Description"] || "Description"]:{ type: "string",        value: metaDesc || '' },
