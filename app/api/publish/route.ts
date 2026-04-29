@@ -88,13 +88,13 @@ export async function POST(req: Request) {
         slug,
         draft: true, // 📝 Keep as Draft for manual review
         fieldData: {
-          // Mandatory Fields (Temporarily ignoring Blog Head to diagnose error)
+          // Mandatory Fields (Temporarily ignoring ALL human names to diagnose error)
           // [fm["Blog Head"] || "Blog Head"]:   { type: "string",        value: title },
-          [fm["Content"] || "Content"]:       { type: "formattedText", value: framerContent },
-          [fm["Category"] || "Category"]:     { type: "string",        value: categoryName },
-          [fm["Description"] || "Description"]:{ type: "string",        value: metaDesc || '' },
+          // [fm["Content"] || "Content"]:       { type: "formattedText", value: framerContent },
+          // [fm["Category"] || "Category"]:     { type: "string",        value: categoryName },
+          // [fm["Description"] || "Description"]:{ type: "string",       value: metaDesc || '' },
           
-          // Machine-ID Fields
+          // Machine-ID Fields (These are the only ones we are testing now)
           "m8La9LqWO": { type: "image",   value: imageUrl || '' },
           "sDXBGwVwZ": { type: "date",    value: new Date().toISOString() },
           "hiA2txbQU": { type: "boolean", value: false },
