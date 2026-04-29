@@ -13,11 +13,12 @@ export async function POST(req: Request) {
     if (platform === 'framer') {
       const framerApiKey = process.env.FRAMER_API_KEY;
       const framerProjectId = process.env.FRAMER_PROJECT_ID;
+      const framerCollectionId = process.env.FRAMER_COLLECTION_ID;
 
-      if (!framerApiKey || !framerProjectId) {
+      if (!framerApiKey || !framerProjectId || !framerCollectionId) {
         return NextResponse.json({
           error: "Framer credentials missing",
-          details: "Please add FRAMER_API_KEY and FRAMER_PROJECT_ID to your Vercel environment variables."
+          details: "Please add FRAMER_API_KEY, FRAMER_PROJECT_ID, and FRAMER_COLLECTION_ID to your environment variables."
         }, { status: 500 });
       }
 
@@ -61,74 +62,43 @@ export async function POST(req: Request) {
         ? (FRAMER_CATEGORY_MAP[nonLockedCat] || String(nonLockedCat))
         : 'Blog';
 
-      // Connect to Framer via framer-api (WebSocket SDK)
-      const { connect } = await import('framer-api');
-      const framer = await connect(
-        `https://framer.com/projects/${framerProjectId}`,
-        framerApiKey
-      );
-
-      const collections = await framer.getCollections();
-      const blogsCol = collections.find((c: any) => c.name === 'Blogs');
-
-      if (!blogsCol) {
-        await framer.disconnect();
-        throw new Error('Blogs collection not found in Framer project');
-      }
-
-      // ── DYNAMIC FIELD RESOLVER (Improved) ──
-      const fields = await blogsCol.getFields();
-      const findField = (keyword: string) => fields.find(f => f.name.toLowerCase().includes(keyword.toLowerCase()));
+      // ── MODERN CMS API PUBLISHING (Fetch Method) ──
+      const publishUrl = `https://api.framer.com/cms/v1/collections/${framerCollectionId}/items`;
       
-      const titleField = findField("Head") || findField("Title") || fields[0];
-      const contentField = findField("Content") || findField("Body") || fields[1];
-
-      const tryPublish = async (tKey: string, cKey: string) => {
-        const itemPayload = {
-          slug,
-          draft: true,
-          fieldData: {
-            // Mandatory Fields (Perfect Shape Fix)
-            [tKey]: { type: "string",        value: title,           valueByLocale: {} },
-            [cKey]: { type: "formattedText", value: framerContent,   valueByLocale: {} },
-            "Category": { type: "string",    value: categoryName,    valueByLocale: {} },
-            "Description": { type: "string", value: metaDesc || '',  valueByLocale: {} },
-            
-            // Machine-ID Fields (Verified)
-            "m8La9LqWO": { type: "image",   value: imageUrl || '' },
-            "sDXBGwVwZ": { type: "date",    value: new Date().toISOString() },
-            "hiA2txbQU": { type: "boolean", value: false },
-            "H2Goeekmd": { type: "string",  value: title,           valueByLocale: {} },
-            "g6sVmWkbx": { type: "string",  value: metaDesc || '',  valueByLocale: {} },
-          }
-        };
-        console.log(`📡 Trying Perfect Shape: Title Key="${tKey}"`);
-        return await (blogsCol as any).addItems([itemPayload]);
+      const itemPayload = {
+        slug,
+        draft: true,
+        fieldData: {
+          "Blog Head": title,
+          "Content": framerContent,
+          "Category": categoryName,
+          "Description": metaDesc || '',
+          "m8La9LqWO": imageUrl || '',
+          "sDXBGwVwZ": new Date().toISOString(),
+          "hiA2txbQU": false,
+          "H2Goeekmd": title,
+          "g6sVmWkbx": metaDesc || '',
+        }
       };
 
-      let newItems: any[] = [];
-      const attempts = [
-        { t: titleField?.id, c: contentField?.id, label: "Live ID" },
-        { t: "title", c: "content", label: "Standard Fallback" },
-        { t: "blog_head", c: "content", label: "Slugified Fallback" },
-        { t: titleField?.name, c: contentField?.name, label: "Name Fallback" }
-      ];
+      console.log(`🚀 Publishing via REST API: ${slug}`);
+      
+      const response = await fetch(publishUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${framerApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(itemPayload),
+      });
 
-      let lastError = "";
-      for (const attempt of attempts) {
-        if (!attempt.t || !attempt.c) continue;
-        try {
-          newItems = await tryPublish(attempt.t, attempt.c);
-          console.log(`✅ Success with ${attempt.label}!`);
-          lastError = "";
-          break;
-        } catch (err: any) {
-          lastError = err.message;
-          console.warn(`⚠️ ${attempt.label} failed: ${err.message}`);
-        }
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Framer REST API Error (${response.status}): ${errorText}`);
       }
 
-      if (lastError) throw new Error(`Framer Publish Failed after all attempts: ${lastError}`);
+      const result = await response.json();
+      console.log(`✅ Success! Item created in Framer via REST.`);
 
       // Automatic Site Republishing is DISABLED (User wants Drafts only)
       /*
@@ -140,9 +110,7 @@ export async function POST(req: Request) {
       }
       */
 
-      await framer.disconnect();
-
-      const framerItemId = (newItems?.[0] as any)?.id || null;
+      const framerItemId = result?.id || null;
       const framerItemUrl = `https://10xds.ai/blog/${slug}`;
       console.log(`✅ Framer CMS item created: ${framerItemId}`);
 
