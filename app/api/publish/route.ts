@@ -88,10 +88,13 @@ export async function POST(req: Request) {
           slug,
           draft: true,
           fieldData: {
-            [tKey]: { type: "string",        value: title },
-            [cKey]: { type: "formattedText", value: framerContent },
-            "category": { type: "string",    value: categoryName },
-            "description": { type: "string", value: metaDesc || '' },
+            // Mandatory Fields (Trying RAW values instead of objects)
+            [tKey]: title, 
+            [cKey]: framerContent,
+            "category": categoryName,
+            "description": metaDesc || '',
+            
+            // Machine-ID Fields (Verified: These MUST be objects)
             "m8La9LqWO": { type: "image",   value: imageUrl || '' },
             "sDXBGwVwZ": { type: "date",    value: new Date().toISOString() },
             "hiA2txbQU": { type: "boolean", value: false },
@@ -99,7 +102,7 @@ export async function POST(req: Request) {
             "g6sVmWkbx": { type: "string",  value: metaDesc || '' },
           }
         };
-        console.log(`📡 Trying Framer Keys: Title="${tKey}", Content="${cKey}"`);
+        console.log(`📡 Trying Mixed Packaging: Title Key="${tKey}"`);
         return await (blogsCol as any).addItems([itemPayload]);
       };
 
