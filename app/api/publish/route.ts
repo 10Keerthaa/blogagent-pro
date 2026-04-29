@@ -76,25 +76,31 @@ export async function POST(req: Request) {
         throw new Error('Blogs collection not found in Framer project');
       }
 
-      // ── DYNAMIC FIELD RESOLVER ──
-      // Instead of hard-coding, we map Human Names -> Machine IDs at runtime.
+      // ── DYNAMIC FIELD RESOLVER (Improved) ──
       const fields = await blogsCol.getFields();
-      const fm = Object.fromEntries(fields.map(f => [f.name, f.id]));
       
-      console.log('📋 Resolved Framer Schema:', JSON.stringify(fm, null, 2));
+      // Helper to find a field ID by searching for a keyword in the name
+      const findId = (keyword: string) => {
+          const f = fields.find(field => field.name.toLowerCase().includes(keyword.toLowerCase()));
+          return f ? f.id : null;
+      };
 
-      // Build the item payload using the resolved IDs
+      const titleFieldId = findId("Head") || findId("Title") || "Blog Head";
+      const contentFieldId = findId("Content") || findId("Body") || "Content";
+      const categoryFieldId = findId("Category") || "Category";
+      const descFieldId = findId("Description") || findId("Excerpt") || "Description";
+
+      // Build the item payload
       const itemPayload = {
         slug,
         draft: true, // 📝 Keep as Draft for manual review
         fieldData: {
-          // Mandatory Fields (Temporarily ignoring ALL human names to diagnose error)
-          // [fm["Blog Head"] || "Blog Head"]:   { type: "string",        value: title },
-          // [fm["Content"] || "Content"]:       { type: "formattedText", value: framerContent },
-          // [fm["Category"] || "Category"]:     { type: "string",        value: categoryName },
-          // [fm["Description"] || "Description"]:{ type: "string",       value: metaDesc || '' },
+          [titleFieldId]:    { type: "string",        value: title },
+          [contentFieldId]:  { type: "formattedText", value: framerContent },
+          [categoryFieldId]: { type: "string",        value: categoryName },
+          [descFieldId]:     { type: "string",        value: metaDesc || '' },
           
-          // Machine-ID Fields (These are the only ones we are testing now)
+          // Machine-ID Fields (Verified)
           "m8La9LqWO": { type: "image",   value: imageUrl || '' },
           "sDXBGwVwZ": { type: "date",    value: new Date().toISOString() },
           "hiA2txbQU": { type: "boolean", value: false },
