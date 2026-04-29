@@ -63,7 +63,7 @@ export async function POST(req: Request) {
         : 'Blog';
 
       // ── MODERN CMS API PUBLISHING (Fetch Method) ──
-      const publishUrl = `https://api.framer.com/cms/v1/collections/${framerCollectionId}/items`;
+      const publishUrl = `https://api.framer.com/cms/collections/${framerCollectionId}/items`;
       
       const itemPayload = {
         slug,
