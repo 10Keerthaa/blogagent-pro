@@ -40,25 +40,25 @@ export async function POST(req: Request) {
 
       // Map Framer category ID or WP numeric ID → display name (as stored in Framer CMS "Category" field)
       const FRAMER_CATEGORY_MAP: Record<string | number, string> = {
-        'framer-blog':     'Blog',
+        'framer-blog': 'Blog',
         'computer-vision': 'Computer Vision',
-        'voice-ai':        'Voice AI',
-        'general':         'General',
-        'ai-assistant':    'AI Assistant',
-        'idr':             'IDR',
-        'case-studies':    'Case studies',
-        'vision-ai':       'Vision AI',
-        '10xclassify':     '10xClassify',
+        'voice-ai': 'Voice AI',
+        'general': 'General',
+        'ai-assistant': 'AI Assistant',
+        'idr': 'IDR',
+        'case-studies': 'Case studies',
+        'vision-ai': 'Vision AI',
+        '10xclassify': '10xClassify',
         // WordPress numeric ID support
-        '1':               'Blog',
-        '101':             'Computer Vision',
+        '1': 'Blog',
+        '101': 'Computer Vision',
       };
 
       const nonLockedCat = (categories || []).find((c: string | number) => c !== 'framer-blog' && c !== 1);
-      
+
       // Ensure categoryName is always a string for Framer SDK (typia assertion)
-      const categoryName = nonLockedCat 
-        ? (FRAMER_CATEGORY_MAP[nonLockedCat] || String(nonLockedCat)) 
+      const categoryName = nonLockedCat
+        ? (FRAMER_CATEGORY_MAP[nonLockedCat] || String(nonLockedCat))
         : 'Blog';
 
       // Connect to Framer via framer-api (WebSocket SDK)
@@ -76,20 +76,45 @@ export async function POST(req: Request) {
         throw new Error('Blogs collection not found in Framer project');
       }
 
-      // Add item using the exact field keys from the live Blogs collection
-      const newItems: any[] = await (blogsCol as any).addItems([{
+      // ── DYNAMIC FIELD RESOLVER ──
+      // Instead of hard-coding, we map Human Names -> Machine IDs at runtime.
+      const fields = await blogsCol.getFields();
+      const fm = Object.fromEntries(fields.map(f => [f.name, f.id]));
+      
+      console.log('📋 Resolved Framer Schema:', JSON.stringify(fm, null, 2));
+
+      // Build the item payload using the resolved IDs
+      const itemPayload = {
         slug,
-        draft: false,
+        draft: true, // 📝 Keep as Draft for manual review
         fieldData: {
-          "Blog Head":  { type: "string",        value: title },
-          "Content":    { type: "formattedText", value: framerContent },
-          "Category":   { type: "string",        value: categoryName },
-          "Description":{ type: "string",        value: metaDesc || '' },
-          "m8La9LqWO":  { type: "string",        value: imageUrl || '' },
-          "H2Goeekmd":  { type: "string",        value: title },
-          "g6sVmWkbx":  { type: "string",        value: metaDesc || '' },
+          // Mandatory Fields (Using the exact format required by the SDK)
+          [fm["Blog Head"] || "Blog Head"]:   { type: "string",        value: title },
+          [fm["Content"] || "Content"]:       { type: "formattedText", value: framerContent },
+          [fm["Category"] || "Category"]:     { type: "string",        value: categoryName },
+          [fm["Description"] || "Description"]:{ type: "string",        value: metaDesc || '' },
+          
+          // Machine-ID Fields
+          "m8La9LqWO": { type: "image",   value: imageUrl || '' },
+          "sDXBGwVwZ": { type: "date",    value: new Date().toISOString() },
+          "hiA2txbQU": { type: "boolean", value: false },
+          "H2Goeekmd": { type: "string",  value: title },
+          "g6sVmWkbx": { type: "string",  value: metaDesc || '' },
         }
-      }]);
+      };
+
+      console.log(`📝 Publishing item to Framer (as DRAFT): ${slug}`);
+      const newItems: any[] = await (blogsCol as any).addItems([itemPayload]);
+
+      // Automatic Site Republishing is DISABLED (User wants Drafts only)
+      /*
+      try {
+        await (framer as any).publish();
+        console.log('✅ Framer site republished — live site redeployed.');
+      } catch (pubErr: any) {
+        console.warn('⚠️ Framer auto-publish failed:', pubErr?.message);
+      }
+      */
 
       await framer.disconnect();
 
@@ -99,18 +124,18 @@ export async function POST(req: Request) {
 
       // Update Firestore to mark as published
       if (id) {
-          try {
-              await db.collection('blog_posts').doc(id).update({
-                  status: 'published',
-                  framerUrl: framerItemUrl,
-                  last_edited_at: new Date().toISOString(),
-                  date: new Date().toISOString(),
-                  published_at: new Date().toISOString()
-              });
-              console.log(`✅ Firestore updated: Post ${id} marked as published.`);
-          } catch (dbErr) {
-              console.error("⚠️ Failed to update Firestore status after publish:", dbErr);
-          }
+        try {
+          await db.collection('blog_posts').doc(id).update({
+            status: 'published',
+            framerUrl: framerItemUrl,
+            last_edited_at: new Date().toISOString(),
+            date: new Date().toISOString(),
+            published_at: new Date().toISOString()
+          });
+          console.log(`✅ Firestore updated: Post ${id} marked as published.`);
+        } catch (dbErr) {
+          console.error("⚠️ Failed to update Firestore status after publish:", dbErr);
+        }
       }
 
       return NextResponse.json({
@@ -225,8 +250,8 @@ export async function POST(req: Request) {
             featuredMediaId = mediaData.id;
             console.log(`✅ Media Composited & Sideloaded: ID ${featuredMediaId}`);
           } else {
-             const mediaErr = await mediaResponse.text();
-             console.error("❌ WordPress Media Upload Failed:", mediaErr.substring(0, 500));
+            const mediaErr = await mediaResponse.text();
+            console.error("❌ WordPress Media Upload Failed:", mediaErr.substring(0, 500));
           }
         } else {
           console.error("❌ Vercel OG Banner Generation Failed:", await imgRes.text());
@@ -264,18 +289,18 @@ export async function POST(req: Request) {
 
     // UPDATE FIRESTORE: Mark as published
     if (id) {
-        try {
-            await db.collection('blog_posts').doc(id).update({
-                status: 'published',
-                wpUrl: postData.link,
-                last_edited_at: new Date().toISOString(),
-                date: new Date().toISOString(),
-                published_at: new Date().toISOString()
-            });
-            console.log(`✅ Firestore updated: Post ${id} marked as published.`);
-        } catch (dbErr) {
-            console.error("⚠️ Failed to update Firestore status after publish:", dbErr);
-        }
+      try {
+        await db.collection('blog_posts').doc(id).update({
+          status: 'published',
+          wpUrl: postData.link,
+          last_edited_at: new Date().toISOString(),
+          date: new Date().toISOString(),
+          published_at: new Date().toISOString()
+        });
+        console.log(`✅ Firestore updated: Post ${id} marked as published.`);
+      } catch (dbErr) {
+        console.error("⚠️ Failed to update Firestore status after publish:", dbErr);
+      }
     }
 
     return NextResponse.json({
