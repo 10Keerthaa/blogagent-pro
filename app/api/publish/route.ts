@@ -78,14 +78,6 @@ export async function POST(req: Request) {
 
       // ── DYNAMIC FIELD RESOLVER (Improved) ──
       const fields = await blogsCol.getFields();
-      
-      // Helper to find a field ID by searching for a keyword in the name
-      const findId = (keyword: string) => {
-          const f = fields.find(field => field.name.toLowerCase().includes(keyword.toLowerCase()));
-          return f ? f.id : null;
-      };
-
-      const fields = await blogsCol.getFields();
       const findField = (keyword: string) => fields.find(f => f.name.toLowerCase().includes(keyword.toLowerCase()));
       
       const titleField = findField("Head") || findField("Title") || fields[0];
