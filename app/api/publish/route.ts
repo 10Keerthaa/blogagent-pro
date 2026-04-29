@@ -90,16 +90,17 @@ export async function POST(req: Request) {
       const categoryFieldId = findId("Category") || "Category";
       const descFieldId = findId("Description") || findId("Excerpt") || "Description";
 
+      console.log(`📡 Final Framer Payload Keys: Title=${titleFieldId}, Content=${contentFieldId}`);
+
       // Build the item payload
       const itemPayload = {
         slug,
         draft: true, // 📝 Keep as Draft for manual review
         fieldData: {
-          // Mandatory Fields (Using slugified IDs to avoid space issues)
-          "blog_head": { type: "string",        value: title },
-          "content":   { type: "formattedText", value: framerContent },
-          "category":  { type: "string",        value: categoryName },
-          "description":{ type: "string",       value: metaDesc || '' },
+          [titleFieldId]:    { type: "string",        value: title },
+          [contentFieldId]:  { type: "formattedText", value: framerContent },
+          [categoryFieldId]: { type: "string",        value: categoryName },
+          [descFieldId]:     { type: "string",        value: metaDesc || '' },
           
           // Machine-ID Fields (Verified)
           "m8La9LqWO": { type: "image",   value: imageUrl || '' },
