@@ -85,8 +85,11 @@ export async function POST(req: Request) {
           return f ? f.id : null;
       };
 
-      const titleFieldId = findId("Head") || findId("Title") || "Blog Head";
-      const contentFieldId = findId("Content") || findId("Body") || "Content";
+      const fields = await blogsCol.getFields();
+      const findField = (keyword: string) => fields.find(f => f.name.toLowerCase().includes(keyword.toLowerCase()));
+      
+      const titleField = findField("Head") || findField("Title") || fields[0];
+      const contentField = findField("Content") || findField("Body") || fields[1];
 
       const tryPublish = async (tKey: string, cKey: string) => {
         const itemPayload = {
@@ -109,24 +112,28 @@ export async function POST(req: Request) {
       };
 
       let newItems: any[] = [];
-      try {
-        // Attempt 1: The IDs we found in the schema
-        newItems = await tryPublish(titleFieldId, contentFieldId);
-      } catch (err: any) {
-        console.warn(`⚠️ Attempt 1 failed (${titleFieldId}): ${err.message}. Trying Fallbacks...`);
+      const attempts = [
+        { t: titleField?.id, c: contentField?.id, label: "Live ID" },
+        { t: "title", c: "content", label: "Standard Fallback" },
+        { t: "blog_head", c: "content", label: "Slugified Fallback" },
+        { t: titleField?.name, c: contentField?.name, label: "Name Fallback" }
+      ];
+
+      let lastError = "";
+      for (const attempt of attempts) {
+        if (!attempt.t || !attempt.c) continue;
         try {
-          // Attempt 2: Universal Fallbacks
-          newItems = await tryPublish("title", "content");
-        } catch (err2: any) {
-          console.warn(`⚠️ Attempt 2 failed (title): ${err2.message}. Trying slugified...`);
-          // Attempt 3: Machine Fallbacks (slugified)
-          const slugTitle = titleFieldId.toLowerCase().replace(/\s+/g, '_');
-          const slugContent = contentFieldId.toLowerCase().replace(/\s+/g, '_');
-          newItems = await tryPublish(slugTitle, slugContent);
+          newItems = await tryPublish(attempt.t, attempt.c);
+          console.log(`✅ Success with ${attempt.label}!`);
+          lastError = "";
+          break;
+        } catch (err: any) {
+          lastError = err.message;
+          console.warn(`⚠️ ${attempt.label} failed: ${err.message}`);
         }
       }
 
-      console.log(`✅ Final Success! Item created in Framer.`);
+      if (lastError) throw new Error(`Framer Publish Failed after all attempts: ${lastError}`);
 
       // Automatic Site Republishing is DISABLED (User wants Drafts only)
       /*
