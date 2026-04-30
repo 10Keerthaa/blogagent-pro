@@ -6,7 +6,7 @@ export const maxDuration = 60; // Set timeout for Vercel
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt, keywords, primaryKeyword, feedback, currentContent, description } = body;
+    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, sitemapLinks } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -58,6 +58,15 @@ export async function POST(req: Request) {
         - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
         - Every sentence must add unique technical value. ZERO FLUFF.
 
+        ${sitemapLinks ? `
+        ━━━ INTERNAL LINKING REPOSITORY (ELITE SEO)
+        Use the following mapping to inject internal links naturally into the body text. 
+        ONLY link if the phrase fits the sentence perfectly. Do not force links.
+        Maximum 10-15 internal links per post.
+        SITEMAP DATA:
+        ${Object.entries(sitemapLinks).map(([k, v]) => `- "${k}": ${v}`).join('\n')}
+        ` : ""}
+
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
 
         STRICT REQUIREMENTS (FRAMER SPECIFIC):
@@ -72,7 +81,7 @@ export async function POST(req: Request) {
            - **SECTION INTROS:** Every <h4> section MUST begin with exactly 3-4 sentences of introductory text before any list.
            - **BULLET POINTS (OPTIONAL):** Use HTML <ul> and <li> tags ONLY when bullet points are contextually appropriate. FORBIDDEN: Do NOT use <b> bold text as a substitute for bullet points. When bullets ARE used, they MUST be inside <ul><li> tags, and each <li> must contain a minimum of 2 full sentences with real technical depth. If no bullets are needed, write plain <p> paragraphs only.
         5. NEVER use <h2> or <h3> for subheadings. ONLY use <h4>.
-        6. NO INTERNAL LINKS: DO NOT generate any <a> tags except for the expert CTA.
+        6. INTERNAL LINKS: You are AUTHORIZED to use <a> tags ONLY for the phrases provided in the INTERNAL LINKING REPOSITORY. DO NOT invent links.
         7. CONCLUSION (MANDATORY): Include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://www.10xds.ai/contact/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
         8. FAQ SECTION (MANDATORY): Include an "<h2>FAQ Section</h2>" heading with 5–7 questions. Wrap each question in <b> tags and each answer in <p> tags. Do not nest them; they must be sequential blocks.
 
@@ -89,6 +98,7 @@ export async function POST(req: Request) {
         ---
         ${currentContent}
         ---
+        ${sitemapLinks ? `INTERNAL LINKING REFERENCE: ${JSON.stringify(sitemapLinks)}` : ""}
 
         USER INSTRUCTION: ${feedback}
         
