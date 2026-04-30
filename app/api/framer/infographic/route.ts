@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
       Style: Translucent frosted glass, iridescent highlights, dark purple background, isometric 3D.
       STRICT RULE: THE ICONS MUST BE PURELY GRAPHICAL SYMBOLS. DO NOT DRAW ANY TEXT, LETTERS, ALPHABETS, OR LABELS **INSIDE**, ON, OR BELOW THE ICONS. ZERO TEXT TOLERANCE.
-      LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row.
+      LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. The bottom half must remain completely empty and dark.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
     `;
 
@@ -115,9 +115,9 @@ export async function POST(req: Request) {
         return sharp(iconStripBuffer)
           .extract({ 
             left: 0, 
-            top: Math.round(metadata.height * 0.1), 
+            top: Math.round(metadata.height * 0.05), 
             width: metadata.width, 
-            height: Math.round(metadata.height * 0.76) // Calibrated crop: 10% top removal, 14% bottom removal
+            height: Math.round(metadata.height * 0.70) // Aggressive crop: 5% top, 25% bottom removal to kill all ghost text
           })
           .toBuffer();
       });

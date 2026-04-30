@@ -94,9 +94,9 @@ export async function POST(req: Request) {
       LAYOUT: Draw 4 circular glass nodes in a single, perfectly straight horizontal row.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
       STRICT RULE: THE ICONS MUST BE PURELY GRAPHICAL SYMBOLS. DO NOT DRAW ANY TEXT, LETTERS, ALPHABETS, OR LABELS **INSIDE**, ON, OR BELOW THE ICONS. ZERO TEXT TOLERANCE.
-      LAYOUT: Draw 4 circular glass nodes in a single, perfectly straight horizontal row.
+      LAYOUT: Draw 4 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. The bottom half must remain completely empty and dark.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
-      FOCUS RULE: Draw ONLY the icons. No other design elements on the canvas.
+      FOCUS RULE: Draw ONLY the icons. No other design elements or labels on the canvas.
       `;
 
       const response = await client.request({
@@ -126,9 +126,9 @@ export async function POST(req: Request) {
         const croppedBuffer = await sharp(rawBuffer)
           .extract({ 
             left: 0, 
-            top: Math.round(imgHeight * 0.10), 
+            top: Math.round(imgHeight * 0.05), 
             width: imgWidth, 
-            height: Math.round(imgHeight * 0.76) // Calibrated crop: 10% top removal, 14% bottom removal
+            height: Math.round(imgHeight * 0.70) // Aggressive crop: 5% top, 25% bottom removal to kill all ghost text
           })
           .png()
           .toBuffer();

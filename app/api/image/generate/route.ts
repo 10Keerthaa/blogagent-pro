@@ -19,17 +19,17 @@ export async function POST(req: Request) {
         const projectId = await auth.getProjectId();
 
         const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
-        const imagePrompt = `A breathtaking, abstract, high-resolution digital art representing '${prompt}'.
-        Style: Glowing neon circuit patterns, flowing data streams, geometric particle fields, or luminous network nodes on a deep dark background.
+        const imagePrompt = `A breathtaking, high-resolution conceptual digital art representing the core essence of '${prompt}'.
+        Style: Professional enterprise aesthetic, high-contrast lighting, 3D depth, cinematic atmosphere.
+        Theme: Incorporate sophisticated visual metaphors related to '${prompt}'. For example, use glowing energy nodes for data, intricate gear-like flows for automation, or shield-like geometry for security.
         Color palette: Deep navy, electric violet, and teal highlights.
         
         ABSOLUTE RULES - ZERO EXCEPTIONS:
-        - NO laptops, NO phones, NO screens, NO monitors, NO devices of ANY kind.
         - NO text, NO letters, NO words, NO numbers anywhere.
         - NO people, NO faces, NO hands.
-        - ONLY abstract geometric patterns, light flows, and data visualizations.
+        - The imagery must be conceptual and sophisticated, not a literal photograph of a device.
         
-        8k photorealistic abstract digital art.`;
+        8k photorealistic enterprise-grade conceptual art.`;
 
         const response = await client.request({
             url,
