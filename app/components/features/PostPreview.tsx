@@ -468,6 +468,7 @@ export const PostPreview = () => {
                                     setSelectedReviewDraft(result);
                                 }
                                 setActiveTab('review');
+                                resetEditorState();
                             }}
                             isLoading={isSavingReview}
                             className="flex-1 h-14 rounded-none bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 font-bold text-[11px] uppercase tracking-widest gap-2"

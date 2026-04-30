@@ -93,9 +93,10 @@ export async function POST(req: Request) {
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
       LAYOUT: Draw 4 circular glass nodes in a single, perfectly straight horizontal row.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
-      STRICT CONSTRAINTS:
-      - BLANK TEXT RULE: You are FORBIDDEN from drawing any letters, numbers, or words.
-      - FOCUS RULE: Draw ONLY the icons. No other design elements on the canvas.
+      STRICT RULE: THE ICONS MUST BE PURELY GRAPHICAL SYMBOLS. DO NOT DRAW ANY TEXT, LETTERS, ALPHABETS, OR LABELS **INSIDE**, ON, OR BELOW THE ICONS. ZERO TEXT TOLERANCE.
+      LAYOUT: Draw 4 circular glass nodes in a single, perfectly straight horizontal row.
+      BACKGROUND: Solid deep purple background (#1A0B2E). 
+      FOCUS RULE: Draw ONLY the icons. No other design elements on the canvas.
       `;
 
       const response = await client.request({
@@ -127,7 +128,7 @@ export async function POST(req: Request) {
             left: 0, 
             top: Math.round(imgHeight * 0.10), 
             width: imgWidth, 
-            height: Math.round(imgHeight * 0.80) 
+            height: Math.round(imgHeight * 0.76) // Calibrated crop: 10% top removal, 14% bottom removal
           })
           .png()
           .toBuffer();
