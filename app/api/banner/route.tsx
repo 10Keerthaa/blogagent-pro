@@ -127,8 +127,8 @@ export async function POST(request: Request) {
         </div>
       ),
       {
-        width: 1200,
-        height: 630,
+        width: 960,
+        height: 720,
         fonts: fontsArr.length > 0 ? fontsArr : undefined
       }
     );
