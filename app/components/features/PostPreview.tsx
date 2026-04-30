@@ -16,7 +16,7 @@ export const PostPreview = () => {
         user, upsertPost, isSavingManual, isSavingReview, setSelectedReviewDraft,
         description, primaryKeyword, prompt: mainTopic, keywords,
         handleRefineSelection, infographicFeedback, setInfographicFeedback, isInfographicRefining,
-        isGenerating, deleteInProgressDraft, checkForResumeDraft, targetPlatform
+        isGenerating, deleteInProgressDraft, checkForResumeDraft, targetPlatform, resetEditorState
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
