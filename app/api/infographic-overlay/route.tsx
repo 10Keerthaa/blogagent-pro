@@ -95,9 +95,9 @@ export async function POST(request: Request) {
               <img
                 src={`data:image/png;base64,${iconStripBase64}`}
                 style={{
-                  width: '620px',
-                  height: '180px', // Slightly taller to match new container
-                  objectFit: 'contain'
+                  width: '720px', // Stretched to fill the entire width of the box
+                  height: '180px',
+                  objectFit: 'cover'
                 }}
               />
             )}
