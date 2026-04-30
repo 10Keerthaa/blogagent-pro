@@ -1,0 +1,470 @@
+[Log in](https://framer.com/r/login)
+[Sign up](https://www.framer.com/r/signup/)
+[CopyLogo as SVG](https://www.framer.com/developers/server-api-quick-start)
+Copy
+Logo as SVG
+[BrandGuidelines](https://www.framer.com/brand)
+Brand
+Guidelines
+[Product](https://www.framer.com/developers/server-api-quick-start)
+[Teams](https://www.framer.com/developers/server-api-quick-start)
+[Resources](https://www.framer.com/developers/server-api-quick-start)
+[Community](https://www.framer.com/developers/server-api-quick-start)
+[Support](https://www.framer.com/developers/server-api-quick-start)
+[Enterprise](https://www.framer.com/enterprise/)
+[Pricing](https://www.framer.com/pricing)
+Search...
+Get Started
+[Overview](https://www.framer.com/developers/)
+[Compare](https://www.framer.com/developers/comparison)
+[FAQ](https://www.framer.com/developers/faq)
+[Plugins](https://www.framer.com/)
+[Introduction](https://www.framer.com/developers/plugins-introduction)
+[Quick Start](https://www.framer.com/developers/plugins-quick-start)
+[Publishing](https://www.framer.com/developers/publishing)
+[Changelog](https://www.framer.com/developers/changelog)
+[Reference](https://www.framer.com/developers/reference)
+Guides
+Server API
+[Introduction](https://www.framer.com/developers/server-api-introduction)
+[Quick Start](https://www.framer.com/developers/server-api-quick-start)
+[Reference](https://www.framer.com/developers/server-api-reference)
+[FAQ](https://www.framer.com/developers/server-api-faq)
+Fetch
+[Introduction](https://www.framer.com/developers/fetch-introduction)
+[Examples](https://www.framer.com/developers/fetch-examples)
+Components
+[Introduction](https://www.framer.com/developers/components-introduction)
+[Examples](https://www.framer.com/developers/component-examples)
+[Asset Sharing](https://www.framer.com/developers/component-sharing)
+[Auto-Sizing](https://www.framer.com/developers/auto-sizing)
+[Property Controls](https://www.framer.com/developers/property-controls)
+[Reference](https://www.framer.com/developers/components-reference)
+Overrides
+[Introduction](https://www.framer.com/developers/overrides-introduction)
+[Examples](https://www.framer.com/developers/overrides-examples)
+[Developers](https://www.framer.com/developers/)
+
+###### Search
+Search...
+Get Started
+[Overview](https://www.framer.com/developers/)
+[Compare](https://www.framer.com/developers/comparison)
+[FAQ](https://www.framer.com/developers/faq)
+[Plugins](https://www.framer.com/)
+[Introduction](https://www.framer.com/developers/plugins-introduction)
+[Quick Start](https://www.framer.com/developers/plugins-quick-start)
+[Publishing](https://www.framer.com/developers/publishing)
+[Changelog](https://www.framer.com/developers/changelog)
+[Reference](https://www.framer.com/developers/reference)
+Guides
+Server API
+[Introduction](https://www.framer.com/developers/server-api-introduction)
+[Quick Start](https://www.framer.com/developers/server-api-quick-start)
+[Reference](https://www.framer.com/developers/server-api-reference)
+[FAQ](https://www.framer.com/developers/server-api-faq)
+Fetch
+[Introduction](https://www.framer.com/developers/fetch-introduction)
+[Examples](https://www.framer.com/developers/fetch-examples)
+Components
+[Introduction](https://www.framer.com/developers/components-introduction)
+[Examples](https://www.framer.com/developers/component-examples)
+[Asset Sharing](https://www.framer.com/developers/component-sharing)
+[Auto-Sizing](https://www.framer.com/developers/auto-sizing)
+[Property Controls](https://www.framer.com/developers/property-controls)
+[Reference](https://www.framer.com/developers/components-reference)
+Overrides
+[Introduction](https://www.framer.com/developers/overrides-introduction)
+[Examples](https://www.framer.com/developers/overrides-examples)
+
+# [Quick Start](https://www.framer.com/developers/server-api-quick-start#quick-start)
+
+[Quick Start](https://www.framer.com/developers/server-api-quick-start#quick-start)
+This guide will help you get up and running with the [Framer Server API](https://www.npmjs.com/package/framer-api).
+
+## [Authentication](https://www.framer.com/developers/server-api-quick-start#authentication)
+[Authentication](https://www.framer.com/developers/server-api-quick-start#authentication)
+In order to interact with the Server API, you will need an API key. These keys authenticate your script as the user who created them, and are bound to a specific project.
+You can generate a new API key by going to the General section in Site Settings for a project.
+Save the key for future use; keep it in a secure location, such as an .env file or your password manager.
+
+```
+.env
+```
+
+## [Installation](https://www.framer.com/developers/server-api-quick-start#installation)
+[Installation](https://www.framer.com/developers/server-api-quick-start#installation)
+You can install the Server API node package with npm:
+
+```
+npm i framer-api
+```
+
+
+```
+npm i framer-api
+```
+
+
+```
+npm i framer-api
+```
+
+## [Create a script](https://www.framer.com/developers/server-api-quick-start#create-a-script)
+[Create a script](https://www.framer.com/developers/server-api-quick-start#create-a-script)
+Create a JavaScript or TypeScript file:
+
+```
+import { connect } from "framer-api" const framer = await connect( "https://framer.com/projects/<id>", // Can be project id or url process.env.FRAMER_API_KEY // Your previously created API key ) const projectInfo = await framer.getProjectInfo() console.log(`Project: ${projectInfo.name}`) // Closes down the server API. // If you don't do this, your script won't finish executing. await framer.disconnect()
+```
+
+
+```
+import { connect } from "framer-api" const framer = await connect( "https://framer.com/projects/<id>", // Can be project id or url process.env.FRAMER_API_KEY // Your previously created API key ) const projectInfo = await framer.getProjectInfo() console.log(`Project: ${projectInfo.name}`) // Closes down the server API. // If you don't do this, your script won't finish executing. await framer.disconnect()
+```
+
+
+```
+import { connect } from "framer-api" const framer = await connect( "https://framer.com/projects/<id>", // Can be project id or url process.env.FRAMER_API_KEY // Your previously created API key ) const projectInfo = await framer.getProjectInfo() console.log(`Project: ${projectInfo.name}`) // Closes down the server API. // If you don't do this, your script won't finish executing. await framer.disconnect()
+```
+
+Note that if your runtime supports it (e.g. TypeScript 5.2+), you can use the new using syntax to avoid needing to call framer.disconnect. In which case it would simply be:
+
+```
+using
+```
+
+
+```
+framer.disconnect
+```
+
+
+```
+using framer = await connect( "https://framer.com/projects/<id>", process.env.FRAMER_API_KEY ) // No need to call framer.disconnect()
+```
+
+
+```
+using framer = await connect( "https://framer.com/projects/<id>", process.env.FRAMER_API_KEY ) // No need to call framer.disconnect()
+```
+
+
+```
+using framer = await connect( "https://framer.com/projects/<id>", process.env.FRAMER_API_KEY ) // No need to call framer.disconnect()
+```
+
+## [Running your script](https://www.framer.com/developers/server-api-quick-start#running-your-script)
+[Running your script](https://www.framer.com/developers/server-api-quick-start#running-your-script)
+With your credentials (you can also put them in a .env file):
+
+```
+.env
+```
+
+
+```
+FRAMER_API_KEY="..." node script.js
+```
+
+
+```
+FRAMER_API_KEY="..." node script.js
+```
+
+
+```
+FRAMER_API_KEY="..." node script.js
+```
+
+## [Examples](https://www.framer.com/developers/server-api-quick-start#examples)
+
+[Examples](https://www.framer.com/developers/server-api-quick-start#examples)
+Here is a quick example of how to connect, publish a new preview, and promote it to production.
+
+```
+import { connect } from "framer-api" // Make a connection based on your credentials const framer = await connect(projectUrl, process.env.FRAMER_API_KEY) // Get a list of current changes compared to the last publish const changes = await framer.getChangedPaths() console.log(changes) // { added: ..., removed: ..., modified: ... } // Publish a new preview link with all the changes const result = await framer.publish() console.log(result) // { deployment: ..., hostnames: ... } // If everything looks good promote that version to production await framer.deploy(result.deployment.id)
+```
+
+
+```
+import { connect } from "framer-api" // Make a connection based on your credentials const framer = await connect(projectUrl, process.env.FRAMER_API_KEY) // Get a list of current changes compared to the last publish const changes = await framer.getChangedPaths() console.log(changes) // { added: ..., removed: ..., modified: ... } // Publish a new preview link with all the changes const result = await framer.publish() console.log(result) // { deployment: ..., hostnames: ... } // If everything looks good promote that version to production await framer.deploy(result.deployment.id)
+```
+
+
+```
+import { connect } from "framer-api" // Make a connection based on your credentials const framer = await connect(projectUrl, process.env.FRAMER_API_KEY) // Get a list of current changes compared to the last publish const changes = await framer.getChangedPaths() console.log(changes) // { added: ..., removed: ..., modified: ... } // Publish a new preview link with all the changes const result = await framer.publish() console.log(result) // { deployment: ..., hostnames: ... } // If everything looks good promote that version to production await framer.deploy(result.deployment.id)
+```
+
+You can find a list of other real-world examples on the following GitHub repository: [https://github.com/framer/server-api-examples](https://github.com/framer/server-api-examples).
+[PreviousIntroduction](https://www.framer.com/developers/server-api-introduction)
+
+### Previous
+
+Introduction
+[NextReference](https://www.framer.com/developers/server-api-reference)
+
+### Next
+
+Reference
+Get an AI summary of Framer
+© Framer B.V.
+2026
+[Loading statusloading](https://www.framerstatus.com/)
+Downloads
+[Mac](https://updates.framer.com/electron/darwin/arm64/Framer.zip?_ga=2.113395847.1447313862.1646043056-273660571.1642151053)
+Mac
+[Windows](https://updates.framer.com/electron/win32/x64/Framer.exe?_ga=2.113395847.1447313862.1646043056-273660571.1642151053)
+Windows
+[CCPA](https://app.eu.vanta.com/framer.com/trust/ow67ujg7iav0t6qtd1o6r2)
+CCPA
+- Product
+- [AI](https://www.framer.com/ai/)
+- [Design](https://www.framer.com/design/)
+- [Publish](https://www.framer.com/publish/)
+- [Collaborate](https://www.framer.com/collaborate/)
+- [Convert](https://www.framer.com/convert/)
+- [CMS](https://www.framer.com/cms/)
+- [SEO](https://www.framer.com/seo/)
+- [Hosting](https://www.framer.com/hosting/)
+- [Performance](https://www.framer.com/performance/)
+- [UpdatesNew](https://www.framer.com/updates)
+[AI](https://www.framer.com/ai/)
+[Design](https://www.framer.com/design/)
+[Publish](https://www.framer.com/publish/)
+[Collaborate](https://www.framer.com/collaborate/)
+[Convert](https://www.framer.com/convert/)
+[CMS](https://www.framer.com/cms/)
+[SEO](https://www.framer.com/seo/)
+[Hosting](https://www.framer.com/hosting/)
+[Performance](https://www.framer.com/performance/)
+[UpdatesNew](https://www.framer.com/updates)
+New
+- Business
+- [Pricing](https://www.framer.com/pricing)
+- [Switch](https://www.framer.com/switch/)
+- [Startups](https://www.framer.com/startups/)
+- [Agencies](https://www.framer.com/agencies/)
+- [Enterprise](https://www.framer.com/enterprise/)
+[Pricing](https://www.framer.com/pricing)
+[Switch](https://www.framer.com/switch/)
+[Startups](https://www.framer.com/startups/)
+[Agencies](https://www.framer.com/agencies/)
+[Enterprise](https://www.framer.com/enterprise/)
+- Solutions
+- [Figma to HTML](https://www.framer.com/solutions/figma-to-html/)
+- [Website builder](https://www.framer.com/solutions/website-builder/)
+- [Portfolio maker](https://www.framer.com/solutions/portfolio-website/)
+- [Landing pages](https://www.framer.com/solutions/landing-pages/)
+- [UI/UX design](https://www.framer.com/solutions/ui-ux-design/)
+- [No-code](https://www.framer.com/solutions/no-code-website-builder/)
+[Figma to HTML](https://www.framer.com/solutions/figma-to-html/)
+[Website builder](https://www.framer.com/solutions/website-builder/)
+[Portfolio maker](https://www.framer.com/solutions/portfolio-website/)
+[Landing pages](https://www.framer.com/solutions/landing-pages/)
+[UI/UX design](https://www.framer.com/solutions/ui-ux-design/)
+[No-code](https://www.framer.com/solutions/no-code-website-builder/)
+- Compare
+- [Claude Code](https://www.framer.com/compare/framer-vs-claude-code)[Squarespace](https://www.framer.com/compare/framer-vs-squarespace)[WordPress](https://www.framer.com/compare/framer-vs-wordpress)[Webflow](https://www.framer.com/compare/framer-vs-webflow)[Lovable](https://www.framer.com/compare/framer-vs-lovable)[Figma](https://www.framer.com/compare/framer-vs-figma)[Wix](https://www.framer.com/compare/framer-vs-wix)[Codex](https://www.framer.com/compare/framer-vs-codex)[Unbounce](https://www.framer.com/compare/framer-vs-unbounce)[Contentful](https://www.framer.com/compare/framer-vs-contentful)[Ceros](https://www.framer.com/compare/framer-vs-ceros)[Readymag](https://www.framer.com/compare/framer-vs-readymag)
+[Claude Code](https://www.framer.com/compare/framer-vs-claude-code)
+[Squarespace](https://www.framer.com/compare/framer-vs-squarespace)
+[WordPress](https://www.framer.com/compare/framer-vs-wordpress)
+[Webflow](https://www.framer.com/compare/framer-vs-webflow)
+[Lovable](https://www.framer.com/compare/framer-vs-lovable)
+[Figma](https://www.framer.com/compare/framer-vs-figma)
+[Wix](https://www.framer.com/compare/framer-vs-wix)
+[Codex](https://www.framer.com/compare/framer-vs-codex)
+[Unbounce](https://www.framer.com/compare/framer-vs-unbounce)
+[Contentful](https://www.framer.com/compare/framer-vs-contentful)
+[Ceros](https://www.framer.com/compare/framer-vs-ceros)
+[Readymag](https://www.framer.com/compare/framer-vs-readymag)
+- Resources
+- [Marketplace](https://www.framer.com/marketplace/)
+- [Templates](https://www.framer.com/marketplace/templates/)
+- [Components](https://www.framer.com/marketplace/components/)
+- [Plugins](https://www.framer.com/marketplace/plugins/)
+- [Vectors](https://www.framer.com/marketplace/vectors/)
+- [Free domains](https://www.framer.com/domains/)
+
+### Next
+
+- [State of SitesNew](https://www.framer.com/state-of-sites-2026/)
+- [Case studies](https://www.framer.com/stories/)
+- [Developers](https://www.framer.com/developers/)
+- [Newsletter](https://www.framer.com/newsletter)
+- [Support](https://www.framer.com/help/)
+- [Contact](https://www.framer.com/contact/)
+- [Guides](https://www.framer.com/guides)
+- [Brand](https://www.framer.com/brand)
+- [Blog](https://www.framer.com/blog/)
+[Marketplace](https://www.framer.com/marketplace/)
+[Templates](https://www.framer.com/marketplace/templates/)
+[Components](https://www.framer.com/marketplace/components/)
+[Plugins](https://www.framer.com/marketplace/plugins/)
+[Vectors](https://www.framer.com/marketplace/vectors/)
+[Free domains](https://www.framer.com/domains/)
+[State of SitesNew](https://www.framer.com/state-of-sites-2026/)
+New
+[Case studies](https://www.framer.com/stories/)
+[Developers](https://www.framer.com/developers/)
+[Newsletter](https://www.framer.com/newsletter)
+[Support](https://www.framer.com/help/)
+[Contact](https://www.framer.com/contact/)
+[Guides](https://www.framer.com/guides)
+[Brand](https://www.framer.com/brand)
+[Blog](https://www.framer.com/blog/)
+- Company
+- [Meetups](https://www.framer.com/meetups/)
+- [Careers](https://www.framer.com/careers/)
+- [Security](https://www.framer.com/legal/security/)
+- [Abuse](mailto:abuse@framer.com)
+- [Media](https://www.framer.com/brand)
+- [Legal](https://www.framer.com/legal/terms-of-service/)
+- [Store](https://www.framer.com/store)
+- [Trust center](https://app.eu.vanta.com/framer.com/trust/ow67ujg7iav0t6qtd1o6r2)
+[Meetups](https://www.framer.com/meetups/)
+[Careers](https://www.framer.com/careers/)
+[Security](https://www.framer.com/legal/security/)
+[Abuse](mailto:abuse@framer.com)
+[Media](https://www.framer.com/brand)
+[Legal](https://www.framer.com/legal/terms-of-service/)
+[Store](https://www.framer.com/store)
+[Trust center](https://app.eu.vanta.com/framer.com/trust/ow67ujg7iav0t6qtd1o6r2)
+- Programs
+- [Experts](https://www.framer.com/expert/apply/)
+- [Creators](https://www.framer.com/creators)
+- [Students](https://www.framer.com/education/students/)
+- [Ambassadors](https://www.framer.com/education/ambassadors/)
+[Experts](https://www.framer.com/expert/apply/)
+[Creators](https://www.framer.com/creators)
+[Students](https://www.framer.com/education/students/)
+[Ambassadors](https://www.framer.com/education/ambassadors/)
+Get an AI summary of Framer
+© Framer B.V.
+2026
+[Loading statusloading](https://www.framerstatus.com/)
+- Product
+- [AI](https://www.framer.com/ai/)
+- [Design](https://www.framer.com/design/)
+- [Publish](https://www.framer.com/publish/)
+- [Collaborate](https://www.framer.com/collaborate/)
+- [Convert](https://www.framer.com/convert/)
+- [CMS](https://www.framer.com/cms/)
+- [SEO](https://www.framer.com/seo/)
+- [Hosting](https://www.framer.com/hosting/)
+- [Performance](https://www.framer.com/performance/)
+- [UpdatesNew](https://www.framer.com/updates)
+[AI](https://www.framer.com/ai/)
+[Design](https://www.framer.com/design/)
+[Publish](https://www.framer.com/publish/)
+[Collaborate](https://www.framer.com/collaborate/)
+[Convert](https://www.framer.com/convert/)
+[CMS](https://www.framer.com/cms/)
+[SEO](https://www.framer.com/seo/)
+[Hosting](https://www.framer.com/hosting/)
+[Performance](https://www.framer.com/performance/)
+[UpdatesNew](https://www.framer.com/updates)
+New
+- Business
+- [Pricing](https://www.framer.com/pricing)
+- [Switch](https://www.framer.com/switch/)
+- [Startups](https://www.framer.com/startups/)
+- [Agencies](https://www.framer.com/agencies/)
+- [Enterprise](https://www.framer.com/enterprise/)
+[Pricing](https://www.framer.com/pricing)
+[Switch](https://www.framer.com/switch/)
+[Startups](https://www.framer.com/startups/)
+[Agencies](https://www.framer.com/agencies/)
+[Enterprise](https://www.framer.com/enterprise/)
+- Solutions
+- [Figma to HTML](https://www.framer.com/solutions/figma-to-html/)
+- [Website builder](https://www.framer.com/solutions/website-builder/)
+- [Portfolio maker](https://www.framer.com/solutions/portfolio-website/)
+- [Landing pages](https://www.framer.com/solutions/landing-pages/)
+- [UI/UX design](https://www.framer.com/solutions/ui-ux-design/)
+- [No-code](https://www.framer.com/solutions/no-code-website-builder/)
+[Figma to HTML](https://www.framer.com/solutions/figma-to-html/)
+[Website builder](https://www.framer.com/solutions/website-builder/)
+[Portfolio maker](https://www.framer.com/solutions/portfolio-website/)
+
+### Next
+
+[Landing pages](https://www.framer.com/solutions/landing-pages/)
+[UI/UX design](https://www.framer.com/solutions/ui-ux-design/)
+[No-code](https://www.framer.com/solutions/no-code-website-builder/)
+- Compare
+- [Claude Code](https://www.framer.com/compare/framer-vs-claude-code)[Squarespace](https://www.framer.com/compare/framer-vs-squarespace)[WordPress](https://www.framer.com/compare/framer-vs-wordpress)[Webflow](https://www.framer.com/compare/framer-vs-webflow)[Lovable](https://www.framer.com/compare/framer-vs-lovable)[Figma](https://www.framer.com/compare/framer-vs-figma)[Wix](https://www.framer.com/compare/framer-vs-wix)[Codex](https://www.framer.com/compare/framer-vs-codex)[Unbounce](https://www.framer.com/compare/framer-vs-unbounce)[Contentful](https://www.framer.com/compare/framer-vs-contentful)[Ceros](https://www.framer.com/compare/framer-vs-ceros)[Readymag](https://www.framer.com/compare/framer-vs-readymag)
+[Claude Code](https://www.framer.com/compare/framer-vs-claude-code)
+[Squarespace](https://www.framer.com/compare/framer-vs-squarespace)
+[WordPress](https://www.framer.com/compare/framer-vs-wordpress)
+[Webflow](https://www.framer.com/compare/framer-vs-webflow)
+[Lovable](https://www.framer.com/compare/framer-vs-lovable)
+[Figma](https://www.framer.com/compare/framer-vs-figma)
+[Wix](https://www.framer.com/compare/framer-vs-wix)
+[Codex](https://www.framer.com/compare/framer-vs-codex)
+[Unbounce](https://www.framer.com/compare/framer-vs-unbounce)
+[Contentful](https://www.framer.com/compare/framer-vs-contentful)
+[Ceros](https://www.framer.com/compare/framer-vs-ceros)
+[Readymag](https://www.framer.com/compare/framer-vs-readymag)
+- Resources
+- [Marketplace](https://www.framer.com/marketplace/)
+- [Templates](https://www.framer.com/marketplace/templates/)
+- [Components](https://www.framer.com/marketplace/components/)
+- [Plugins](https://www.framer.com/marketplace/plugins/)
+- [Vectors](https://www.framer.com/marketplace/vectors/)
+- [Free domains](https://www.framer.com/domains/)
+- [State of SitesNew](https://www.framer.com/state-of-sites-2026/)
+- [Case studies](https://www.framer.com/stories/)
+- [Developers](https://www.framer.com/developers/)
+- [Newsletter](https://www.framer.com/newsletter)
+- [Support](https://www.framer.com/help/)
+- [Contact](https://www.framer.com/contact/)
+- [Guides](https://www.framer.com/guides)
+- [Brand](https://www.framer.com/brand)
+- [Blog](https://www.framer.com/blog/)
+[Marketplace](https://www.framer.com/marketplace/)
+[Templates](https://www.framer.com/marketplace/templates/)
+[Components](https://www.framer.com/marketplace/components/)
+[Plugins](https://www.framer.com/marketplace/plugins/)
+[Vectors](https://www.framer.com/marketplace/vectors/)
+[Free domains](https://www.framer.com/domains/)
+[State of SitesNew](https://www.framer.com/state-of-sites-2026/)
+New
+[Case studies](https://www.framer.com/stories/)
+[Developers](https://www.framer.com/developers/)
+[Newsletter](https://www.framer.com/newsletter)
+[Support](https://www.framer.com/help/)
+[Contact](https://www.framer.com/contact/)
+[Guides](https://www.framer.com/guides)
+[Brand](https://www.framer.com/brand)
+[Blog](https://www.framer.com/blog/)
+- Company
+- [Meetups](https://www.framer.com/meetups/)
+- [Careers](https://www.framer.com/careers/)
+- [Security](https://www.framer.com/legal/security/)
+- [Abuse](mailto:abuse@framer.com)
+- [Media](https://www.framer.com/brand)
+- [Legal](https://www.framer.com/legal/terms-of-service/)
+- [Store](https://www.framer.com/store)
+- [Trust center](https://app.eu.vanta.com/framer.com/trust/ow67ujg7iav0t6qtd1o6r2)
+[Meetups](https://www.framer.com/meetups/)
+[Careers](https://www.framer.com/careers/)
+[Security](https://www.framer.com/legal/security/)
+[Abuse](mailto:abuse@framer.com)
+[Media](https://www.framer.com/brand)
+[Legal](https://www.framer.com/legal/terms-of-service/)
+[Store](https://www.framer.com/store)
+[Trust center](https://app.eu.vanta.com/framer.com/trust/ow67ujg7iav0t6qtd1o6r2)
+- Programs
+- [Experts](https://www.framer.com/expert/apply/)
+- [Creators](https://www.framer.com/creators)
+- [Students](https://www.framer.com/education/students/)
+- [Ambassadors](https://www.framer.com/education/ambassadors/)
+[Experts](https://www.framer.com/expert/apply/)
+[Creators](https://www.framer.com/creators)
+[Students](https://www.framer.com/education/students/)
+[Ambassadors](https://www.framer.com/education/ambassadors/)
+CCPA
+Get an AI summary of Framer
+© Framer B.V.
+2026

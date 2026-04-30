@@ -545,6 +545,9 @@ export const ReviewList = () => {
                                                     )}
                                                 </div>
                                                 {/* Logo baked into PNG */}
+                                                <div className="absolute bottom-[40px] right-[40px] flex">
+                                                    <img src="/10xDS.png" className="h-10 w-auto object-contain" alt="10xDS" />
+                                                </div>
                                             </div>
                                         </div>
                                     )}

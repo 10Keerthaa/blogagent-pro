@@ -6,39 +6,39 @@ async function main() {
     const envPath = path.resolve(process.cwd(), '.env.local');
     const envContent = fs.readFileSync(envPath, 'utf8');
     const apiKey = envContent.match(/FRAMER_API_KEY=(.*)/)?.[1]?.trim();
-    const projectId = envContent.match(/FRAMER_PROJECT_ID=(.*)/)?.[1]?.trim();
+    const projectId = "10xDS-AI--HWf6AK0krID40WbZhtbm-70z6O";
+    const collectionId = "y4HlWWxdS";
 
     try {
         const framer = await connect(`https://framer.com/projects/${projectId}`, apiKey);
         const collections = await framer.getCollections();
-        const blogsCol = collections.find(c => c.id === 'y4HlWWxdS');
+        const blogsCol = collections.find(c => c.id === collectionId);
 
-        console.log("\n🔨 BRUTE FORCE TEST: Finding the right Keys");
-        console.log("-----------------------------------------");
-
-        // We will try 4 different variations for the "Title" and "Content"
         const variations = [
-            { titleKey: "Blog Head", contentKey: "Content" },
-            { titleKey: "blog-head", contentKey: "content" },
-            { titleKey: "title",     contentKey: "article" },
-            { titleKey: "Title",     contentKey: "Body" }
+            { key: "slug-title", label: "Gemini Hint" },
+            { key: "Blog Head",  label: "Original" },
+            { key: "blog-title", label: "Slug Title" },
+            { key: "title",      label: "Standard" },
+            { key: "Name",       label: "System Name" }
         ];
 
+        console.log("\n🔥 BRUTE FORCE TEST: Finding the winning key");
+        console.log("-----------------------------------------");
+
         for (const v of variations) {
-            console.log(`Testing variation: Title="${v.titleKey}", Content="${v.contentKey}"...`);
+            console.log(`Testing variation: ${v.label} ("${v.key}")`);
             try {
-                const itemPayload = {
-                    slug: `brute-force-${Date.now()}`,
+                const testSlug = `test-brute-${Date.now()}`;
+                await blogsCol.addItems([{
+                    slug: testSlug,
                     draft: true,
                     fieldData: {
-                        [v.titleKey]: { type: "string", value: "Brute Force Test" },
-                        [v.contentKey]: { type: "formattedText", value: "<p>Testing...</p>" },
-                        "H2Goeekmd": { type: "string", value: "SEO Test" } // Verified machine ID
+                        [v.key]: { type: "string", value: "BRUTE SUCCESS", valueByLocale: {} },
+                        "Content": { type: "formattedText", value: "Test", valueByLocale: {} }
                     }
-                };
-                await blogsCol.addItems([itemPayload]);
-                console.log(`✅ SUCCESS! The keys are: "${v.titleKey}" and "${v.contentKey}"`);
-                break; 
+                }]);
+                console.log(`✅ SUCCESS! The winning key is: "${v.key}"`);
+                process.exit(0);
             } catch (err) {
                 console.log(`❌ Failed: ${err.message}`);
             }
