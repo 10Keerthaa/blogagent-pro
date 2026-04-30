@@ -272,9 +272,9 @@ export const PostPreview = () => {
                         </div>
                     )}
 
-                    {/* Layer 2: Vertically Centered Title Group */}
-                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-center px-[30px] lg:px-[60px]">
-                        <div className="text-white max-w-[90%] font-sans drop-shadow-2xl" style={{ lineHeight: '1.2' }}>
+                    {/* Layer 2: Perfect Center Title Group */}
+                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-center px-[60px] lg:px-[100px]">
+                        <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-center text-center" style={{ lineHeight: '1.2' }}>
                             {preview.title.includes(':') ? (
                                 <>
                                     <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.1]">{preview.title.split(':')[0]}:</h1>
@@ -287,7 +287,7 @@ export const PostPreview = () => {
                     </div>
 
                     {/* Layer 3: Logo */}
-                    <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex">
+                    <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex z-50">
                         <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
                     </div>
                 </div>

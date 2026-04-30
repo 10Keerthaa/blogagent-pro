@@ -65,7 +65,7 @@ export async function POST(request: Request) {
             {tagArrayBuffer && <img src={tagArrayBuffer as any} width="80" height="40" style={{ objectFit: 'contain' }} />}
           </div>
 
-          {/* Layer 2: Vertically Centered Title Group */}
+          {/* Layer 2: Perfect Center Title Group */}
           <div
             style={{
               position: 'absolute',
@@ -76,15 +76,18 @@ export async function POST(request: Request) {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              paddingLeft: '60px',
-              paddingRight: '60px',
+              alignItems: 'center',
+              paddingLeft: '100px',
+              paddingRight: '100px',
             }}
           >
             <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: '90%',
+                width: '100%',
+                alignItems: 'center',
+                textAlign: 'center',
               }}
             >
               <h1

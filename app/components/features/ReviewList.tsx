@@ -529,9 +529,9 @@ export const ReviewList = () => {
                                                 </div>
                                             )}
 
-                                            {/* Layer 2: Vertically Centered Title Group Overlay */}
-                                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center px-[40px] lg:px-[60px]">
-                                                <div className="text-white flex flex-col items-start text-left gap-0 drop-shadow-2xl" style={{ lineHeight: '1.2' }}>
+                                            {/* Layer 2: Perfect Center Title Group Overlay */}
+                                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-center px-[40px] lg:px-[100px]">
+                                                <div className="text-white flex flex-col items-center text-center gap-0 drop-shadow-2xl w-full" style={{ lineHeight: '1.2' }}>
                                                     {selectedReviewDraft.title.includes(':') ? (
                                                         <>
                                                             <h1 className="text-[48px] lg:text-[64px] font-bold tracking-tight m-0 p-0 leading-[1.1]">
@@ -542,7 +542,7 @@ export const ReviewList = () => {
                                                             </p>
                                                         </>
                                                     ) : (
-                                                        <h1 className="text-[48px] lg:text-[64px] font-bold tracking-tight m-0 p-0 text-left leading-[1.1]">
+                                                        <h1 className="text-[48px] lg:text-[64px] font-bold tracking-tight m-0 p-0 text-center leading-[1.1]">
                                                             {selectedReviewDraft.title}
                                                         </h1>
                                                     )}
@@ -550,7 +550,7 @@ export const ReviewList = () => {
                                             </div>
 
                                             {/* Layer 3: Logo */}
-                                            <div className="absolute bottom-[60px] lg:bottom-[80px] right-[40px] lg:right-[60px] pointer-events-none flex">
+                                            <div className="absolute bottom-[60px] lg:bottom-[80px] right-[40px] lg:right-[60px] pointer-events-none flex z-50">
                                                 <img src="/10xDS.png" className="h-10 lg:h-12 w-auto object-contain" alt="10xDS" />
                                             </div>
                                         </div>

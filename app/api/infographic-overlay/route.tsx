@@ -128,18 +128,18 @@ export async function POST(request: Request) {
             </div>
           </div>
 
-          {/* 3. Technical Cards Grid - Shifted down by 60px to accommodate taller 240px glass box */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '435px', left: '40px', width: '720px' }}>
+          {/* 3. Technical Cards Grid - Matches Image 2 Spacing */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '405px', left: '40px', width: '720px' }}>
             {data.blocks.slice(0, 4).map((block: any, idx: number) => {
               const isRightCol = idx % 2 !== 0;
               const isRow2 = idx >= 2;
               return (
                 <div key={idx} style={{
                   position: 'absolute',
-                  top: isRow2 ? '245px' : '0px',
+                  top: isRow2 ? '265px' : '0px',
                   left: isRightCol ? '376px' : '0px',
                   width: '344px',
-                  height: '225px', // Optimized height to prevent overflow into summary
+                  height: '245px', // Restored to 245px as in Image 2
                   backgroundColor: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
@@ -169,19 +169,19 @@ export async function POST(request: Request) {
             })}
           </div>
 
-          {/* 4. Executive Summary Box - Shifted down by 60px for new layout */}
+          {/* 4. Executive Summary Box - Restored to Image 2 width */}
           <div style={{
             position: 'absolute',
-            top: '925px',
+            top: '940px',
             left: '40px',
-            width: '560px', // Shrunk to leave a 'Safe Zone' for the logo on the right
-            height: '85px',
+            width: '720px',
+            height: '75px',
             backgroundColor: 'rgba(139, 92, 246, 0.12)',
             border: '1px solid rgba(139, 92, 246, 0.25)',
             borderRadius: '16px',
             display: 'flex',
             alignItems: 'center',
-            padding: '0 25px',
+            padding: '0 30px',
             overflow: 'hidden'
           }}>
             <p style={{
