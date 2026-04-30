@@ -65,7 +65,7 @@ export async function POST(request: Request) {
             }}
           >
             <div style={{ display: 'flex', marginBottom: '20px' }}>
-              {tagBase64 && <img src={`data:image/png;base64,${tagBase64}`} style={{ height: '40px', width: '80px' }} />}
+              {tagBase64 && <img src={`data:image/png;base64,${tagBase64}`} width="80" height="40" style={{ objectFit: 'contain' }} />}
             </div>
 
             <div
@@ -115,7 +115,7 @@ export async function POST(request: Request) {
                 right: '40px',
               }}
             >
-              {logoBase64 && <img src={`data:image/png;base64,${logoBase64}`} style={{ height: '56px', width: '130px' }} />}
+              {logoBase64 && <img src={`data:image/png;base64,${logoBase64}`} width="130" height="56" style={{ objectFit: 'contain' }} />}
             </div>
           </div>
         </div>
