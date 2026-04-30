@@ -522,31 +522,31 @@ export const ReviewList = () => {
                                         <div className="relative group overflow-hidden rounded-none shadow-2xl border border-slate-100 dark:border-slate-800 w-full">
                                             <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '4/3' }} />
                                             <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }} />
-                                            <div className="absolute inset-0 pointer-events-none">
+                                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center px-[40px] lg:px-[60px]">
                                                 {targetPlatform !== 'framer' && (
-                                                    <img src="/Blog.png" className="absolute top-[40px] left-[40px] h-10 w-auto" alt="blog" />
+                                                    <img src="/Blog.png" className="absolute top-[60px] lg:top-[80px] left-[40px] lg:left-[60px] h-10 w-auto" alt="blog" />
                                                 )}
                                                 
                                                 {/* Centered Title Group Overlay */}
-                                                <div className="absolute inset-x-10 text-white flex flex-col items-center text-center gap-0 drop-shadow-2xl" style={{ top: '120px', lineHeight: '1.2' }}>
+                                                <div className="text-white flex flex-col items-start text-left gap-0 drop-shadow-2xl" style={{ lineHeight: '1.2' }}>
                                                     {selectedReviewDraft.title.includes(':') ? (
                                                         <>
-                                                            <h1 className="text-[48px] lg:text-[56px] font-bold tracking-tight m-0 p-0">
+                                                            <h1 className="text-[48px] lg:text-[64px] font-bold tracking-tight m-0 p-0 leading-[1.1]">
                                                                 {selectedReviewDraft.title.split(':')[0]}:
                                                             </h1>
-                                                            <p className="text-[34px] lg:text-[40px] font-normal opacity-95 m-0 p-0">
+                                                            <p className="text-[34px] lg:text-[48px] font-normal opacity-95 m-0 p-0 leading-[1.2] mt-4">
                                                                 {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
                                                             </p>
                                                         </>
                                                     ) : (
-                                                        <h1 className="text-[48px] lg:text-[56px] font-bold tracking-tight m-0 p-0 text-center">
+                                                        <h1 className="text-[48px] lg:text-[64px] font-bold tracking-tight m-0 p-0 text-left leading-[1.1]">
                                                             {selectedReviewDraft.title}
                                                         </h1>
                                                     )}
                                                 </div>
                                                 {/* Logo baked into PNG */}
-                                                <div className="absolute bottom-[40px] right-[40px] flex">
-                                                    <img src="/10xDS.png" className="h-10 w-auto object-contain" alt="10xDS" />
+                                                <div className="absolute bottom-[60px] lg:bottom-[80px] right-[40px] lg:right-[60px] flex">
+                                                    <img src="/10xDS.png" className="h-10 lg:h-12 w-auto object-contain" alt="10xDS" />
                                                 </div>
                                             </div>
                                         </div>

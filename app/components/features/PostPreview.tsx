@@ -265,25 +265,24 @@ export const PostPreview = () => {
                         style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
                     />
 
-                    <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-center px-[30px] lg:px-[60px]">
                         {targetPlatform !== 'framer' && (
-                            <>
-                                <img src="/Blog.png" alt="Blog" className="absolute top-[30px] lg:top-[40px] left-[30px] lg:left-[40px] h-8 lg:h-10 w-auto" />
-                            </>
+                            <img src="/Blog.png" alt="Blog" className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] h-8 lg:h-10 w-auto" />
                         )}
                         
-                        <div className="absolute top-[80px] lg:top-[100px] left-[30px] lg:left-[40px] text-white max-w-[85%] font-sans drop-shadow-2xl" style={{ lineHeight: '1.3' }}>
+                        <div className="text-white max-w-[90%] font-sans drop-shadow-2xl" style={{ lineHeight: '1.2' }}>
                             {preview.title.includes(':') ? (
                                 <>
-                                    <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold m-0 p-0 leading-[1.3]">{preview.title.split(':')[0]}:</h1>
-                                    <p className="text-[24px] md:text-[32px] lg:text-[44px] font-normal opacity-95 m-0 p-0 leading-[1.3]">{preview.title.split(':').slice(1).join(':').trim()}</p>
+                                    <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.1]">{preview.title.split(':')[0]}:</h1>
+                                    <p className="text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 m-0 p-0 leading-[1.2] mt-4">{preview.title.split(':').slice(1).join(':').trim()}</p>
                                 </>
                             ) : (
-                                <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold m-0 p-0 leading-[1.3]">{preview.title}</h1>
+                                <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.1]">{preview.title}</h1>
                             )}
                         </div>
-                        <div className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] flex">
-                            <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-10 w-auto object-contain" />
+
+                        <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] flex">
+                            <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
                         </div>
                     </div>
                 </div>

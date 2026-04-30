@@ -66,31 +66,33 @@ export async function POST(request: Request) {
               flexDirection: 'column',
               width: '100%',
               height: '100%',
-              padding: '40px',
               position: 'relative',
+              justifyContent: 'center',
+              padding: '0 60px',
             }}
           >
-            <div style={{ display: 'flex', marginBottom: '20px' }}>
+            {/* Blog Tag - Nudged Down */}
+            <div style={{ display: 'flex', position: 'absolute', top: '80px', left: '60px' }}>
               {tagArrayBuffer && <img src={tagArrayBuffer as any} width="80" height="40" style={{ objectFit: 'contain' }} />}
             </div>
 
+            {/* Centered Title Group */}
             <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                marginTop: '40px',
-                width: '85%',
+                width: '90%',
               }}
             >
               <h1
                 style={{
-                  fontSize: '56px',
+                  fontSize: '64px',
                   fontWeight: 700,
                   color: 'white',
-                  lineHeight: 1.2,
+                  lineHeight: 1.1,
                   margin: 0,
                   fontFamily: 'Inter',
-                  textShadow: '0 4px 10px rgba(0,0,0,0.5)',
+                  textShadow: '0 4px 12px rgba(0,0,0,0.6)',
                 }}
               >
                 {mainTitle}
@@ -98,14 +100,14 @@ export async function POST(request: Request) {
               {subtitle && (
                 <p
                   style={{
-                    fontSize: '44px',
+                    fontSize: '48px',
                     color: 'white',
                     opacity: 0.95,
                     lineHeight: 1.2,
-                    marginTop: '15px',
+                    marginTop: '20px',
                     fontFamily: 'Inter',
                     fontWeight: 400,
-                    textShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                    textShadow: '0 2px 10px rgba(0,0,0,0.5)',
                   }}
                 >
                   {subtitle}
@@ -113,15 +115,16 @@ export async function POST(request: Request) {
               )}
             </div>
 
+            {/* Logo - Lifted Up */}
             <div
               style={{
                 display: 'flex',
                 position: 'absolute',
-                bottom: '40px',
-                right: '40px',
+                bottom: '80px',
+                right: '60px',
               }}
             >
-              {logoArrayBuffer && <img src={logoArrayBuffer as any} width="130" height="56" style={{ objectFit: 'contain' }} />}
+              {logoArrayBuffer && <img src={logoArrayBuffer as any} width="140" height="60" style={{ objectFit: 'contain' }} />}
             </div>
           </div>
         </div>
