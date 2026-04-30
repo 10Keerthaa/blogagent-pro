@@ -12,6 +12,9 @@ export async function POST(request: Request) {
 
     const fontData = fontBoldBase64 ? Buffer.from(fontBoldBase64, 'base64') : null;
     const fontRegData = fontRegBase64 ? Buffer.from(fontRegBase64, 'base64') : null;
+
+    const logoBuffer = logoBase64 ? Buffer.from(logoBase64, 'base64').buffer : null;
+    const tagBuffer = tagBase64 ? Buffer.from(tagBase64, 'base64').buffer : null;
     
     const fontsArr: any[] = [];
     if (fontData) fontsArr.push({ name: 'Inter', data: fontData, style: 'normal', weight: 700 });
@@ -65,7 +68,7 @@ export async function POST(request: Request) {
             }}
           >
             <div style={{ display: 'flex', marginBottom: '20px' }}>
-              {tagBase64 && <img src={`data:image/png;base64,${tagBase64}`} width="80" height="40" style={{ objectFit: 'contain' }} />}
+              {tagBuffer && <img src={tagBuffer as any} width="80" height="40" style={{ objectFit: 'contain' }} />}
             </div>
 
             <div
@@ -115,7 +118,7 @@ export async function POST(request: Request) {
                 right: '40px',
               }}
             >
-              {logoBase64 && <img src={`data:image/png;base64,${logoBase64}`} width="130" height="56" style={{ objectFit: 'contain' }} />}
+              {logoBuffer && <img src={logoBuffer as any} width="130" height="56" style={{ objectFit: 'contain' }} />}
             </div>
           </div>
         </div>
