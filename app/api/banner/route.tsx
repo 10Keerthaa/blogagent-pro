@@ -60,23 +60,26 @@ export async function POST(request: Request) {
             }}
           />
 
+          {/* Layer 1: Blog Tag */}
+          <div style={{ display: 'flex', position: 'absolute', top: '80px', left: '60px' }}>
+            {tagArrayBuffer && <img src={tagArrayBuffer as any} width="80" height="40" style={{ objectFit: 'contain' }} />}
+          </div>
+
+          {/* Layer 2: Vertically Centered Title Group */}
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
+              position: 'absolute',
+              top: 0,
+              left: 0,
               width: '100%',
               height: '100%',
-              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
               justifyContent: 'center',
-              padding: '0 60px',
+              paddingLeft: '60px',
+              paddingRight: '60px',
             }}
           >
-            {/* Blog Tag - Nudged Down */}
-            <div style={{ display: 'flex', position: 'absolute', top: '80px', left: '60px' }}>
-              {tagArrayBuffer && <img src={tagArrayBuffer as any} width="80" height="40" style={{ objectFit: 'contain' }} />}
-            </div>
-
-            {/* Centered Title Group */}
             <div
               style={{
                 display: 'flex',
@@ -114,18 +117,18 @@ export async function POST(request: Request) {
                 </p>
               )}
             </div>
+          </div>
 
-            {/* Logo - Lifted Up */}
-            <div
-              style={{
-                display: 'flex',
-                position: 'absolute',
-                bottom: '80px',
-                right: '60px',
-              }}
-            >
-              {logoArrayBuffer && <img src={logoArrayBuffer as any} width="140" height="60" style={{ objectFit: 'contain' }} />}
-            </div>
+          {/* Layer 3: Logo */}
+          <div
+            style={{
+              display: 'flex',
+              position: 'absolute',
+              bottom: '80px',
+              right: '60px',
+            }}
+          >
+            {logoArrayBuffer && <img src={logoArrayBuffer as any} width="140" height="60" style={{ objectFit: 'contain' }} />}
           </div>
         </div>
       ),

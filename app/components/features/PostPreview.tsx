@@ -265,11 +265,15 @@ export const PostPreview = () => {
                         style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
                     />
 
+                    {/* Layer 1: Blog Tag */}
+                    {targetPlatform !== 'framer' && (
+                        <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
+                            <img src="/Blog.png" alt="Blog" className="h-8 lg:h-10 w-auto" />
+                        </div>
+                    )}
+
+                    {/* Layer 2: Vertically Centered Title Group */}
                     <div className="absolute inset-0 pointer-events-none flex flex-col justify-center px-[30px] lg:px-[60px]">
-                        {targetPlatform !== 'framer' && (
-                            <img src="/Blog.png" alt="Blog" className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] h-8 lg:h-10 w-auto" />
-                        )}
-                        
                         <div className="text-white max-w-[90%] font-sans drop-shadow-2xl" style={{ lineHeight: '1.2' }}>
                             {preview.title.includes(':') ? (
                                 <>
@@ -280,10 +284,11 @@ export const PostPreview = () => {
                                 <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.1]">{preview.title}</h1>
                             )}
                         </div>
+                    </div>
 
-                        <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] flex">
-                            <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
-                        </div>
+                    {/* Layer 3: Logo */}
+                    <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex">
+                        <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
                     </div>
                 </div>
 

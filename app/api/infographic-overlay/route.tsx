@@ -81,8 +81,8 @@ export async function POST(request: Request) {
             top: '135px',
             left: '40px',
             width: '720px',
-            height: '240px', // Expanded to perfectly match Framer and allow label room
-            backgroundColor: '#1A0B2E', // Seamless blend with AI Image
+            height: '280px', // Increased from 240px to prevent bottom-clipping of icons
+            backgroundColor: '#1A0B2E',
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '16px',
             display: 'flex',
@@ -96,8 +96,8 @@ export async function POST(request: Request) {
                 src={`data:image/png;base64,${iconStripBase64}`}
                 style={{
                   width: '620px',
-                  height: '160px',
-                  objectFit: 'cover' // Stretches inner AI box to fill the glass box perfectly
+                  height: '180px', // Slightly taller to match new container
+                  objectFit: 'contain'
                 }}
               />
             )}
@@ -105,9 +105,9 @@ export async function POST(request: Request) {
             {/* Pillar Labels - Perfectly aligned under floating icons */}
             <div style={{
               display: 'flex',
-              width: '620px', // Shrunk from 720px to exactly match the AI image width
+              width: '620px',
               position: 'absolute',
-              bottom: '15px' // Slightly lifted to give breathing room for 2-line wraps
+              bottom: '20px' // Lifted for more breathing room
             }}>
               {data.pillars.map((pillar: string, i: number) => (
                 <span key={i} style={{
@@ -129,17 +129,17 @@ export async function POST(request: Request) {
           </div>
 
           {/* 3. Technical Cards Grid - Shifted down by 60px to accommodate taller 240px glass box */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '395px', left: '40px', width: '720px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', position: 'absolute', top: '435px', left: '40px', width: '720px' }}>
             {data.blocks.slice(0, 4).map((block: any, idx: number) => {
               const isRightCol = idx % 2 !== 0;
               const isRow2 = idx >= 2;
               return (
                 <div key={idx} style={{
                   position: 'absolute',
-                  top: isRow2 ? '265px' : '0px',
+                  top: isRow2 ? '245px' : '0px',
                   left: isRightCol ? '376px' : '0px',
                   width: '344px',
-                  height: '245px', // Increased to 245px for deep technical content
+                  height: '225px', // Optimized height to prevent overflow into summary
                   backgroundColor: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
@@ -174,14 +174,14 @@ export async function POST(request: Request) {
             position: 'absolute',
             top: '925px',
             left: '40px',
-            width: '720px',
-            height: '75px',
+            width: '560px', // Shrunk to leave a 'Safe Zone' for the logo on the right
+            height: '85px',
             backgroundColor: 'rgba(139, 92, 246, 0.12)',
             border: '1px solid rgba(139, 92, 246, 0.25)',
             borderRadius: '16px',
             display: 'flex',
             alignItems: 'center',
-            padding: '0 30px',
+            padding: '0 25px',
             overflow: 'hidden'
           }}>
             <p style={{

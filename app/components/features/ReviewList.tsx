@@ -522,12 +522,15 @@ export const ReviewList = () => {
                                         <div className="relative group overflow-hidden rounded-none shadow-2xl border border-slate-100 dark:border-slate-800 w-full">
                                             <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '4/3' }} />
                                             <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }} />
+                                            {/* Layer 1: Blog Tag */}
+                                            {targetPlatform !== 'framer' && (
+                                                <div className="absolute top-[60px] lg:top-[80px] left-[40px] lg:left-[60px] pointer-events-none">
+                                                    <img src="/Blog.png" className="h-10 w-auto" alt="blog" />
+                                                </div>
+                                            )}
+
+                                            {/* Layer 2: Vertically Centered Title Group Overlay */}
                                             <div className="absolute inset-0 pointer-events-none flex flex-col justify-center px-[40px] lg:px-[60px]">
-                                                {targetPlatform !== 'framer' && (
-                                                    <img src="/Blog.png" className="absolute top-[60px] lg:top-[80px] left-[40px] lg:left-[60px] h-10 w-auto" alt="blog" />
-                                                )}
-                                                
-                                                {/* Centered Title Group Overlay */}
                                                 <div className="text-white flex flex-col items-start text-left gap-0 drop-shadow-2xl" style={{ lineHeight: '1.2' }}>
                                                     {selectedReviewDraft.title.includes(':') ? (
                                                         <>
@@ -544,10 +547,11 @@ export const ReviewList = () => {
                                                         </h1>
                                                     )}
                                                 </div>
-                                                {/* Logo baked into PNG */}
-                                                <div className="absolute bottom-[60px] lg:bottom-[80px] right-[40px] lg:right-[60px] flex">
-                                                    <img src="/10xDS.png" className="h-10 lg:h-12 w-auto object-contain" alt="10xDS" />
-                                                </div>
+                                            </div>
+
+                                            {/* Layer 3: Logo */}
+                                            <div className="absolute bottom-[60px] lg:bottom-[80px] right-[40px] lg:right-[60px] pointer-events-none flex">
+                                                <img src="/10xDS.png" className="h-10 lg:h-12 w-auto object-contain" alt="10xDS" />
                                             </div>
                                         </div>
                                     )}
