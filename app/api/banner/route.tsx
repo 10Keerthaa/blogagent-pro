@@ -13,8 +13,11 @@ export async function POST(request: Request) {
     const fontData = fontBoldBase64 ? Buffer.from(fontBoldBase64, 'base64') : null;
     const fontRegData = fontRegBase64 ? Buffer.from(fontRegBase64, 'base64') : null;
 
-    const logoBuffer = logoBase64 ? Buffer.from(logoBase64, 'base64').buffer : null;
-    const tagBuffer = tagBase64 ? Buffer.from(tagBase64, 'base64').buffer : null;
+    const logoBuf = logoBase64 ? Buffer.from(logoBase64, 'base64') : null;
+    const logoArrayBuffer = logoBuf ? logoBuf.buffer.slice(logoBuf.byteOffset, logoBuf.byteOffset + logoBuf.byteLength) : null;
+
+    const tagBuf = tagBase64 ? Buffer.from(tagBase64, 'base64') : null;
+    const tagArrayBuffer = tagBuf ? tagBuf.buffer.slice(tagBuf.byteOffset, tagBuf.byteOffset + tagBuf.byteLength) : null;
     
     const fontsArr: any[] = [];
     if (fontData) fontsArr.push({ name: 'Inter', data: fontData, style: 'normal', weight: 700 });
@@ -68,7 +71,7 @@ export async function POST(request: Request) {
             }}
           >
             <div style={{ display: 'flex', marginBottom: '20px' }}>
-              {tagBuffer && <img src={tagBuffer as any} width="80" height="40" style={{ objectFit: 'contain' }} />}
+              {tagArrayBuffer && <img src={tagArrayBuffer as any} width="80" height="40" style={{ objectFit: 'contain' }} />}
             </div>
 
             <div
@@ -118,7 +121,7 @@ export async function POST(request: Request) {
                 right: '40px',
               }}
             >
-              {logoBuffer && <img src={logoBuffer as any} width="130" height="56" style={{ objectFit: 'contain' }} />}
+              {logoArrayBuffer && <img src={logoArrayBuffer as any} width="130" height="56" style={{ objectFit: 'contain' }} />}
             </div>
           </div>
         </div>
