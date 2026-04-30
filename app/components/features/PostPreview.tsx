@@ -282,6 +282,9 @@ export const PostPreview = () => {
                                 <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold m-0 p-0 leading-[1.3]">{preview.title}</h1>
                             )}
                         </div>
+                        <div className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] flex">
+                            <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-10 w-auto object-contain" />
+                        </div>
                     </div>
                 </div>
 
