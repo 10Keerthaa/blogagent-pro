@@ -80,7 +80,7 @@ export async function POST(req: Request) {
            - Start with a strategic 2-paragraph introduction (minimum 80 words).
            - **HEADINGS:** For the body of the post, use **<h4>** for all section headings. This is a strict requirement for the Framer template.
            - Use 5–7 <h4> sections for depth. Each section MUST contribute at least 150 words.
-           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, summarize its core concepts into 2-3 bullet points and naturally weave them into whichever <h4> section is most relevant to that data. DO NOT create a separate summary section.
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, summarize its core concepts into 2-3 bullet points and naturally weave them into whichever <h4> section is most relevant to that data. DO NOT create a separate summary section. **FORBIDDEN:** Do NOT use phrases like "According to the learned context", "Based on the provided URL", or "According to the LEARNED CONTEXT". Act as if you already knew these facts.
            - **SECTION INTROS:** Every <h4> section MUST begin with exactly 2-3 sentences of introductory text before any list.
            - **BULLET POINTS (OPTIONAL):** Use HTML <ul> and <li> tags ONLY when bullet points are contextually appropriate. FORBIDDEN: Do NOT use <b> bold text as a substitute for bullet points. When bullets ARE used, they MUST be inside <ul><li> tags, and each <li> MUST be exactly 2 full sentences to guarantee sufficient length. If no bullets are needed, write plain <p> paragraphs only.
         5. NEVER use <h2> or <h3> for subheadings. ONLY use <h4>.

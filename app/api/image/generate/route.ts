@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
         const imagePrompt = `A breathtaking, high-resolution conceptual digital art representing the core essence of '${cleanPrompt}'.
         Style: Professional enterprise aesthetic, high-contrast lighting, 3D depth, cinematic atmosphere.
-        Theme: Analyze the '${cleanPrompt}' topic and make the INDUSTRY the primary visual subject. Use topic-specific sophisticated visual metaphors. For example, if it's about healthcare, draw abstract DNA helices or sterile medical environments. If it's finance, draw abstract 3D charts, glowing vaults, or golden geometric coins. The AI element should be a secondary glowing effect.
+        Theme: Analyze the '${cleanPrompt}' topic and make the INDUSTRY the primary visual subject. Use topic-specific sophisticated visual metaphors. For example, if it's about healthcare, draw abstract DNA helices or sterile medical environments. If it's finance, draw abstract 3D charts, glowing vaults, or golden geometric coins. Any technological elements should be subtle background data streams or node networks.
         Color palette: Deep navy, electric violet, and teal highlights.
         
         ABSOLUTE RULES - ZERO EXCEPTIONS:

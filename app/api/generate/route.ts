@@ -69,7 +69,7 @@ export async function POST(req: Request) {
         4. STRUCTURE (Inside <content>):
            - Start with a strategic 1-paragraph introduction.
            - Use 5–7 H2 sections for depth. Headings MUST be direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
-           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, summarize its core concepts into 2-3 bullet points and naturally weave them into whichever H2 section is most relevant to that data. DO NOT create a separate summary section.
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, summarize its core concepts into 2-3 bullet points and naturally weave them into whichever H2 section is most relevant to that data. DO NOT create a separate summary section. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
            - **SECTION INTROS:** Every H2 section MUST begin with exactly 2-3 sentences of introductory text before any list or sub-points.
            - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags. Every <li> point MUST be exactly 2 full sentences to guarantee sufficient length.
            - Formatting: Use HTML <b>Bold Headers:</b> for specific sub-points. 
