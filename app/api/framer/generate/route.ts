@@ -6,21 +6,17 @@ export const maxDuration = 60; // Set timeout for Vercel
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, sitemapLinks } = body;
+    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, sitemapLinks, referenceUrl } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    // --- URL Crawling Logic (Mirroring WordPress quality) ---
+    // --- Reference URL Crawling: Fetch and summarize the provided URL for richer context ---
     let learnedContext = "";
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const urls = (feedback || prompt).match(urlRegex);
-
-    if (urls && urls.length > 0) {
+    if (referenceUrl && referenceUrl.startsWith('http')) {
       try {
-        const targetUrl = urls[0];
-        const res = await fetch(targetUrl, { signal: AbortSignal.timeout(10000) });
+        const res = await fetch(referenceUrl, { signal: AbortSignal.timeout(10000) });
         if (res.ok) {
           const html = await res.text();
           learnedContext = html
@@ -32,7 +28,7 @@ export async function POST(req: Request) {
             .slice(0, 10000);
         }
       } catch (err) {
-        console.error("URL Crawling Failed:", err);
+        console.error("Reference URL Crawling Failed:", err);
       }
     }
 

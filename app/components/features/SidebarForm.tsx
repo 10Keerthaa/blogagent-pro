@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { Zap, Loader2, X, RefreshCw, Star, AlertCircle, Check, AlertTriangle, Plus, Globe, Code } from 'lucide-react';
+import { Zap, Loader2, X, RefreshCw, Star, AlertCircle, Check, AlertTriangle, Plus, Globe, Code, Link2 } from 'lucide-react';
 import { useDashboard } from '../context/DashboardContext';
 import { Textarea } from '../ui/Textarea';
 import { Button } from '../ui/Button';
@@ -21,7 +21,8 @@ export const SidebarForm = () => {
         handleResumeDraft, isResuming, user, isHumanizing,
         humanizationError, handleRetryHumanization,
         hasResumeDraft, handleClearForm, setActiveTab, isProcessingFullPost,
-        targetPlatform, setTargetPlatform
+        targetPlatform, setTargetPlatform,
+        referenceUrl, setReferenceUrl
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -164,6 +165,26 @@ export const SidebarForm = () => {
                         maxLength={200}
                     />
                 </section>
+
+                {/* Reference URL (Optional) */}
+                {!isReadOnly && (
+                    <section className="space-y-4">
+                        <div className="flex items-center gap-2 !pl-4">
+                            <Link2 className="w-3.5 h-3.5 text-slate-400" />
+                            <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Reference URL <span className="normal-case font-medium tracking-normal text-slate-300">(Optional)</span></label>
+                        </div>
+                        <input
+                            type="url"
+                            placeholder="https://example.com/related-article"
+                            value={referenceUrl}
+                            onChange={(e) => setReferenceUrl(e.target.value)}
+                            className="w-full bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-4 pl-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
+                        />
+                        <p className="text-[10px] text-slate-400 !pl-4 leading-relaxed">
+                            Add a related URL to enrich the generated post with specific facts from that page.
+                        </p>
+                    </section>
+                )}
             </div>
 
             {/* STICKY ACTION ZONE */}

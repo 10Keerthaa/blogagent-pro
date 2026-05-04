@@ -18,6 +18,8 @@ interface DashboardContextType {
     setFeedback: (v: string) => void;
     description: string;
     setDescription: (v: string) => void;
+    referenceUrl: string;
+    setReferenceUrl: (v: string) => void;
     activeTab: 'create' | 'review' | 'history';
     setActiveTab: (v: 'create' | 'review' | 'history') => void;
     preview: any | null;
@@ -116,6 +118,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [keywords, setKeywords] = useState<string[]>([]);
     const [feedback, setFeedback] = useState('');
     const [description, setDescription] = useState('');
+    const [referenceUrl, setReferenceUrl] = useState('');
     const [activeTab, setActiveTab] = useState<'create' | 'review' | 'history'>('create');
     const [preview, setPreview] = useState<any | null>(null);
     const [reviewDrafts, setReviewDrafts] = useState<any[]>([]);
@@ -153,6 +156,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setKeywordInput('');
         setPrimaryKeyword(null);
         setDescription('');
+        setReferenceUrl('');
         setPreview(null);
         setInfographicUrl(null);
         setSelectedCategories([LOCKED_CATEGORY_ID]);
@@ -549,6 +553,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setKeywords([]);
         setKeywordInput('');
         setDescription('');
+        setReferenceUrl('');
         setPreview(null);
         setInfographicUrl(null);
         setError(null);
@@ -562,7 +567,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : api.generateContent;
             
             const fullRawText = await generationFn(
-                { prompt, keywords: keywords.join(', '), primaryKeyword, description, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null },
+                { prompt, keywords: keywords.join(', '), primaryKeyword, description, referenceUrl: referenceUrl.trim() || undefined, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
@@ -1048,7 +1053,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isProcessingFullPost, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, infographicFeedback, setInfographicFeedback, isInfographicRefining, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft, selectedCategories, setSelectedCategories,
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, referenceUrl, setReferenceUrl, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isProcessingFullPost, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, infographicFeedback, setInfographicFeedback, isInfographicRefining, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft, selectedCategories, setSelectedCategories,
         deleteInProgressDraft: api.deleteInProgressDraft,
         targetPlatform, setTargetPlatform
     };
