@@ -112,14 +112,16 @@ export async function POST(request: Request) {
             }}>
               {data.pillars.map((pillar: string, i: number) => (
                 <span key={i} style={{ 
-                  flex: 1,
+                  width: '20%',
                   fontSize: '11px', 
                   color: '#FFFFFF', 
                   textTransform: 'uppercase', 
                   textAlign: 'center', 
                   fontFamily: 'EliteBold', 
                   fontWeight: 900,
-                  letterSpacing: '1.2px'
+                  letterSpacing: '1.2px',
+                  display: 'flex',
+                  justifyContent: 'center'
                 }}>
                   {pillar}
                 </span>

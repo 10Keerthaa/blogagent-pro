@@ -45,14 +45,14 @@ export async function POST(req: Request) {
       {
         "title": "EXACT MAIN TITLE (The part before the colon from the blog title)",
         "subtitle": "EXACT SUBTITLE (The part after the colon from the blog title)",
-        "pillars": ["Exactly 4 short technical category names (1-2 words each)"],
+        "pillars": ["Exactly 5 short technical category names (1-2 words each)"],
         "executiveSummary": "A concise, 1-sentence conclusion about the strategic value of the topic (max 25 words).",
         "blocks": [
           {
             "title": "Category Name",
             "items": ["Exactly 3 high-authority technical bullet points"]
           }
-        ] (Provide exactly 4 blocks)
+        ] (Provide exactly 5 blocks)
       }
 
       DATA SOURCE RULE: Focus only on the unique technical insights found in this specific blog post. Only analyze the core technical body of the post.
@@ -88,13 +88,13 @@ export async function POST(req: Request) {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const imagePrompt = `
-      A horizontal strip of 4 premium 3D technical icons for an enterprise infographic.
+      A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
       ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
-      LAYOUT: Draw 4 circular glass nodes in a single, perfectly straight horizontal row.
+      LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
       STRICT RULE: THE ICONS MUST BE PURELY GRAPHICAL SYMBOLS. DO NOT DRAW ANY TEXT, LETTERS, ALPHABETS, OR LABELS **INSIDE**, ON, OR BELOW THE ICONS. ZERO TEXT TOLERANCE.
-      LAYOUT: Draw 4 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. The bottom half must remain completely empty and dark.
+      LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. The bottom half must remain completely empty and dark.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
       FOCUS RULE: Draw ONLY the icons. No other design elements or labels on the canvas.
       `;
