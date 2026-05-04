@@ -59,7 +59,7 @@ export async function POST(req: Request) {
         STRICT REQUIREMENTS:
         1. BLOG TITLE: 50-60 characters inside <title> tags.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be highly informative, action-oriented, and densely packed with keyword-rich insights. MUST include the primary keyword.
-        3. BLOG CONTENT: 1600 to 2000 words inside <content> tags. Provide extreme technical depth and exhaustive detail in every section to ensure length.
+        3. BLOG CONTENT: MAXIMUM 2000 words inside <content> tags. STOP at 2000. Do not exceed. Maintain extreme technical depth.
         4. STRUCTURE (Inside <content>):
            - Start with a strategic 1-paragraph introduction.
            - Use 7–10 H2 sections for maximum depth. Headings MUST be direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
         6. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content (except for the expert CTA).
         7. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
         8. CONCLUSION (MANDATORY): You MUST include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
-        9. FAQ SECTION (MANDATORY): You MUST include an "<h2>FAQ Section</h2>" heading with 5–7 questions. Wrap each question in <b> tags and each answer in <p> tags. Do not nest them; they must be sequential blocks.
+        9. FAQ SECTION (MANDATORY): You MUST include an "<h2>FAQ Section</h2>" heading with EXACTLY 5 questions. Wrap each question in <b> tags and each answer in <p> tags. Do not nest them; they must be sequential blocks.
 
         RESULT FORMAT:
         <title>...</title>
