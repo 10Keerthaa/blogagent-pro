@@ -178,7 +178,7 @@ export const SidebarForm = () => {
                             placeholder="https://example.com/related-article"
                             value={referenceUrl}
                             onChange={(e) => setReferenceUrl(e.target.value)}
-                            className="w-full h-[68px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl py-6 px-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
+                            className="w-full h-[68px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl py-6 !px-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
                         />
                         <p className="text-[10px] text-slate-400 !pl-4 leading-relaxed">
                             Add a related URL to enrich the generated post with specific facts from that page.
