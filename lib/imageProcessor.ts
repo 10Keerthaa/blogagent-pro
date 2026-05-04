@@ -28,9 +28,9 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
     const metadata = await sharp(imageBuffer).metadata();
     const width = metadata.width || 1024;
 
-    // Enforce strictly 960x720 Elite dimensions and apply signature brand purple overlay
+    // Enforce strictly 1376x768 Elite dimensions and apply signature brand purple overlay
     const resizedImage = await sharp(imageBuffer)
-      .resize(960, 720, {
+      .resize(1376, 768, {
         fit: 'cover',
         position: 'center',
         kernel: 'cubic'
@@ -42,7 +42,7 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
     // Apply ONLY the purple brand gradient tint (no SVG text - server has no system fonts).
     // Title text is properly rendered by the /api/banner route with embedded custom fonts.
     const overlay = Buffer.from(
-      `<svg width="960" height="720">
+      `<svg width="1376" height="768">
         <defs>
           <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:0.4" />

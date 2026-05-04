@@ -258,7 +258,7 @@ export const PostPreview = () => {
                         src={preview.imageUrl}
                         alt={preview.title}
                         className="w-full h-auto block object-cover"
-                        style={{ aspectRatio: '4/3' }}
+                        style={{ aspectRatio: '1376/768' }}
                     />
                     <div
                         className="absolute inset-0 pointer-events-none"

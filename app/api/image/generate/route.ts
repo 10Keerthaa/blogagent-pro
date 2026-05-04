@@ -40,7 +40,7 @@ export async function POST(req: Request) {
             method: 'POST',
             data: {
                 instances: [{ prompt: imagePrompt }],
-                parameters: { sampleCount: 1, aspectRatio: "4:3", negativePrompt: negativePrompt },
+                parameters: { sampleCount: 1, aspectRatio: "16:9", negativePrompt: negativePrompt },
             },
         });
 
