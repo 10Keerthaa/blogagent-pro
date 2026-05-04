@@ -19,13 +19,19 @@ export async function POST(req: Request) {
         const res = await fetch(referenceUrl, { signal: AbortSignal.timeout(10000) });
         if (res.ok) {
           const html = await res.text();
-          learnedContext = html
+          // Extract body content to skip head/meta tags and invisible code
+          const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+          const rawText = bodyMatch ? bodyMatch[1] : html;
+
+          learnedContext = rawText
             .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "")
             .replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gim, "")
+            .replace(/<nav\b[^>]*>([\s\S]*?)<\/nav>/gim, "")
+            .replace(/<footer\b[^>]*>([\s\S]*?)<\/footer>/gim, "")
             .replace(/<[^>]+>/g, " ")
             .replace(/\s+/g, " ")
             .trim()
-            .slice(0, 10000);
+            .slice(0, 15000);
         }
       } catch (err) {
         console.error("Reference URL Crawling Failed:", err);
@@ -74,6 +80,7 @@ export async function POST(req: Request) {
            - Start with a strategic 2-paragraph introduction (minimum 80 words).
            - **HEADINGS:** For the body of the post, use **<h4>** for all section headings. This is a strict requirement for the Framer template.
            - Use 5–7 <h4> sections for depth. Each section MUST contribute at least 150 words.
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, summarize its core concepts into 2-3 bullet points and naturally weave them into whichever <h4> section is most relevant to that data. DO NOT create a separate summary section.
            - **SECTION INTROS:** Every <h4> section MUST begin with exactly 2-3 sentences of introductory text before any list.
            - **BULLET POINTS (OPTIONAL):** Use HTML <ul> and <li> tags ONLY when bullet points are contextually appropriate. FORBIDDEN: Do NOT use <b> bold text as a substitute for bullet points. When bullets ARE used, they MUST be inside <ul><li> tags, and each <li> MUST be exactly 2 full sentences to guarantee sufficient length. If no bullets are needed, write plain <p> paragraphs only.
         5. NEVER use <h2> or <h3> for subheadings. ONLY use <h4>.

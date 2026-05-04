@@ -25,19 +25,18 @@ export async function POST(req: Request) {
         Color palette: Deep navy, electric violet, and teal highlights.
         
         ABSOLUTE RULES - ZERO EXCEPTIONS:
-        - DO NOT draw microchips, circuit boards, or glowing brains UNLESS the topic is specifically about computer hardware.
-        - NO text, NO letters, NO words, NO numbers anywhere.
-        - NO people, NO faces, NO hands.
         - The imagery must be conceptual and sophisticated, not a literal photograph of a device.
         
         8k photorealistic enterprise-grade conceptual art.`;
+
+        const negativePrompt = "microchips, circuit boards, glowing brains, text, letters, words, numbers, people, faces, hands, humans, cartoon, clipart, photorealistic humans, realistic people";
 
         const response = await client.request({
             url,
             method: 'POST',
             data: {
                 instances: [{ prompt: imagePrompt }],
-                parameters: { sampleCount: 1, aspectRatio: "4:3" },
+                parameters: { sampleCount: 1, aspectRatio: "4:3", negativePrompt: negativePrompt },
             },
         });
 
