@@ -98,7 +98,7 @@ export async function POST(request: Request) {
                   left: '30px',
                   width: '620px',
                   height: '160px',
-                  objectFit: 'cover'
+                  objectFit: 'contain'
                 }}
               />
             )}

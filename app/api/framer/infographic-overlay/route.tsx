@@ -97,7 +97,7 @@ export async function POST(request: Request) {
                   left: '30px',
                   width: '620px', // 680px glass box - 30px left - 30px right = 620px (all 6 icons fully visible)
                   height: '160px',
-                  objectFit: 'cover'
+                  objectFit: 'contain'
                 }}
               />
             )}
@@ -201,7 +201,7 @@ export async function POST(request: Request) {
       ),
       {
         width: 800,
-        height: 1060,
+        height: 1200,
         fonts: fonts
       }
     );
