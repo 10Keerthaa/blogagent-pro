@@ -21,10 +21,11 @@ export async function POST(req: Request) {
         const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
         const imagePrompt = `A breathtaking, high-resolution conceptual digital art representing the core essence of '${prompt}'.
         Style: Professional enterprise aesthetic, high-contrast lighting, 3D depth, cinematic atmosphere.
-        Theme: Analyze the '${prompt}' topic. Use topic-specific sophisticated visual metaphors. For example, if it's about healthcare, subtly incorporate abstract medical crosses, DNA helices, or sterile environments. If it's finance, use abstract charts or golden geometric coins. Blend this seamlessly with enterprise AI aesthetics.
+        Theme: Analyze the '${prompt}' topic and make the INDUSTRY the primary visual subject. Use topic-specific sophisticated visual metaphors. For example, if it's about healthcare, draw abstract DNA helices or sterile medical environments. If it's finance, draw abstract 3D charts, glowing vaults, or golden geometric coins. The AI element should be a secondary glowing effect.
         Color palette: Deep navy, electric violet, and teal highlights.
         
         ABSOLUTE RULES - ZERO EXCEPTIONS:
+        - DO NOT draw microchips, circuit boards, or glowing brains UNLESS the topic is specifically about computer hardware.
         - NO text, NO letters, NO words, NO numbers anywhere.
         - NO people, NO faces, NO hands.
         - The imagery must be conceptual and sophisticated, not a literal photograph of a device.

@@ -68,14 +68,14 @@ export async function POST(req: Request) {
         STRICT REQUIREMENTS (FRAMER SPECIFIC):
         1. BLOG TITLE: Inside <title> tags. Generate a fresh, high-authority, and catchy blog title BASED on the provided topic. Do NOT simply repeat the topic verbatim; instead, refine it for maximum impact. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title under any circumstances. If the topic is short and needs only one part, keep it as a single bold statement without a colon.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
-        3. BLOG CONTENT: Target 1500 to 1800 words. MAXIMUM 2000 words. DO NOT abruptly cut off the text; ensure the full structure is completely finished within the limit. Maintain technical depth without unnecessary fluff.
+        3. BLOG CONTENT: You MUST write a MINIMUM of 1600 words. Target 1600 to 1800 words. MAXIMUM 2000 words. DO NOT abruptly cut off the text; ensure the full structure is completely finished.
         4. STRUCTURE (Inside <content>):
            - **FORBIDDEN:** Do NOT wrap the content in markdown code blocks or fences like \`\`\`html. Start directly with the content.
            - Start with a strategic 2-paragraph introduction (minimum 80 words).
            - **HEADINGS:** For the body of the post, use **<h4>** for all section headings. This is a strict requirement for the Framer template.
            - Use 5–7 <h4> sections for depth. Each section MUST contribute at least 150 words.
            - **SECTION INTROS:** Every <h4> section MUST begin with exactly 2-3 sentences of introductory text before any list.
-           - **BULLET POINTS (OPTIONAL):** Use HTML <ul> and <li> tags ONLY when bullet points are contextually appropriate. FORBIDDEN: Do NOT use <b> bold text as a substitute for bullet points. When bullets ARE used, they MUST be inside <ul><li> tags, and each <li> must be concise and punchy (1-2 sentences). If no bullets are needed, write plain <p> paragraphs only.
+           - **BULLET POINTS (OPTIONAL):** Use HTML <ul> and <li> tags ONLY when bullet points are contextually appropriate. FORBIDDEN: Do NOT use <b> bold text as a substitute for bullet points. When bullets ARE used, they MUST be inside <ul><li> tags, and each <li> MUST be exactly 2 full sentences to guarantee sufficient length. If no bullets are needed, write plain <p> paragraphs only.
         5. NEVER use <h2> or <h3> for subheadings. ONLY use <h4>.
         6. INTERNAL LINKS: You are AUTHORIZED to use <a> tags ONLY for the phrases provided in the INTERNAL LINKING REPOSITORY. DO NOT invent links.
         7. CONCLUSION (MANDATORY): Include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://www.10xds.ai/contact/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
