@@ -96,8 +96,8 @@ export async function POST(request: Request) {
                   top: '10px',
                   left: '30px',
                   width: '620px', // 680px glass box - 30px left - 30px right = 620px (all 6 icons fully visible)
-                  height: '160px',
-                  objectFit: 'contain'
+                  height: '180px',
+                  objectFit: 'cover'
                 }}
               />
             )}

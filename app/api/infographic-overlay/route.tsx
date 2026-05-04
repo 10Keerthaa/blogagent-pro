@@ -97,8 +97,8 @@ export async function POST(request: Request) {
                   top: '10px',
                   left: '30px',
                   width: '620px',
-                  height: '160px',
-                  objectFit: 'contain'
+                  height: '180px',
+                  objectFit: 'cover'
                 }}
               />
             )}
