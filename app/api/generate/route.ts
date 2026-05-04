@@ -59,12 +59,12 @@ export async function POST(req: Request) {
         STRICT REQUIREMENTS:
         1. BLOG TITLE: 50-60 characters inside <title> tags.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be highly informative, action-oriented, and densely packed with keyword-rich insights. MUST include the primary keyword.
-        3. BLOG CONTENT: MAXIMUM 2000 words inside <content> tags. STOP at 2000. Do not exceed. Maintain extreme technical depth.
+        3. BLOG CONTENT: Target 1500 to 1800 words. MAXIMUM 2000 words. DO NOT abruptly cut off the text; ensure the full structure is completely finished within the limit. Maintain technical depth without unnecessary fluff.
         4. STRUCTURE (Inside <content>):
            - Start with a strategic 1-paragraph introduction.
-           - Use 7–10 H2 sections for maximum depth. Headings MUST be direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
-           - **SECTION INTROS:** Every H2 section MUST begin with exactly 3-4 sentences of introductory text before any list or sub-points.
-           - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags. Every <li> point must be substantial (2 sentences).
+           - Use 5–7 H2 sections for depth. Headings MUST be direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
+           - **SECTION INTROS:** Every H2 section MUST begin with exactly 2-3 sentences of introductory text before any list or sub-points.
+           - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags. Make bullet points concise and punchy (1-2 sentences).
            - Formatting: Use HTML <b>Bold Headers:</b> for specific sub-points. 
         5. Use <h2> and <h3> for headings. NEVER use Markdown headers (#).
         6. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content (except for the expert CTA).
