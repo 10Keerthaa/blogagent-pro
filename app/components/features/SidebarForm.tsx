@@ -22,7 +22,9 @@ export const SidebarForm = () => {
         humanizationError, handleRetryHumanization,
         hasResumeDraft, handleClearForm, setActiveTab, isProcessingFullPost,
         targetPlatform, setTargetPlatform,
-        referenceUrl, setReferenceUrl
+        referenceUrl1, setReferenceUrl1,
+        referenceUrl2, setReferenceUrl2,
+        referenceUrl3, setReferenceUrl3
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -166,22 +168,38 @@ export const SidebarForm = () => {
                     />
                 </section>
 
-                {/* Reference URL (Optional) */}
+                {/* Reference URLs (Optional) */}
                 {!isReadOnly && (
                     <section className="space-y-4">
                         <div className="flex items-center gap-2 !pl-4">
                             <Link2 className="w-3.5 h-3.5 text-slate-400" />
-                            <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Reference URL <span className="normal-case font-medium tracking-normal text-slate-300">(Optional)</span></label>
+                            <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Reference URLs <span className="normal-case font-medium tracking-normal text-slate-300">(Optional)</span></label>
                         </div>
-                        <input
-                            type="url"
-                            placeholder="https://example.com/related-article"
-                            value={referenceUrl}
-                            onChange={(e) => setReferenceUrl(e.target.value)}
-                            className="w-full h-[68px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl py-6 !px-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
-                        />
+                        <div className="space-y-3">
+                            <input
+                                type="url"
+                                placeholder="https://example.com/related-article-1"
+                                value={referenceUrl1}
+                                onChange={(e) => setReferenceUrl1(e.target.value)}
+                                className="w-full h-[52px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl px-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
+                            />
+                            <input
+                                type="url"
+                                placeholder="https://example.com/related-article-2"
+                                value={referenceUrl2}
+                                onChange={(e) => setReferenceUrl2(e.target.value)}
+                                className="w-full h-[52px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl px-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
+                            />
+                            <input
+                                type="url"
+                                placeholder="https://example.com/related-article-3"
+                                value={referenceUrl3}
+                                onChange={(e) => setReferenceUrl3(e.target.value)}
+                                className="w-full h-[52px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl px-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
+                            />
+                        </div>
                         <p className="text-[10px] text-slate-400 !pl-4 leading-relaxed">
-                            Add a related URL to enrich the generated post with specific facts from that page.
+                            Add up to 3 related URLs. The AI will weave relevant facts from these into existing sections without creating new ones.
                         </p>
                     </section>
                 )}

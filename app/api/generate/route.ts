@@ -6,35 +6,45 @@ export const maxDuration = 60; // Set timeout for Vercel
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, referenceUrl } = body;
+    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, referenceUrl1, referenceUrl2, referenceUrl3 } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    // --- Reference URL Crawling: Fetch and summarize the provided URL for richer context ---
+    // --- Reference URLs Crawling: Fetch and summarize the provided URLs for richer context ---
     let learnedContext = "";
-    if (referenceUrl && referenceUrl.startsWith('http')) {
+    const urlsToFetch = [referenceUrl1, referenceUrl2, referenceUrl3].filter(url => url && url.startsWith('http'));
+    
+    if (urlsToFetch.length > 0) {
       try {
-        const res = await fetch(referenceUrl, { signal: AbortSignal.timeout(10000) });
-        if (res.ok) {
-          const html = await res.text();
-          // Extract body content to skip head/meta tags and invisible code
-          const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-          const rawText = bodyMatch ? bodyMatch[1] : html;
+        const fetchPromises = urlsToFetch.map(async (url) => {
+          try {
+            const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+            if (res.ok) {
+              const html = await res.text();
+              const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+              const rawText = bodyMatch ? bodyMatch[1] : html;
+              return rawText
+                .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "")
+                .replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gim, "")
+                .replace(/<nav\b[^>]*>([\s\S]*?)<\/nav>/gim, "")
+                .replace(/<footer\b[^>]*>([\s\S]*?)<\/footer>/gim, "")
+                .replace(/<[^>]+>/g, " ")
+                .replace(/\s+/g, " ")
+                .trim()
+                .slice(0, 15000);
+            }
+          } catch (err) {
+            console.error(`Failed to fetch ${url}:`, err);
+          }
+          return "";
+        });
 
-          learnedContext = rawText
-            .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "")
-            .replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gim, "")
-            .replace(/<nav\b[^>]*>([\s\S]*?)<\/nav>/gim, "")
-            .replace(/<footer\b[^>]*>([\s\S]*?)<\/footer>/gim, "")
-            .replace(/<[^>]+>/g, " ")
-            .replace(/\s+/g, " ")
-            .trim()
-            .slice(0, 15000);
-        }
+        const results = await Promise.all(fetchPromises);
+        learnedContext = results.filter(text => text.length > 0).join("\n\n---\n\n");
       } catch (err) {
-        console.error("Reference URL Crawling Failed:", err);
+        console.error("Reference URLs Crawling Failed:", err);
       }
     }
 
@@ -69,7 +79,7 @@ export async function POST(req: Request) {
         4. STRUCTURE (Inside <content>):
            - Start with a strategic 1-paragraph introduction.
            - Use 5–7 H2 sections for depth. Headings MUST be direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
-           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, summarize its core concepts into 2-3 bullet points and naturally weave them into whichever H2 section is most relevant to that data. DO NOT create a separate summary section. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, extract 2-3 facts that are HIGHLY RELEVANT to the main blog topic. Weave these facts naturally as bullet points inside the most relevant existing H2 section. DO NOT create a separate summary section for them. DO NOT copy exact wording from the URLs (no plagiarism, synthesize in your own words). DO NOT use exact phrases from the URLs as subheadings. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
            - **SECTION INTROS:** Every H2 section MUST begin with exactly 2-3 sentences of introductory text before any list or sub-points.
            - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags. Every <li> point MUST be exactly 2 full sentences to guarantee sufficient length.
            - Formatting: Use HTML <b>Bold Headers:</b> for specific sub-points. 
