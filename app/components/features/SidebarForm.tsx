@@ -181,21 +181,21 @@ export const SidebarForm = () => {
                                 placeholder="https://example.com/related-article-1"
                                 value={referenceUrl1}
                                 onChange={(e) => setReferenceUrl1(e.target.value)}
-                                className="w-full h-[52px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl px-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
+                                className="w-full h-[52px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl !pl-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
                             />
                             <input
                                 type="url"
                                 placeholder="https://example.com/related-article-2"
                                 value={referenceUrl2}
                                 onChange={(e) => setReferenceUrl2(e.target.value)}
-                                className="w-full h-[52px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl px-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
+                                className="w-full h-[52px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl !pl-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
                             />
                             <input
                                 type="url"
                                 placeholder="https://example.com/related-article-3"
                                 value={referenceUrl3}
                                 onChange={(e) => setReferenceUrl3(e.target.value)}
-                                className="w-full h-[52px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl px-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
+                                className="w-full h-[52px] bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl !pl-4 text-sm font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/5 transition-all"
                             />
                         </div>
                         <p className="text-[10px] text-slate-400 !pl-4 leading-relaxed">
