@@ -165,6 +165,7 @@ export async function POST(request: Request) {
             borderRadius: '15px',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             marginTop: '25px', // Exact match to icon-to-block spacing
+            marginBottom: '10px', // Exact match to heading gap
             padding: '15px 30px',
             alignItems: 'center',
             justifyContent: 'center',
@@ -184,20 +185,19 @@ export async function POST(request: Request) {
              </p>
           </div>
 
-          {/* 10xDS Brand Logo - Absolutely pinned to bottom-right */}
+          {/* 10xDS Brand Logo - Flex positioned to bottom-right */}
           {logoData && (
-            <img
-              src={logoData}
-              alt="10xDS Logo"
-              style={{
-                position: 'absolute',
-                bottom: '30px',
-                right: '60px',
-                height: '36px',
-                width: 'auto',
-                opacity: 1
-              }}
-            />
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end', marginTop: 'auto' }}>
+              <img
+                src={logoData}
+                alt="10xDS Logo"
+                style={{
+                  height: '36px',
+                  width: 'auto',
+                  opacity: 1
+                }}
+              />
+            </div>
           )}
         </div>
       ),

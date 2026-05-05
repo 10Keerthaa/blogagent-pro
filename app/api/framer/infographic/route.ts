@@ -117,7 +117,7 @@ export async function POST(req: Request) {
             left: 0, 
             top: Math.round(metadata.height * 0.05), 
             width: metadata.width, 
-            height: Math.round(metadata.height * 0.70) // Aggressive crop: 5% top, 25% bottom removal to kill all ghost text
+            height: Math.round(metadata.height * 0.75) // Increased crop to 75% to prevent clipping of the bottom icon glow
           })
           .toBuffer();
       });
@@ -156,21 +156,7 @@ export async function POST(req: Request) {
 
     let finalBuffer = Buffer.from(await compositeResp.arrayBuffer());
 
-    // LOGO COMPOSITE: Stamp 10xDS logo at bottom-right via Sharp (100% reliable vs Satori CSS)
-    try {
-      if (ASSETS.logo) {
-        const logoBuffer = Buffer.from(ASSETS.logo, 'base64');
-        const logoResized = await sharp(logoBuffer).resize({ height: 36 }).png().toBuffer();
-        const logoMeta = await sharp(logoResized).metadata();
-        const logoW = logoMeta.width || 120;
-        finalBuffer = await sharp(finalBuffer)
-          .composite([{ input: logoResized, left: 800 - 60 - logoW, top: 1060 - 30 - 36 }])
-          .png()
-          .toBuffer() as Buffer<ArrayBuffer>;
-      }
-    } catch (logoErr) {
-      console.warn("Logo composite skipped:", logoErr);
-    }
+    // LOGO COMPOSITE: Removed manual Sharp stamping to allow Satori flex layout to place logo dynamically with proper spacing
 
     // UPLOAD TO GCS
     const slug = prompt.toLowerCase().split(' ').join('-').replace(/[^\w-]/g, '');

@@ -466,7 +466,17 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     // Safety Lock: Clear preview and selected draft if platform is toggled mid-generation
     useEffect(() => {
+        setPrompt('');
+        setKeywords([]);
+        setKeywordInput('');
+        setDescription('');
+        setReferenceUrl1('');
+        setReferenceUrl2('');
+        setReferenceUrl3('');
         setPreview(null);
+        setInfographicUrl(null);
+        setError(null);
+        setPrimaryKeyword(null);
         setSelectedReviewDraft(null);
     }, [targetPlatform]);
 
