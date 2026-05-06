@@ -273,7 +273,7 @@ export const PostPreview = () => {
                     )}
 
                     {/* Layer 2: Platform-Specific Title Group */}
-                    <div className={`absolute inset-0 pointer-events-none flex flex-col justify-center ${targetPlatform === 'wordpress' ? 'items-start px-[60px]' : 'items-center px-[60px] lg:px-[100px]'}`}>
+                    <div className={`absolute inset-0 pointer-events-none flex flex-col justify-center ${targetPlatform === 'wordpress' ? 'items-start' : 'items-center px-[60px] lg:px-[100px]'}`} style={{ paddingLeft: targetPlatform === 'wordpress' ? '60px' : undefined, paddingRight: targetPlatform === 'wordpress' ? '60px' : undefined }}>
                         <div className={`text-white w-full font-sans drop-shadow-2xl flex flex-col ${targetPlatform === 'wordpress' ? 'items-start text-left w-[75%]' : 'items-center text-center'}`} style={{ lineHeight: '1.2' }}>
                             {preview.title.includes(':') ? (
                                 <>
