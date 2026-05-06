@@ -215,7 +215,8 @@ export async function POST(req: Request) {
             logoBase64: logoBase64,
             tagBase64: blogTagBase64,
             fontBoldBase64: fontBoldBase64,
-            fontRegBase64: fontRegBase64
+            fontRegBase64: fontRegBase64,
+            platform: 'wordpress'
           })
         });
 

@@ -4,7 +4,11 @@ export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {
-    const { title = 'Blog Title', bgUrl = '', logoBase64 = '', tagBase64 = '', fontBoldBase64 = '', fontRegBase64 = '' } = await request.json();
+    const { title = 'Blog Title', bgUrl = '', logoBase64 = '', tagBase64 = '', fontBoldBase64 = '', fontRegBase64 = '', platform = 'framer' } = await request.json();
+
+    const isWordPress = platform === 'wordpress';
+    const canvasWidth = isWordPress ? 960 : 1376;
+    const canvasHeight = isWordPress ? 720 : 768;
 
     const titleParts = title.split(':');
     const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
@@ -65,7 +69,7 @@ export async function POST(request: Request) {
             {tagArrayBuffer && <img src={tagArrayBuffer as any} width="80" height="40" style={{ objectFit: 'contain' }} />}
           </div>
 
-          {/* Layer 2: Perfect Center Title Group */}
+          {/* Layer 2: Title Group — Left-aligned for WordPress, Centred for Framer */}
           <div
             style={{
               position: 'absolute',
@@ -76,49 +80,33 @@ export async function POST(request: Request) {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              alignItems: 'center',
-              paddingLeft: '100px',
-              paddingRight: '100px',
+              alignItems: isWordPress ? 'flex-start' : 'center',
+              paddingLeft: isWordPress ? '60px' : '100px',
+              paddingRight: isWordPress ? '60px' : '100px',
             }}
           >
             <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: '100%',
-                alignItems: 'center',
-                textAlign: 'center',
+                width: isWordPress ? '75%' : '100%',
+                alignItems: isWordPress ? 'flex-start' : 'center',
+                textAlign: isWordPress ? 'left' : 'center',
               }}
             >
               <h1
                 style={{
-                  fontSize: '64px',
+                  fontSize: isWordPress ? '52px' : '64px',
                   fontWeight: 700,
                   color: 'white',
-                  lineHeight: 1.1,
+                  lineHeight: 1.2,
                   margin: 0,
                   fontFamily: 'Inter',
                   textShadow: '0 4px 12px rgba(0,0,0,0.6)',
                 }}
               >
-                {mainTitle}
+                {title}
               </h1>
-              {subtitle && (
-                <p
-                  style={{
-                    fontSize: '48px',
-                    color: 'white',
-                    opacity: 0.95,
-                    lineHeight: 1.2,
-                    marginTop: '20px',
-                    fontFamily: 'Inter',
-                    fontWeight: 400,
-                    textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-                  }}
-                >
-                  {subtitle}
-                </p>
-              )}
             </div>
           </div>
 
@@ -136,8 +124,8 @@ export async function POST(request: Request) {
         </div>
       ),
       {
-        width: 1376,
-        height: 768,
+        width: canvasWidth,
+        height: canvasHeight,
         fonts: fontsArr.length > 0 ? fontsArr : undefined
       }
     );
