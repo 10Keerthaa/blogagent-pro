@@ -105,8 +105,25 @@ export async function POST(request: Request) {
                   textShadow: '0 4px 12px rgba(0,0,0,0.6)',
                 }}
               >
-                {title}
+                {mainTitle}
               </h1>
+              {subtitle && (
+                <p
+                  style={{
+                    fontSize: isWordPress ? '36px' : '48px',
+                    fontWeight: 400,
+                    color: 'white',
+                    opacity: 0.9,
+                    lineHeight: 1.3,
+                    marginTop: '14px',
+                    marginBottom: 0,
+                    fontFamily: 'Inter',
+                    textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                  }}
+                >
+                  {subtitle}
+                </p>
+              )}
             </div>
           </div>
 
