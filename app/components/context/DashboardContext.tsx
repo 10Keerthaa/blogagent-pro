@@ -654,7 +654,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     isHumanized: false,
                     humanizationStatus: 'idle',
                     categories: selectedCategories,
-                    platform: targetPlatform
+                    platform: targetPlatform,
+                    referenceUrl1: referenceUrl1.trim() || null,
+                    referenceUrl2: referenceUrl2.trim() || null,
+                    referenceUrl3: referenceUrl3.trim() || null
                 });
             } catch (err) {
                 console.warn("Post-generation sync failed:", err);
@@ -958,6 +961,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 else if (typeof draft.keywords === 'string') setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
                 setInfographicUrl(draft.infographicUrl || null); 
                 setPrimaryKeyword(draft.primaryKeyword || null);
+                setReferenceUrl1(draft.referenceUrl1 || '');
+                setReferenceUrl2(draft.referenceUrl2 || '');
+                setReferenceUrl3(draft.referenceUrl3 || '');
                 setActiveTab('create');
                 
                 // Load categories

@@ -57,7 +57,10 @@ export const useBlogApi = () => {
             auditLog: data.auditLog || data.audit_log || [],
             publishedBy: data.publishedBy || data.published_by || null,
             categories: data.categories || [],
-            platform: data.platform || null
+            platform: data.platform || null,
+            referenceUrl1: data.referenceUrl1 || null,
+            referenceUrl2: data.referenceUrl2 || null,
+            referenceUrl3: data.referenceUrl3 || null
         };
     }, []);
 
@@ -436,6 +439,9 @@ export const useBlogApi = () => {
                 user_email: data.user_email || data.authorEmail || null,
                 categories: data.categories || [],
                 platform: data.platform || null,
+                referenceUrl1: data.referenceUrl1 || null,
+                referenceUrl2: data.referenceUrl2 || null,
+                referenceUrl3: data.referenceUrl3 || null,
                 last_edited_at: serverTimestamp()
             };
 
