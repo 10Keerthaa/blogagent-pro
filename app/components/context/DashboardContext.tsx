@@ -635,7 +635,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             
             // --- STAGE 2: Image Generation & Draft Sync ---
             try {
-                const finalImgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle });
+                const finalImgUrl = await api.generateFeaturedImage({ prompt, title: finalTitle, platform: targetPlatform });
                 if (finalImgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: finalImgUrl }));
 
                 // --- STAGE 3: Auto-Save for Resumption (Draft Buffer) ---
@@ -680,7 +680,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             );
             
             const cleanHumanized = cleanAiHtml(rawHumanized);
-            const finalImgUrl = await api.generateFeaturedImage({ prompt, title: preview.title });
+            const finalImgUrl = await api.generateFeaturedImage({ prompt, title: preview.title, platform: targetPlatform });
             
             setPreview((prev: any) => ({ 
                 ...prev, 
@@ -759,7 +759,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: currentImageUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
             setDescription(finalMeta); setFeedback('');
-            const imgUrl = await api.generateFeaturedImage({ prompt: finalTitle, title: finalTitle });
+            const imgUrl = await api.generateFeaturedImage({ prompt: finalTitle, title: finalTitle, platform: targetPlatform });
             if (imgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: imgUrl }));
         } catch (e: any) { setError(e.message); }
     };

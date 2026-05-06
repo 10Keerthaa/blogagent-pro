@@ -23,14 +23,15 @@ function escapeXml(unsafe: string): string {
  * Resizes the image to a standard hero size.
  * Overlay logic is now handled in the frontend for pixel-perfect precision.
  */
-export async function generateHeroBanner(imageBuffer: Buffer, title: string): Promise<Buffer> {
+export async function generateHeroBanner(imageBuffer: Buffer, title: string, platform: string = 'framer'): Promise<Buffer> {
   try {
-    const metadata = await sharp(imageBuffer).metadata();
-    const width = metadata.width || 1024;
+    const isWordPress = platform === 'wordpress';
+    const width = isWordPress ? 960 : 1376;
+    const height = isWordPress ? 720 : 768;
 
-    // Enforce strictly 1376x768 Elite dimensions and apply signature brand purple overlay
+    // Enforce platform-specific dimensions and apply signature brand purple overlay
     const resizedImage = await sharp(imageBuffer)
-      .resize(1376, 768, {
+      .resize(width, height, {
         fit: 'cover',
         position: 'center',
         kernel: 'cubic'
@@ -42,7 +43,7 @@ export async function generateHeroBanner(imageBuffer: Buffer, title: string): Pr
     // Apply ONLY the purple brand gradient tint (no SVG text - server has no system fonts).
     // Title text is properly rendered by the /api/banner route with embedded custom fonts.
     const overlay = Buffer.from(
-      `<svg width="1376" height="768">
+      `<svg width="${width}" height="${height}">
         <defs>
           <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:0.4" />

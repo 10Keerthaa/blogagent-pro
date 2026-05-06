@@ -8,7 +8,7 @@ export const maxDuration = 60;
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { prompt, title, keywords } = body;
+        const { prompt, title, keywords, platform = 'framer' } = body;
 
         if (!prompt || !title) {
             return NextResponse.json({ error: "Prompt and Title are required" }, { status: 400 });
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
             method: 'POST',
             data: {
                 instances: [{ prompt: imagePrompt }],
-                parameters: { sampleCount: 1, aspectRatio: "16:9", negativePrompt: negativePrompt },
+                parameters: { sampleCount: 1, aspectRatio: platform === 'wordpress' ? "4:3" : "16:9", negativePrompt: negativePrompt },
             },
         });
 
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 
             // Bake the Hero Banner (Refinement 3.0 logic already handles the frontend overlay, 
             // but we still want the base image resized/tinted if needed by imageProcessor)
-            const bannerBuffer = await generateHeroBanner(buffer, title);
+            const bannerBuffer = await generateHeroBanner(buffer, title, platform);
 
             const fileName = `featured-${Date.now()}.png`;
             const generatedImageUrl = await uploadToGCS(bannerBuffer, fileName, 'image/png');

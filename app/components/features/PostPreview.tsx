@@ -258,7 +258,7 @@ export const PostPreview = () => {
                         src={preview.imageUrl}
                         alt={preview.title}
                         className="w-full h-auto block object-cover"
-                        style={{ aspectRatio: '1376/768' }}
+                        style={{ aspectRatio: targetPlatform === 'wordpress' ? '960/720' : '1376/768' }}
                     />
                     <div
                         className="absolute inset-0 pointer-events-none"
@@ -272,16 +272,16 @@ export const PostPreview = () => {
                         </div>
                     )}
 
-                    {/* Layer 2: Perfect Center Title Group */}
-                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-center px-[60px] lg:px-[100px]">
-                        <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-center text-center" style={{ lineHeight: '1.2' }}>
+                    {/* Layer 2: Platform-Specific Title Group */}
+                    <div className={`absolute inset-0 pointer-events-none flex flex-col justify-center ${targetPlatform === 'wordpress' ? 'items-start px-[60px]' : 'items-center px-[60px] lg:px-[100px]'}`}>
+                        <div className={`text-white w-full font-sans drop-shadow-2xl flex flex-col ${targetPlatform === 'wordpress' ? 'items-start text-left w-[75%]' : 'items-center text-center'}`} style={{ lineHeight: '1.2' }}>
                             {preview.title.includes(':') ? (
                                 <>
-                                    <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.1]">{preview.title.split(':')[0]}:</h1>
-                                    <p className="text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 m-0 p-0 leading-[1.2] mt-4">{preview.title.split(':').slice(1).join(':').trim()}</p>
+                                    <h1 className={`${targetPlatform === 'wordpress' ? 'text-[32px] md:text-[42px] lg:text-[52px]' : 'text-[32px] md:text-[42px] lg:text-[64px]'} font-bold m-0 p-0 leading-[1.2]`}>{preview.title.split(':')[0]}:</h1>
+                                    <p className={`${targetPlatform === 'wordpress' ? 'text-[24px] md:text-[30px] lg:text-[36px] opacity-90 font-normal mt-[14px]' : 'text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 mt-4'} m-0 p-0 leading-[1.3]`}>{preview.title.split(':').slice(1).join(':').trim()}</p>
                                 </>
                             ) : (
-                                <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.1]">{preview.title}</h1>
+                                <h1 className={`${targetPlatform === 'wordpress' ? 'text-[32px] md:text-[42px] lg:text-[52px]' : 'text-[32px] md:text-[42px] lg:text-[64px]'} font-bold m-0 p-0 leading-[1.2]`}>{preview.title}</h1>
                             )}
                         </div>
                     </div>
