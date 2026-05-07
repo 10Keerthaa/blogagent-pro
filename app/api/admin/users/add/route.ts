@@ -29,6 +29,8 @@ export async function POST(req: Request) {
 
     // Process Add User
     const { email, role, msToken } = await req.json();
+    
+    console.log(`[Admin API] Inviting user: ${email}, Role: ${role}, Has Token: ${!!msToken}`);
 
     if (!email || !role) {
       return NextResponse.json({ error: "Missing email or role" }, { status: 400 });

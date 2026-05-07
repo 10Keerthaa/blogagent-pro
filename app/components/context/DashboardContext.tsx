@@ -146,7 +146,23 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [isResuming, setIsResuming] = useState(false);
     const [user, setUser] = useState<FirebaseUser | null>(null);
     const [role, setRole] = useState<'admin' | 'editor' | null>(null);
-    const [microsoftAccessToken, setMicrosoftAccessToken] = useState<string | null>(null);
+    const [microsoftAccessToken, setMicrosoftAccessTokenState] = useState<string | null>(() => {
+        if (typeof window !== 'undefined') {
+            return sessionStorage.getItem('ms_access_token');
+        }
+        return null;
+    });
+
+    const setMicrosoftAccessToken = (token: string | null) => {
+        setMicrosoftAccessTokenState(token);
+        if (typeof window !== 'undefined') {
+            if (token) {
+                sessionStorage.setItem('ms_access_token', token);
+            } else {
+                sessionStorage.removeItem('ms_access_token');
+            }
+        }
+    };
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [humanizationError, setHumanizationError] = useState(false);
