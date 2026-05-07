@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, OAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -18,4 +18,11 @@ const auth = getAuth(app);
 const db = getFirestore(app, "blog-creation");
 const storage = getStorage(app);
 
-export { app, auth, db, storage };
+// Microsoft Provider Setup
+const microsoftProvider = new OAuthProvider('microsoft.com');
+microsoftProvider.setCustomParameters({
+    tenant: process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID || 'common',
+    prompt: 'select_account'
+});
+
+export { app, auth, db, storage, microsoftProvider };

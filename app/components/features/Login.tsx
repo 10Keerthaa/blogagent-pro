@@ -1,49 +1,89 @@
 'use client';
 
 import React, { useState } from 'react';
-import { auth, db } from '../../lib/firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { auth, db, microsoftProvider } from '../../lib/firebase';
+import { 
+    signInWithEmailAndPassword, 
+    signInWithPopup,
+    getAdditionalUserInfo,
+    OAuthProvider
+} from 'firebase/auth';
+import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { Button } from '../ui/Button';
-import { Sparkles, Lock, Mail, Zap } from 'lucide-react';
+import { Lock, Mail, Zap } from 'lucide-react';
+import { useDashboard } from '../context/DashboardContext';
 
 export const Login = () => {
+    const { setMicrosoftAccessToken } = useDashboard();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [fullName, setFullName] = useState('');
-    const [isSignUp, setIsSignUp] = useState(false);
-    const [signUpSuccess, setSignUpSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const handleMicrosoftLogin = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const result = await signInWithPopup(auth, microsoftProvider);
+            const user = result.user;
+
+            // Get the Microsoft Access Token to send emails later
+            const credential = OAuthProvider.credentialFromResult(result);
+            if (credential?.accessToken) {
+                setMicrosoftAccessToken(credential.accessToken);
+            }
+
+            // Check if user exists in our authorized profiles
+            const userDoc = await getDoc(doc(db, 'user_profiles', user.uid));
+            
+            if (!userDoc.exists()) {
+                // 1. Check if they were explicitly invited
+                const inviteRef = doc(db, 'invited_users', user.email?.toLowerCase() || '');
+                const inviteSnap = await getDoc(inviteRef);
+
+                if (inviteSnap.exists()) {
+                    const inviteData = inviteSnap.data();
+                    await setDoc(doc(db, 'user_profiles', user.uid), {
+                        full_name: user.displayName || 'Team Member',
+                        email: user.email,
+                        role: inviteData.role || 'editor',
+                        created_at: new Date().toISOString()
+                    });
+                    // Cleanup invitation
+                    await deleteDoc(inviteRef);
+                } else {
+                    // 2. If not invited, check if this is the very first system user (Admin)
+                    const isFirstUser = (await getDoc(doc(db, 'system_config', 'init'))).exists() === false;
+                    
+                    if (isFirstUser) {
+                        await setDoc(doc(db, 'user_profiles', user.uid), {
+                            full_name: user.displayName || 'Admin',
+                            email: user.email,
+                            role: 'admin',
+                            created_at: new Date().toISOString()
+                        });
+                        await setDoc(doc(db, 'system_config', 'init'), { initialized: true });
+                    } else {
+                        await auth.signOut();
+                        setError("Access Denied. You must be invited by an administrator to join this platform.");
+                    }
+                }
+            }
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleAuthAction = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        setSignUpSuccess(false);
 
         try {
-            if (isSignUp) {
-                // SIGN UP FLOW: Firebase
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                // Set Profile Data
-                await updateProfile(user, { displayName: fullName });
-
-                // Create user profile in Firestore
-                await setDoc(doc(db, 'user_profiles', user.uid), {
-                    full_name: fullName,
-                    email: email,
-                    role: 'editor', // Default role for new signups
-                    created_at: new Date().toISOString()
-                });
-
-                setSignUpSuccess(true);
-            } else {
-                // LOGIN FLOW: Firebase
-                await signInWithEmailAndPassword(auth, email, password);
-            }
+            // LOGIN FLOW: Firebase
+            await signInWithEmailAndPassword(auth, email, password);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -118,42 +158,51 @@ export const Login = () => {
                             {/* HEADER: Centered and floating in the middle family */}
                             <div className="text-center w-full">
                                 <h2 className="text-[26px] font-bold text-[#0F172A] dark:text-white mb-[14px] tracking-tight leading-tight">
-                                    {isSignUp ? 'Create Profile' : 'Welcome Back'}
+                                    Welcome Back
                                 </h2>
                                 <p className="text-[12px] text-[#64748B] dark:text-slate-400 font-medium leading-relaxed">
-                                    {isSignUp
-                                        ? 'Join the elite editorial platform today.'
-                                        : 'Please enter your credentials to access the platform.'}
+                                    Please enter your credentials to access the platform.
                                 </p>
                             </div>
 
                             {/* Internal Container */}
                             <div className="w-full flex flex-col" style={{ marginTop: '14px' }}>
                                 
-                                {error && (
-                                    <div className="w-full mb-10 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-[11px] font-bold rounded-xl flex items-center justify-center gap-3 animate-shake uppercase tracking-[1.5px]">
-                                        <Lock className="w-4 h-4 shrink-0 text-red-500" />
-                                        {error}
-                                    </div>
-                                    )}
+                                <div className="w-full flex flex-col" style={{ gap: '20px' }}>
+                                    <Button
+                                        onClick={handleMicrosoftLogin}
+                                        isLoading={loading}
+                                        className="w-full h-[56px] rounded-[16px] bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 text-slate-900 dark:text-white text-[13px] font-bold flex items-center justify-center gap-3 shadow-sm hover:shadow-md transition-all active:scale-[0.98] group"
+                                    >
+                                        {!loading && (
+                                            <svg className="w-5 h-5" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill="#f35325" d="M1 1h10v10H1z"/>
+                                                <path fill="#81bc06" d="M12 1h10v10H12z"/>
+                                                <path fill="#05a6f0" d="M1 12h10v10H1z"/>
+                                                <path fill="#ffba08" d="M12 12h10v10H12z"/>
+                                            </svg>
+                                        )}
+                                        <span className="text-slate-900 dark:text-white">
+                                            {loading ? 'Connecting...' : 'Sign in with Microsoft'}
+                                        </span>
+                                    </Button>
 
-                                <form onSubmit={handleAuthAction} className="w-full flex flex-col" style={{ gap: '20px' }}>
-                                    {isSignUp && (
-                                        <div className="gap-1.5 flex flex-col">
-                                            <label className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2 mb-1">
-                                                <Sparkles className="w-3 h-3" />
-                                                Full Name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                required
-                                                value={fullName}
-                                                onChange={(e) => setFullName(e.target.value)}
-                                                placeholder="Your Full Name"
-                                                className="w-full h-[48px] bg-[#F8FAFC] dark:bg-slate-800/50 border border-[#E2E8F0] dark:border-slate-700 rounded-[12px] px-[16px] text-[13px] font-medium placeholder:text-[#94A3B8] focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 outline-none transition-all login-input"
-                                            />
+                                    <div className="flex items-center gap-4 w-full">
+                                        <div className="h-[1px] flex-1 bg-[#F1F5F9] dark:bg-slate-800"></div>
+                                        <span className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-[2px]">or continue with email</span>
+                                        <div className="h-[1px] flex-1 bg-[#F1F5F9] dark:bg-slate-800"></div>
+                                    </div>
+
+                                    {error && (
+                                        <div className="w-full mb-2 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-500 text-[11px] font-bold rounded-xl flex items-center justify-center gap-3 animate-shake uppercase tracking-[1.5px] text-center">
+                                            <Lock className="w-4 h-4 shrink-0 text-red-500" />
+                                            {error}
                                         </div>
                                     )}
+                                </div>
+
+                                <form onSubmit={handleAuthAction} className="w-full flex flex-col" style={{ gap: '20px' }}>
+
                                     <div className="gap-1.5 flex flex-col">
                                         <label className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-[1.5px] flex items-center gap-2 mb-1">
                                             <Mail className="w-3 h-3" />
@@ -191,26 +240,8 @@ export const Login = () => {
                                             isLoading={loading}
                                             className="w-full h-[48px] rounded-[12px] bg-[#8424FF] hover:bg-[#7215e8] text-[12px] font-bold tracking-[0.5px] uppercase text-white shadow-xl shadow-violet-500/10 transition-all active:scale-[0.98]"
                                         >
-                                            {isSignUp ? 'Register Profile' : 'Authenticate Profile'}
+                                            Authenticate Profile
                                         </Button>
-
-                                        <div className="flex flex-col items-center" style={{ gap: '12px' }}>
-                                            <span className="text-[9px] text-[#94A3B8] font-bold uppercase tracking-[4px]">
-                                                {isSignUp ? 'Already Joined?' : 'New User?'}
-                                            </span>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setIsSignUp(!isSignUp);
-                                                    setSignUpSuccess(false);
-                                                    setError(null);
-                                                }}
-                                                className="w-full h-[48px] rounded-[12px] bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 text-[#475569] dark:text-slate-300 text-[12px] font-bold uppercase transition-all hover:bg-[#F8FAFC] dark:hover:bg-slate-800"
-                                            >
-                                                {isSignUp ? 'Back to Sign In' : 'Create Account'}
-                                            </button>
-                                        </div>
                                     </div>
                                 </form>
                             </div>

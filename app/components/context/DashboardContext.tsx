@@ -109,6 +109,8 @@ interface DashboardContextType {
     targetPlatform: 'wordpress' | 'framer';
     setTargetPlatform: (v: 'wordpress' | 'framer') => void;
     deleteInProgressDraft: (userId: string) => Promise<any>;
+    microsoftAccessToken: string | null;
+    setMicrosoftAccessToken: (v: string | null) => void;
 }
 
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
@@ -144,6 +146,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [isResuming, setIsResuming] = useState(false);
     const [user, setUser] = useState<FirebaseUser | null>(null);
     const [role, setRole] = useState<'admin' | 'editor' | null>(null);
+    const [microsoftAccessToken, setMicrosoftAccessToken] = useState<string | null>(null);
     const [isRefiningSelection, setIsRefiningSelection] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [humanizationError, setHumanizationError] = useState(false);
@@ -214,6 +217,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     const handleLogout = async () => {
         await signOut(auth);
+        setMicrosoftAccessToken(null);
         resetEditorState();
         setActiveTab('create');
     };
@@ -1023,7 +1027,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const handleAddUser = async (email: string, role: string) => {
-        const success = await api.addUser(email, role);
+        const success = await api.addUser(email, role, microsoftAccessToken);
         if (success) {
             await handleFetchUsers();
             return true;
@@ -1087,7 +1091,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const value = {
         prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, referenceUrl1, setReferenceUrl1, referenceUrl2, setReferenceUrl2, referenceUrl3, setReferenceUrl3, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isProcessingFullPost, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, infographicFeedback, setInfographicFeedback, isInfographicRefining, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft, selectedCategories, setSelectedCategories,
         deleteInProgressDraft: api.deleteInProgressDraft,
-        targetPlatform, setTargetPlatform
+        targetPlatform, setTargetPlatform,
+        microsoftAccessToken, setMicrosoftAccessToken
     };
 
     return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;

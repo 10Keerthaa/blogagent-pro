@@ -480,7 +480,7 @@ export const useBlogApi = () => {
         }
     }, [mapFirestoreToDraft]);
 
-    const addUser = useCallback(async (email: string, role: string) => {
+    const addUser = useCallback(async (email: string, role: string, msToken?: string | null) => {
         const user = auth.currentUser;
         if (!user) return false;
         try {
@@ -491,7 +491,7 @@ export const useBlogApi = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ email, role })
+                body: JSON.stringify({ email, role, msToken })
             });
 
             if (!response.ok) {
