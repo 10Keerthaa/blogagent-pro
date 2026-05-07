@@ -35,11 +35,9 @@ export const Login = () => {
             
             const user = result.user;
 
-            // Get the Microsoft Access Token to send emails later
-            const credential = OAuthProvider.credentialFromResult(result);
-            if (credential?.accessToken) {
-                setMicrosoftAccessToken(credential.accessToken);
-            }
+            // 1. Check if user is already invited
+            const inviteRef = doc(db, 'invited_users', user.email?.toLowerCase() || '');
+            const inviteSnap = await getDoc(inviteRef);
 
             // Check if user exists in our authorized profiles
             const userDoc = await getDoc(doc(db, 'user_profiles', user.uid));
