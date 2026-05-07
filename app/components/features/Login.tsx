@@ -25,6 +25,14 @@ export const Login = () => {
         setError(null);
         try {
             const result = await signInWithPopup(auth, microsoftProvider);
+            const credential = OAuthProvider.credentialFromResult(result);
+            const accessToken = credential?.accessToken;
+            
+            if (accessToken) {
+                console.log("Microsoft Token Captured!");
+                setMicrosoftAccessToken(accessToken);
+            }
+            
             const user = result.user;
 
             // Get the Microsoft Access Token to send emails later
