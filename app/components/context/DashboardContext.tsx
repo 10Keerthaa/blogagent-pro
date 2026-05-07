@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 import { useBlogApi } from '../hooks/useBlogApi';
 import { auth, db } from '../../lib/firebase';
 import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { LOCKED_CATEGORY_ID } from '@/lib/constants/categories';
 
 interface DashboardContextType {
@@ -1045,6 +1045,41 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const handleAddUser = async (email: string, role: string) => {
         const success = await api.addUser(email, role, microsoftAccessToken);
         if (success) {
+            // Create "Sent" Notification
+            try {
+                if (user) {
+                    await addDoc(collection(db, 'notifications'), {
+                        recipientId: user.uid,
+                        type: 'invite_sent',
+                        title: 'Invitation Dispatched',
+                        message: `The invitation for ${email} has been sent successfully.`,
+                        createdAt: serverTimestamp(),
+                        read: false
+                    });
+                }
+            } catch (e) { console.error("Notification creation failed:", e); }
+
+            // Show Elite Success Banner
+            const banner = document.createElement('div');
+            banner.setAttribute('role', 'status');
+            banner.style.cssText = `
+                position:fixed; top:0; left:0; right:0; z-index:99999;
+                background:#8b5cf6; color:#fff;
+                display:flex; align-items:center; justify-content:center; gap:10px;
+                padding:18px 24px; font-family:inherit;
+                box-shadow:0 4px 24px rgba(139, 92, 246, 0.2);
+            `;
+            banner.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span style="font-size:14px; font-weight:700; letter-spacing:0.02em; text-transform:uppercase;">Invitation Dispatched to ${email}</span>
+            `;
+            document.body.appendChild(banner);
+            setTimeout(() => {
+                banner.style.opacity = '0';
+                banner.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => banner.remove(), 500);
+            }, 3500);
+
             await handleFetchUsers();
             return true;
         } else {

@@ -55,6 +55,28 @@ export const Login = () => {
                         role: inviteData.role || 'editor',
                         created_at: new Date().toISOString()
                     });
+
+                    // 1.5 Create Notification for Admins
+                    try {
+                        const { collection, addDoc, serverTimestamp, query, where, getDocs } = await import('firebase/firestore');
+                        // Find admins to notify
+                        const adminQuery = query(collection(db, 'user_profiles'), where('role', '==', 'admin'));
+                        const adminSnaps = await getDocs(adminQuery);
+                        
+                        for (const adminDoc of adminSnaps.docs) {
+                            await addDoc(collection(db, 'notifications'), {
+                                recipientId: adminDoc.id,
+                                type: 'invite_accepted',
+                                title: 'New Team Member',
+                                message: `${user.email} has accepted the invitation and joined as ${inviteData.role || 'editor'}.`,
+                                createdAt: serverTimestamp(),
+                                read: false
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Failed to create notification:", e);
+                    }
+
                     // Cleanup invitation
                     await deleteDoc(inviteRef);
                 } else {

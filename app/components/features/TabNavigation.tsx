@@ -5,6 +5,7 @@ import { useDashboard } from '../context/DashboardContext';
 import { User, Shield, BarChart3, Users, ChevronDown, Zap, Plus } from 'lucide-react';
 import { TeamManagement } from './TeamManagement';
 import { PerformanceManagement } from './PerformanceManagement';
+import { NotificationBell } from './NotificationBell';
 
 export const TabNavigation = () => {
     const { 
@@ -104,6 +105,9 @@ export const TabNavigation = () => {
 
             {/* WING 3: Controls (Right Wing) */}
             <div className="flex items-center justify-end gap-8">
+                {/* NOTIFICATION BELL */}
+                {role === 'admin' && <NotificationBell />}
+
                 {/* ADMIN CONSOLE PILL */}
                 {role === 'admin' && (
                     <div className="relative">
