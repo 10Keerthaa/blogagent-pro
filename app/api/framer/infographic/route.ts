@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       {
         "title": "EXACT MAIN TITLE (The part before the colon from the blog title)",
         "subtitle": "EXACT SUBTITLE (The part after the colon from the blog title)",
-        "pillars": ["5 technical icons labels, max 15 chars each"],
+        "pillars": ["4 technical icons labels, max 15 chars each"],
         "blocks": [
           { "title": "Category Title", "items": ["Key Point 1", "Key Point 2"] }
         ],
@@ -44,13 +44,13 @@ export async function POST(req: Request) {
       }
       RULES:
       1. TITLE SYNC: The 'title' and 'subtitle' MUST match the blog title provided in the topic (${prompt}). If the topic has a colon, split it into title and subtitle. If no colon, use the topic as title and create a professional executive subtitle.
-      2. Blocks must be exactly 4-5.
+      2. Blocks must be exactly 4.
       3. Items per block must be exactly 3.
       4. Use extremely formal enterprise terminology.
       5. ZERO TEXT ICON RULE: DO NOT draw any text, letters, or words INSIDE or BELOW the glass icons.
       6. SPELLING MUST BE PERFECT.
       7. DATA SOURCE RULE: Only analyze the core technical body of the post. IGNORE the Conclusion and FAQ sections entirely as they are repetitive summary information. Focus only on the unique technical insights.
-      7. PILLAR COUNT: You MUST provide exactly 5 pillars.
+      7. PILLAR COUNT: You MUST provide exactly 4 pillars.
     `;
 
     const analysisResp = await client.request({
@@ -77,9 +77,9 @@ export async function POST(req: Request) {
     const imageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
     
     const visualPrompt = `
-      A horizontal strip of 5 premium 3D technical icons for an enterprise technology blog. 
+      A horizontal strip of 4 premium 3D technical icons for an enterprise technology blog. 
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
-      ICONS: Draw 5 distinct, purely abstract geometric 3D symbols (e.g. interlocking gears, connected nodes, data shields, or circuit patterns) representing: ${parsedData.pillars.join(', ')}.
+      ICONS: Draw 4 distinct, purely abstract geometric 3D symbols (e.g. interlocking gears, connected nodes, data shields, or circuit patterns) representing: ${parsedData.pillars.join(', ')}.
       LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
       BACKGROUND: Solid deep purple background (#1A0B2E). 
       STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, OR LABELS ANYWHERE ON THE IMAGE. THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.

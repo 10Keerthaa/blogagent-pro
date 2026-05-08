@@ -45,14 +45,14 @@ export async function POST(req: Request) {
       {
         "title": "EXACT MAIN TITLE (The part before the colon from the blog title)",
         "subtitle": "EXACT SUBTITLE (The part after the colon from the blog title)",
-        "pillars": ["Exactly 5 short technical category names (1-2 words each)"],
+        "pillars": ["Exactly 4 short technical category names (1-2 words each)"],
         "executiveSummary": "A concise, 1-sentence conclusion about the strategic value of the topic (max 25 words).",
         "blocks": [
           {
             "title": "Category Name",
             "items": ["Exactly 3 high-authority technical bullet points"]
           }
-        ] (Provide exactly 5 blocks)
+        ] (Provide exactly 4 blocks)
       }
 
       DATA SOURCE RULE: Focus only on the unique technical insights found in this specific blog post. Only analyze the core technical body of the post.
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
       parsedData = JSON.parse(jsonMatch ? jsonMatch[0] : rawText);
     } catch (designerError: any) {
       console.error("Analysis Phase Error:", designerError);
-      parsedData = { title: prompt.split(':')[0], subtitle: prompt.split(':')[1] || '', pillars: ['Strategy', 'Execution', 'Scale', 'Governance', 'Optimization'], blocks: [] };
+      parsedData = { title: prompt.split(':')[0], subtitle: prompt.split(':')[1] || '', pillars: ['Strategy', 'Execution', 'Scale', 'Governance'], blocks: [] };
     }
 
     // TASK 2: 3D Technical Icon Generation (Imagen 3.0 via Gemini 2.5 Flash Image)
@@ -88,10 +88,10 @@ export async function POST(req: Request) {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const imagePrompt = `
-      A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
+      A horizontal strip of 4 premium 3D technical icons for an enterprise infographic.
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
-      ICONS: Draw 5 distinct, purely abstract geometric 3D symbols (e.g. interlocking gears, connected nodes, data shields, or circuit patterns) representing: ${parsedData.pillars.join(', ')}.
-      LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
+      ICONS: Draw 4 distinct, purely abstract geometric 3D symbols (e.g. interlocking gears, connected nodes, data shields, or circuit patterns) representing: ${parsedData.pillars.join(', ')}.
+      LAYOUT: Draw 4 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
       BACKGROUND: Solid deep purple background (#1A0B2E). 
       STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, OR LABELS ANYWHERE ON THE IMAGE. THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.
       FOCUS: Draw ONLY the icons. The bottom 40% of the canvas must remain completely empty, solid dark purple, and free of any graphics or text.
