@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 
 
           {/* Header Section */}
-          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', position: 'relative' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', position: 'relative', flexShrink: 0 }}>
             <h1 style={{
               fontSize: '42px',
               fontFamily: 'EliteBold',
@@ -187,7 +187,7 @@ export async function POST(request: Request) {
 
           {/* 10xDS Brand Logo - Flex positioned closer to content */}
           {logoData && (
-            <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end', marginTop: '30px' }}>
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end', marginTop: '30px', flexShrink: 0 }}>
               <img
                 src={logoData}
                 alt="10xDS Logo"

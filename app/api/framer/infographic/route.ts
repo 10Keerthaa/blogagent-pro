@@ -33,6 +33,9 @@ export async function POST(req: Request) {
       Blog: ${content.substring(0, 4000)}
 
       STRICT OUTPUT: ONLY a JSON object with this structure:
+      {
+        "title": "EXACT MAIN TITLE (The part before the colon from the blog title)",
+        "subtitle": "EXACT SUBTITLE (The part after the colon from the blog title)",
         "pillars": ["5 technical icons labels, max 15 chars each"],
         "blocks": [
           { "title": "Category Title", "items": ["Key Point 1", "Key Point 2"] }
