@@ -78,7 +78,7 @@ export async function POST(req: Request) {
         3. BLOG CONTENT: You MUST write a MINIMUM of 1600 words. Target 1600 to 1800 words. MAXIMUM 2000 words. DO NOT abruptly cut off the text; ensure the full structure is completely finished.
         4. STRUCTURE (Inside <content>):
            - Start with a strategic 1-paragraph introduction.
-           - Use 5–7 H2 sections for depth. Headings MUST be direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
+           - Use 5–7 H2 sections for depth. Headings MUST be authoritative technical statements (e.g., "<h2>Strategic Framework for [Topic]</h2>"). AVOID using questions as headings.
            - **URL INTEGRATION:** If LEARNED CONTEXT is provided, extract 2-3 facts that are HIGHLY RELEVANT to the main blog topic. Weave these facts naturally as bullet points inside the most relevant existing H2 section. DO NOT create a separate summary section for them. DO NOT copy exact wording from the URLs (no plagiarism, synthesize in your own words). DO NOT use exact phrases from the URLs as subheadings. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
            - **SECTION INTROS:** Every H2 section MUST begin with exactly 2-3 sentences of introductory text before any list or sub-points.
            - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags. Every <li> point MUST be exactly 2 full sentences to guarantee sufficient length.

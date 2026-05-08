@@ -88,15 +88,15 @@ export async function POST(req: Request) {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const imagePrompt = `
-      A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
-      ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
+      A horizontal strip of 5 premium 3D technical symbols for an enterprise infographic.
+      SYMBOLS REPRESENTING: ${parsedData.pillars.join(', ')}.
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
       LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
-      STRICT RULE: THE ICONS MUST BE PURELY GRAPHICAL SYMBOLS. DO NOT DRAW ANY TEXT, LETTERS, ALPHABETS, OR LABELS **INSIDE**, ON, OR BELOW THE ICONS. ZERO TEXT TOLERANCE.
+      STRICT NO-TEXT RULE: THE ICONS MUST BE 100% PURE GRAPHICAL SYMBOLS. DO NOT DRAW ANY WORDS, LETTERS, ALPHABETS, OR LABELS ANYWHERE ON THE CANVAS. THE INTERIOR OF THE GLASS CIRCLES MUST BE PURELY VISUAL AND DEVOID OF ANY TEXT. ZERO TEXT TOLERANCE.
       LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. The bottom half must remain completely empty and dark.
       BACKGROUND: Solid deep purple background (#1A0B2E). 
-      FOCUS RULE: Draw ONLY the icons. No other design elements or labels on the canvas.
+      FOCUS RULE: Draw ONLY the 3D symbols. No other design elements or labels on the canvas.
       `;
 
       const response = await client.request({
