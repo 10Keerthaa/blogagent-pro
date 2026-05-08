@@ -77,13 +77,13 @@ export async function POST(req: Request) {
     const imageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
     
     const visualPrompt = `
-      A high-fidelity horizontal strip of 5 minimalist 3D glass icons for an enterprise technology blog. 
-      Topic: ${prompt}
-      ICONS TO DRAW: ${parsedData.pillars.join(', ')}.
-      Style: Translucent frosted glass, iridescent highlights, dark purple background, isometric 3D.
-      STRICT RULE: THE ICONS MUST BE PURELY GRAPHICAL SYMBOLS. DO NOT DRAW ANY TEXT, LETTERS, ALPHABETS, OR LABELS **INSIDE**, ON, OR BELOW THE ICONS. ZERO TEXT TOLERANCE.
-      LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. The bottom half must remain completely empty and dark.
+      A horizontal strip of 5 premium 3D technical icons for an enterprise technology blog. 
+      STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
+      ICONS: Draw 5 distinct, purely abstract geometric 3D symbols (e.g. interlocking gears, connected nodes, data shields, or circuit patterns) representing: ${parsedData.pillars.join(', ')}.
+      LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
       BACKGROUND: Solid deep purple background (#1A0B2E). 
+      STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, OR LABELS ANYWHERE ON THE IMAGE. THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.
+      FOCUS: Draw ONLY the icons. The bottom 40% of the canvas must remain completely empty, solid dark purple, and free of any graphics or text.
     `;
 
     const imageResp = await client.request({
