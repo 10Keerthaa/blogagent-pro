@@ -16,19 +16,19 @@ export async function POST(request: Request) {
 
     const fonts: any[] = [];
     if (fontBoldArray) {
-      fonts.push({ 
-        name: 'EliteBold', 
-        data: fontBoldArray.buffer, 
-        style: 'normal', 
-        weight: 900 
+      fonts.push({
+        name: 'EliteBold',
+        data: fontBoldArray.buffer,
+        style: 'normal',
+        weight: 900
       });
     }
     if (fontRegArray) {
-      fonts.push({ 
-        name: 'EliteReg', 
-        data: fontRegArray.buffer, 
-        style: 'normal', 
-        weight: 400 
+      fonts.push({
+        name: 'EliteReg',
+        data: fontRegArray.buffer,
+        style: 'normal',
+        weight: 400
       });
     }
 
@@ -72,11 +72,11 @@ export async function POST(request: Request) {
           </div>
 
           {/* Pillar Icons Bar - UNIFIED GLASS BOX */}
-          <div style={{ 
-            display: 'flex', 
+          <div style={{
+            display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            width: '100%', 
+            width: '100%',
             marginBottom: '25px',
             backgroundColor: 'rgba(255, 255, 255, 0.12)',
             backdropFilter: 'blur(15px)',
@@ -88,7 +88,7 @@ export async function POST(request: Request) {
           }}>
             {/* The AI Generated Icon Strip */}
             {iconStripBase64 && (
-              <img 
+              <img
                 src={`data:image/png;base64,${iconStripBase64}`}
                 alt="Icons"
                 style={{
@@ -105,19 +105,19 @@ export async function POST(request: Request) {
             {/* Labels placed precisely below icons */}
             <div style={{
               display: 'flex',
-              width: '620px', 
+              width: '620px',
               position: 'absolute',
               bottom: '15px',
-              left: '30px' 
+              left: '30px'
             }}>
               {data.pillars.map((pillar: string, i: number) => (
-                <span key={i} style={{ 
+                <span key={i} style={{
                   width: '20%',
-                  fontSize: '11px', 
-                  color: '#FFFFFF', 
-                  textTransform: 'uppercase', 
-                  textAlign: 'center', 
-                  fontFamily: 'EliteBold', 
+                  fontSize: '11px',
+                  color: '#FFFFFF',
+                  textTransform: 'uppercase',
+                  textAlign: 'center',
+                  fontFamily: 'EliteBold',
                   fontWeight: 900,
                   letterSpacing: '1.2px',
                   display: 'flex',
@@ -132,8 +132,8 @@ export async function POST(request: Request) {
           {/* Main Content Grid (4-5 Blocks) */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', alignContent: 'flex-start' }}>
             {data.blocks.map((block: any, i: number) => (
-              <div key={i} style={{ 
-                width: '330px', 
+              <div key={i} style={{
+                width: '330px',
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 padding: '15px 20px',
                 borderRadius: '12px',
@@ -171,23 +171,23 @@ export async function POST(request: Request) {
             justifyContent: 'center',
             position: 'relative'
           }}>
-             <p style={{ 
-               fontSize: '14px', 
-               color: '#FFFFFF', 
-               fontFamily: 'EliteReg', 
-               textAlign: 'center', 
-               margin: 0, 
-               lineHeight: 1.5,
-               fontStyle: 'italic',
-               opacity: 0.9
-             }}>
-               "{data.footer_summary}"
-             </p>
+            <p style={{
+              fontSize: '14px',
+              color: '#FFFFFF',
+              fontFamily: 'EliteReg',
+              textAlign: 'center',
+              margin: 0,
+              lineHeight: 1.5,
+              fontStyle: 'italic',
+              opacity: 0.9
+            }}>
+              "{data.footer_summary}"
+            </p>
           </div>
 
-          {/* 10xDS Brand Logo - Flex positioned to bottom-right */}
+          {/* 10xDS Brand Logo - Flex positioned closer to content */}
           {logoData && (
-            <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end', marginTop: 'auto' }}>
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end', marginTop: '30px' }}>
               <img
                 src={logoData}
                 alt="10xDS Logo"

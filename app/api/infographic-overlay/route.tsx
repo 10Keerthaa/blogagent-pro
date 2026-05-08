@@ -97,7 +97,7 @@ export async function POST(request: Request) {
                   top: '10px',
                   left: '30px',
                   width: '620px',
-                  height: '180px',
+                  height: '160px',
                   objectFit: 'cover'
                 }}
               />
@@ -106,10 +106,10 @@ export async function POST(request: Request) {
             {/* Pillar Labels */}
             <div style={{
               display: 'flex',
-              width: '560px',
+              width: '620px',
               position: 'absolute',
               bottom: '15px',
-              left: '60px'
+              left: '30px'
             }}>
               {data.pillars.map((pillar: string, i: number) => (
                 <span key={i} style={{
