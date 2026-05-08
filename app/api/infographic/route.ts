@@ -88,13 +88,13 @@ export async function POST(req: Request) {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
       const imagePrompt = `
-      A horizontal strip of 5 premium 3D technical icons for an enterprise infographic.
+      A horizontal strip of 5 premium 3D abstract geometric crystal structures for an enterprise technology blog. 
       STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
-      ICONS: Draw 5 distinct, purely abstract geometric 3D symbols (e.g. interlocking gears, connected nodes, data shields, or circuit patterns) representing: ${parsedData.pillars.join(', ')}.
+      ICONS: Draw 5 distinct, purely abstract 3D geometric shapes (e.g. faceted crystals, floating light-nodes, or prismatic shields) representing the energy of: ${parsedData.pillars.join(', ')}.
       LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
       BACKGROUND: Solid deep purple background (#1A0B2E). 
-      STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, OR LABELS ANYWHERE ON THE IMAGE. THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.
-      FOCUS: Draw ONLY the icons. The bottom 40% of the canvas must remain completely empty, solid dark purple, and free of any graphics or text.
+      STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, OR LABELS. NO LOGOS, NO CAPTIONS, NO TYPOGRAPHY. ZERO TEXT TOLERANCE.
+      FOCUS: Draw ONLY abstract shapes. The image must be 100% free of any human-readable text or characters.
       `;
 
       const response = await client.request({

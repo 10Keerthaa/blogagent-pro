@@ -121,9 +121,14 @@ export async function POST(request: Request) {
                   fontWeight: 900,
                   letterSpacing: '1.2px',
                   display: 'flex',
-                  justifyContent: 'center'
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  lineHeight: 1.2
                 }}>
-                  {pillar}
+                  {pillar.split(' ').map((word, index) => (
+                    <div key={index}>{word}</div>
+                  ))}
                 </span>
               ))}
             </div>
