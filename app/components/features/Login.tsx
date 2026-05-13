@@ -35,67 +35,20 @@ export const Login = () => {
             
             const user = result.user;
 
-            // 1. Check if user is already invited
-            const inviteRef = doc(db, 'invited_users', user.email?.toLowerCase() || '');
-            const inviteSnap = await getDoc(inviteRef);
-
-            // Check if user exists in our authorized profiles
-            const userDoc = await getDoc(doc(db, 'user_profiles', user.uid));
-            
-            if (!userDoc.exists()) {
-                // 1. Check if they were explicitly invited
-                const inviteRef = doc(db, 'invited_users', user.email?.toLowerCase() || '');
-                const inviteSnap = await getDoc(inviteRef);
-
-                if (inviteSnap.exists()) {
-                    const inviteData = inviteSnap.data();
-                    await setDoc(doc(db, 'user_profiles', user.uid), {
-                        full_name: user.displayName || 'Team Member',
-                        email: user.email,
-                        role: inviteData.role || 'editor',
-                        created_at: new Date().toISOString()
-                    });
-
-                    // 1.5 Create Notification for Admins
-                    try {
-                        const { collection, addDoc, serverTimestamp, query, where, getDocs } = await import('firebase/firestore');
-                        // Find admins to notify
-                        const adminQuery = query(collection(db, 'user_profiles'), where('role', '==', 'admin'));
-                        const adminSnaps = await getDocs(adminQuery);
-                        
-                        for (const adminDoc of adminSnaps.docs) {
-                            await addDoc(collection(db, 'notifications'), {
-                                recipientId: adminDoc.id,
-                                type: 'invite_accepted',
-                                title: 'New Team Member',
-                                message: `${user.email} has accepted the invitation and joined as ${inviteData.role || 'editor'}.`,
-                                createdAt: serverTimestamp(),
-                                read: false
-                            });
-                        }
-                    } catch (e) {
-                        console.error("Failed to create notification:", e);
-                    }
-
-                    // Cleanup invitation
-                    await deleteDoc(inviteRef);
-                } else {
-                    // 2. If not invited, check if this is the very first system user (Admin)
-                    const isFirstUser = (await getDoc(doc(db, 'system_config', 'init'))).exists() === false;
-                    
-                    if (isFirstUser) {
-                        await setDoc(doc(db, 'user_profiles', user.uid), {
-                            full_name: user.displayName || 'Admin',
-                            email: user.email,
-                            role: 'admin',
-                            created_at: new Date().toISOString()
-                        });
-                        await setDoc(doc(db, 'system_config', 'init'), { initialized: true });
-                    } else {
-                        await auth.signOut();
-                        setError("Access Denied. You must be invited by an administrator to join this platform.");
-                    }
+            // Call the secure backend to process the invite and create the profile
+            const token = await user.getIdToken();
+            const acceptRes = await fetch('/api/auth/accept-invite', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
+            });
+
+            const acceptData = await acceptRes.json();
+
+            if (!acceptRes.ok) {
+                await auth.signOut();
+                setError(acceptData.error || "Access Denied. You must be invited by an administrator to join this platform.");
             }
         } catch (err: any) {
             setError(err.message);
