@@ -1043,7 +1043,27 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const handleAddUser = async (email: string, role: string) => {
-        const success = await api.addUser(email, role, microsoftAccessToken);
+        let currentMsToken = microsoftAccessToken;
+        let msTokenTimestamp = parseInt(sessionStorage.getItem('ms_token_time') || '0', 10);
+        const now = Date.now();
+
+        // Check if token is older than 55 minutes (3300000 ms) or missing
+        if (!currentMsToken || now - msTokenTimestamp > 3300000) {
+            try {
+                const { signInWithPopup, OAuthProvider } = await import('firebase/auth');
+                const result = await signInWithPopup(auth, (await import('../../lib/firebase')).microsoftProvider);
+                const credential = OAuthProvider.credentialFromResult(result);
+                currentMsToken = credential?.accessToken || null;
+                if (currentMsToken) {
+                    setMicrosoftAccessToken(currentMsToken);
+                    sessionStorage.setItem('ms_token_time', Date.now().toString());
+                }
+            } catch (err) {
+                console.warn("Failed to refresh MS token", err);
+            }
+        }
+
+        const success = await api.addUser(email, role, currentMsToken);
         if (success) {
             // Create "Sent" Notification
             try {

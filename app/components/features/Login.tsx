@@ -31,6 +31,7 @@ export const Login = () => {
             if (accessToken) {
                 console.log("Microsoft Token Captured!");
                 setMicrosoftAccessToken(accessToken);
+                sessionStorage.setItem('ms_token_time', Date.now().toString());
             }
             
             const user = result.user;
