@@ -107,12 +107,12 @@ export async function POST(req: Request) {
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL (USE FOR FACTS/DATA): \n${learnedContext}\n` : ""}
 
         STRICT SURGICAL CONTRACT — VIOLATING ANY OF THESE IS A FAILURE:
-        1. ZERO DRIFT: You must return the GROUND TRUTH HTML with EXTREME PRECISION. Do not rephrase, move, or edit any sentence, heading, or paragraph that was not explicitly mentioned in the USER INSTRUCTION. 
+        1. ZERO DRIFT: You must return the GROUND TRUTH HTML with EXTREME PRECISION. Do not rephrase, move, or edit any sentence, heading, or paragraph that was not explicitly mentioned in the USER INSTRUCTION. **EXCEPTION:** If LEARNED CONTEXT is provided, you ARE allowed to "drift" solely to weave in new facts into existing sections.
         2. THREE MODES:
            - INSERT: If asked to add/insert content, find the exact position described and inject the new <p> or <h2>/<h3> blocks. 
            - DELETE: If asked to remove/delete content, locate the specific block and remove it entirely.
            - REPLACE: If asked to change/rename/update a heading or paragraph, swap Only that specific text and maintain all surrounding content exactly as-is.
-        3. URL DATA: if LEARNED CONTEXT is provided, use its facts to inform your insertion.
+        3. URL DATA: if LEARNED CONTEXT is provided, you MUST use its facts to inform your generation or refinement. This is the only case where you may add new technical bullet points to existing sections.
         4. STRUCTURE: Maintain all <h2>, <h3>, and <ul> tags exactly as they appear in the GROUND TRUTH.
         5. FORMAT: Return the final, fully merged HTML within <content> tags. 
         6. META/TITLE: Ensure the <title> and <meta> tags are also included. For meta descriptions, enforce 155 characters EXACTLY and include the primary keyword.
