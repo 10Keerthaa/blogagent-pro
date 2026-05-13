@@ -114,12 +114,15 @@ export async function POST(req: Request) {
         ${sitemapLinks ? `INTERNAL LINKING REFERENCE: ${JSON.stringify(sitemapLinks)}` : ""}
 
         USER INSTRUCTION: ${feedback}
+        ${learnedContext ? `\nLEARNED CONTEXT FROM URL (USE FOR FACTS/DATA): \n${learnedContext}\n` : ""}
         
         STRICT SURGICAL CONTRACT:
-        1. Maintain all <h4> tags exactly as they appear in the GROUND TRUTH.
-        2. Return the final, fully merged HTML within <content> tags. 
-        3. Ensure <title> and <meta> tags are also included.
-        4. Every post MUST have an <h2> Conclusion with the expert CTA link.
+        1. ZERO DRIFT: You must return the GROUND TRUTH HTML with EXTREME PRECISION. Do not rephrase, move, or edit any sentence, heading, or paragraph that was not explicitly mentioned in the USER INSTRUCTION. **EXCEPTION:** If LEARNED CONTEXT is provided, you ARE allowed to "drift" solely to weave in new facts into existing sections.
+        2. Maintain all <h4> tags exactly as they appear in the GROUND TRUTH.
+        3. URL DATA: if LEARNED CONTEXT is provided, you MUST use its facts to inform your generation or refinement. This is the only case where you may add new technical bullet points to existing sections.
+        4. Return the final, fully merged HTML within <content> tags. 
+        5. Ensure <title> and <meta> tags are also included.
+        6. Every post MUST have an <h2> Conclusion with the expert CTA link.
 
         RESULT FORMAT:
         <title>...</title>
