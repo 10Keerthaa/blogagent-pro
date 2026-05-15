@@ -128,7 +128,7 @@ export async function POST(req: Request) {
         <content>Full Updated HTML with surgical changes applied</content>
     ` : BASE_PROMPT;
 
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-preview-04-17:streamGenerateContent`;
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
 
     const response = await client.request({
       url,

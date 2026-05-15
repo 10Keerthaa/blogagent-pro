@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         const projectId = await auth.getProjectId();
 
         // Switched from Imagen 3.0 to Gemini 2.5 Flash Image for richer, topic-aware generation
-        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-preview-04-17:generateContent`;
+        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent`;
 
         // Strip "AI" so the model draws the industry (Farming, Finance) instead of a microchip.
         const cleanPrompt = prompt.replace(/\bAI in\b|\bAI\b/ig, "").trim() || prompt;
