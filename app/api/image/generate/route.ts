@@ -18,10 +18,14 @@ export async function POST(req: Request) {
         const client = await auth.getClient();
         const projectId = await auth.getProjectId();
 
-        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
-        
+        // Switched from Imagen 3.0 to Gemini 2.5 Flash Image for richer, topic-aware generation
+        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-preview-04-17:generateContent`;
+
         // Strip "AI" so the model draws the industry (Farming, Finance) instead of a microchip.
         const cleanPrompt = prompt.replace(/\bAI in\b|\bAI\b/ig, "").trim() || prompt;
+
+        // Aspect ratio: WordPress=4:3, Framer=16:9 — dimensions enforced downstream by imageProcessor
+        const aspectRatio = platform === 'wordpress' ? "4:3" : "16:9";
 
         const imagePrompt = `A breathtaking, high-resolution conceptual digital art representing the core essence of '${cleanPrompt}'.
         Style: Professional enterprise aesthetic, high-contrast lighting, 3D depth, cinematic atmosphere.
@@ -30,27 +34,34 @@ export async function POST(req: Request) {
         
         ABSOLUTE RULES - ZERO EXCEPTIONS:
         - The imagery must be conceptual and sophisticated, not a literal photograph of a device.
+        - NO text, letters, words, numbers, or labels anywhere in the image.
+        - NO microchips, circuit boards, glowing brains, cartoon or clipart elements.
+        - NO people, faces, hands, or human figures.
         
         8k photorealistic enterprise-grade conceptual art.`;
-
-        const negativePrompt = "microchips, circuit boards, glowing brains, text, letters, words, numbers, people, faces, hands, humans, cartoon, clipart, photorealistic humans, realistic people";
 
         const response = await client.request({
             url,
             method: 'POST',
             data: {
-                instances: [{ prompt: imagePrompt }],
-                parameters: { sampleCount: 1, aspectRatio: platform === 'wordpress' ? "4:3" : "16:9", negativePrompt: negativePrompt },
+                contents: [{ role: 'user', parts: [{ text: imagePrompt }] }],
+                generationConfig: {
+                    responseModalities: ['IMAGE'],
+                    imageConfig: { aspect_ratio: aspectRatio }
+                }
             },
         });
 
         const data = response.data as any;
-        if (data.predictions?.[0]?.bytesBase64Encoded) {
-            const base64Data = data.predictions[0].bytesBase64Encoded;
-            const buffer = Buffer.from(base64Data, 'base64');
+        const candidates = data?.candidates || [];
+        const parts = candidates[0]?.content?.parts || [];
+        const imagePart = parts.find((p: any) => p.inlineData?.mimeType?.startsWith('image/'));
 
-            // Bake the Hero Banner (Refinement 3.0 logic already handles the frontend overlay, 
-            // but we still want the base image resized/tinted if needed by imageProcessor)
+        if (imagePart?.inlineData?.data) {
+            const buffer = Buffer.from(imagePart.inlineData.data, 'base64');
+
+            // Downstream pipeline unchanged: resize + purple tint via imageProcessor,
+            // then logo/tag/title overlay via /api/banner, then GCS upload.
             const bannerBuffer = await generateHeroBanner(buffer, title, platform);
 
             const fileName = `featured-${Date.now()}.png`;
@@ -58,7 +69,7 @@ export async function POST(req: Request) {
 
             return NextResponse.json({ imageUrl: generatedImageUrl });
         } else {
-            throw new Error("Invalid image response from Vertex AI");
+            throw new Error("Invalid image response from Gemini 2.5 Flash Image");
         }
 
     } catch (error: any) {
