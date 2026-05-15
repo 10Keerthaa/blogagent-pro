@@ -75,14 +75,15 @@ export async function POST(req: Request) {
         STRICT REQUIREMENTS:
         1. BLOG TITLE: 50-60 characters inside <title> tags.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be highly informative, action-oriented, and densely packed with keyword-rich insights. MUST include the primary keyword.
-        3. BLOG CONTENT: You MUST write a MINIMUM of 1600 words. Target 1600 to 1800 words. MAXIMUM 2000 words. DO NOT abruptly cut off the text; ensure the full structure is completely finished.
+        3. BLOG CONTENT: You MUST write a MINIMUM of 1800 words. Target 1800 to 2100 words. MAXIMUM 2100 words. DO NOT abruptly cut off the text; ensure the full structure is completely finished.
         4. STRUCTURE (Inside <content>):
-           - Start with a strategic 1-paragraph introduction.
-           - Use 5–7 H2 sections for depth. Headings MUST be direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
-           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, extract 2-3 facts that are HIGHLY RELEVANT to the main blog topic. Weave these facts naturally as bullet points inside the most relevant existing H2 section. DO NOT create a separate summary section for them. DO NOT copy exact wording from the URLs (no plagiarism, synthesize in your own words). DO NOT use exact phrases from the URLs as subheadings. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
-           - **SECTION INTROS:** Every H2 section MUST begin with exactly 2-3 sentences of introductory text before any list or sub-points.
-           - **BULLET POINTS:** ALWAYS use HTML <ul> and <li> tags. Every <li> point MUST be exactly 2 full sentences to guarantee sufficient length.
-           - Formatting: Use HTML <b>Bold Headers:</b> for specific sub-points. 
+           - Start with a 4-sentence introduction paragraph that clearly describes the topic and sets the context for the reader.
+           - Use EXACTLY 7 H2 sections total: 5 content H2s + 1 Conclusion H2 + 1 FAQ H2. Headings MUST be direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
+           - **H3 SUB-SECTIONS:** Most of the 5 content H2s MUST contain <h3> sub-headings to break down the topic further. Each <h3> section must be followed by at least 2-3 sentences of prose before any list.
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, extract 2-3 facts that are HIGHLY RELEVANT to the main blog topic. Weave these facts naturally inside the most relevant existing H2 section. DO NOT create a separate summary section for them. DO NOT copy exact wording from the URLs (no plagiarism, synthesize in your own words). DO NOT use exact phrases from the URLs as subheadings. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
+           - **SECTION INTROS:** Every H2 section MUST begin with exactly 2-3 sentences of introductory prose before any sub-section or list.
+           - **BULLET POINTS:** Use HTML <ul> and <li> tags ONLY where contextually appropriate (e.g., listing features, steps, or comparisons). Do NOT force bullet points into every section. Where bullets are used, each <li> can be 1 or 2 sentences.
+           - Formatting: Use HTML <b>Bold Headers:</b> for specific sub-points where needed.
         5. Use <h2> and <h3> for headings. NEVER use Markdown headers (#).
         6. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content (except for the expert CTA).
         7. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
@@ -127,7 +128,7 @@ export async function POST(req: Request) {
         <content>Full Updated HTML with surgical changes applied</content>
     ` : BASE_PROMPT;
 
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-preview-04-17:streamGenerateContent`;
 
     const response = await client.request({
       url,
