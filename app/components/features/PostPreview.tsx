@@ -258,7 +258,7 @@ export const PostPreview = () => {
 
                             {/* Layer 1: Blog Tag */}
                             <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
-                                <img src="/Blog.png" alt="Blog" className="h-8 lg:h-10 w-auto" />
+                                <img src="/linkedlin tag.png" alt="LinkedIn Tag" className="h-8 lg:h-10 w-auto" />
                             </div>
 
                             {/* Layer 2: Title Group */}
