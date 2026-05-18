@@ -121,6 +121,7 @@ export async function POST(req: Request) {
            - Every post MUST have an <h2> Conclusion. 
            - The Conclusion MUST end with a purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
            - DELETE any existing [[CTA_LINK]] placeholders; they are now deprecated.
+        8. RELATIVE REFERENCE RESOLUTION: If the USER INSTRUCTION uses vague or relative language such as "the new subheading", "the section I just added", "the last heading", "the recently added block", or "the new section" — scan the GROUND TRUTH HTML structure from bottom to top and identify the most recently positioned <h2> or <h3> block as the target. Apply the requested action (INSERT, DELETE, or REPLACE) to that identified block. All other content must remain completely untouched.
 
         RESULT FORMAT:
         <title>...</title>

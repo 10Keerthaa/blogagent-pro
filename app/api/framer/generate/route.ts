@@ -123,6 +123,7 @@ export async function POST(req: Request) {
         4. Return the final, fully merged HTML within <content> tags. 
         5. Ensure <title> and <meta> tags are also included.
         6. Every post MUST have an <h2> Conclusion with the expert CTA link.
+        7. RELATIVE REFERENCE RESOLUTION: If the USER INSTRUCTION uses vague or relative language such as "the new subheading", "the section I just added", "the last heading", "the recently added block", or "the new section" — scan the GROUND TRUTH HTML structure from bottom to top and identify the most recently positioned <h4> or <h2> block as the target. Apply the requested action (INSERT, DELETE, or REPLACE) to that identified block. All other content must remain completely untouched.
 
         RESULT FORMAT:
         <title>...</title>
