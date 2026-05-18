@@ -81,7 +81,7 @@ export async function POST(req: Request) {
                                         
                                         <p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0 0 28px 0;">
                                           Hello,<br/><br/>
-                                          You have been formally invited to join the official <strong>Editorial Team</strong> on the <strong>10xBlog agent</strong> platform as an <strong style="color: #7c3aed; background-color: #f5f3ff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">\${role.toUpperCase()}</strong>.
+                                          You have been formally invited to join the official <strong>Editorial Team</strong> on the <strong>10xBlog agent</strong> platform as an <strong style="color: #7c3aed; background-color: #f5f3ff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">${role.toUpperCase()}</strong>.
                                         </p>
 
                                         <!-- PRIVILEGES BLOCK -->
@@ -118,7 +118,7 @@ export async function POST(req: Request) {
                                               <table border="0" cellpadding="0" cellspacing="0">
                                                 <tr>
                                                   <td align="center" bgcolor="#8b5cf6" style="border-radius: 6px;">
-                                                    <a href="\${appUrl}" target="_blank" style="display: inline-block; font-size: 13px; font-weight: 700; color: #ffffff; text-decoration: none; padding: 14px 36px; border: 1px solid #7c3aed; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em;">
+                                                    <a href="${appUrl}" target="_blank" style="display: inline-block; font-size: 13px; font-weight: 700; color: #ffffff; text-decoration: none; padding: 14px 36px; border: 1px solid #7c3aed; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em;">
                                                       Accept Invitation & Sign In
                                                     </a>
                                                   </td>
