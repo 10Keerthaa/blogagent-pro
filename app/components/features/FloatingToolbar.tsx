@@ -142,16 +142,34 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     <button
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => {
-                            // Find existing URL if selection is inside a link
+                            // Find existing URL if selection is inside a link using robust 3-way check
                             let existingUrl = '';
                             const selection = window.getSelection();
                             if (selection && selection.rangeCount > 0) {
                                 const range = selection.getRangeAt(0);
-                                let container = range.commonAncestorContainer;
-                                if (container.nodeType === 3) {
-                                    container = container.parentNode as Node;
+                                let anchor: HTMLAnchorElement | null = null;
+                                
+                                // Check 1: Selection start container
+                                let startNode = range.startContainer;
+                                if (startNode.nodeType === 3) startNode = startNode.parentNode as Node;
+                                if (startNode instanceof HTMLElement) anchor = startNode.closest('a');
+                                
+                                // Check 2: Selection end container
+                                if (!anchor) {
+                                    let endNode = range.endContainer;
+                                    if (endNode.nodeType === 3) endNode = endNode.parentNode as Node;
+                                    if (endNode instanceof HTMLElement) anchor = endNode.closest('a');
                                 }
-                                const anchor = container instanceof HTMLElement ? container.closest('a') : null;
+                                
+                                // Check 3: Common ancestor contains or is an anchor
+                                if (!anchor) {
+                                    let container = range.commonAncestorContainer;
+                                    if (container.nodeType === 3) container = container.parentNode as Node;
+                                    if (container instanceof HTMLElement) {
+                                        anchor = container.closest('a') || container.querySelector('a');
+                                    }
+                                }
+                                
                                 if (anchor) {
                                     existingUrl = anchor.getAttribute('href') || '';
                                 }

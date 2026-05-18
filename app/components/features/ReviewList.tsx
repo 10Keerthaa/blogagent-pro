@@ -319,7 +319,7 @@ export const ReviewList = () => {
                                 setSelectedReviewDraft(updated);
                                 handleSaveManualEdits(updated);
                             }}
-                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px] w-full lg:px-12 px-6
+                            className={`text-black dark:text-white text-base leading-relaxed prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[500px] w-full lg:px-12 px-6 platform-${targetPlatform}
                                 prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold ${isReadOnly ? 'cursor-default' : ''}`}
                             onMouseUp={updateSelectionRect}
                             onSelect={updateSelectionRect}
@@ -330,7 +330,41 @@ export const ReviewList = () => {
                             onKeyDown={(e) => {
                                 if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                                     e.preventDefault();
-                                    const url = window.prompt('Enter the URL:');
+                                    
+                                    // Find if already linked using robust 3-way selection check
+                                    let existingUrl = '';
+                                    const sel = window.getSelection();
+                                    if (sel && sel.rangeCount > 0) {
+                                        const range = sel.getRangeAt(0);
+                                        let anchor: HTMLAnchorElement | null = null;
+                                        
+                                        // Check 1: Selection start container
+                                        let startNode = range.startContainer;
+                                        if (startNode.nodeType === 3) startNode = startNode.parentNode as Node;
+                                        if (startNode instanceof HTMLElement) anchor = startNode.closest('a');
+                                        
+                                        // Check 2: Selection end container
+                                        if (!anchor) {
+                                            let endNode = range.endContainer;
+                                            if (endNode.nodeType === 3) endNode = endNode.parentNode as Node;
+                                            if (endNode instanceof HTMLElement) anchor = endNode.closest('a');
+                                        }
+                                        
+                                        // Check 3: Common ancestor contains or is an anchor
+                                        if (!anchor) {
+                                            let container = range.commonAncestorContainer;
+                                            if (container.nodeType === 3) container = container.parentNode as Node;
+                                            if (container instanceof HTMLElement) {
+                                                anchor = container.closest('a') || container.querySelector('a');
+                                            }
+                                        }
+                                        
+                                        if (anchor) {
+                                            existingUrl = anchor.getAttribute('href') || '';
+                                        }
+                                    }
+
+                                    const url = window.prompt('Enter the URL:', existingUrl);
                                     if (url) handleToolbarAction('link', url);
                                 }
                             }}
