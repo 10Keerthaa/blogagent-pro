@@ -253,7 +253,7 @@ export const PostPreview = () => {
                             />
                             <div
                                 className="absolute inset-0 pointer-events-none"
-                                style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
+                                style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }}
                             />
 
                             {/* Layer 1: Blog Tag */}
@@ -341,7 +341,7 @@ export const PostPreview = () => {
                             />
                             <div
                                 className="absolute inset-0 pointer-events-none"
-                                style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
+                                style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }}
                             />
 
                             {/* Layer 1: Blog Tag */}

@@ -269,7 +269,7 @@ export const ReviewList = () => {
                                             />
                                             <div
                                                 className="absolute inset-0 z-10 pointer-events-none"
-                                                style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
+                                                style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }}
                                             />
                                             <div className="absolute inset-0 z-20 pointer-events-none">
                                                 <img
@@ -333,7 +333,7 @@ export const ReviewList = () => {
                                             />
                                             <div
                                                 className="absolute inset-0 z-10 pointer-events-none"
-                                                style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
+                                                style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }}
                                             />
                                             <div className="absolute inset-0 z-20 pointer-events-none">
                                                 {targetPlatform !== 'framer' && (
@@ -618,7 +618,7 @@ export const ReviewList = () => {
                                     {selectedReviewDraft.imageUrl && (
                                         <div className="relative group overflow-hidden rounded-none shadow-2xl border border-slate-100 dark:border-slate-800 w-full">
                                             <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '4/3' }} />
-                                            <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }} />
+                                            <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }} />
                                             {/* Layer 1: Blog Tag */}
                                             {targetPlatform !== 'framer' && (
                                                 <div className="absolute top-[60px] lg:top-[80px] left-[40px] lg:left-[60px] pointer-events-none">
