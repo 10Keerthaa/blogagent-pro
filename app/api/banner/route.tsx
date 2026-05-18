@@ -7,8 +7,9 @@ export async function POST(request: Request) {
     const { title = 'Blog Title', bgUrl = '', logoBase64 = '', tagBase64 = '', fontBoldBase64 = '', fontRegBase64 = '', platform = 'framer' } = await request.json();
 
     const isWordPress = platform === 'wordpress';
-    const canvasWidth = isWordPress ? 960 : 1376;
-    const canvasHeight = isWordPress ? 720 : 768;
+    const isLinkedIn = platform === 'linkedin';
+    const canvasWidth = isLinkedIn ? 1706 : isWordPress ? 960 : 1376;
+    const canvasHeight = isLinkedIn ? 960 : isWordPress ? 720 : 768;
 
     const titleParts = title.split(':');
     const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');

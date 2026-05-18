@@ -615,7 +615,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setIsProcessingFullPost(true);
         setError(null); setInfographicUrl(null); setPreview(null);
         try {
-            const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : api.generateContent;
+            const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
             
             const fullRawText = await generationFn(
                 { prompt, keywords: keywords.join(', '), primaryKeyword, description, referenceUrl1: referenceUrl1.trim() || undefined, referenceUrl2: referenceUrl2.trim() || undefined, referenceUrl3: referenceUrl3.trim() || undefined, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null },
@@ -649,8 +649,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 } else finalTitle = prompt;
             }
             finalTitle = finalTitle.replace(/\*\*|#/g, '').trim();
-            finalContent = await applySitemapLinks(finalContent);
-            finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
+            if (targetPlatform !== 'linkedin') {
+                finalContent = await applySitemapLinks(finalContent);
+                finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
+            }
 
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
             // Only update the description state if it was empty
@@ -765,7 +767,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         const currentImageUrl = preview?.imageUrl;
         setError(null); setPreview(null);
         try {
-            const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : api.generateContent;
+            const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
             const fullRawText = await generationFn(
                 { prompt: preview?.title || prompt, keywords: keywords.join(', '), primaryKeyword, feedback, currentContent: preview?.content, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null },
                 (chunk: string) => {
@@ -783,8 +785,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const finalTitle = titleMatch ? titleMatch[1].trim() : (preview?.title || prompt);
             const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : (preview?.meta || ""), primaryKeyword);
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
-            finalContent = await applySitemapLinks(finalContent);
-            finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
+            if (targetPlatform !== 'linkedin') {
+                finalContent = await applySitemapLinks(finalContent);
+                finalContent = processKeywordsInContent(finalContent, keywords, primaryKeyword);
+            }
             setPreview({ title: finalTitle, meta: finalMeta, content: finalContent, imageUrl: currentImageUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=960&q=720&q=80' });
             setDescription(finalMeta); setFeedback('');
             const imgUrl = await api.generateFeaturedImage({ prompt: finalTitle, title: finalTitle, platform: targetPlatform });
@@ -797,7 +801,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setError(null);
         try {
             const activeKeyword = primaryKeyword || '';
-            const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : api.generateContent;
+            const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
             const fullRawText = await generationFn({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), primaryKeyword: activeKeyword, feedback, currentContent: selectedReviewDraft.content, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null }, () => { });
             const titleMatch = fullRawText.match(/<title>([\s\S]*?)<\/title>/i);
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
@@ -805,8 +809,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const finalTitle = titleMatch ? titleMatch[1].trim() : (selectedReviewDraft?.title || prompt);
             const finalMeta = sanitizeMetaDescription(metaMatch ? metaMatch[1].trim() : (selectedReviewDraft?.metaDesc || ""), activeKeyword);
             let finalContent = contentMatch ? contentMatch[1].trim() : fullRawText;
-            finalContent = await applySitemapLinks(finalContent);
-            finalContent = processKeywordsInContent(finalContent, keywords, activeKeyword);
+            if (targetPlatform !== 'linkedin') {
+                finalContent = await applySitemapLinks(finalContent);
+                finalContent = processKeywordsInContent(finalContent, keywords, activeKeyword);
+            }
             const updateData = { title: finalTitle, content: finalContent, metaDesc: finalMeta };
             await api.updateDraft({ id: selectedReviewDraft.id, action: 'edit', updateData });
             setSelectedReviewDraft({ ...selectedReviewDraft, ...updateData });

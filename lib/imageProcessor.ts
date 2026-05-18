@@ -26,8 +26,9 @@ function escapeXml(unsafe: string): string {
 export async function generateHeroBanner(imageBuffer: Buffer, title: string, platform: string = 'framer'): Promise<Buffer> {
   try {
     const isWordPress = platform === 'wordpress';
-    const width = isWordPress ? 960 : 1376;
-    const height = isWordPress ? 720 : 768;
+    const isLinkedIn = platform === 'linkedin';
+    const width = isLinkedIn ? 1706 : isWordPress ? 960 : 1376;
+    const height = isLinkedIn ? 960 : isWordPress ? 720 : 768;
 
     // Enforce platform-specific dimensions and apply signature brand purple overlay
     const resizedImage = await sharp(imageBuffer)

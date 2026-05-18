@@ -240,71 +240,140 @@ export const PostPreview = () => {
                     />
                 )}
 
-                {/* EDITABLE TITLE */}
-                <div className="flex justify-center mb-4">
-                    {preview.isHumanized && (
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-100 dark:bg-violet-900/20 dark:border-violet-800 animate-in fade-in slide-in-from-top-1 duration-700">
-                            <Sparkles className="w-3 h-3 text-violet-500" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-violet-600 dark:text-violet-400">
-                                AI Refined & Humanized
-                            </span>
+                {/* DYNAMIC CONTENT LAYOUT (SWAPPED FOR LINKEDIN) */}
+                {targetPlatform === 'linkedin' ? (
+                    <>
+                        {/* 1. Featured Image Overlay (First for LinkedIn) */}
+                        <div className="relative mb-8 group overflow-hidden shadow-2xl ring-1 ring-slate-200 dark:ring-slate-800">
+                            <img
+                                src={preview.imageUrl}
+                                alt={preview.title}
+                                className="w-full h-auto block object-cover"
+                                style={{ aspectRatio: '1706/960' }}
+                            />
+                            <div
+                                className="absolute inset-0 pointer-events-none"
+                                style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
+                            />
+
+                            {/* Layer 1: Blog Tag */}
+                            <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
+                                <img src="/Blog.png" alt="Blog" className="h-8 lg:h-10 w-auto" />
+                            </div>
+
+                            {/* Layer 2: Title Group */}
+                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-center px-[60px] lg:px-[100px]">
+                                <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-center text-center" style={{ lineHeight: '1.2' }}>
+                                    {preview.title.includes(':') ? (
+                                        <>
+                                            <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.2]">{preview.title.split(':')[0]}:</h1>
+                                            <p className="text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 mt-4 m-0 p-0 leading-[1.3]">{preview.title.split(':').slice(1).join(':').trim()}</p>
+                                        </>
+                                    ) : (
+                                        <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.2]">{preview.title}</h1>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Layer 3: Logo */}
+                            <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex z-50">
+                                <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
+                            </div>
                         </div>
-                    )}
-                </div>
-                <h1
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) => {
-                        const newTitle = e.currentTarget.innerText;
-                        setPreview({ ...preview, title: newTitle });
-                        handleAutoSave({ ...preview, title: newTitle });
-                    }}
-                    className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg lg:px-12 px-6 transition-all"
-                >
-                    {preview.title}
-                </h1>
 
-                {/* 10xDS Brand Overlay */}
-                <div className="relative mb-20 group overflow-hidden shadow-2xl ring-1 ring-slate-200 dark:ring-slate-800">
-                    <img
-                        src={preview.imageUrl}
-                        alt={preview.title}
-                        className="w-full h-auto block object-cover"
-                        style={{ aspectRatio: targetPlatform === 'wordpress' ? '960/720' : '1376/768' }}
-                    />
-                    <div
-                        className="absolute inset-0 pointer-events-none"
-                        style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
-                    />
-
-                    {/* Layer 1: Blog Tag */}
-                    {targetPlatform !== 'framer' && (
-                        <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
-                            <img src="/Blog.png" alt="Blog" className="h-8 lg:h-10 w-auto" />
-                        </div>
-                    )}
-
-                    {/* Layer 2: Platform-Specific Title Group */}
-                    <div className={`absolute inset-0 pointer-events-none flex flex-col justify-center ${targetPlatform === 'wordpress' ? 'items-start' : 'items-center px-[60px] lg:px-[100px]'}`} style={{ paddingLeft: targetPlatform === 'wordpress' ? '60px' : undefined, paddingRight: targetPlatform === 'wordpress' ? '60px' : undefined }}>
-                        <div className={`text-white w-full font-sans drop-shadow-2xl flex flex-col ${targetPlatform === 'wordpress' ? 'items-start text-left w-[75%]' : 'items-center text-center'}`} style={{ lineHeight: '1.2' }}>
-                            {preview.title.includes(':') ? (
-                                <>
-                                    <h1 className={`${targetPlatform === 'wordpress' ? 'text-[32px] md:text-[42px] lg:text-[52px]' : 'text-[32px] md:text-[42px] lg:text-[64px]'} font-bold m-0 p-0 leading-[1.2]`}>{preview.title.split(':')[0]}:</h1>
-                                    <p className={`${targetPlatform === 'wordpress' ? 'text-[24px] md:text-[30px] lg:text-[36px] opacity-90 font-normal mt-[14px]' : 'text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 mt-4'} m-0 p-0 leading-[1.3]`}>{preview.title.split(':').slice(1).join(':').trim()}</p>
-                                </>
-                            ) : (
-                                <h1 className={`${targetPlatform === 'wordpress' ? 'text-[32px] md:text-[42px] lg:text-[52px]' : 'text-[32px] md:text-[42px] lg:text-[64px]'} font-bold m-0 p-0 leading-[1.2]`}>{preview.title}</h1>
+                        {/* 2. Blog Title (Second for LinkedIn) */}
+                        <div className="flex justify-center mb-4 mt-8">
+                            {preview.isHumanized && (
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-100 dark:bg-violet-900/20 dark:border-violet-800 animate-in fade-in slide-in-from-top-1 duration-700">
+                                    <Sparkles className="w-3 h-3 text-violet-500" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-violet-600 dark:text-violet-400">
+                                        AI Refined & Humanized
+                                    </span>
+                                </div>
                             )}
                         </div>
-                    </div>
-
-                    {/* Layer 3: Logo */}
-                    {targetPlatform !== 'framer' && (
-                        <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex z-50">
-                            <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
+                        <h1
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) => {
+                                const newTitle = e.currentTarget.innerText;
+                                setPreview({ ...preview, title: newTitle });
+                                handleAutoSave({ ...preview, title: newTitle });
+                            }}
+                            className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg lg:px-12 px-6 transition-all"
+                        >
+                            {preview.title}
+                        </h1>
+                    </>
+                ) : (
+                    <>
+                        {/* 1. Blog Title (First for WordPress / Framer) */}
+                        <div className="flex justify-center mb-4">
+                            {preview.isHumanized && (
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-100 dark:bg-violet-900/20 dark:border-violet-800 animate-in fade-in slide-in-from-top-1 duration-700">
+                                    <Sparkles className="w-3 h-3 text-violet-500" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-violet-600 dark:text-violet-400">
+                                        AI Refined & Humanized
+                                    </span>
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
+                        <h1
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) => {
+                                const newTitle = e.currentTarget.innerText;
+                                setPreview({ ...preview, title: newTitle });
+                                handleAutoSave({ ...preview, title: newTitle });
+                            }}
+                            className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg lg:px-12 px-6 transition-all"
+                        >
+                            {preview.title}
+                        </h1>
+
+                        {/* 2. Featured Image Overlay (Second for WordPress / Framer) */}
+                        <div className="relative mb-20 group overflow-hidden shadow-2xl ring-1 ring-slate-200 dark:ring-slate-800">
+                            <img
+                                src={preview.imageUrl}
+                                alt={preview.title}
+                                className="w-full h-auto block object-cover"
+                                style={{ aspectRatio: targetPlatform === 'wordpress' ? '960/720' : '1376/768' }}
+                            />
+                            <div
+                                className="absolute inset-0 pointer-events-none"
+                                style={{ backgroundColor: 'rgba(139, 92, 246, 0.60)' }}
+                            />
+
+                            {/* Layer 1: Blog Tag */}
+                            {targetPlatform !== 'framer' && (
+                                <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
+                                    <img src="/Blog.png" alt="Blog" className="h-8 lg:h-10 w-auto" />
+                                </div>
+                            )}
+
+                            {/* Layer 2: Title Group */}
+                            <div className={`absolute inset-0 pointer-events-none flex flex-col justify-center ${targetPlatform === 'wordpress' ? 'items-start' : 'items-center px-[60px] lg:px-[100px]'}`} style={{ paddingLeft: targetPlatform === 'wordpress' ? '60px' : undefined, paddingRight: targetPlatform === 'wordpress' ? '60px' : undefined }}>
+                                <div className={`text-white w-full font-sans drop-shadow-2xl flex flex-col ${targetPlatform === 'wordpress' ? 'items-start text-left w-[75%]' : 'items-center text-center'}`} style={{ lineHeight: '1.2' }}>
+                                    {preview.title.includes(':') ? (
+                                        <>
+                                            <h1 className={`${targetPlatform === 'wordpress' ? 'text-[32px] md:text-[42px] lg:text-[52px]' : 'text-[32px] md:text-[42px] lg:text-[64px]'} font-bold m-0 p-0 leading-[1.2]`}>{preview.title.split(':')[0]}:</h1>
+                                            <p className={`${targetPlatform === 'wordpress' ? 'text-[24px] md:text-[30px] lg:text-[36px] opacity-90 font-normal mt-[14px]' : 'text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 mt-4'} m-0 p-0 leading-[1.3]`}>{preview.title.split(':').slice(1).join(':').trim()}</p>
+                                        </>
+                                    ) : (
+                                        <h1 className={`${targetPlatform === 'wordpress' ? 'text-[32px] md:text-[42px] lg:text-[52px]' : 'text-[32px] md:text-[42px] lg:text-[64px]'} font-bold m-0 p-0 leading-[1.2]`}>{preview.title}</h1>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Layer 3: Logo */}
+                            {targetPlatform !== 'framer' && (
+                                <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex z-50">
+                                    <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
 
                 {/* Content Area */}
                 <div
