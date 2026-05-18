@@ -106,8 +106,8 @@ interface DashboardContextType {
     isRefiningSelection: boolean;
     resetEditorState: () => void;
     handleRefineSelection: (text: string, action: string, onUpdate: (newText: string) => void) => Promise<void>;
-    targetPlatform: 'wordpress' | 'framer';
-    setTargetPlatform: (v: 'wordpress' | 'framer') => void;
+    targetPlatform: 'wordpress' | 'framer' | 'linkedin';
+    setTargetPlatform: (v: 'wordpress' | 'framer' | 'linkedin') => void;
     deleteInProgressDraft: (userId: string) => Promise<any>;
     microsoftAccessToken: string | null;
     setMicrosoftAccessToken: (v: string | null) => void;
@@ -171,7 +171,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [isInfographicRefining, setIsInfographicRefining] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState<number[]>([LOCKED_CATEGORY_ID]);
     const [isProcessingFullPost, setIsProcessingFullPost] = useState(false);
-    const [targetPlatform, setTargetPlatform] = useState<'wordpress' | 'framer'>('wordpress');
+    const [targetPlatform, setTargetPlatform] = useState<'wordpress' | 'framer' | 'linkedin'>('wordpress');
 
     // --- HELPER FUNCTIONS ---
 
@@ -209,6 +209,11 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const fetchSitemap = useCallback(async () => {
+        if (targetPlatform === 'linkedin') {
+            setSitemapData({});
+            setAnchorMap({});
+            return;
+        }
         try {
             const r = await fetch(`/api/sitemap-urls?platform=${targetPlatform}`);
             const d = await r.json();

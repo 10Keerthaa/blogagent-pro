@@ -43,20 +43,33 @@ export const SidebarForm = () => {
                     <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner h-14">
                         <button
                             onClick={() => setTargetPlatform('wordpress')}
-                            className={`flex-1 flex items-center justify-center gap-3 h-full text-xs font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
                         >
-                            <Globe className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'wordpress' ? 'scale-110' : 'scale-100 opacity-70'}`} />
+                            <Globe className={`w-3.5 h-3.5 transition-transform duration-300 ${targetPlatform === 'wordpress' ? 'scale-110' : 'scale-100 opacity-70'}`} />
                             WordPress
                         </button>
                         <button
                             onClick={() => setTargetPlatform('framer')}
-                            className={`flex-1 flex items-center justify-center gap-3 h-full text-xs font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
                         >
-                            <Code className={`w-4 h-4 transition-transform duration-300 ${targetPlatform === 'framer' ? 'scale-110' : 'scale-100 opacity-70'}`} />
+                            <Code className={`w-3.5 h-3.5 transition-transform duration-300 ${targetPlatform === 'framer' ? 'scale-110' : 'scale-100 opacity-70'}`} />
                             Framer
                         </button>
+                        <button
+                            onClick={() => setTargetPlatform('linkedin')}
+                            className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'linkedin' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                        >
+                            <Link2 className={`w-3.5 h-3.5 transition-transform duration-300 ${targetPlatform === 'linkedin' ? 'scale-110' : 'scale-100 opacity-70'}`} />
+                            LinkedIn
+                        </button>
                         <div
-                            className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white dark:bg-slate-700 shadow-md rounded-xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${targetPlatform === 'framer' ? 'translate-x-full left-0 ml-1.5' : 'left-1.5'}`}
+                            className={`absolute top-1.5 bottom-1.5 w-[calc(33.33%-6px)] bg-white dark:bg-slate-700 shadow-md rounded-xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${
+                                targetPlatform === 'framer' 
+                                    ? 'left-[33.33%] ml-0.5' 
+                                    : targetPlatform === 'linkedin' 
+                                        ? 'left-[66.66%] ml-[1px]' 
+                                        : 'left-1.5'
+                            }`}
                         />
                     </div>
                 </div>

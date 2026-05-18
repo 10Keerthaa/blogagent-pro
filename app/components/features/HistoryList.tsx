@@ -50,6 +50,7 @@ export const HistoryList = () => {
     const filteredHistory = React.useMemo(() => {
         return history.filter(item => {
             if (targetPlatform === 'framer') return item.platform === 'framer';
+            if (targetPlatform === 'linkedin') return item.platform === 'linkedin';
             // WordPress mode shows both wordpress-tagged and legacy (null) posts
             return item.platform === 'wordpress' || !item.platform;
         });
@@ -190,7 +191,13 @@ export const HistoryList = () => {
                                                 <div className="px-4 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-100/50 dark:border-emerald-900/50 leading-none">
                                                     Published
                                                 </div>
-                                                {item.platform === 'framer' ? <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-400 border border-fuchsia-200 dark:border-fuchsia-800 leading-none">Framer</span> : <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800 leading-none">WordPress</span>}
+                                                {item.platform === 'framer' ? (
+                                                    <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-400 border border-fuchsia-200 dark:border-fuchsia-800 leading-none">Framer</span>
+                                                ) : item.platform === 'linkedin' ? (
+                                                    <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400 border border-sky-200 dark:border-sky-800 leading-none">LinkedIn</span>
+                                                ) : (
+                                                    <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800 leading-none">WordPress</span>
+                                                )}
                                             </div>
 
                                             {/* Stacked details for Reviewer and Publisher */}

@@ -166,9 +166,10 @@ body {
   margin-bottom: 2.25rem !important; /* Equates to roughly mb-9 for clear separation */
 }
 
-/* === WordPress Typography Refinement === */
-/* Refines the H3 subheadings for perfect editorial hierarchy - ONLY for WordPress posts */
-.platform-wordpress h3 {
+/* === WordPress & LinkedIn Typography Refinement === */
+/* Refines the H3 subheadings for perfect editorial hierarchy - for both WordPress and LinkedIn posts */
+.platform-wordpress h3,
+.platform-linkedin h3 {
   font-size: 1.25rem !important; /* Reduces H3 size from 24px to a clean 20px */
   font-weight: 500 !important;   /* Softens the bold weight to a premium medium */
   color: var(--text-primary);    /* Keeps it dark and readable */

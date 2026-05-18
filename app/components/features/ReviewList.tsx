@@ -189,6 +189,7 @@ export const ReviewList = () => {
         
         const platformBase = reviewDrafts.filter(d => {
             if (targetPlatform === 'framer') return d.platform === 'framer';
+            if (targetPlatform === 'linkedin') return d.platform === 'linkedin';
             // WordPress mode shows both wordpress-tagged and legacy (null) posts
             return d.platform === 'wordpress' || !d.platform;
         });
@@ -226,7 +227,7 @@ export const ReviewList = () => {
                             {/* Right: Wordpress Controls */}
                             <div className="flex items-center justify-end gap-3 pr-2">
                                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1 opacity-70">
-                                    {targetPlatform === 'framer' ? 'Framer Category' : 'Wordpress Category'}
+                                    {targetPlatform === 'framer' ? 'Framer Category' : targetPlatform === 'linkedin' ? 'LinkedIn Category' : 'WordPress Category'}
                                 </span>
                                 <div className="min-w-[180px]">
                                     <CategorySelector 
