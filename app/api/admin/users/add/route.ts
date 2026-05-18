@@ -52,40 +52,94 @@ export async function POST(req: Request) {
             const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://blogagent-pro.vercel.app';
             const emailContent = {
                 message: {
-                    subject: "You're Invited: Join the BlogAgent Pro Editorial Team",
+                    subject: "You're Invited: Join the 10xBlog agent Editorial Team",
                     body: {
                         contentType: "HTML",
                         content: `
-                            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 12px; background-color: #ffffff;">
-                                <div style="text-align: center; margin-bottom: 30px;">
-                                    <div style="display: inline-block; padding: 12px; background-color: #8b5cf6; border-radius: 50%; color: white; font-weight: bold; font-size: 24px; margin-bottom: 10px;">⚡</div>
-                                    <h1 style="color: #1e1b4b; font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.02em;">BlogAgent <span style="color: #8b5cf6;">Pro</span></h1>
-                                </div>
-                                
-                                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-                                    Hello, <br/><br/>
-                                    You have been invited to join the 10xDS editorial team as an <strong>${role.toUpperCase()}</strong>.
-                                </p>
-                                
-                                <div style="background-color: #f8fafc; border-radius: 8px; padding: 24px; margin-bottom: 24px; border-left: 4px solid #8b5cf6;">
-                                    <p style="margin: 0; color: #1e293b; font-weight: 600; font-size: 14px;">Platform Privileges:</p>
-                                    <ul style="margin: 10px 0 0 20px; color: #64748b; font-size: 14px; padding: 0;">
-                                        <li>High-Fidelity Content Generation</li>
-                                        <li>Executive Editorial Review</li>
-                                        <li>Direct CMS Integration</li>
-                                    </ul>
-                                </div>
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif; padding: 40px 0;">
+                              <tr>
+                                <td align="center">
+                                  
+                                  <table border="0" cellpadding="0" cellspacing="0" width="560" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); overflow: hidden;">
+                                    
+                                    <!-- BRAND HEADER BAR -->
+                                    <tr>
+                                      <td align="center" style="background-color: #0f172a; padding: 28px 0; border-bottom: 3px solid #8b5cf6;">
+                                        <span style="color: #ffffff; font-size: 20px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
+                                          10xBlog <span style="color: #8b5cf6;">agent</span>
+                                        </span>
+                                      </td>
+                                    </tr>
 
-                                <div style="text-align: center; margin-top: 35px;">
-                                    <a href="${appUrl}" style="background-color: #8b5cf6; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px; display: inline-block; box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.2);">
-                                        ACCEPT INVITATION & SIGN IN
-                                    </a>
-                                </div>
+                                    <!-- BODY CONTENT -->
+                                    <tr>
+                                      <td style="padding: 40px 48px;">
+                                        
+                                        <p style="color: #0f172a; font-size: 16px; font-weight: 600; margin: 0 0 16px 0;">
+                                          Invitation to Join the 10xDS Editorial Team
+                                        </p>
+                                        
+                                        <p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0 0 28px 0;">
+                                          Hello,<br/><br/>
+                                          You have been formally invited to join the official <strong>Editorial Team</strong> on the <strong>10xBlog agent</strong> platform as an <strong style="color: #7c3aed; background-color: #f5f3ff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">\${role.toUpperCase()}</strong>.
+                                        </p>
 
-                                <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
-                                    This invitation was sent by your administrator. Please sign in using your corporate Microsoft account to activate your access.
-                                </p>
-                            </div>
+                                        <!-- PRIVILEGES BLOCK -->
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 32px;">
+                                          <tr>
+                                            <td style="padding: 20px 24px;">
+                                              <p style="color: #0f172a; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin: 0 0 12px 0;">
+                                                Your Platform Access Includes:
+                                              </p>
+                                              
+                                              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                <tr>
+                                                  <td width="24" valign="top" style="color: #8b5cf6; font-weight: bold; font-size: 14px; padding-bottom: 10px;">✓</td>
+                                                  <td style="color: #334155; font-size: 13px; padding-bottom: 10px; font-weight: 500; line-height: 1.4;">High-Fidelity Content Generation & Humanizer</td>
+                                                </tr>
+                                                <tr>
+                                                  <td width="24" valign="top" style="color: #8b5cf6; font-weight: bold; font-size: 14px; padding-bottom: 10px;">✓</td>
+                                                  <td style="color: #334155; font-size: 13px; padding-bottom: 10px; font-weight: 500; line-height: 1.4;">Executive Review & Approval Pipeline</td>
+                                                </tr>
+                                                <tr>
+                                                  <td width="24" valign="top" style="color: #8b5cf6; font-weight: bold; font-size: 14px;">✓</td>
+                                                  <td style="color: #334155; font-size: 13px; font-weight: 500; line-height: 1.4;">Direct Framer & WordPress CMS Publishing</td>
+                                                </tr>
+                                              </table>
+                                              
+                                            </td>
+                                          </tr>
+                                        </table>
+
+                                        <!-- SOLID BULLETPROOF BUTTON -->
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                          <tr>
+                                            <td align="center" style="padding: 12px 0 24px 0;">
+                                              <table border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                  <td align="center" bgcolor="#8b5cf6" style="border-radius: 6px;">
+                                                    <a href="\${appUrl}" target="_blank" style="display: inline-block; font-size: 13px; font-weight: 700; color: #ffffff; text-decoration: none; padding: 14px 36px; border: 1px solid #7c3aed; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em;">
+                                                      Accept Invitation & Sign In
+                                                    </a>
+                                                  </td>
+                                                </tr>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </table>
+
+                                        <!-- HELP TEXT / DISCLAIMER -->
+                                        <p style="color: #94a3b8; font-size: 11px; line-height: 1.5; text-align: center; margin: 28px 0 0 0; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                                          This invitation was generated automatically. To secure your account, please activate your access to **10xBlog agent** using your corporate Microsoft credentials.
+                                        </p>
+
+                                      </td>
+                                    </tr>
+                                  </table>
+
+                                </td>
+                              </tr>
+                            </table>
                         `
                     },
                     toRecipients: [
