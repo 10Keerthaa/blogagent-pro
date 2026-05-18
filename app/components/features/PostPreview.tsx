@@ -148,14 +148,26 @@ export const PostPreview = () => {
                 const sel = window.getSelection();
                 if (!sel || sel.isCollapsed || !value) return;
                 const range = sel.getRangeAt(0);
-                const anchor = document.createElement('a');
-                anchor.href = value;
-                anchor.target = '_blank';
-                anchor.rel = 'noopener noreferrer';
-                anchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
-                // Wrap the selected fragment in the <a> tag
-                anchor.appendChild(range.extractContents());
-                range.insertNode(anchor);
+
+                // Check if selection is already inside an anchor to edit existing link
+                let container = range.commonAncestorContainer;
+                if (container.nodeType === 3) {
+                    container = container.parentNode as Node;
+                }
+                const existingAnchor = container instanceof HTMLElement ? container.closest('a') : null;
+
+                if (existingAnchor) {
+                    existingAnchor.href = value;
+                } else {
+                    const anchor = document.createElement('a');
+                    anchor.href = value;
+                    anchor.target = '_blank';
+                    anchor.rel = 'noopener noreferrer';
+                    anchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
+                    // Wrap the selected fragment in the <a> tag
+                    anchor.appendChild(range.extractContents());
+                    range.insertNode(anchor);
+                }
                 // Collapse selection after the link
                 sel.collapseToEnd();
                 // --- 4. State Sync ---
@@ -319,7 +331,23 @@ export const PostPreview = () => {
                         // Check for Ctrl+K or Cmd+K
                         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                             e.preventDefault(); // Stop browser search/address bar
-                            const url = window.prompt('Enter the URL:');
+                            
+                            // Find if already linked
+                            let existingUrl = '';
+                            const sel = window.getSelection();
+                            if (sel && sel.rangeCount > 0) {
+                                const range = sel.getRangeAt(0);
+                                let container = range.commonAncestorContainer;
+                                if (container.nodeType === 3) {
+                                    container = container.parentNode as Node;
+                                }
+                                const anchor = container instanceof HTMLElement ? container.closest('a') : null;
+                                if (anchor) {
+                                    existingUrl = anchor.getAttribute('href') || '';
+                                }
+                            }
+
+                            const url = window.prompt('Enter the URL:', existingUrl);
                             if (url) {
                                 handleToolbarAction('link', url);
                             }

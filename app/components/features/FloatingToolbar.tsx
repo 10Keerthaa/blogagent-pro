@@ -141,7 +141,24 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     </button>
                     <button
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                        onClick={() => setShowLinkInput(true)}
+                        onClick={() => {
+                            // Find existing URL if selection is inside a link
+                            let existingUrl = '';
+                            const selection = window.getSelection();
+                            if (selection && selection.rangeCount > 0) {
+                                const range = selection.getRangeAt(0);
+                                let container = range.commonAncestorContainer;
+                                if (container.nodeType === 3) {
+                                    container = container.parentNode as Node;
+                                }
+                                const anchor = container instanceof HTMLElement ? container.closest('a') : null;
+                                if (anchor) {
+                                    existingUrl = anchor.getAttribute('href') || '';
+                                }
+                            }
+                            setLinkUrl(existingUrl);
+                            setShowLinkInput(true);
+                        }}
                         className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
                         title="Add Link"
                     >
