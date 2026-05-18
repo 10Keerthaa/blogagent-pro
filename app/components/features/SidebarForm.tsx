@@ -45,9 +45,7 @@ export const SidebarForm = () => {
                             onClick={() => setTargetPlatform('wordpress')}
                             className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
                         >
-                            <svg viewBox="0 0 24 24" className={`w-3.5 h-3.5 fill-current transition-transform duration-300 ${targetPlatform === 'wordpress' ? 'scale-110' : 'scale-100 opacity-70'}`} xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.16 18.25c-.99 0-1.95-.2-2.83-.55l3.18-9.21 2.21 6.07c1.39-1.08 2.28-2.77 2.28-4.67 0-.84-.18-1.64-.5-2.36L12.16 20.25zM3.75 12c0 2.21.87 4.22 2.29 5.71L2.71 8.56C2.39 9.63 2.25 10.79 2.25 12zm7.64-4.32c.17.01.34.02.47.02.58 0 1.26-.07 1.26-.07.31-.02.35.42.04.46 0 0-.31.04-.66.06l2.08 6.2 1.25-3.76-.89-.04c-.31-.02-.35-.46-.04-.46 0 0 .69.07 1.24.07.53 0 1.23-.07 1.23-.07.31-.02.35.42.04.46 0 0-.29.04-.62.06l-1.35 3.99 1.3 3.88c.49-.02.87-.06.87-.06.31-.02.35.42.04.46 0 0-.58.06-1.19.06-.57 0-1.26-.06-1.26-.06-.31-.02-.35-.46-.04-.46 0 0 .34.04.65.06l-1.69-4.99-2.07 6-3.38-9.29c.33-.02.64-.06.64-.06.31-.02.27-.46-.04-.46 0 0-.55.04-1.13.04-.47 0-1.01-.04-1.01-.04-.31-.02-.35.42-.04.46 0 0 .35.04.62.06l3.52 9.69-3.21-9.45c-.32-.56-.69-1.17-.97-1.85l2.25 6.19-.63-.06c-.31-.02-.35-.46-.04-.46 0 0 .55.07 1.13.07.55 0 1.11-.07 1.11-.07.31-.02.35.42.04.46 0 0-.31.04-.62.06l1.36 3.73 1.23-3.73-.62-.06c-.31-.02-.27-.46.04-.46z"/>
-                            </svg>
+                            <span className={`text-[11px] font-black leading-none transition-transform duration-300 ${targetPlatform === 'wordpress' ? 'scale-110 text-slate-900 dark:text-white' : 'scale-100 text-slate-400 opacity-70'}`}>W</span>
                             WordPress
                         </button>
                         <button

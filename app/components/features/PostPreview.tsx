@@ -257,13 +257,13 @@ export const PostPreview = () => {
                             />
 
                             {/* Layer 1: Blog Tag */}
-                            <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
-                                <img src="/linkedlin tag.png" alt="LinkedIn Tag" className="h-8 lg:h-10 w-auto" />
+                            <div className="absolute top-[24px] lg:top-[32px] left-[24px] lg:left-[32px] pointer-events-none">
+                                <img src="/linkedlin tag.png" alt="LinkedIn Tag" className="h-5 lg:h-7 w-auto" />
                             </div>
 
                             {/* Layer 2: Title Group */}
-                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-center px-[60px] lg:px-[100px]">
-                                <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-center text-center" style={{ lineHeight: '1.2' }}>
+                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start px-[24px] lg:px-[32px]">
+                                <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-start text-left w-[75%]" style={{ lineHeight: '1.2' }}>
                                     {preview.title.includes(':') ? (
                                         <>
                                             <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.2]">{preview.title.split(':')[0]}:</h1>
