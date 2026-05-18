@@ -220,11 +220,12 @@ export const SidebarForm = () => {
 
             {/* STICKY ACTION ZONE */}
             <div className={`px-8 py-8 border-t border-slate-100 dark:border-slate-800 space-y-3 shrink-0 ${isReadOnly ? 'hidden' : ''}`}>
-                {user && hasResumeDraft && (
+                {user && (
                     <Button
                         variant="secondary"
                         onClick={handleResumeDraft}
                         isLoading={isResuming}
+                        disabled={!hasResumeDraft}
                         className="w-full text-[11px] font-bold uppercase tracking-widest bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 py-6 rounded-xl transition-all"
                     >
                         <RefreshCw className={`w-3.5 h-3.5 mr-2 ${isResuming ? 'animate-spin' : ''}`} />
