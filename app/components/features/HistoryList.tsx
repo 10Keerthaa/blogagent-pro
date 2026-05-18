@@ -192,11 +192,11 @@ export const HistoryList = () => {
                                                     Published
                                                 </div>
                                                 {item.platform === 'framer' ? (
-                                                    <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-400 border border-fuchsia-200 dark:border-fuchsia-800 leading-none">Framer</span>
+                                                    <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-slate-950 text-white dark:bg-slate-800 dark:text-slate-100 border border-slate-900 dark:border-slate-700 leading-none">Framer</span>
                                                 ) : item.platform === 'linkedin' ? (
                                                     <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400 border border-sky-200 dark:border-sky-800 leading-none">LinkedIn</span>
                                                 ) : (
-                                                    <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800 leading-none">WordPress</span>
+                                                    <span className="px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border border-violet-200 dark:border-violet-800 leading-none">WordPress</span>
                                                 )}
                                             </div>
 
