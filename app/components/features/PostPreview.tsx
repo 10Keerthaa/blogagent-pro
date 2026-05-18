@@ -318,7 +318,7 @@ export const PostPreview = () => {
                         setPreview({ ...preview, content: newContent });
                         handleAutoSave({ ...preview, content: newContent });
                     }}
-                    className="editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif lg:px-12 px-6"
+                    className={`editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif lg:px-12 px-6 platform-${targetPlatform}`}
                     style={{ minHeight: '50vh' }}
                     onMouseUp={updateSelectionRect}
                     onSelect={updateSelectionRect}

@@ -28,21 +28,15 @@ export async function GET(request: Request) {
         const sitemapUrl = isFramer ? "https://www.10xds.ai/sitemap.xml" : "https://10xds.com/sitemap.xml";
         const dbDocument = isFramer ? 'sitemap-cache-framer' : 'sitemap-cache';
 
-        // 1. Internal Helper: Fast Slug-based Map (Baseline Fallback)
         function generateSlugMap(urls: string[]) {
             const map: Record<string, string> = {};
             urls.forEach(url => {
                 try {
                     const slug = new URL(url).pathname.replace(/\/$/, "").replace(/^\//, "").replace(/-/g, " ");
                     if (!slug) return;
-                    const segments = slug.split(/\s+/).filter(s => s.length >= 3 && !STOP_WORDS.has(s));
-                    for (let i = 0; i < segments.length; i++) {
-                        for (let len = 2; len <= 4; len++) {
-                            if (i + len <= segments.length) {
-                                const phrase = segments.slice(i, i + len).join(" ");
-                                if (phrase.length >= 8 && !map[phrase]) map[phrase] = url;
-                            }
-                        }
+                    const cleaned = slug.split(/\s+/).filter(s => s.length >= 3 && !STOP_WORDS.has(s)).join(" ");
+                    if (cleaned.length >= 8 && !map[cleaned]) {
+                        map[cleaned] = url;
                     }
                 } catch (e) { }
             });
@@ -51,6 +45,7 @@ export async function GET(request: Request) {
 
         // 2. Load Firestore Cache first (Isolated by Platform)
         const docRef = db.collection('config').doc(dbDocument);
+        const stateRef = db.collection('config').doc(dbDocument + '-state');
         let cachedData: any = {
             timestamp: 0,
             keywordMap: {},
@@ -62,10 +57,22 @@ export async function GET(request: Request) {
         };
 
         try {
-            const doc = await docRef.get();
+            const [doc, stateDoc] = await Promise.all([docRef.get(), stateRef.get()]);
             if (doc.exists) {
-                cachedData = { ...cachedData, ...doc.data() };
-            } else if (!isFramer && fs.existsSync(CACHE_FILE)) {
+                const cData = doc.data() || {};
+                cachedData.timestamp = cData.timestamp || 0;
+                cachedData.keywordMap = cData.keywordMap || {};
+                cachedData.anchorMap = cData.anchorMap || {};
+                cachedData.lastDiscovery = cData.lastDiscovery || 0;
+            }
+            if (stateDoc.exists) {
+                const sData = stateDoc.data() || {};
+                cachedData.crawledUrls = sData.crawledUrls || [];
+                cachedData.aiCrawledUrls = sData.aiCrawledUrls || [];
+                cachedData.discoveredUrls = sData.discoveredUrls || [];
+            }
+            
+            if (Object.keys(cachedData.keywordMap).length === 0 && !isFramer && fs.existsSync(CACHE_FILE)) {
                 try {
                     const localData = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
                     cachedData = { ...cachedData, ...localData };
@@ -83,7 +90,7 @@ export async function GET(request: Request) {
             async function getLocs(url: string, depth = 0): Promise<string[]> {
                 if (depth > 5) return []; 
                 try {
-                    const resp = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(4000) });
+                    const resp = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(15000) });
                     if (!resp.ok) return [];
                     const text = await resp.text();
                     const locMatch = /<loc>(.*?)<\/loc>/g;
@@ -194,16 +201,20 @@ export async function GET(request: Request) {
         const updatedCrawledUrls = Array.from(new Set([...alreadyCrawled, ...toCrawl]));
         const updatedAiCrawledUrls = Array.from(new Set([...aiCrawledUrls, ...toAiCrawl]));
 
-        await docRef.set({
-            ...cachedData,
-            timestamp: Date.now(),
-            keywordMap: newKeywordMap,
-            crawledUrls: updatedCrawledUrls,
-            anchorMap: newAnchorMap,
-            aiCrawledUrls: updatedAiCrawledUrls,
-            lastDiscovery: cachedData.lastDiscovery,
-            discoveredUrls: urls
-        });
+        // Split data to bypass Firestore 1MB document size limit
+        await Promise.all([
+            docRef.set({
+                timestamp: Date.now(),
+                keywordMap: newKeywordMap,
+                anchorMap: newAnchorMap,
+                lastDiscovery: cachedData.lastDiscovery || Date.now()
+            }),
+            stateRef.set({
+                crawledUrls: updatedCrawledUrls,
+                aiCrawledUrls: updatedAiCrawledUrls,
+                discoveredUrls: urls
+            })
+        ]);
 
         const anchorPhraseMap: Record<string, string> = {};
         for (const [u, anchors] of Object.entries(newAnchorMap)) {
