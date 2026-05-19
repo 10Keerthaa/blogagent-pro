@@ -75,9 +75,9 @@ export async function POST(req: Request) {
         STRICT PROMPT BLUEPRINT & RULES:
         1. TITLE: 50-60 characters inside <title> tags.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be action-oriented, densely packed with keyword-rich insights, and include the primary keyword.
-        3. CONTENT WORD COUNT: You MUST write strictly between 1500 and 2000 words inside <content> tags. Ensure the post does not abruptly cut off; the entire structure must be completely and beautifully finished.
+        3. CONTENT WORD COUNT: You MUST write strictly between 1500 and 2000 words inside <content> tags. The entire content MUST never exceed 2100 words under any circumstances. Ensure the post does not abruptly cut off; the entire structure must be completely and beautifully finished.
         4. TONE PROFILE: Authoritative & Domain-Native, Visionary yet Pragmatic, Collaborative & Reassuring (framing innovation as a digital co-pilot elevating humans).
-        5. EXECUTIVE SCANNABILITY: Every single paragraph throughout the article MUST contain exactly 3 to 4 sentences. Avoid dense walls of text.
+        5. EXECUTIVE SCANNABILITY: Every single paragraph throughout the article MUST contain exactly 3 to 4 sentences, with ONE strict exception: the very first introductory description paragraph immediately after the opening <content> tag (before the first <h2> subheading) MUST consist of strictly exactly 3 sentences, and not more. Avoid dense walls of text.
         6. HEADINGS & HIERARCHY:
            - Use HTML <h2> and <h3> tags ONLY.
            - NEVER use Markdown headers (#).
@@ -111,11 +111,11 @@ export async function POST(req: Request) {
         STRICT SURGICAL CONTRACT — VIOLATING ANY OF THESE IS A FAILURE:
         1. ZERO DRIFT: You must return the GROUND TRUTH HTML with EXTREME PRECISION. Do not rephrase, move, or edit any sentence, heading, or paragraph that was not explicitly mentioned in the USER INSTRUCTION. **EXCEPTION:** If LEARNED CONTEXT is provided, you ARE allowed to "drift" solely to weave in new facts into existing sections.
         2. TONE & FORMAT ALIGNMENT: Any new sections or updates must strictly follow the LinkedIn style guide:
-           - Every paragraph must consist of exactly 3 to 4 sentences.
+           - Every paragraph must consist of exactly 3 to 4 sentences, with the sole exception of the very first introductory description paragraph immediately after the opening <content> tag, which must consist of strictly exactly 3 sentences.
            - H3 headings must only have prose paragraphs (no bullets).
            - Bullets can only live under H2 headings, must follow the <b>Bolded Core Concept:</b> followed by exactly 2 sentences rule, and every single bullet item MUST live inside its own separate <li> tag (never squished inline in a single paragraph).
            - No FAQ section under any circumstances.
-           - Word count stays within 1500 to 2000 words.
+           - Word count stays within 1500 to 2000 words, and never exceeds 2100 words.
         3. THREE MODES:
            - INSERT: If asked to add/insert content, inject the new H2, H3 or paragraph blocks.
            - DELETE: If asked to remove content, locate and delete it.
