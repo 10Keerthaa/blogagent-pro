@@ -257,12 +257,12 @@ export const PostPreview = () => {
                             />
 
                             {/* Layer 1: Blog Tag */}
-                            <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
-                                <img src="/linkedlin tag.png" alt="LinkedIn Tag" className="h-10 lg:h-14 w-auto" />
+                            <div className="absolute top-0 pointer-events-none" style={{ left: '80px' }}>
+                                <img src="/linkedlin tag.png" alt="LinkedIn Tag" className="h-16 lg:h-24 w-auto object-contain" />
                             </div>
 
                             {/* Layer 2: Title Group */}
-                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start pl-[30px] lg:pl-[60px] pr-[30px] lg:pr-[60px]">
+                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start" style={{ paddingLeft: '80px', paddingRight: '80px' }}>
                                 <div className="flex flex-row items-stretch gap-6 pl-6 border-l-8 border-[#2DD4BF]">
                                     <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-start text-left w-[75%]" style={{ lineHeight: '1.2' }}>
                                         {preview.title.includes(':') ? (
@@ -278,7 +278,7 @@ export const PostPreview = () => {
                             </div>
 
                             {/* Layer 3: Logo */}
-                            <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex z-50">
+                            <div className="absolute pointer-events-none flex z-50" style={{ bottom: '80px', right: '80px' }}>
                                 <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
                             </div>
                         </div>

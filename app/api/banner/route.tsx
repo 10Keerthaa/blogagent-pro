@@ -66,8 +66,8 @@ export async function POST(request: Request) {
           />
 
           {/* Layer 1: Blog Tag */}
-          <div style={{ display: 'flex', position: 'absolute', top: '80px', left: '60px' }}>
-            {tagArrayBuffer && <img src={tagArrayBuffer as any} width={isLinkedIn ? "160" : "80"} height={isLinkedIn ? "80" : "40"} style={{ objectFit: 'contain' }} />}
+          <div style={{ display: 'flex', position: 'absolute', top: isLinkedIn ? '0px' : '80px', left: isLinkedIn ? '80px' : '60px' }}>
+            {tagArrayBuffer && <img src={tagArrayBuffer as any} width={isLinkedIn ? "180" : "80"} height={isLinkedIn ? "100" : "40"} style={{ objectFit: 'contain' }} />}
           </div>
 
           {/* Layer 2: Title Group — Left-aligned for WordPress/LinkedIn, Centred for Framer */}

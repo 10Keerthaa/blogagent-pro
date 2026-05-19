@@ -276,32 +276,36 @@ export const ReviewList = () => {
                                                 style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }}
                                             />
                                             <div className="absolute inset-0 z-20 pointer-events-none">
-                                                <img
-                                                    src="/linkedlin tag.png"
-                                                    alt="LinkedIn Tag"
-                                                    className="absolute top-[24px] lg:top-[32px] left-[24px] lg:left-[32px] w-auto h-5 lg:h-7 object-contain"
-                                                />
-                                                <div className="absolute inset-0 flex flex-col justify-center items-start px-[24px] lg:px-[32px] text-white drop-shadow-2xl">
-                                                    <div className="w-[75%] font-sans flex flex-col items-start text-left" style={{ lineHeight: '1.2' }}>
-                                                        {selectedReviewDraft.title.includes(':') ? (
-                                                            <>
-                                                                <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.2]">
-                                                                    {selectedReviewDraft.title.split(':')[0]}:
+                                                {/* Layer 1: Blog Tag */}
+                                                <div className="absolute top-0 pointer-events-none" style={{ left: '80px' }}>
+                                                    <img src="/linkedlin tag.png" alt="LinkedIn Tag" className="h-16 lg:h-24 w-auto object-contain" />
+                                                </div>
+
+                                                {/* Layer 2: Title Group */}
+                                                <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start" style={{ paddingLeft: '80px', paddingRight: '80px' }}>
+                                                    <div className="flex flex-row items-stretch gap-6 pl-6 border-l-8 border-[#2DD4BF]">
+                                                        <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-start text-left w-[75%]" style={{ lineHeight: '1.2' }}>
+                                                            {selectedReviewDraft.title.includes(':') ? (
+                                                                <>
+                                                                    <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold tracking-tight m-0 p-0 leading-[1.2]">
+                                                                        {selectedReviewDraft.title.split(':')[0]}:
+                                                                    </h1>
+                                                                    <p className="text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 mt-4 m-0 p-0 leading-[1.3]">
+                                                                        {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                                    </p>
+                                                                </>
+                                                            ) : (
+                                                                <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold tracking-tight m-0 p-0 leading-[1.2]">
+                                                                    {selectedReviewDraft.title}
                                                                 </h1>
-                                                                <p className="text-[24px] md:text-[32px] lg:text-[44px] font-normal opacity-95 mt-4 m-0 p-0 leading-[1.3]">
-                                                                    {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
-                                                                </p>
-                                                            </>
-                                                        ) : (
-                                                            <h1 className="text-[32px] md:text-[42px] lg:text-[56px] font-bold tracking-tight m-0 p-0 leading-[1.2]">
-                                                                {selectedReviewDraft.title}
-                                                            </h1>
-                                                        )}
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                {/* Logo */}
-                                                <div className="absolute bottom-[30px] lg:bottom-[40px] right-[30px] lg:right-[40px] pointer-events-none flex z-30">
-                                                    <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-10 w-auto object-contain" />
+                                                
+                                                {/* Layer 3: Logo */}
+                                                <div className="absolute pointer-events-none flex z-30" style={{ bottom: '80px', right: '80px' }}>
+                                                    <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
                                                 </div>
                                             </div>
                                         </div>
@@ -624,12 +628,12 @@ export const ReviewList = () => {
                                                     <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }} />
                                                     
                                                     {/* Layer 1: Blog Tag */}
-                                                    <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
-                                                        <img src="/linkedlin tag.png" className="h-10 lg:h-14 w-auto" alt="LinkedIn Tag" />
+                                                    <div className="absolute top-0 pointer-events-none" style={{ left: '80px' }}>
+                                                        <img src="/linkedlin tag.png" className="h-16 lg:h-24 w-auto object-contain" alt="LinkedIn Tag" />
                                                     </div>
 
                                                     {/* Layer 2: Title Overlay (Left aligned + Teal Line) */}
-                                                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start pl-[30px] lg:pl-[60px] pr-[30px] lg:pr-[60px]">
+                                                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start" style={{ paddingLeft: '80px', paddingRight: '80px' }}>
                                                         <div className="flex flex-row items-stretch gap-6 pl-6 border-l-8 border-[#2DD4BF]">
                                                             <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-start text-left w-[75%]" style={{ lineHeight: '1.2' }}>
                                                                 {selectedReviewDraft.title.includes(':') ? (
@@ -651,7 +655,7 @@ export const ReviewList = () => {
                                                     </div>
 
                                                     {/* Layer 3: Logo */}
-                                                    <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex z-50">
+                                                    <div className="absolute pointer-events-none flex z-50" style={{ bottom: '80px', right: '80px' }}>
                                                         <img src="/10xDS.png" className="h-8 lg:h-12 w-auto object-contain" alt="10xDS" />
                                                     </div>
                                                 </div>
