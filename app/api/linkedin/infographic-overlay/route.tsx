@@ -114,14 +114,15 @@ export async function POST(request: Request) {
               </p>
             </div>
 
-            {/* Timeline Wrapper */}
+            {/* Timeline Wrapper (Push down 25px to prevent touching the summary box) */}
             <div style={{
               width: '700px',
               height: '640px',
               position: 'relative',
               display: 'flex',
               flexDirection: 'column',
-              gap: gapSize
+              gap: gapSize,
+              marginTop: '25px'
             }}>
               {/* Central vertical golden timeline axis line */}
               <div style={{
@@ -170,7 +171,7 @@ export async function POST(request: Request) {
                       </span>
                     </div>
 
-                    {/* Left Block Content (if even) or Label Content (if odd) */}
+                    {/* Left Block Content (if even) or Spacer (if odd) */}
                     <div style={{
                       width: '290px',
                       display: 'flex',
@@ -198,45 +199,28 @@ export async function POST(request: Request) {
                             textTransform: 'uppercase',
                             marginBottom: '4px',
                             display: 'flex',
-                            justifyContent: 'flex-end',
-                            textAlign: 'right'
+                            textAlign: 'left'
                           }}>
                             {block.title}
                           </span>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                             {block.items.slice(0, 2).map((item: string, i: number) => (
-                              <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9, justifyContent: 'flex-end', textAlign: 'right' }}>
-                                <span style={{ marginRight: '6px' }}>{item}</span>
-                                <span style={{ color: '#2DD4BF' }}>•</span>
+                              <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9, textAlign: 'left' }}>
+                                <span style={{ marginRight: '6px', color: '#2DD4BF' }}>•</span>
+                                <span style={{ flex: 1 }}>{item}</span>
                               </div>
                             ))}
                           </div>
                         </div>
                       ) : (
-                        <div style={{
-                          width: '290px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'flex-end'
-                        }}>
-                          <span style={{
-                            fontSize: '14px',
-                            fontFamily: 'EliteBold',
-                            color: '#B794F4',
-                            textTransform: 'uppercase',
-                            textAlign: 'right',
-                            display: 'flex'
-                          }}>
-                            {data.pillars[idx] || 'Pillar'}
-                          </span>
-                        </div>
+                        <div style={{ width: '290px' }} />
                       )}
                     </div>
 
                     {/* Spacer for central timeline axis (120px to accommodate robust spacing) */}
                     <div style={{ width: '120px' }} />
 
-                    {/* Right Block Content (if odd) or Label Content (if even) */}
+                    {/* Right Block Content (if odd) or Spacer (if even) */}
                     <div style={{
                       width: '290px',
                       display: 'flex',
@@ -278,23 +262,7 @@ export async function POST(request: Request) {
                           </div>
                         </div>
                       ) : (
-                        <div style={{
-                          width: '290px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'flex-start'
-                        }}>
-                          <span style={{
-                            fontSize: '14px',
-                            fontFamily: 'EliteBold',
-                            color: '#B794F4',
-                            textTransform: 'uppercase',
-                            textAlign: 'left',
-                            display: 'flex'
-                          }}>
-                            {data.pillars[idx] || 'Pillar'}
-                          </span>
-                        </div>
+                        <div style={{ width: '290px' }} />
                       )}
                     </div>
 
