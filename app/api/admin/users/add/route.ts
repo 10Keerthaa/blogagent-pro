@@ -52,7 +52,7 @@ export async function POST(req: Request) {
             const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://blogagent-pro.vercel.app';
             const emailContent = {
                 message: {
-                    subject: "You're Invited: Join the 10xBlog agent Editorial Team",
+                    subject: "You're Invited: Join the 10xBlogAgent Editorial Team",
                     body: {
                         contentType: "HTML",
                         content: `
@@ -66,11 +66,11 @@ export async function POST(req: Request) {
                                     <tr>
                                       <td align="center" style="background-color: #0f172a; padding: 28px 0; border-bottom: 3px solid #8b5cf6;">
                                         <span style="color: #ffffff; font-size: 20px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
-                                          10xBlog <span style="color: #8b5cf6;">agent</span>
+                                          10xBlog<span style="color: #8b5cf6;">Agent</span>
                                         </span>
                                       </td>
                                     </tr>
-
+ 
                                     <!-- BODY CONTENT -->
                                     <tr>
                                       <td style="padding: 40px 48px;">
@@ -81,9 +81,9 @@ export async function POST(req: Request) {
                                         
                                         <p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0 0 28px 0;">
                                           Hello,<br/><br/>
-                                          You have been formally invited to join the official <strong>Editorial Team</strong> on the <strong>10xBlog agent</strong> platform as an <strong style="color: #7c3aed; background-color: #f5f3ff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">${role.toUpperCase()}</strong>.
+                                          You have been formally invited to join the official <strong>Editorial Team</strong> on the <strong>10xBlogAgent</strong> platform as an <strong style="color: #7c3aed; background-color: #f5f3ff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">${role.toUpperCase()}</strong>.
                                         </p>
-
+ 
                                         <!-- PRIVILEGES BLOCK -->
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 32px;">
                                           <tr>
@@ -110,7 +110,7 @@ export async function POST(req: Request) {
                                             </td>
                                           </tr>
                                         </table>
-
+ 
                                         <!-- SOLID BULLETPROOF BUTTON -->
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                           <tr>
@@ -127,11 +127,11 @@ export async function POST(req: Request) {
                                             </td>
                                           </tr>
                                         </table>
-
+ 
                                         <!-- HELP TEXT / DISCLAIMER -->
                                         <p style="color: #94a3b8; font-size: 11px; line-height: 1.5; text-align: center; margin: 28px 0 0 0; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                                          This invitation was generated automatically. To secure your account, please activate your access to **10xBlog agent** using your corporate Microsoft credentials.
-                                        </p>
+                                          This invitation was generated automatically. To secure your account, please activate your access to **10xBlogAgent** using your corporate Microsoft credentials.
+                                        </p>  </p>
 
                                       </td>
                                     </tr>
