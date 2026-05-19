@@ -86,7 +86,7 @@ export async function POST(req: Request) {
            - **NO FAQs:** Do NOT include any FAQ sections or Q&A pairs under any circumstances.
            - **NO bullet lists under H3:** Under every <h3> heading, you must write ONLY prose paragraphs of exactly 3 to 4 sentences. No bullet points or numbered lists are allowed under H3 headings.
            - **H2 Bullet Point Placement:** Bullet points can ONLY be placed directly under main <h2> headings.
-           - **Bullet Point Formatting:** Every single bullet item in a list must start with a **Bolded Core Concept:** followed by a colon and exactly 2 explanatory sentences.
+           - **Bullet Point Formatting:** Every single bullet item in a list must start with a <b>Bolded Core Concept:</b> followed by a colon and exactly 2 explanatory sentences.
            - **Roadmap Section:** Include an optional "Crawl, Walk, Run" phased adoption framework ONLY if it is contextually relevant to the implementation of the topic.
         8. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content.
         9. CONCLUSION (MANDATORY): You MUST include a final "<h2>Conclusion</h2>" heading followed by exactly 1 paragraph of 3 to 4 sentences looking towards the future and ending on a strong, definitive statement celebrating the new operational era.
@@ -113,7 +113,7 @@ export async function POST(req: Request) {
         2. TONE & FORMAT ALIGNMENT: Any new sections or updates must strictly follow the LinkedIn style guide:
            - Every paragraph must consist of exactly 3 to 4 sentences.
            - H3 headings must only have prose paragraphs (no bullets).
-           - Bullets can only live under H2 headings and must follow the **Bolded Core Concept:** followed by exactly 2 sentences rule.
+           - Bullets can only live under H2 headings and must follow the <b>Bolded Core Concept:</b> followed by exactly 2 sentences rule.
            - No FAQ section under any circumstances.
            - Word count stays within 1500 to 2000 words.
         3. THREE MODES:
