@@ -185,9 +185,10 @@ export async function POST(request: Request) {
                           </span>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                             {block.items.slice(0, 2).map((item: string, i: number) => (
-                              <span key={i} style={{ fontSize: '11px', color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9 }}>
-                                {item}
-                              </span>
+                              <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9, justifyContent: 'flex-end' }}>
+                                <span style={{ marginRight: '6px' }}>{item}</span>
+                                <span style={{ color: '#2DD4BF' }}>•</span>
+                              </div>
                             ))}
                           </div>
                         </>
@@ -230,9 +231,10 @@ export async function POST(request: Request) {
                           </span>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                             {block.items.slice(0, 2).map((item: string, i: number) => (
-                              <span key={i} style={{ fontSize: '11px', color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9 }}>
-                                {item}
-                              </span>
+                              <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9 }}>
+                                <span style={{ marginRight: '6px', color: '#2DD4BF' }}>•</span>
+                                <span style={{ flex: 1 }}>{item}</span>
+                              </div>
                             ))}
                           </div>
                         </>
