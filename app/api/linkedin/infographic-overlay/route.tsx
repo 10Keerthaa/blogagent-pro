@@ -32,8 +32,17 @@ export async function POST(request: Request) {
     const nodeCount = data.nodeCount || 4;
     const layoutType = data.layoutType || 'standard';
 
-    // --- TEMPLATE 1: TIMELINE ALTERNATING LAYOUT (N=5) ---
-    if (nodeCount === 5 || layoutType === 'timeline') {
+    // --- TEMPLATE 1: TIMELINE ALTERNATING LAYOUT (N=5 to 7) ---
+    if (nodeCount === 5 || nodeCount === 6 || nodeCount === 7 || layoutType === 'timeline') {
+      const rowHeight = nodeCount === 7 ? '82px' : nodeCount === 6 ? '95px' : '110px';
+      const axisHeight = nodeCount === 7 ? '590px' : nodeCount === 6 ? '610px' : '620px';
+      const badgeSize = nodeCount === 7 ? '32px' : nodeCount === 6 ? '36px' : '40px';
+      const badgeLeft = nodeCount === 7 ? '334px' : nodeCount === 6 ? '332px' : '330px';
+      const badgeFontSize = nodeCount === 7 ? '14px' : nodeCount === 6 ? '16px' : '18px';
+      const gapSize = nodeCount === 7 ? '4px' : nodeCount === 6 ? '8px' : '12px';
+      const textSize = nodeCount === 7 ? '10px' : '11px';
+      const titleSize = nodeCount === 7 ? '13px' : '15px';
+
       return new ImageResponse(
         (
           <div style={{
@@ -112,7 +121,7 @@ export async function POST(request: Request) {
               position: 'relative',
               display: 'flex',
               flexDirection: 'column',
-              gap: '12px'
+              gap: gapSize
             }}>
               {/* Central vertical golden timeline axis line */}
               <div style={{
@@ -120,13 +129,13 @@ export async function POST(request: Request) {
                 left: '349px',
                 top: '10px',
                 width: '2px',
-                height: '620px',
+                height: axisHeight,
                 backgroundColor: '#FFD700',
                 opacity: 0.6
               }} />
 
               {/* Rows Alternating */}
-              {data.blocks.slice(0, 5).map((block: any, idx: number) => {
+              {data.blocks.slice(0, nodeCount).map((block: any, idx: number) => {
                 const stepNum = idx + 1;
                 const isLeft = idx % 2 === 0;
 
@@ -134,16 +143,16 @@ export async function POST(request: Request) {
                   <div key={idx} style={{
                     display: 'flex',
                     width: '700px',
-                    height: '110px',
+                    height: rowHeight,
                     position: 'relative',
                     alignItems: 'center'
                   }}>
                     {/* Circle badge in absolute center */}
                     <div style={{
                       position: 'absolute',
-                      left: '330px',
-                      width: '40px',
-                      height: '40px',
+                      left: badgeLeft,
+                      width: badgeSize,
+                      height: badgeSize,
                       borderRadius: '50%',
                       backgroundColor: '#1A0B2E',
                       border: '2px solid #FFD700',
@@ -153,7 +162,7 @@ export async function POST(request: Request) {
                       zIndex: 10
                     }}>
                       <span style={{
-                        fontSize: '18px',
+                        fontSize: badgeFontSize,
                         fontFamily: 'EliteBold',
                         color: '#FFD700'
                       }}>
@@ -173,7 +182,7 @@ export async function POST(request: Request) {
                       {isLeft ? (
                         <>
                           <span style={{
-                            fontSize: '15px',
+                            fontSize: titleSize,
                             fontFamily: 'EliteBold',
                             color: '#FFD700',
                             textTransform: 'uppercase',
@@ -185,7 +194,7 @@ export async function POST(request: Request) {
                           </span>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                             {block.items.slice(0, 2).map((item: string, i: number) => (
-                              <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9, justifyContent: 'flex-end' }}>
+                              <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9, justifyContent: 'flex-end' }}>
                                 <span style={{ marginRight: '6px' }}>{item}</span>
                                 <span style={{ color: '#2DD4BF' }}>•</span>
                               </div>
@@ -220,7 +229,7 @@ export async function POST(request: Request) {
                       {!isLeft ? (
                         <>
                           <span style={{
-                            fontSize: '15px',
+                            fontSize: titleSize,
                             fontFamily: 'EliteBold',
                             color: '#FFD700',
                             textTransform: 'uppercase',
@@ -231,7 +240,7 @@ export async function POST(request: Request) {
                           </span>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                             {block.items.slice(0, 2).map((item: string, i: number) => (
-                              <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9 }}>
+                              <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9 }}>
                                 <span style={{ marginRight: '6px', color: '#2DD4BF' }}>•</span>
                                 <span style={{ flex: 1 }}>{item}</span>
                               </div>

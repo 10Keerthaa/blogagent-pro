@@ -32,16 +32,15 @@ export async function POST(req: Request) {
       Topic: ${prompt}
       Blog: ${content.substring(0, 4000)}
 
-      Determine the structure of the infographic:
-      - If the topic is a chronological sequence (e.g. stages, steps, timeline), classify as "timeline" and target N=5.
-      - If the topic describes high-end core components or concepts (e.g. pillars, strategies, core items), classify as "grid" and target N=8.
-      - Otherwise, classify as "standard" and target N=4.
-      - If there are too many items (9 or more), consolidate them into the top 8 most high-impact pillars.
+      Determine the structure of the infographic strictly based on the presence of numbers in the Topic title "${prompt}":
+      - RULE 1 (NO NUMBERS / STACKED): If the Topic title does not contain any numbers (e.g. no digits like 5, 8, and no written number words like "five", "eight", "six"), you MUST classify the layoutType as "standard" and set nodeCount to 4. Do NOT choose "timeline" or "grid" under any circumstances if there are no numbers in the Topic title.
+      - RULE 2 (5 TO 7 / TIMELINE): If the Topic title contains a number from 5 to 7 (e.g. "5", "6", "7", "five", "six", "seven"), you MUST classify the layoutType as "timeline" and set nodeCount to that exact number (e.g., 5, 6, or 7).
+      - RULE 3 (8 OR MORE / GRID): If the Topic title contains a number of 8 or more (e.g. "8", "10", "eight", "ten"), you MUST classify the layoutType as "grid" and set nodeCount to 8 (consolidating the content into the top 8 most high-impact pillars).
 
       Output ONLY a JSON object with:
       {
         "layoutType": "timeline" | "grid" | "standard",
-        "nodeCount": 4 | 5 | 8,
+        "nodeCount": 4 | 5 | 6 | 7 | 8,
         "title": "EXACT MAIN TITLE (The part before the colon from the blog title)",
         "subtitle": "EXACT SUBTITLE (The part after the colon from the blog title)",
         "pillars": ["Short technical pillar/step names (exactly matching nodeCount, 1-2 words each)"],
