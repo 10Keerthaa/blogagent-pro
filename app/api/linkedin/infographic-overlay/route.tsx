@@ -438,7 +438,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // --- TEMPLATE 3: STANDARD STACKED LAYOUT (N=4) ---
+    // --- TEMPLATE 3: STANDARD STACKED LAYOUT (N=5) ---
     return new ImageResponse(
       (
         <div style={{
@@ -512,7 +512,7 @@ export async function POST(request: Request) {
               />
             )}
 
-            {/* Pillar Labels */}
+            {/* Pillar Labels (20% width to perfectly center under the 5 glass spheres) */}
             <div style={{
               display: 'flex',
               width: '670px',
@@ -520,9 +520,9 @@ export async function POST(request: Request) {
               bottom: '8px',
               left: '15px'
             }}>
-              {data.pillars.map((pillar: string, i: number) => (
+              {data.pillars.slice(0, 5).map((pillar: string, i: number) => (
                 <span key={i} style={{
-                  width: '25%',
+                  width: '20%',
                   fontSize: '9px',
                   color: '#FFFFFF',
                   textTransform: 'uppercase',
@@ -539,24 +539,24 @@ export async function POST(request: Request) {
             </div>
           </div>
 
-          {/* Vertical Stacked Cards */}
+          {/* Vertical Stacked Cards (Exactly 5 Cards, beautifully scaled) */}
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column',
-            gap: '12px',
+            gap: '10px',
             width: '700px',
-            height: '520px'
+            height: '630px'
           }}>
-            {data.blocks.slice(0, 4).map((block: any, idx: number) => (
+            {data.blocks.slice(0, 5).map((block: any, idx: number) => (
               <div key={idx} style={{
                 width: '700px',
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 borderLeft: '4px solid #2DD4BF',
                 borderRadius: '10px',
-                padding: '12px 20px',
+                padding: '10px 20px',
                 display: 'flex',
                 flexDirection: 'column',
-                minHeight: '110px'
+                minHeight: '115px'
               }}>
                 <span style={{
                   fontSize: '15px',
@@ -578,32 +578,6 @@ export async function POST(request: Request) {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* Executive Summary Box */}
-          <div style={{
-            width: '700px',
-            backgroundColor: 'rgba(255, 255, 255, 0.06)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '10px 20px',
-            marginTop: '15px'
-          }}>
-            <p style={{
-              fontSize: '11px',
-              fontFamily: 'EliteReg',
-              color: '#FFFFFF',
-              margin: 0,
-              lineHeight: 1.4,
-              fontStyle: 'italic',
-              textAlign: 'center',
-              opacity: 0.9
-            }}>
-              "{data.executiveSummary || 'Driving strategic enterprise value through automated, continuous verification frameworks.'}"
-            </p>
           </div>
 
         </div>
