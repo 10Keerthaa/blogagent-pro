@@ -434,7 +434,12 @@ export const useBlogApi = () => {
     const generateInfographic = useCallback(async (body: any, targetPlatform?: string) => {
         setIsGeneratingInfographic(true);
         try {
-            const endpoint = targetPlatform === 'framer' ? '/api/framer/infographic' : '/api/infographic';
+            let endpoint = '/api/infographic';
+            if (targetPlatform === 'framer') {
+                endpoint = '/api/framer/infographic';
+            } else if (targetPlatform === 'linkedin') {
+                endpoint = '/api/linkedin/infographic';
+            }
             const r = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
