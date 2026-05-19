@@ -67,10 +67,10 @@ export async function POST(request: Request) {
 
           {/* Layer 1: Blog Tag */}
           <div style={{ display: 'flex', position: 'absolute', top: '80px', left: '60px' }}>
-            {tagArrayBuffer && <img src={tagArrayBuffer as any} width="80" height="40" style={{ objectFit: 'contain' }} />}
+            {tagArrayBuffer && <img src={tagArrayBuffer as any} width={isLinkedIn ? "160" : "80"} height={isLinkedIn ? "80" : "40"} style={{ objectFit: 'contain' }} />}
           </div>
 
-          {/* Layer 2: Title Group — Left-aligned for WordPress, Centred for Framer */}
+          {/* Layer 2: Title Group — Left-aligned for WordPress/LinkedIn, Centred for Framer */}
           <div
             style={{
               position: 'absolute',
@@ -81,50 +81,61 @@ export async function POST(request: Request) {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              alignItems: isWordPress ? 'flex-start' : 'center',
-              paddingLeft: isWordPress ? '60px' : '100px',
-              paddingRight: isWordPress ? '60px' : '100px',
+              alignItems: (isWordPress || isLinkedIn) ? 'flex-start' : 'center',
+              paddingLeft: isLinkedIn ? '80px' : (isWordPress ? '60px' : '100px'),
+              paddingRight: isLinkedIn ? '80px' : (isWordPress ? '60px' : '100px'),
             }}
           >
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'column',
-                width: isWordPress ? '75%' : '100%',
-                alignItems: isWordPress ? 'flex-start' : 'center',
-                textAlign: isWordPress ? 'left' : 'center',
+                flexDirection: isLinkedIn ? 'row' : 'column',
+                alignItems: isLinkedIn ? 'stretch' : (isWordPress ? 'flex-start' : 'center'),
+                width: (isWordPress || isLinkedIn) ? '75%' : '100%',
+                borderLeft: isLinkedIn ? '8px solid #2DD4BF' : undefined,
+                paddingLeft: isLinkedIn ? '24px' : undefined,
               }}
             >
-              <h1
+              <div
                 style={{
-                  fontSize: isWordPress ? '52px' : '64px',
-                  fontWeight: 700,
-                  color: 'white',
-                  lineHeight: 1.2,
-                  margin: 0,
-                  fontFamily: 'Inter',
-                  textShadow: '0 4px 12px rgba(0,0,0,0.6)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
+                  alignItems: (isWordPress || isLinkedIn) ? 'flex-start' : 'center',
+                  textAlign: (isWordPress || isLinkedIn) ? 'left' : 'center',
                 }}
               >
-                {mainTitle}
-              </h1>
-              {subtitle && (
-                <p
+                <h1
                   style={{
-                    fontSize: isWordPress ? '36px' : '48px',
-                    fontWeight: 400,
+                    fontSize: isWordPress ? '52px' : '64px',
+                    fontWeight: 700,
                     color: 'white',
-                    opacity: 0.9,
-                    lineHeight: 1.3,
-                    marginTop: '14px',
-                    marginBottom: 0,
+                    lineHeight: 1.2,
+                    margin: 0,
                     fontFamily: 'Inter',
-                    textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                    textShadow: '0 4px 12px rgba(0,0,0,0.6)',
                   }}
                 >
-                  {subtitle}
-                </p>
-              )}
+                  {mainTitle}
+                </h1>
+                {subtitle && (
+                  <p
+                    style={{
+                      fontSize: isWordPress ? '36px' : '48px',
+                      fontWeight: 400,
+                      color: 'white',
+                      opacity: 0.9,
+                      lineHeight: 1.3,
+                      marginTop: '14px',
+                      marginBottom: 0,
+                      fontFamily: 'Inter',
+                      textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                    }}
+                  >
+                    {subtitle}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 

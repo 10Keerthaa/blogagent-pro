@@ -225,19 +225,23 @@ export const ReviewList = () => {
                             </div>
 
                             {/* Right: Wordpress Controls */}
-                            <div className="flex items-center justify-end gap-3 pr-2">
-                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1 opacity-70">
-                                    {targetPlatform === 'framer' ? 'Framer Category' : targetPlatform === 'linkedin' ? 'LinkedIn Category' : 'WordPress Category'}
-                                </span>
-                                <div className="min-w-[180px]">
-                                    <CategorySelector 
-                                        selectedIds={selectedCategories}
-                                        onChange={setSelectedCategories}
-                                        readOnly={isReadOnly}
-                                        hideLabel={true}
-                                    />
+                            {targetPlatform !== 'linkedin' && selectedReviewDraft.platform !== 'linkedin' ? (
+                                <div className="flex items-center justify-end gap-3 pr-2 col-start-3">
+                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1 opacity-70">
+                                        {targetPlatform === 'framer' ? 'Framer Category' : 'WordPress Category'}
+                                    </span>
+                                    <div className="min-w-[180px]">
+                                        <CategorySelector 
+                                            selectedIds={selectedCategories}
+                                            onChange={setSelectedCategories}
+                                            readOnly={isReadOnly}
+                                            hideLabel={true}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className="col-start-3" />
+                            )}
                         </div>
                     </div>
 
@@ -592,8 +596,8 @@ export const ReviewList = () => {
                             {/* Scrollable Content */}
                             <div className="flex-1 overflow-y-auto custom-scrollbar p-12 lg:p-24 flex flex-col items-center">
                                 <div className="max-w-[850px] w-full space-y-16">
-                                    {/* Categories Verification Header */}
-                                    {selectedCategories.length > 0 && (
+                                    {/* Categories Verification Header (only for non-LinkedIn) */}
+                                    {targetPlatform !== 'linkedin' && selectedReviewDraft.platform !== 'linkedin' && selectedCategories.length > 0 && (
                                         <div className="flex justify-center mb-[-2rem]">
                                             <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/30 px-6 py-1.5 border border-violet-100 dark:border-violet-800">
                                                 {(() => {
@@ -610,46 +614,100 @@ export const ReviewList = () => {
                                         </div>
                                     )}
 
-                                    <h1 className="text-4xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif text-center whitespace-normal">
-                                        {selectedReviewDraft.title}
-                                    </h1>
+                                    {/* LinkedIn Layout: Image Overlay First, Title second */}
+                                    {targetPlatform === 'linkedin' || selectedReviewDraft.platform === 'linkedin' ? (
+                                        <>
+                                            {/* 1. Featured Image Overlay (First for LinkedIn) */}
+                                            {selectedReviewDraft.imageUrl && (
+                                                <div className="relative group overflow-hidden rounded-none shadow-2xl border border-slate-100 dark:border-slate-800 w-full">
+                                                    <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '1706/960' }} />
+                                                    <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }} />
+                                                    
+                                                    {/* Layer 1: Blog Tag */}
+                                                    <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
+                                                        <img src="/linkedlin tag.png" className="h-10 lg:h-14 w-auto" alt="LinkedIn Tag" />
+                                                    </div>
 
-                                    {selectedReviewDraft.imageUrl && (
-                                        <div className="relative group overflow-hidden rounded-none shadow-2xl border border-slate-100 dark:border-slate-800 w-full">
-                                            <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '4/3' }} />
-                                            <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }} />
-                                            {/* Layer 1: Blog Tag */}
-                                            {targetPlatform !== 'framer' && (
-                                                <div className="absolute top-[60px] lg:top-[80px] left-[40px] lg:left-[60px] pointer-events-none">
-                                                    <img src="/Blog.png" className="h-10 w-auto" alt="blog" />
+                                                    {/* Layer 2: Title Overlay (Left aligned + Teal Line) */}
+                                                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start pl-[30px] lg:pl-[60px] pr-[30px] lg:pr-[60px]">
+                                                        <div className="flex flex-row items-stretch gap-6 pl-6 border-l-8 border-[#2DD4BF]">
+                                                            <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-start text-left w-[75%]" style={{ lineHeight: '1.2' }}>
+                                                                {selectedReviewDraft.title.includes(':') ? (
+                                                                    <>
+                                                                        <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.2]">
+                                                                            {selectedReviewDraft.title.split(':')[0]}:
+                                                                        </h1>
+                                                                        <p className="text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 mt-4 m-0 p-0 leading-[1.3]">
+                                                                            {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                                        </p>
+                                                                    </>
+                                                                ) : (
+                                                                    <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.2]">
+                                                                        {selectedReviewDraft.title}
+                                                                    </h1>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Layer 3: Logo */}
+                                                    <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex z-50">
+                                                        <img src="/10xDS.png" className="h-8 lg:h-12 w-auto object-contain" alt="10xDS" />
+                                                    </div>
                                                 </div>
                                             )}
 
-                                            {/* Layer 2: Perfect Center Title Group Overlay */}
-                                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-center px-[40px] lg:px-[100px]">
-                                                <div className="text-white flex flex-col items-center text-center gap-0 drop-shadow-2xl w-full" style={{ lineHeight: '1.2' }}>
-                                                    {selectedReviewDraft.title.includes(':') ? (
-                                                        <>
-                                                            <h1 className="text-[48px] lg:text-[64px] font-bold tracking-tight m-0 p-0 leading-[1.1]">
-                                                                {selectedReviewDraft.title.split(':')[0]}:
-                                                            </h1>
-                                                            <p className="text-[34px] lg:text-[48px] font-normal opacity-95 m-0 p-0 leading-[1.2] mt-4">
-                                                                {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
-                                                            </p>
-                                                        </>
-                                                    ) : (
-                                                        <h1 className="text-[48px] lg:text-[64px] font-bold tracking-tight m-0 p-0 text-center leading-[1.1]">
-                                                            {selectedReviewDraft.title}
-                                                        </h1>
-                                                    )}
-                                                </div>
-                                            </div>
+                                            {/* 2. Blog Title (Second for LinkedIn) */}
+                                            <h1 className="text-4xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif text-center whitespace-normal">
+                                                {selectedReviewDraft.title}
+                                            </h1>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {/* WordPress / Framer Layout: Title First, Image Overlay second */}
+                                            <h1 className="text-4xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight font-serif text-center whitespace-normal">
+                                                {selectedReviewDraft.title}
+                                            </h1>
 
-                                            {/* Layer 3: Logo */}
-                                            <div className="absolute bottom-[60px] lg:bottom-[80px] right-[40px] lg:right-[60px] pointer-events-none flex z-50">
-                                                <img src="/10xDS.png" className="h-10 lg:h-12 w-auto object-contain" alt="10xDS" />
-                                            </div>
-                                        </div>
+                                            {selectedReviewDraft.imageUrl && (
+                                                <div className="relative group overflow-hidden rounded-none shadow-2xl border border-slate-100 dark:border-slate-800 w-full">
+                                                    <img src={selectedReviewDraft.imageUrl} alt={selectedReviewDraft.title} className="w-full h-auto object-cover" style={{ aspectRatio: '4/3' }} />
+                                                    <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(58, 26, 102, 0.75)' }} />
+                                                    
+                                                    {/* Layer 1: Blog Tag */}
+                                                    {targetPlatform !== 'framer' && (
+                                                        <div className="absolute top-[60px] lg:top-[80px] left-[40px] lg:left-[60px] pointer-events-none">
+                                                            <img src="/Blog.png" className="h-10 w-auto" alt="blog" />
+                                                        </div>
+                                                    )}
+
+                                                    {/* Layer 2: Perfect Center Title Group Overlay */}
+                                                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-center px-[40px] lg:px-[100px]">
+                                                        <div className="text-white flex flex-col items-center text-center gap-0 drop-shadow-2xl w-full" style={{ lineHeight: '1.2' }}>
+                                                            {selectedReviewDraft.title.includes(':') ? (
+                                                                <>
+                                                                    <h1 className="text-[48px] lg:text-[64px] font-bold tracking-tight m-0 p-0 leading-[1.1]">
+                                                                        {selectedReviewDraft.title.split(':')[0]}:
+                                                                    </h1>
+                                                                    <p className="text-[34px] lg:text-[48px] font-normal opacity-95 m-0 p-0 leading-[1.2] mt-4">
+                                                                        {selectedReviewDraft.title.split(':').slice(1).join(':').trim()}
+                                                                    </p>
+                                                                </>
+                                                            ) : (
+                                                                <h1 className="text-[48px] lg:text-[64px] font-bold tracking-tight m-0 p-0 text-center leading-[1.1]">
+                                                                    {selectedReviewDraft.title}
+                                                                </h1>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Layer 3: Logo */}
+                                                    <div className="absolute bottom-[60px] lg:bottom-[80px] right-[40px] lg:right-[60px] pointer-events-none flex z-50">
+                                                        <img src="/10xDS.png" className="h-10 lg:h-12 w-auto object-contain" alt="10xDS" />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>
                                     )}
                                     <article dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }} className="text-black dark:text-white text-lg leading-relaxed prose prose-stone dark:prose-invert max-w-none prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold" />
                                     {selectedReviewDraft.infographicUrl && (

@@ -257,21 +257,23 @@ export const PostPreview = () => {
                             />
 
                             {/* Layer 1: Blog Tag */}
-                            <div className="absolute top-[24px] lg:top-[32px] left-[24px] lg:left-[32px] pointer-events-none">
-                                <img src="/linkedlin tag.png" alt="LinkedIn Tag" className="h-5 lg:h-7 w-auto" />
+                            <div className="absolute top-[60px] lg:top-[80px] left-[30px] lg:left-[60px] pointer-events-none">
+                                <img src="/linkedlin tag.png" alt="LinkedIn Tag" className="h-10 lg:h-14 w-auto" />
                             </div>
 
                             {/* Layer 2: Title Group */}
-                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start px-[24px] lg:px-[32px]">
-                                <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-start text-left w-[75%]" style={{ lineHeight: '1.2' }}>
-                                    {preview.title.includes(':') ? (
-                                        <>
-                                            <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.2]">{preview.title.split(':')[0]}:</h1>
-                                            <p className="text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 mt-4 m-0 p-0 leading-[1.3]">{preview.title.split(':').slice(1).join(':').trim()}</p>
-                                        </>
-                                    ) : (
-                                        <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.2]">{preview.title}</h1>
-                                    )}
+                            <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start pl-[30px] lg:pl-[60px] pr-[30px] lg:pr-[60px]">
+                                <div className="flex flex-row items-stretch gap-6 pl-6 border-l-8 border-[#2DD4BF]">
+                                    <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-start text-left w-[75%]" style={{ lineHeight: '1.2' }}>
+                                        {preview.title.includes(':') ? (
+                                            <>
+                                                <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.2]">{preview.title.split(':')[0]}:</h1>
+                                                <p className="text-[24px] md:text-[32px] lg:text-[48px] font-normal opacity-95 mt-4 m-0 p-0 leading-[1.3]">{preview.title.split(':').slice(1).join(':').trim()}</p>
+                                            </>
+                                        ) : (
+                                            <h1 className="text-[32px] md:text-[42px] lg:text-[64px] font-bold m-0 p-0 leading-[1.2]">{preview.title}</h1>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
