@@ -95,9 +95,9 @@ export async function POST(req: Request) {
            - **SECTION INTROS:** Every <h4> section MUST begin with exactly 2-3 sentences of introductory text before any list.
            - **BULLET POINTS (OPTIONAL):** Use HTML <ul> and <li> tags ONLY when bullet points are contextually appropriate. FORBIDDEN: Do NOT use <b> bold text as a substitute for bullet points. When bullets ARE used, they MUST be inside <ul><li> tags. Each <li> MUST follow this exact format: **<b>Short Heading:</b> exactly 2 full sentences of detailed description.** This ensures both readability and the required word count. If no bullets are needed, write plain <p> paragraphs only.
         5. NEVER use <h2> or <h3> for subheadings. ONLY use <h4>.
-        6. INTERNAL LINKS: You are AUTHORIZED to use <a> tags ONLY for the phrases provided in the INTERNAL LINKING REPOSITORY. DO NOT invent links.
+        6. INTERNAL LINKS: You are AUTHORIZED to use <a> tags ONLY for the phrases provided in the INTERNAL LINKING REPOSITORY. DO NOT invent links. ABSOLUTE RULE: Do NOT add any inline styles (like style="color:...") or class names to these internal links. They must be plain <a href="..."> tags.
         7. CONCLUSION (MANDATORY): Include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://www.10xds.ai/contact/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
-        8. FAQ SECTION (MANDATORY): Include an "<h2>FAQ Section</h2>" heading with EXACTLY 5 questions. Wrap each question in <b> tags and each answer in <p> tags. Do not nest them; they must be sequential blocks.
+        8. FAQ SECTION (MANDATORY): Include an "<h2>FAQ Section</h2>" heading with EXACTLY 5 questions. Wrap each question in <p><b>...</b></p> tags and each answer in <p>...</p> tags. Add a <br /> after every answer to ensure a clear vertical gap between each Q&A pair. Do not nest them; they must be sequential blocks.
 
         RESULT FORMAT:
         <title>...</title>
