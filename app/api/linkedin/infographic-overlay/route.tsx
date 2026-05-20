@@ -511,11 +511,12 @@ export async function POST(request: Request) {
                 src={`data:image/png;base64,${iconStripBase64}`}
                 style={{
                   position: 'absolute',
-                  top: '5px',
+                  top: '0px',
                   left: '15px',
                   width: '670px',
-                  height: '100px',
-                  objectFit: 'cover'
+                  height: '115px',
+                  objectFit: 'cover',
+                  objectPosition: 'top'
                 }}
               />
             )}
