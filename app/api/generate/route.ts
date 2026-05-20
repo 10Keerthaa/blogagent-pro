@@ -80,7 +80,7 @@ export async function POST(req: Request) {
            - Start with a 4-sentence introduction paragraph that clearly describes the topic and sets the context for the reader.
            - **DYNAMIC H2 COUNT:** If the Topic title contains a number (e.g., "7 Steps", "8 Ways"), you MUST write exactly that many content H2 sections. If the title has NO numbers, default to exactly 5 content H2 sections.
            - **MANDATORY ADDITIONS:** After your content H2s, you MUST always append exactly 1 Conclusion H2 and 1 FAQ H2.
-           - All H2 Headings MUST be formatted as direct questions or key statements (e.g., "<h2>What is [Topic]?</h2>").
+           - **HEADING STYLE:** All H2 and H3 headings must be formal, declarative, and professional (e.g., "The Strategic Role of Autonomous Systems"). Do NOT force them to be questions.
            - **H3 SUB-SECTIONS:** Use <h3> sub-headings to break down complex H2 topics where appropriate. Each <h3> section must be followed by at least 2-3 sentences of prose before any list.
            - **URL INTEGRATION:** If LEARNED CONTEXT is provided, extract 2-3 facts that are HIGHLY RELEVANT to the main blog topic. Weave these facts naturally inside the most relevant existing H2 section. DO NOT create a separate summary section for them. DO NOT copy exact wording from the URLs (no plagiarism, synthesize in your own words). DO NOT use exact phrases from the URLs as subheadings. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
            - **SECTION INTROS:** Every H2 section MUST begin with exactly 2-3 sentences of introductory prose before any sub-section or list.
