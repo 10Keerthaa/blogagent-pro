@@ -32,8 +32,11 @@ export async function POST(request: Request) {
     const nodeCount = data.nodeCount || 4;
     const layoutType = data.layoutType || 'standard';
 
+    const titleMatch = data.title ? data.title.match(/\b(5|6|7|8)\b/) : null;
+    const titleNumber = titleMatch ? parseInt(titleMatch[1], 10) : null;
+
     // --- TEMPLATE 1: TIMELINE ALTERNATING LAYOUT (N=5 to 7) ---
-    if (nodeCount === 5 || nodeCount === 6 || nodeCount === 7 || layoutType === 'timeline') {
+    if (titleNumber === 5 || titleNumber === 6 || titleNumber === 7 || layoutType === 'timeline') {
       const rowHeight = nodeCount === 7 ? '82px' : nodeCount === 6 ? '95px' : '110px';
       const axisHeight = nodeCount === 7 ? '590px' : nodeCount === 6 ? '610px' : '620px';
       const badgeSize = nodeCount === 7 ? '32px' : nodeCount === 6 ? '36px' : '40px';
@@ -281,7 +284,7 @@ export async function POST(request: Request) {
     }
 
     // --- TEMPLATE 2: TWO-COLUMN GRID LAYOUT (N=8) ---
-    if (nodeCount === 8 || layoutType === 'grid') {
+    if (titleNumber === 8 || layoutType === 'grid') {
       return new ImageResponse(
         (
           <div style={{
