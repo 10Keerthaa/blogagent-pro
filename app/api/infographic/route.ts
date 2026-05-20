@@ -96,9 +96,11 @@ export async function POST(req: Request) {
 
       const numIcons = parsedData.nodeCount || 5;
 
+      const userOverride = refinement ? `\nCRITICAL USER OVERRIDE: The user has commanded the following custom art direction: "${refinement}". You MUST strictly obey this custom command and change the shapes, colors, or themes to match it exactly!` : "";
+
       const imagePrompt = `
       A horizontal strip of ${numIcons} premium 3D abstract geometric crystal structures for an enterprise technology blog. 
-      STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects.
+      STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects. ${userOverride}
       ICONS: Draw ${numIcons} distinct, purely abstract 3D geometric shapes (e.g. faceted crystals, floating light-nodes, or prismatic shields) representing the energy of: ${parsedData.pillars.join(', ')}.
       LAYOUT: Draw ${numIcons} circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
       BACKGROUND: Solid deep purple background (#1A0B2E). 

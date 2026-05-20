@@ -11,6 +11,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const prompt = body.prompt || body.title;
     const content = body.content;
+    const refinement = body.refinement;
 
     if (!prompt || !content) {
       return NextResponse.json({ error: "Prompt and Content are required" }, { status: 400 });
@@ -93,13 +94,17 @@ export async function POST(req: Request) {
     try {
       const geminiImageUrl = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
+      const numIcons = parsedData.nodeCount || 5;
+
+      const userOverride = refinement ? `\nCRITICAL USER OVERRIDE: The user has commanded the following custom art direction: "${refinement}". You MUST strictly obey this custom command and change the shapes, colors, or themes to match it exactly!` : "";
+
       const imagePrompt = `
-      A horizontal strip of 5 premium 3D abstract geometric crystal structures for an enterprise technology blog. 
-      STYLE: High-contrast gold and white 3D Glassmorphism, ray-traced lighting, holographic effects.
-      ICONS: Draw 5 distinct, purely abstract 3D geometric shapes (e.g. faceted crystals, floating light-nodes, or prismatic shields) representing the energy of: ${parsedData.pillars.join(', ')}.
-      LAYOUT: Draw 5 circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
+      A horizontal strip of ${numIcons} premium 3D abstract geometric crystal structures for an enterprise technology blog. 
+      STYLE: High-contrast gold and white 3D Glassmorphism, ray-traced lighting, holographic effects. ${userOverride}
+      ICONS: Draw ${numIcons} distinct, purely abstract 3D geometric shapes (e.g. faceted crystals, floating light-nodes, or prismatic shields) representing the energy of: ${parsedData.pillars.join(', ')}.
+      LAYOUT: Draw ${numIcons} circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
       BACKGROUND: Solid deep purple background (#1A0B2E). 
-      STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, OR LABELS. NO LOGOS, NO CAPTIONS, NO TYPOGRAPHY. ZERO TEXT TOLERANCE.
+      STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, CAPTIONS, OR LABELS ANYWHERE ON THE IMAGE (ESPECIALLY BENEATH THE ICONS). THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.
       FOCUS: Draw ONLY abstract shapes. The image must be 100% free of any human-readable text or characters.
       `;
 
