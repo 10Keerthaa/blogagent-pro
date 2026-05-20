@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         "pillars": ["Short technical pillar/step names (exactly matching nodeCount, 1-2 words each)"],
         "footer_summary": "A concise exactly 2-sentence executive summary explaining the strategic business impact. (Maximum 25 words).",
         "blocks": [
-          { "title": "Step/Pillar Name", "items": ["Key Point 1", "Key Point 2"] }
+          { "title": "Step/Pillar Name", "items": ["DYNAMIC BULLET COUNT: If layoutType is 'standard' (5 nodes), provide EXACTLY 3 bullet points here. If layoutType is 'timeline' or 'grid', provide EXACTLY 2 bullet points here."] }
         ] (Provide exactly nodeCount blocks)
       }
       RULES:
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
       ICONS: Draw ${numIcons} distinct, purely abstract geometric 3D symbols (e.g. interlocking gears, connected nodes, data shields, or circuit patterns) representing: ${parsedData.pillars.join(', ')}.
       LAYOUT: Draw ${numIcons} circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
       BACKGROUND: Solid deep purple background (#1A0B2E). 
-      STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, OR LABELS ANYWHERE ON THE IMAGE. THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.
+      STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, CAPTIONS, OR LABELS ANYWHERE ON THE IMAGE (ESPECIALLY BENEATH THE ICONS). THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.
       FOCUS: Draw ONLY the icons. The bottom 40% of the canvas must remain completely empty, solid dark purple, and free of any graphics or text.
     `;
 

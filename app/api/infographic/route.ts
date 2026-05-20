@@ -57,7 +57,7 @@ export async function POST(req: Request) {
         "blocks": [
           {
             "title": "Step/Pillar Name",
-            "items": ["Exactly 2 high-authority technical bullet points"]
+            "items": ["DYNAMIC BULLET COUNT: If layoutType is 'standard' (5 nodes), provide EXACTLY 3 bullet points here. If layoutType is 'timeline' or 'grid', provide EXACTLY 2 bullet points here."]
           }
         ] (Provide exactly nodeCount blocks)
       }
@@ -102,7 +102,7 @@ export async function POST(req: Request) {
       ICONS: Draw ${numIcons} distinct, purely abstract 3D geometric shapes (e.g. faceted crystals, floating light-nodes, or prismatic shields) representing the energy of: ${parsedData.pillars.join(', ')}.
       LAYOUT: Draw ${numIcons} circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
       BACKGROUND: Solid deep purple background (#1A0B2E). 
-      STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, OR LABELS. NO LOGOS, NO CAPTIONS, NO TYPOGRAPHY. ZERO TEXT TOLERANCE.
+      STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, CAPTIONS, OR LABELS ANYWHERE ON THE IMAGE (ESPECIALLY BENEATH THE ICONS). THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.
       FOCUS: Draw ONLY abstract shapes. The image must be 100% free of any human-readable text or characters.
       `;
 
