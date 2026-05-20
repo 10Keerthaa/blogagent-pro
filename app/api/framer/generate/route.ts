@@ -132,7 +132,7 @@ export async function POST(req: Request) {
         <content>Full Updated HTML with surgical changes applied</content>
     ` : FRAMER_PROMPT;
 
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
 
     const response = await client.request({
       url,
