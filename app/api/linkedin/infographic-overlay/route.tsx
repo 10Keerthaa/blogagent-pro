@@ -494,7 +494,7 @@ export async function POST(request: Request) {
           {/* Glass Icon Strip Box */}
           <div style={{
             width: '700px',
-            height: '160px',
+            height: '130px',
             backgroundColor: 'rgba(255, 255, 255, 0.12)',
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '16px',
@@ -504,17 +504,17 @@ export async function POST(request: Request) {
             justifyContent: 'center',
             position: 'relative',
             overflow: 'hidden',
-            marginBottom: '10px'
+            marginBottom: '20px'
           }}>
             {iconStripBase64 && (
               <img
                 src={`data:image/png;base64,${iconStripBase64}`}
                 style={{
                   position: 'absolute',
-                  top: '0px',
+                  top: '8px',
                   left: '15px',
                   width: '670px',
-                  height: '145px',
+                  height: '100px',
                   objectFit: 'cover',
                   objectPosition: 'center 15%'
                 }}
@@ -552,7 +552,7 @@ export async function POST(request: Request) {
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column',
-            gap: '8px',
+            gap: '10px',
             width: '700px',
             height: '630px'
           }}>
@@ -562,7 +562,7 @@ export async function POST(request: Request) {
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 borderLeft: '4px solid #2DD4BF',
                 borderRadius: '10px',
-                padding: '8px 20px',
+                padding: '10px 20px',
                 display: 'flex',
                 flexDirection: 'column',
                 minHeight: '115px'
