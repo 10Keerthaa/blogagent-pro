@@ -50,7 +50,7 @@ export async function POST(request: Request) {
         (
           <div style={{
             width: '800px',
-            height: '1000px',
+            height: '1200px',
             backgroundColor: '#1A0B2E',
             display: 'flex',
             flexDirection: 'column',
@@ -289,7 +289,7 @@ export async function POST(request: Request) {
         (
           <div style={{
             width: '800px',
-            height: '1000px',
+            height: '1200px',
             backgroundColor: '#1A0B2E',
             display: 'flex',
             flexDirection: 'column',
@@ -494,7 +494,7 @@ export async function POST(request: Request) {
           {/* Glass Icon Strip Box */}
           <div style={{
             width: '700px',
-            height: '130px',
+            height: '220px',
             backgroundColor: 'rgba(255, 255, 255, 0.12)',
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '16px',
@@ -511,10 +511,10 @@ export async function POST(request: Request) {
                 src={`data:image/png;base64,${iconStripBase64}`}
                 style={{
                   position: 'absolute',
-                  top: '8px',
+                  top: '10px',
                   left: '15px',
                   width: '670px',
-                  height: '100px',
+                  height: '175px',
                   objectFit: 'cover',
                   objectPosition: 'center 15%'
                 }}
@@ -552,9 +552,9 @@ export async function POST(request: Request) {
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column',
-            gap: '10px',
+            gap: '15px',
             width: '700px',
-            height: '630px'
+            height: 'auto'
           }}>
             {data.blocks.slice(0, 5).map((block: any, idx: number) => (
               <div key={idx} style={{
@@ -593,7 +593,7 @@ export async function POST(request: Request) {
       ),
       {
         width: 800,
-        height: 1000,
+        height: 1200,
         fonts: fonts
       }
     );
