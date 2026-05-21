@@ -7,9 +7,10 @@ export async function GET(request: NextRequest) {
     const error = searchParams.get('error');
     const origin = request.nextUrl.origin;
 
-    // If the manager clicked "Cancel" on the LinkedIn popup
+    // If the manager clicked "Cancel" or if LinkedIn returned an error
     if (error) {
-        return NextResponse.redirect(`${origin}/?error=linkedin_auth_failed`);
+        const desc = searchParams.get('error_description') || '';
+        return NextResponse.redirect(`${origin}/?error=linkedin_auth_failed&details=${encodeURIComponent(error)}&desc=${encodeURIComponent(desc)}`);
     }
 
     if (!code) {
