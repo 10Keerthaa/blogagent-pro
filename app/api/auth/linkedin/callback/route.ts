@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
     // If the manager clicked "Cancel" on the LinkedIn popup
     if (error) {
-        return NextResponse.redirect(`${origin}/dashboard?error=linkedin_auth_failed`);
+        return NextResponse.redirect(`${origin}/?error=linkedin_auth_failed`);
     }
 
     if (!code) {
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
         }, { merge: true });
 
         // Redirect back to the dashboard indicating success
-        return NextResponse.redirect(`${origin}/dashboard?linkedin=connected`);
+        return NextResponse.redirect(`${origin}/?linkedin=connected`);
     } catch (err) {
         console.error('LinkedIn Callback Failed:', err);
         return NextResponse.json({ error: 'Failed to process LinkedIn callback' }, { status: 500 });
