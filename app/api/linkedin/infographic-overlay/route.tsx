@@ -491,10 +491,10 @@ export async function POST(request: Request) {
             </p>
           </div>
 
-          {/* Glass Icon Strip Box — compacted to 130px to save vertical space */}
+          {/* Glass Icon Strip Box — 180px to show icons clearly */}
           <div style={{
             width: '700px',
-            height: '130px',
+            height: '180px',
             backgroundColor: 'rgba(255, 255, 255, 0.12)',
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '16px',
@@ -514,7 +514,7 @@ export async function POST(request: Request) {
                   top: '6px',
                   left: '15px',
                   width: '670px',
-                  height: '100px',
+                  height: '145px',
                   objectFit: 'cover',
                   objectPosition: 'center 15%'
                 }}
@@ -548,11 +548,11 @@ export async function POST(request: Request) {
             </div>
           </div>
 
-          {/* Vertical Stacked Cards — compacted padding and gap to fit within 1000px */}
+          {/* Vertical Stacked Cards — fills canvas evenly with no huge empty gap */}
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column',
-            gap: '8px',
+            gap: '12px',
             width: '700px',
             height: 'auto'
           }}>
@@ -564,7 +564,8 @@ export async function POST(request: Request) {
                 borderRadius: '10px',
                 padding: '6px 15px',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                minHeight: '95px'
               }}>
                 <span style={{
                   fontSize: '14px',
