@@ -457,7 +457,7 @@ export async function POST(request: Request) {
           flexDirection: 'column',
           position: 'relative',
           overflow: 'hidden',
-          padding: '40px 50px',
+          padding: '30px 50px',
           color: 'white'
         }}>
           {/* Header */}
@@ -465,11 +465,11 @@ export async function POST(request: Request) {
             display: 'flex',
             flexDirection: 'column',
             width: '700px',
-            gap: '6px',
-            marginBottom: '15px'
+            gap: '4px',
+            marginBottom: '10px'
           }}>
             <h1 style={{
-              fontSize: '36px',
+              fontSize: '34px',
               fontFamily: 'EliteBold',
               color: '#FFD700',
               textTransform: 'uppercase',
@@ -480,7 +480,7 @@ export async function POST(request: Request) {
               {data.title}
             </h1>
             <p style={{
-              fontSize: '18px',
+              fontSize: '16px',
               fontFamily: 'EliteReg',
               color: '#FFFFFF',
               margin: 0,
@@ -491,10 +491,10 @@ export async function POST(request: Request) {
             </p>
           </div>
 
-          {/* Glass Icon Strip Box */}
+          {/* Glass Icon Strip Box — compacted to 130px to save vertical space */}
           <div style={{
             width: '700px',
-            height: '220px',
+            height: '130px',
             backgroundColor: 'rgba(255, 255, 255, 0.12)',
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '16px',
@@ -504,17 +504,17 @@ export async function POST(request: Request) {
             justifyContent: 'center',
             position: 'relative',
             overflow: 'hidden',
-            marginBottom: '20px'
+            marginBottom: '10px'
           }}>
             {iconStripBase64 && (
               <img
                 src={`data:image/png;base64,${iconStripBase64}`}
                 style={{
                   position: 'absolute',
-                  top: '10px',
+                  top: '6px',
                   left: '15px',
                   width: '670px',
-                  height: '175px',
+                  height: '100px',
                   objectFit: 'cover',
                   objectPosition: 'center 15%'
                 }}
@@ -526,7 +526,7 @@ export async function POST(request: Request) {
               display: 'flex',
               width: '670px',
               position: 'absolute',
-              bottom: '8px',
+              bottom: '6px',
               left: '15px'
             }}>
               {data.pillars.slice(0, 5).map((pillar: string, i: number) => (
@@ -548,11 +548,11 @@ export async function POST(request: Request) {
             </div>
           </div>
 
-          {/* Vertical Stacked Cards (Exactly 5 Cards, beautifully scaled) */}
+          {/* Vertical Stacked Cards — compacted padding and gap to fit within 1000px */}
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column',
-            gap: '15px',
+            gap: '8px',
             width: '700px',
             height: 'auto'
           }}>
@@ -562,22 +562,21 @@ export async function POST(request: Request) {
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 borderLeft: '4px solid #2DD4BF',
                 borderRadius: '10px',
-                padding: '10px 20px',
+                padding: '6px 15px',
                 display: 'flex',
-                flexDirection: 'column',
-                minHeight: '115px'
+                flexDirection: 'column'
               }}>
                 <span style={{
-                  fontSize: '15px',
+                  fontSize: '14px',
                   fontFamily: 'EliteBold',
                   color: '#FFD700',
                   textTransform: 'uppercase',
-                  marginBottom: '6px',
+                  marginBottom: '4px',
                   display: 'flex'
                 }}>
                   {block.title}
                 </span>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   {block.items.slice(0, 2).map((item: string, i: number) => (
                     <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9 }}>
                       <span style={{ marginRight: '6px', color: '#2DD4BF' }}>•</span>
@@ -593,7 +592,7 @@ export async function POST(request: Request) {
       ),
       {
         width: 800,
-        height: 1200,
+        height: 1000,
         fonts: fonts
       }
     );
