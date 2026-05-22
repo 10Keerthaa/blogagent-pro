@@ -72,9 +72,9 @@ export async function POST(req: Request) {
 
         ${sitemapLinks ? `
         ━━━ INTERNAL LINKING REPOSITORY (ELITE SEO)
-        Use the following mapping to inject internal links naturally into the body text. 
+        From the sitemap data below, select ONLY the 8 to 10 keyword phrases that are MOST RELEVANT to the topic "${prompt}". Ignore all others.
+        STRICT ONE-LINK RULE: Each selected keyword phrase must be linked EXACTLY ONCE in the entire post. Once a phrase has been hyperlinked anywhere in the content, NEVER link that same phrase again — not in any other paragraph, section, or sentence.
         ONLY link if the phrase fits the sentence perfectly. Do not force links.
-        Maximum 10-15 internal links per post.
         SITEMAP DATA:
         ${Object.entries(sitemapLinks).map(([k, v]) => `- "${k}": ${v}`).join('\n')}
         ` : ""}
@@ -95,7 +95,7 @@ export async function POST(req: Request) {
            - **SECTION INTROS:** Every <h4> section MUST begin with exactly 2-3 sentences of introductory text before any list.
            - **BULLET POINTS (OPTIONAL):** Use HTML <ul> and <li> tags ONLY when bullet points are contextually appropriate. FORBIDDEN: Do NOT use <b> bold text as a substitute for bullet points. When bullets ARE used, they MUST be inside <ul><li> tags. Each <li> MUST follow this exact format: **<b>Short Heading:</b> exactly 2 full sentences of detailed description.** This ensures both readability and the required word count. If no bullets are needed, write plain <p> paragraphs only.
         5. NEVER use <h2> or <h3> for subheadings. ONLY use <h4>.
-        6. INTERNAL LINKS: You are AUTHORIZED to use <a> tags ONLY for the phrases provided in the INTERNAL LINKING REPOSITORY. DO NOT invent links. ABSOLUTE RULE: Do NOT add any inline styles (like style="color:...") or class names to these internal links. They must be plain <a href="..."> tags.
+        6. INTERNAL LINKS: You are AUTHORIZED to use <a> tags ONLY for the phrases provided in the INTERNAL LINKING REPOSITORY. DO NOT invent links. ABSOLUTE RULE: Do NOT add any inline styles (like style="color:...") or class names to these internal links. They must be plain <a href="..."> tags. CRITICAL: Each keyword phrase must appear as a hyperlink ONLY ONCE in the entire post. If you have already linked a phrase earlier, you MUST write it as plain text in all subsequent occurrences — never as a link again.
         7. CONCLUSION (MANDATORY): Include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://www.10xds.ai/contact/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
         8. FAQ SECTION (MANDATORY): Include an "<h2>FAQ Section</h2>" heading with EXACTLY 5 questions. Wrap each question in <p><b>...</b></p> tags and each answer in <p>...</p> tags. Add a <br /> after every answer to ensure a clear vertical gap between each Q&A pair. Do not nest them; they must be sequential blocks.
 
