@@ -77,19 +77,19 @@ export async function POST(req: Request) {
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be highly informative, action-oriented, and densely packed with keyword-rich insights. MUST include the primary keyword.
         3. BLOG CONTENT: You MUST write a MINIMUM of 1800 words. Target 1800 to 2100 words. MAXIMUM 2100 words. DO NOT abruptly cut off the text; ensure the full structure is completely finished.
         4. STRUCTURE (Inside <content>):
-           - Start with a 4-sentence introduction paragraph that clearly describes the topic and sets the context for the reader.
+           - Start with an exactly 3-sentence introduction paragraph that clearly describes the topic and sets the context for the reader.
            - **DYNAMIC H2 COUNT:** If the Topic title contains a number (e.g., "7 Steps", "8 Ways"), you MUST write exactly that many content H2 sections. If the title has NO numbers, default to exactly 5 content H2 sections.
            - **MANDATORY ADDITIONS:** After your content H2s, you MUST always append exactly 1 Conclusion H2 and 1 FAQ H2.
            - **HEADING STYLE:** All H2 and H3 headings must be formal, declarative, and professional (e.g., "The Strategic Role of Autonomous Systems"). Do NOT force them to be questions.
-           - **H3 SUB-SECTIONS:** Use <h3> sub-headings to break down complex H2 topics where appropriate. Each <h3> section must be followed by at least 2-3 sentences of prose before any list.
+           - **H3 SUB-SECTIONS:** Use <h3> sub-headings to break down complex H2 topics where appropriate. Each <h3> section must be followed by exactly 3 sentences of prose before any list.
            - **URL INTEGRATION:** If LEARNED CONTEXT is provided, extract 2-3 facts that are HIGHLY RELEVANT to the main blog topic. Weave these facts naturally inside the most relevant existing H2 section. DO NOT create a separate summary section for them. DO NOT copy exact wording from the URLs (no plagiarism, synthesize in your own words). DO NOT use exact phrases from the URLs as subheadings. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
-           - **SECTION INTROS:** Every H2 section MUST begin with exactly 2-3 sentences of introductory prose before any sub-section or list.
+           - **SECTION INTROS:** Every H2 section MUST begin with exactly 3 sentences of introductory prose before any sub-section or list.
            - **BULLET POINTS:** Use HTML <ul> and <li> tags ONLY where contextually appropriate (e.g., listing features, steps, or comparisons). Do NOT force bullet points into every section. Where bullets are used, each <li> can be 1 or 2 sentences.
            - Formatting: Use HTML <b>Bold Headers:</b> for specific sub-points where needed.
         5. Use <h2> and <h3> for headings. NEVER use Markdown headers (#).
         6. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content (except for the expert CTA).
         7. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
-        8. CONCLUSION (MANDATORY): You MUST include an "<h2>Conclusion</h2>" heading followed by a professional wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
+        8. CONCLUSION (MANDATORY): You MUST include an "<h2>Conclusion</h2>" heading followed by exactly 3 to 4 sentences of professional wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
         9. FAQ SECTION (MANDATORY): You MUST include an "<h2>FAQ Section</h2>" heading with EXACTLY 5 questions. Wrap each question in <p><b>...</b></p> tags and each answer in <p>...</p> tags. Add a <br /> after every answer to ensure a clear vertical gap between each Q&A pair. Do not nest them; they must be sequential blocks.
 
         RESULT FORMAT:
