@@ -12,8 +12,9 @@ export class SemanticLinker {
     private knowledge: PageKnowledge[] = [];
     private confidenceThreshold = 0.95;
 
-    async init() {
-        const snapshot = await db.collection('page_knowledge').get();
+    async init(platform?: string) {
+        const collectionName = platform === 'framer' ? 'page_knowledge_framer' : 'page_knowledge';
+        const snapshot = await db.collection(collectionName).get();
         this.knowledge = snapshot.docs.map(doc => doc.data() as PageKnowledge);
     }
 
@@ -21,8 +22,8 @@ export class SemanticLinker {
      * Tier 1: Semantic Intent Matching
      * Uses LLM to check if a paragraph's context justifies a specific technical link.
      */
-    async matchContext(paragraph: string, anchorCandidates: string[]): Promise<{ url: string, confidence: number } | null> {
-        if (this.knowledge.length === 0) await this.init();
+    async matchContext(paragraph: string, anchorCandidates: string[], platform?: string): Promise<{ url: string, confidence: number } | null> {
+        if (this.knowledge.length === 0) await this.init(platform);
 
         // Find potential pages based on anchor text overlap
         const potentialPages = this.knowledge.filter(k => 

@@ -356,15 +356,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     try {
                         const resp = await fetch('/api/internal-links/contextualize', {
                             method: 'POST',
-                            body: JSON.stringify({ paragraph: part.replace(/<[^>]+>/g, ' '), candidates: candidatesInPart })
+                            body: JSON.stringify({ paragraph: part.replace(/<[^>]+>/g, ' '), candidates: candidatesInPart, platform: targetPlatform })
                         });
                         const data = await resp.json();
                         
                         if (data.match) {
-                            const domain = targetPlatform === 'framer' ? 'https://www.10xds.ai' : 'https://10xds.com';
-                            let targetUrl = data.match.url;
-                            if (targetUrl.startsWith('/') && !targetUrl.startsWith('//')) targetUrl = `${domain}${targetUrl}`;
-                            else if (!targetUrl.startsWith('http')) targetUrl = `${domain}/${targetUrl}`;
+                            const targetUrl = data.match.url;
 
                             const matchText = candidatesInPart.find(c => part.toLowerCase().includes(c.toLowerCase()));
                             if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
@@ -383,22 +380,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 }
 
                 // Tier 2: Exact Match Fallback
-                if (!partLinked && currentLinkCount < maxLinksLimit) {
-                    for (const phrase of sortedKeywords) {
-                        const targetUrl = phraseLookup[phrase.toLowerCase()];
-                        if (usedAnchors.has(phrase.toLowerCase()) || currentLinkCount >= maxLinksLimit) continue;
+                // DISABLED: Strict business rule - if Semantic AI cannot find a high-confidence match in the correct platform database, do not create a link.
 
-                        const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                        const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedPhrase})\\b(?![^<]*>)`, 'i');
-                        if (regex.test(part)) {
-                            part = part.replace(regex, `<a href="${targetUrl}" target="_blank" class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium">$1</a>`);
-                            usedAnchors.add(phrase.toLowerCase());
-                            currentLinkCount++;
-                            lastLinkWordIndex = globalWordCounter;
-                            break; 
-                        }
-                    }
-                }
 
                 processedSubBlocks.push(part);
                 globalWordCounter += wordCountInPart;

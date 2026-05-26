@@ -5,16 +5,16 @@ export const maxDuration = 60;
 
 export async function POST(req: Request) {
     try {
-        const { paragraph, candidates } = await req.json();
+        const { paragraph, candidates, platform } = await req.json();
 
         if (!paragraph || !candidates) {
             return NextResponse.json({ error: "Paragraph and candidates are required" }, { status: 400 });
         }
 
         const linker = new SemanticLinker();
-        await linker.init();
+        await linker.init(platform);
 
-        const match = await linker.matchContext(paragraph, candidates);
+        const match = await linker.matchContext(paragraph, candidates, platform);
 
         return NextResponse.json({ match });
     } catch (error: any) {
