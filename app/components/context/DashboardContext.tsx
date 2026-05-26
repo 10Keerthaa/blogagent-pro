@@ -367,7 +367,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                             if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
                                 const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                                 const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
-                                part = part.replace(regex, `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium">$1</a>`);
+                                const linkStyle = targetPlatform === 'framer'
+                                    ? `style="color: inherit; text-decoration: underline; text-decoration-color: #000000;"`
+                                    : `class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium"`;
+                                part = part.replace(regex, `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" ${linkStyle}>$1</a>`);
                                 usedAnchors.add(matchText.toLowerCase());
                                 currentLinkCount++;
                                 lastLinkWordIndex = globalWordCounter;
@@ -601,7 +604,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
             
             const fullRawText = await generationFn(
-                { prompt, keywords: keywords.join(', '), primaryKeyword, description, referenceUrl1: referenceUrl1.trim() || undefined, referenceUrl2: referenceUrl2.trim() || undefined, referenceUrl3: referenceUrl3.trim() || undefined, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null },
+                { prompt, keywords: keywords.join(', '), primaryKeyword, description, referenceUrl1: referenceUrl1.trim() || undefined, referenceUrl2: referenceUrl2.trim() || undefined, referenceUrl3: referenceUrl3.trim() || undefined, sitemapLinks: targetPlatform === 'wordpress' ? sitemapData : null },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
