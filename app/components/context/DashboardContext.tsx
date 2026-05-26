@@ -368,7 +368,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                                 const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                                 const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
                                 const linkStyle = targetPlatform === 'framer'
-                                    ? `style="color: inherit; text-decoration: underline; text-decoration-color: #000000;"`
+                                    ? `style="color: #9333ea; text-decoration: underline; text-decoration-color: #9333ea; font-weight: 500;"`
                                     : `class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium"`;
                                 part = part.replace(regex, `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" ${linkStyle}>$1</a>`);
                                 usedAnchors.add(matchText.toLowerCase());
