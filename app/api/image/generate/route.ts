@@ -29,13 +29,20 @@ export async function POST(req: Request) {
 
         const imagePrompt = `A breathtaking, high-resolution conceptual digital art representing the core essence of '${cleanPrompt}'.
         Style: Professional enterprise aesthetic, high-contrast lighting, 3D depth, cinematic atmosphere.
-        Theme: Analyze the '${cleanPrompt}' topic and make the INDUSTRY the primary visual subject. Use topic-specific sophisticated visual metaphors. For example, if it's about healthcare, draw abstract DNA helices or sterile medical environments. If it's finance, draw abstract 3D charts, glowing vaults, or golden geometric coins. Any technological elements should be subtle background data streams or node networks.
-        Color palette: Deep navy, electric violet, and teal highlights.
+        Theme: STRICTLY visualize the exact industry and subject matter of '${cleanPrompt}'. The background must be unmistakably and obviously related to this specific topic. Use bold, industry-specific 3D visual metaphors:
+        - Healthcare / Medical → glowing DNA double helices, 3D molecular structures, abstract neural pathways, medical cross symbols
+        - Finance / Banking → glowing 3D bar charts, abstract gold geometric coins, digital vault structures, rising graph lines
+        - Technology / AI → abstract neural network nodes, flowing data streams, glowing geometric circuit-like patterns, holographic data grids
+        - Logistics / Supply Chain → interconnected 3D node networks, abstract flow arrows, geometric grid maps
+        - Manufacturing → abstract 3D gear systems, precision geometric machinery forms
+        - Cybersecurity → abstract shield forms, encrypted data patterns, glowing lock structures
+        Always use whichever visual metaphors best match the exact topic '${cleanPrompt}'. The image must be INSTANTLY recognisable as belonging to that specific industry.
+        Color palette: Deep navy, electric violet, and teal highlights. MANDATORY — this exact color scheme must dominate the entire image at all times.
         
         ABSOLUTE RULES - ZERO EXCEPTIONS:
-        - The imagery must be conceptual and sophisticated, not a literal photograph of a device.
+        - The imagery must be unmistakably and directly related to the specific topic '${cleanPrompt}'. Generic floating geometric shapes alone are NOT acceptable.
         - NO text, letters, words, numbers, or labels anywhere in the image.
-        - NO microchips, circuit boards, glowing brains, cartoon or clipart elements.
+        - NO cartoon, clipart, or flat vector illustration style.
         - NO people, faces, hands, or human figures.
         
         8k photorealistic enterprise-grade conceptual art.`;
