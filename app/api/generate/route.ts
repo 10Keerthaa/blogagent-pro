@@ -56,6 +56,11 @@ export async function POST(req: Request) {
     // Determine if we are in "Surgical Refinement" mode
     const isSurgical = !!(feedback && currentContent);
 
+    // Detect structural intent in user feedback to select the correct refinement engine
+    const isStructuralFeedback = isSurgical && (
+      /reorganize|restructure|merge\s+(sections|headings|h2|h3)|consolidate|headings|structure|7\s+h2|5\s+core|outline|layout/i.test(feedback)
+    );
+
     // --- GENERATION STRATEGY ---
     const BASE_PROMPT = `
         You are an expert SEO copywriter. Generate a high-quality, long-form blog post.
@@ -98,7 +103,7 @@ export async function POST(req: Request) {
         <content>...</content>
     `;
 
-    const aiPrompt = isSurgical ? `
+    const surgicalPrompt = `
         OBJECTIVE: Perform a STRATEGIC SURGICAL REFINEMENT on an existing blog post.
         
         GROUND TRUTH HTML:
@@ -129,7 +134,35 @@ export async function POST(req: Request) {
         <title>...</title>
         <meta>...</meta>
         <content>Full Updated HTML with surgical changes applied</content>
-    ` : BASE_PROMPT;
+    `;
+
+    const structuralPrompt = `
+        OBJECTIVE: Perform an ARCHITECTURAL / STRUCTURAL REORGANIZATION on an existing blog post.
+        
+        GROUND TRUTH HTML:
+        ---
+        ${currentContent}
+        ---
+
+        USER RESTRUCTURE INSTRUCTION: ${feedback}
+        ${learnedContext ? `\nLEARNED CONTEXT FROM URL (USE FOR FACTS/DATA): \n${learnedContext}\n` : ""}
+
+        STRICT STRUCTURAL REBUILD CONTRACT:
+        1. RESTRUCTURE: You are hereby permitted and commanded to reorganize, merge, delete, or rename headings and paragraphs to match the USER RESTRUCTURE INSTRUCTION. Do not worry about the "Zero Drift" rule for this structural rewrite.
+        2. PRESERVE SUBSTANCE: You must retain all existing facts, numbers, dates, tables, and bullet points from the GROUND TRUTH HTML. Do not invent any new facts.
+        3. COMPLETION GUARANTEE: You MUST output the entire redesigned HTML from the introduction to the FAQ section. Do NOT stop generating or truncate early.
+        4. FORMAT: Return the final, fully merged HTML within <content> tags. Ensure the <title> and <meta> tags are also included.
+        5. MANDATORY STANDARDS: The post must end with an <h2>Conclusion</h2> containing a 3-sentence prose wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
+
+        RESULT FORMAT:
+        <title>...</title>
+        <meta>...</meta>
+        <content>Full Updated HTML with structural changes applied</content>
+    `;
+
+    const aiPrompt = isSurgical 
+      ? (isStructuralFeedback ? structuralPrompt : surgicalPrompt)
+      : BASE_PROMPT;
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
 
