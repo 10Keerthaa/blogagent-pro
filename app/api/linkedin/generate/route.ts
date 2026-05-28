@@ -77,13 +77,13 @@ export async function POST(req: Request) {
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be action-oriented, densely packed with keyword-rich insights, and include the primary keyword.
         3. CONTENT WORD COUNT: You MUST write strictly between 1500 and 2000 words inside <content> tags. The entire content MUST never exceed 2100 words under any circumstances. Ensure the post does not abruptly cut off; the entire structure must be completely and beautifully finished.
         4. TONE PROFILE: Authoritative & Domain-Native, Visionary yet Pragmatic, Collaborative & Reassuring (framing innovation as a digital co-pilot elevating humans).
-        5. EXECUTIVE SCANNABILITY: Every single paragraph throughout the article MUST contain exactly 3 to 4 sentences, with TWO strict exceptions: the very first introductory description paragraph immediately after the opening <content> tag MUST consist of strictly exactly 3 sentences, and the introductory paragraph directly under every <h2> and <h3> subheading MUST consist of exactly 2 sentences. Avoid dense walls of text.
+        5. EXECUTIVE SCANNABILITY: Every single paragraph throughout the article MUST contain exactly 3 to 4 sentences, with TWO strict exceptions: the very first introductory description paragraph immediately after the opening <content> tag MUST consist of strictly exactly 3 sentences, and the introductory paragraph directly under every <h2> subheading MUST consist of exactly 2 sentences. Avoid dense walls of text.
         6. HEADINGS & HIERARCHY:
            - Use HTML <h2> and <h3> tags ONLY.
            - NEVER use Markdown headers (#).
            - Do not repeat the blog title as an <h1> inside the <content>.
         7. STRUCTURAL ARCS & LAYOUT RULES:
-           - **SECTION INTROS:** Every <h2> and <h3> section MUST begin with exactly 2 sentences of introductory prose before any sub-section or list.
+           - **SECTION INTROS:** Every <h2> section MUST begin with exactly 2 sentences of introductory prose before any sub-section or list.
            - **NO FAQs:** Do NOT include any FAQ sections or Q&A pairs under any circumstances.
            - **NO bullet lists under H3:** Under every <h3> heading, you must write ONLY prose paragraphs of exactly 3 to 4 sentences. No bullet points or numbered lists are allowed under H3 headings.
            - **H2 Bullet Point Placement & HTML Structure:** Bullet points can ONLY be placed directly under main <h2> headings. You MUST use a standard HTML <ul> list, and every single bullet item MUST be placed inside its own separate <li> tag (e.g., <ul><li><b>Bolded Core Concept:</b> explanation sentence 1. Explanation sentence 2.</li><li><b>Another Concept:</b> ...</li></ul>).
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
         STRICT SURGICAL CONTRACT — VIOLATING ANY OF THESE IS A FAILURE:
         1. ZERO DRIFT: You must return the GROUND TRUTH HTML with EXTREME PRECISION. Do not rephrase, move, or edit any sentence, heading, or paragraph that was not explicitly mentioned in the USER INSTRUCTION. **EXCEPTION:** If LEARNED CONTEXT is provided, you ARE allowed to "drift" solely to weave in new facts into existing sections.
         2. TONE & FORMAT ALIGNMENT: Any new sections or updates must strictly follow the LinkedIn style guide:
-           - Every paragraph must consist of exactly 3 to 4 sentences, with two exceptions: the very first introductory description paragraph must be exactly 3 sentences, and the introductory paragraph directly under every subheading must consist of exactly 2 sentences.
+           - Every paragraph must consist of exactly 3 to 4 sentences, with two exceptions: the very first introductory description paragraph must be exactly 3 sentences, and the introductory paragraph directly under every <h2> subheading must consist of exactly 2 sentences.
            - H3 headings must only have prose paragraphs (no bullets).
            - Bullets can only live under H2 headings, must follow the <b>Bolded Core Concept:</b> followed by exactly 2 sentences rule, and every single bullet item MUST live inside its own separate <li> tag (never squished inline in a single paragraph).
            - No FAQ section under any circumstances.
