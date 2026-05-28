@@ -93,7 +93,7 @@ export async function POST(request: Request) {
                 alignItems: isLinkedIn ? 'stretch' : (isWordPress ? 'flex-start' : 'center'),
                 width: (isWordPress || isLinkedIn) ? '75%' : '100%',
                 borderLeft: isLinkedIn ? '8px solid #2DD4BF' : undefined,
-                paddingLeft: isLinkedIn ? '24px' : undefined,
+                paddingLeft: isLinkedIn ? '40px' : undefined,
               }}
             >
               <div
