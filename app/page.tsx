@@ -8,10 +8,39 @@ import { PostPreview } from './components/features/PostPreview';
 import { ReviewList } from './components/features/ReviewList';
 import { HistoryList } from './components/features/HistoryList';
 import { Login } from './components/features/Login';
-import { X, XCircle } from 'lucide-react';
+import { X, XCircle, Loader2, CheckCircle, Sparkles } from 'lucide-react';
 
 const DashboardContent = () => {
-  const { activeTab, error, setError, user, selectedReviewDraft, isPreviewOpen } = useDashboard();
+  const { 
+    activeTab, error, setError, user, selectedReviewDraft, isPreviewOpen,
+    isGenerating, isInfographicRefining 
+  } = useDashboard();
+
+  const [showSuccessToast, setShowSuccessToast] = React.useState(false);
+  const [successType, setSuccessType] = React.useState<'text' | 'image'>('text');
+  
+  const prevIsGenerating = React.useRef(isGenerating);
+  const prevIsInfographicRefining = React.useRef(isInfographicRefining);
+
+  React.useEffect(() => {
+    if (prevIsGenerating.current && !isGenerating) {
+      setSuccessType('text');
+      setShowSuccessToast(true);
+      const timer = setTimeout(() => setShowSuccessToast(false), 4000);
+      return () => clearTimeout(timer);
+    }
+    prevIsGenerating.current = isGenerating;
+  }, [isGenerating]);
+
+  React.useEffect(() => {
+    if (prevIsInfographicRefining.current && !isInfographicRefining) {
+      setSuccessType('image');
+      setShowSuccessToast(true);
+      const timer = setTimeout(() => setShowSuccessToast(false), 4000);
+      return () => clearTimeout(timer);
+    }
+    prevIsInfographicRefining.current = isInfographicRefining;
+  }, [isInfographicRefining]);
 
   // Sidebar visibility rule:
   // Show on 'create' tab always (split screen preserved)
@@ -26,7 +55,83 @@ const DashboardContent = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-slate-50 dark:bg-[#060606] overflow-hidden">
+    <div className="h-screen flex flex-col bg-slate-50 dark:bg-[#060606] overflow-hidden relative">
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes slideIn {
+          from {
+            transform: translateY(-20px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { transform: scale(0.95); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        .animate-slideIn {
+          animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out forwards;
+        }
+        .animate-scaleIn {
+          animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}} />
+
+      {/* Floating Active Progress Banners */}
+      {isGenerating && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none">
+          <div className="bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-800/80 rounded-full px-6 py-3 shadow-2xl flex items-center gap-3 animate-scaleIn">
+            <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-100">
+              ✦ AI is refining this post...
+            </span>
+          </div>
+        </div>
+      )}
+
+      {isInfographicRefining && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none">
+          <div className="bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-800/80 rounded-full px-6 py-3 shadow-2xl flex items-center gap-3 animate-scaleIn">
+            <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-100">
+              ✦ Updating Infographic...
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Success Toast Notification */}
+      {showSuccessToast && (
+        <div className="fixed top-6 right-6 z-[9999] pointer-events-auto animate-slideIn">
+          <div className="bg-emerald-500 text-white border border-emerald-600 rounded-xl px-5 py-4 shadow-2xl flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-white shrink-0 animate-scaleIn" />
+            <div className="flex flex-col">
+              <span className="text-xs font-black uppercase tracking-widest leading-none">
+                {successType === 'text' ? 'Refinement Complete!' : 'Visual Updated!'}
+              </span>
+              <span className="text-[10px] opacity-90 mt-1.5 font-medium leading-none">
+                {successType === 'text' ? 'Post updated and auto-saved.' : 'New custom infographic generated.'}
+              </span>
+            </div>
+            <button 
+              onClick={() => setShowSuccessToast(false)}
+              className="p-1 hover:bg-emerald-600 rounded transition-colors ml-2"
+            >
+              <X className="w-3.5 h-3.5 text-white" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ELITE GLOBAL HEADER (Part 1 - App Name, Tabs, Admin Console, User Profile) */}
       <TabNavigation />
 
@@ -35,7 +140,7 @@ const DashboardContent = () => {
         <div
           className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0 border-r border-slate-200 dark:border-slate-800
             ${showSidebar 
-              ? `w-full md:w-[32%] ${activeTab === 'review' ? 'lg:w-[30%] xl:w-[30%]' : 'lg:w-[28%] xl:w-[25%]'} opacity-100 pointer-events-auto` 
+              ? `w-full md:w-[32%] ${activeTab === 'review' ? 'lg:w-[30%] xl:w-[30%]' : 'lg:w-[28%] xl:w-[25%]'}` 
               : 'w-0 opacity-0 pointer-events-none'}`}
         >
           <SidebarForm />
@@ -47,13 +152,53 @@ const DashboardContent = () => {
             ? `md:w-[68%] ${activeTab === 'review' ? 'lg:w-[70%] xl:w-[70%]' : 'lg:w-[72%] xl:w-[75%]'}` 
             : 'w-full'}`}>
 
+          {/* Frosted Glass Workspace Overlay for AI Text Refinement */}
+          {isGenerating && (
+            <div className="absolute inset-0 bg-white/60 dark:bg-slate-950/60 backdrop-blur-[3px] z-[40] flex flex-col items-center justify-center pointer-events-auto transition-all animate-fadeIn">
+              <div className="flex flex-col items-center gap-4 p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 shadow-2xl rounded-2xl max-w-sm text-center animate-scaleIn">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full border-2 border-violet-100 dark:border-violet-950 animate-ping absolute inset-0" />
+                  <div className="w-12 h-12 rounded-full border-2 border-violet-500 dark:border-violet-600 flex items-center justify-center bg-violet-50 dark:bg-violet-950/50">
+                    <Sparkles className="w-5 h-5 text-violet-500 animate-pulse" />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">AI Refining Content</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Surgically updating headers, keywords, and tone constraints in real-time. Please wait...
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Frosted Glass Workspace Overlay for AI Infographic Refinement */}
+          {isInfographicRefining && (
+            <div className="absolute inset-0 bg-white/60 dark:bg-slate-950/60 backdrop-blur-[3px] z-[40] flex flex-col items-center justify-center pointer-events-auto transition-all animate-fadeIn">
+              <div className="flex flex-col items-center gap-4 p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 shadow-2xl rounded-2xl max-w-sm text-center animate-scaleIn">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full border-2 border-violet-100 dark:border-violet-950 animate-ping absolute inset-0" />
+                  <div className="w-12 h-12 rounded-full border-2 border-violet-500 dark:border-violet-600 flex items-center justify-center bg-violet-50 dark:bg-violet-950/50">
+                    <Loader2 className="w-5 h-5 text-violet-500 animate-spin" />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">Visual Refining</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Regenerating custom glassmorphic canvas overlay on Google Cloud. Please wait...
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Scrollable Workspace */}
           <div className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar scroll-smooth">
             {/* Elite Error Banner */}
             {error && (
               <div
                 role="alert"
-                className="mb-8 p-5 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 rounded-none text-red-600 dark:text-red-500 text-xs font-semibold flex items-center justify-between animate-fadeIn shadow-sm hover:shadow-md transition-all"
+                className="mb-8 p-5 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 rounded-none text-red-600 dark:text-red-500 text-xs font-semibold flex items-center justify-between animate-fadeIn shadow-sm hover:shadow-md transition-all animate-scaleIn"
               >
                 <div className="flex items-center gap-3">
                   <XCircle className="w-5 h-5 text-red-500" />
