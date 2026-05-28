@@ -177,7 +177,7 @@ export async function POST(request: Request) {
 
           <div style={{ width: '700px', height: '220px', backgroundColor: 'rgba(255, 255, 255, 0.12)', border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', marginBottom: '20px' }}>
             {iconStripBase64 && (
-              <img src={`data:image/png;base64,${iconStripBase64}`} style={{ position: 'absolute', top: '10px', left: '15px', width: '670px', height: '175px', objectFit: 'cover', objectPosition: 'center 15%' }} />
+              <img src={`data:image/png;base64,${iconStripBase64}`} style={{ position: 'absolute', top: '10px', left: '15px', width: '670px', height: '175px', objectFit: 'cover', objectPosition: 'center 50%' }} />
             )}
             <div style={{ display: 'flex', width: '670px', position: 'absolute', bottom: '8px', left: '15px' }}>
               {data.pillars.slice(0, 5).map((pillar: string, i: number) => (
