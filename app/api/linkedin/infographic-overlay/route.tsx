@@ -516,7 +516,7 @@ export async function POST(request: Request) {
                   width: '670px',
                   height: '145px',
                   objectFit: 'cover',
-                  objectPosition: 'center 15%'
+                  objectPosition: 'center 100%'
                 }}
               />
             )}
