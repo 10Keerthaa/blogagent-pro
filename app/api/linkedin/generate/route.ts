@@ -86,7 +86,7 @@ export async function POST(req: Request) {
            - **SECTION INTROS:** Every <h2> section MUST begin with exactly 2 sentences of introductory prose before any sub-section or list.
            - **NO FAQs:** Do NOT include any FAQ sections or Q&A pairs under any circumstances.
            - **NO bullet lists under H3:** Under every <h3> heading, you must write ONLY prose paragraphs of exactly 3 to 4 sentences. No bullet points or numbered lists are allowed under H3 headings.
-           - **H2 Bullet Point Placement & HTML Structure:** Bullet points can ONLY be placed directly under main <h2> headings. You MUST use a standard HTML <ul> list, and every single bullet item MUST be placed inside its own separate <li> tag (e.g., <ul><li><b>Bolded Core Concept:</b> explanation sentence 1. Explanation sentence 2.</li><li><b>Another Concept:</b> ...</li></ul>).
+           - **H2 Bullet Point Placement & HTML Structure:** Bullet points can ONLY be placed directly under main <h2> headings. You MUST use a standard HTML <ul> list, and every single bullet item MUST be placed inside its own separate <li> tag (e.g., <ul><li><b>Bolded Core Concept:</b> exactly 1 sentence of explanation.</li><li><b>Another Concept:</b> ...</li></ul>).
            - **NO SQUISHED BULLETS:** Never place multiple bolded concepts inside a single paragraph or inside a single <li> tag. Every single core concept must begin on a brand-new line inside its own separate <li> tag.
            - **Roadmap Section:** Include an optional "Crawl, Walk, Run" phased adoption framework ONLY if it is contextually relevant to the implementation of the topic.
         8. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content.
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
         2. TONE & FORMAT ALIGNMENT: Any new sections or updates must strictly follow the LinkedIn style guide:
            - Every paragraph must consist of exactly 3 to 4 sentences, with two exceptions: the very first introductory description paragraph must be exactly 3 sentences, and the introductory paragraph directly under every <h2> subheading must consist of exactly 2 sentences.
            - H3 headings must only have prose paragraphs (no bullets).
-           - Bullets can only live under H2 headings, must follow the <b>Bolded Core Concept:</b> followed by exactly 2 sentences rule, and every single bullet item MUST live inside its own separate <li> tag (never squished inline in a single paragraph).
+           - Bullets can only live under H2 headings, must follow the <b>Bolded Core Concept:</b> followed by exactly 1 sentence rule, and every single bullet item MUST live inside its own separate <li> tag (never squished inline in a single paragraph).
            - No FAQ section under any circumstances.
            - Word count stays within 1500 to 2000 words, and never exceeds 2100 words.
         3. THREE MODES:
