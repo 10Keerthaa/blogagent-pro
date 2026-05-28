@@ -117,7 +117,7 @@ const DashboardContext = createContext<DashboardContextType | undefined>(undefin
 
 export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const api = useBlogApi();
-    const { fetchSitemap: apiFetchSitemap, fetchHistory: apiFetchHistory, fetchDrafts: apiFetchDrafts } = api;
+    const { fetchSitemap: apiFetchSitemap, fetchHistory: apiFetchHistory, fetchDrafts: apiFetchDrafts, setIsApplyingFeedback } = api;
 
     const [prompt, setPrompt] = useState('');
     const [keywordInput, setKeywordInput] = useState('');
@@ -752,6 +752,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         }
         const currentImageUrl = preview?.imageUrl;
         setError(null); setPreview(null);
+        setIsApplyingFeedback(true);
         try {
             const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
             const fullRawText = await generationFn(
@@ -780,11 +781,13 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const imgUrl = await api.generateFeaturedImage({ prompt: finalTitle, title: finalTitle, platform: targetPlatform });
             if (imgUrl) setPreview((prev: any) => ({ ...prev, imageUrl: imgUrl }));
         } catch (e: any) { setError(e.message); }
+        finally { setIsApplyingFeedback(false); }
     };
 
     const handleApplyReviewFeedback = async () => {
         if (!selectedReviewDraft || !feedback) return;
         setError(null);
+        setIsApplyingFeedback(true);
         try {
             const activeKeyword = primaryKeyword || '';
             const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
@@ -804,6 +807,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             setSelectedReviewDraft({ ...selectedReviewDraft, ...updateData });
             setFeedback('');
         } catch (e: any) { setError(e.message); }
+        finally {
+            setIsApplyingFeedback(false);
+        }
     };
 
     const handleSaveManualEdits = async (updatedDraft?: any) => {
