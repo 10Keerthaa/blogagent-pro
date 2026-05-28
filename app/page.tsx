@@ -13,24 +13,24 @@ import { X, XCircle, Loader2, CheckCircle, Sparkles } from 'lucide-react';
 const DashboardContent = () => {
   const { 
     activeTab, error, setError, user, selectedReviewDraft, isPreviewOpen,
-    isGenerating, isInfographicRefining, isApplyingFeedback
+    isInfographicRefining, isApplyingFeedback
   } = useDashboard();
 
   const [showSuccessToast, setShowSuccessToast] = React.useState(false);
   const [successType, setSuccessType] = React.useState<'text' | 'image'>('text');
   
-  const prevIsGenerating = React.useRef(isGenerating);
+  const prevIsApplyingFeedback = React.useRef(isApplyingFeedback);
   const prevIsInfographicRefining = React.useRef(isInfographicRefining);
 
   React.useEffect(() => {
-    if (prevIsGenerating.current && !isGenerating) {
+    if (prevIsApplyingFeedback.current && !isApplyingFeedback) {
       setSuccessType('text');
       setShowSuccessToast(true);
       const timer = setTimeout(() => setShowSuccessToast(false), 4000);
       return () => clearTimeout(timer);
     }
-    prevIsGenerating.current = isGenerating;
-  }, [isGenerating]);
+    prevIsApplyingFeedback.current = isApplyingFeedback;
+  }, [isApplyingFeedback]);
 
   React.useEffect(() => {
     if (prevIsInfographicRefining.current && !isInfographicRefining) {
@@ -86,28 +86,7 @@ const DashboardContent = () => {
         }
       `}} />
 
-      {/* Floating Active Progress Banners */}
-      {isGenerating && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none">
-          <div className="bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-800/80 rounded-full px-6 py-3 shadow-2xl flex items-center gap-3 animate-scaleIn">
-            <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-100">
-              {isApplyingFeedback ? '✦ AI is refining this post...' : '✦ Generating your post...'}
-            </span>
-          </div>
-        </div>
-      )}
 
-      {isInfographicRefining && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none">
-          <div className="bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-800/80 rounded-full px-6 py-3 shadow-2xl flex items-center gap-3 animate-scaleIn">
-            <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-100">
-              ✦ Updating Infographic...
-            </span>
-          </div>
-        </div>
-      )}
 
       {/* Floating Success Toast Notification */}
       {showSuccessToast && (
@@ -153,7 +132,7 @@ const DashboardContent = () => {
             : 'w-full'}`}>
 
           {/* Frosted Glass Workspace Overlay for AI Text Refinement */}
-          {isGenerating && (
+          {isApplyingFeedback && (
             <div className="absolute inset-0 bg-white/60 dark:bg-slate-950/60 backdrop-blur-[3px] z-[40] flex flex-col items-center justify-center pointer-events-auto transition-all animate-fadeIn">
               <div className="flex flex-col items-center gap-4 p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 shadow-2xl rounded-2xl max-w-sm text-center animate-scaleIn">
                 <div className="relative">
