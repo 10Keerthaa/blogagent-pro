@@ -134,7 +134,7 @@ export async function POST(req: Request) {
             left: 0, 
             top: Math.round(imgHeight * 0.02), 
             width: imgWidth, 
-            height: Math.round(imgHeight * 0.74)
+            height: Math.round(imgHeight * 0.85)
           })
           .png()
           .toBuffer();
