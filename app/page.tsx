@@ -13,7 +13,7 @@ import { X, XCircle, Loader2, CheckCircle, Sparkles } from 'lucide-react';
 const DashboardContent = () => {
   const { 
     activeTab, error, setError, user, selectedReviewDraft, isPreviewOpen,
-    isGenerating, isInfographicRefining 
+    isGenerating, isInfographicRefining, isApplyingFeedback
   } = useDashboard();
 
   const [showSuccessToast, setShowSuccessToast] = React.useState(false);
@@ -92,7 +92,7 @@ const DashboardContent = () => {
           <div className="bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md border border-slate-800/80 rounded-full px-6 py-3 shadow-2xl flex items-center gap-3 animate-scaleIn">
             <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-100">
-              ✦ AI is refining this post...
+              {isApplyingFeedback ? '✦ AI is refining this post...' : '✦ Generating your post...'}
             </span>
           </div>
         </div>
