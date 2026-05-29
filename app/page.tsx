@@ -91,21 +91,21 @@ const DashboardContent = () => {
       {/* Floating Success Toast Notification */}
       {showSuccessToast && (
         <div className="fixed top-6 right-6 z-[9999] pointer-events-auto animate-slideIn">
-          <div className="bg-emerald-500 text-white border border-emerald-600 rounded-xl px-5 py-4 shadow-2xl flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 text-white shrink-0 animate-scaleIn" />
+          <div className="bg-emerald-500 text-white border border-emerald-600 rounded-2xl px-7 py-5 shadow-[0_12px_40px_rgba(16,185,129,0.35)] flex items-center gap-4 min-w-[360px] animate-scaleIn">
+            <CheckCircle className="w-7 h-7 text-white shrink-0 animate-scaleIn" />
             <div className="flex flex-col">
-              <span className="text-xs font-black uppercase tracking-widest leading-none">
+              <span className="text-sm font-extrabold uppercase tracking-widest leading-none">
                 {successType === 'text' ? 'Refinement Complete!' : 'Visual Updated!'}
               </span>
-              <span className="text-[10px] opacity-90 mt-1.5 font-medium leading-none">
+              <span className="text-xs opacity-95 mt-2 font-semibold leading-normal">
                 {successType === 'text' ? 'Post updated and auto-saved.' : 'New custom infographic generated.'}
               </span>
             </div>
             <button 
               onClick={() => setShowSuccessToast(false)}
-              className="p-1 hover:bg-emerald-600 rounded transition-colors ml-2"
+              className="p-1.5 hover:bg-emerald-600 rounded-lg transition-colors ml-auto shrink-0"
             >
-              <X className="w-3.5 h-3.5 text-white" />
+              <X className="w-4 h-4 text-white" />
             </button>
           </div>
         </div>
