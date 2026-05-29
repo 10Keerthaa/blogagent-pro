@@ -283,7 +283,7 @@ export const ReviewList = () => {
 
                                                 {/* Layer 2: Title Group */}
                                                 <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start" style={{ paddingLeft: '80px', paddingRight: '80px' }}>
-                                                    <div className="flex flex-row items-stretch gap-6 pl-6 border-l-8 border-[#2DD4BF]">
+                                                    <div className="flex flex-row items-stretch gap-6 pl-8 border-l-8 border-[#2DD4BF]">
                                                         <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-start text-left w-[75%]" style={{ lineHeight: '1.2' }}>
                                                             {selectedReviewDraft.title.includes(':') ? (
                                                                 <>
@@ -634,7 +634,7 @@ export const ReviewList = () => {
 
                                                     {/* Layer 2: Title Overlay (Left aligned + Teal Line) */}
                                                     <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-start" style={{ paddingLeft: '80px', paddingRight: '80px' }}>
-                                                        <div className="flex flex-row items-stretch gap-6 pl-6 border-l-8 border-[#2DD4BF]">
+                                                        <div className="flex flex-row items-stretch gap-6 pl-8 border-l-8 border-[#2DD4BF]">
                                                             <div className="text-white w-full font-sans drop-shadow-2xl flex flex-col items-start text-left w-[75%]" style={{ lineHeight: '1.2' }}>
                                                                 {selectedReviewDraft.title.includes(':') ? (
                                                                     <>
