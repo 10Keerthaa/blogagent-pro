@@ -95,6 +95,10 @@ export async function POST(request: Request) {
                 borderLeft: isLinkedIn ? '8px solid #2DD4BF' : undefined,
               }}
             >
+              {/* EXPLICIT SPACER for LinkedIn so it NEVER touches the green bar */}
+              {isLinkedIn && (
+                <div style={{ display: 'flex', width: '40px', flexShrink: 0 }}></div>
+              )}
               <div
                 style={{
                   display: 'flex',
@@ -102,7 +106,7 @@ export async function POST(request: Request) {
                   width: '100%',
                   alignItems: (isWordPress || isLinkedIn) ? 'flex-start' : 'center',
                   textAlign: (isWordPress || isLinkedIn) ? 'left' : 'center',
-                  paddingLeft: isLinkedIn ? '40px' : undefined,
+                  // Spacing is handled by the explicit spacer div below
                 }}
               >
                 <h1
