@@ -86,27 +86,55 @@ export async function POST(request: Request) {
               paddingRight: isLinkedIn ? '80px' : (isWordPress ? '60px' : '100px'),
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: isLinkedIn ? 'row' : 'column',
-                alignItems: isLinkedIn ? 'stretch' : (isWordPress ? 'flex-start' : 'center'),
-                width: (isWordPress || isLinkedIn) ? '75%' : '100%',
-                borderLeft: isLinkedIn ? '8px solid #2DD4BF' : undefined,
-              }}
-            >
-              {/* EXPLICIT SPACER for LinkedIn so it NEVER touches the green bar */}
-              {isLinkedIn && (
-                <div style={{ display: 'flex', width: '40px', flexShrink: 0 }}></div>
-              )}
+            {/* LinkedIn: Green bar | gap | text — all as separate sibling divs */}
+            {isLinkedIn ? (
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'stretch', width: '75%' }}>
+                {/* The green vertical bar */}
+                <div style={{ display: 'flex', width: '8px', backgroundColor: '#2DD4BF', flexShrink: 0, borderRadius: '2px' }}></div>
+                {/* The gap between bar and text */}
+                <div style={{ display: 'flex', width: '28px', flexShrink: 0 }}></div>
+                {/* The text content */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
+                  <h1
+                    style={{
+                      fontSize: '64px',
+                      fontWeight: 700,
+                      color: 'white',
+                      lineHeight: 1.2,
+                      margin: 0,
+                      fontFamily: 'Inter',
+                      textShadow: '0 4px 12px rgba(0,0,0,0.6)',
+                    }}
+                  >
+                    {mainTitle}
+                  </h1>
+                  {subtitle && (
+                    <p
+                      style={{
+                        fontSize: '48px',
+                        fontWeight: 400,
+                        color: 'white',
+                        opacity: 0.9,
+                        lineHeight: 1.3,
+                        marginTop: '14px',
+                        marginBottom: 0,
+                        fontFamily: 'Inter',
+                        textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                      }}
+                    >
+                      {subtitle}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : (
               <div
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   width: '100%',
-                  alignItems: (isWordPress || isLinkedIn) ? 'flex-start' : 'center',
-                  textAlign: (isWordPress || isLinkedIn) ? 'left' : 'center',
-                  // Spacing is handled by the explicit spacer div below
+                  alignItems: isWordPress ? 'flex-start' : 'center',
+                  textAlign: isWordPress ? 'left' : 'center',
                 }}
               >
                 <h1
@@ -140,7 +168,7 @@ export async function POST(request: Request) {
                   </p>
                 )}
               </div>
-            </div>
+            )}
           </div>
 
           {/* Layer 3: Logo */}
