@@ -102,7 +102,7 @@ export async function POST(request: Request) {
                   width: '100%',
                   alignItems: (isWordPress || isLinkedIn) ? 'flex-start' : 'center',
                   textAlign: (isWordPress || isLinkedIn) ? 'left' : 'center',
-                  paddingLeft: isLinkedIn ? '100px' : undefined,
+                  paddingLeft: isLinkedIn ? '40px' : undefined,
                 }}
               >
                 <h1
