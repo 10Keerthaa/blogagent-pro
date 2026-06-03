@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         const client = await auth.getClient();
         const projectId = await auth.getProjectId();
 
-        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:streamGenerateContent`;
+        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
 
         let bestDescription = '';
         const maxRetries = 3;
