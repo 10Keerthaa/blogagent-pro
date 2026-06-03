@@ -36,7 +36,7 @@ export class SemanticLinker {
         const auth = await getGoogleAuth(['https://www.googleapis.com/auth/cloud-platform']);
         const client = await auth.getClient();
         const projectId = await auth.getProjectId();
-        const endpoint = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:generateContent`;
+        const endpoint = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:generateContent`;
 
         const aiPrompt = `Objective: Semantic Intent Matching for Internal Linking.
         
