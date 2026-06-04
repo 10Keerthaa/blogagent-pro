@@ -10,7 +10,7 @@ import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
     FileText, Calendar, ArrowLeft, ArrowRight, X, CheckCircle, XCircle, Zap, Sparkles, Users,
-    AlertCircle, Loader2
+    AlertCircle, Loader2, Trash2, CheckSquare
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 import { Portal } from '../ui/Portal';
@@ -42,6 +42,9 @@ export const ReviewList = () => {
     const [isLinkActive, setIsLinkActive] = React.useState(false);
     const [isEditorFocused, setIsEditorFocused] = React.useState(false);
     const [isRefiningVisual, setIsRefiningVisual] = React.useState(false);
+    const [selectedDraftIds, setSelectedDraftIds] = React.useState<string[]>([]);
+    const [draftToDelete, setDraftToDelete] = React.useState<string | null>(null);
+    const [isBulkDeleting, setIsBulkDeleting] = React.useState(false);
     const editorRef = React.useRef<HTMLDivElement>(null);
 
     const refinementRef = React.useRef<HTMLDivElement>(null);
@@ -554,9 +557,19 @@ export const ReviewList = () => {
                 </section>
             </div>
             ) : (
-                <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8">
+                <div className="animate-fadeIn w-full space-y-10 pb-24 transition-all duration-500 px-4 lg:px-8 relative">
                     <div className="flex items-center justify-between mb-2 px-1">
-                        <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
+                        <div className="flex items-center gap-4">
+                            <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
+                            {filteredDrafts && filteredDrafts.length > 0 && (
+                                <button
+                                    onClick={() => setSelectedDraftIds(selectedDraftIds.length === filteredDrafts.length ? [] : filteredDrafts.map(d => d.id))}
+                                    className="text-[10px] font-bold tracking-widest uppercase text-violet-500 hover:text-violet-600 transition-colors"
+                                >
+                                    {selectedDraftIds.length === filteredDrafts.length ? 'Deselect All' : 'Select All'}
+                                </button>
+                            )}
+                        </div>
                     </div>
                     <div className="grid grid-cols-1 gap-6">
                         {isFetchingDrafts || filteredDrafts === null ? (
@@ -567,13 +580,36 @@ export const ReviewList = () => {
                             ))
                         ) : filteredDrafts.length > 0 ? (
                             filteredDrafts.map((draft) => (
-                                <Card key={draft.id} hoverable className="p-8 cursor-pointer group border-slate-200 dark:border-slate-800" onClick={() => handleSelectReviewDraft(draft.id)}>
-                                    <div className={`flex items-center justify-between p-4 cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-violet-100/10 dark:bg-violet-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
-                                        <div className="flex items-center gap-7">
-                                            <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
+                                <Card key={draft.id} hoverable className="p-4 lg:p-6 cursor-pointer group border-slate-200 dark:border-slate-800" onClick={() => handleSelectReviewDraft(draft.id)}>
+                                    <div className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-violet-100/10 dark:bg-violet-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                                        <div className="flex items-center gap-6">
+                                            <div 
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setSelectedDraftIds(prev => prev.includes(draft.id) ? prev.filter(i => i !== draft.id) : [...prev, draft.id]);
+                                                }}
+                                                className={`w-6 h-6 rounded border ${selectedDraftIds.includes(draft.id) ? 'bg-violet-500 border-violet-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:border-violet-400'} flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-sm ml-2`}
+                                            >
+                                                {selectedDraftIds.includes(draft.id) && <CheckSquare className="w-4 h-4" />}
+                                            </div>
+                                            <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm shrink-0"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
                                             <div className="space-y-2"><h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3><div className="flex items-center gap-6"><span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" />{new Date(draft.createdAt || draft.created_at).toLocaleDateString()}</span>{draft.authorEmail && <span className="text-[10px] font-medium text-violet-400 lowercase italic">by {draft.authorEmail}</span>}<Badge variant="outline" className="px-3">Draft</Badge>{draft.platform === 'framer' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700">Framer</span> : draft.platform === 'linkedin' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400 border border-sky-200 dark:border-sky-800">LinkedIn</span> : <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border border-violet-200 dark:border-violet-800">WordPress</span>}</div></div>
                                         </div>
-                                        <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0"><span className="text-[11px] font-extrabold uppercase tracking-widest text-violet-500">Launch Review</span><ArrowRight className="w-5 h-5 text-violet-500" /></div>
+                                        <div className="flex items-center gap-3 pr-2">
+                                            <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0 flex items-center gap-2">
+                                                <span className="text-[11px] font-extrabold uppercase tracking-widest text-violet-500 whitespace-nowrap">Launch Review</span>
+                                                <ArrowRight className="w-5 h-5 text-violet-500 shrink-0" />
+                                            </div>
+                                            <button 
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setDraftToDelete(draft.id);
+                                                }}
+                                                className="ml-4 p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full transition-all group-hover:opacity-100 shrink-0 border border-transparent hover:border-red-100 dark:hover:border-red-900/30"
+                                            >
+                                                <Trash2 className="w-5 h-5" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </Card>
                             ))
@@ -585,6 +621,48 @@ export const ReviewList = () => {
                         )}
                     </div>
                 </div>
+            )}
+
+            {/* FLOATING ACTION BAR FOR BULK DELETE */}
+            {selectedDraftIds.length > 0 && !selectedReviewDraft && (
+                <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white px-10 py-5 rounded-md shadow-2xl flex items-center justify-center gap-8 z-50 animate-fadeIn border border-slate-700 w-auto min-w-max">
+                    <span className="text-base font-bold whitespace-nowrap">{selectedDraftIds.length} Draft{selectedDraftIds.length > 1 ? 's' : ''} Selected</span>
+                    <button 
+                        onClick={() => setIsBulkDeleting(true)}
+                        className="bg-red-600 hover:bg-red-700 text-white rounded-md px-6 py-3 uppercase tracking-widest text-[11px] font-bold whitespace-nowrap transition-colors border-none outline-none flex items-center justify-center"
+                    >
+                        Delete Selected
+                    </button>
+                </div>
+            )}
+
+            {/* CONFIRMATION MODAL FOR DELETION */}
+            {(draftToDelete || isBulkDeleting) && (
+                <Portal>
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fadeIn p-4">
+                        <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 animate-scaleIn" style={{ padding: '40px' }}>
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Delete Draft{isBulkDeleting ? 's' : ''}?</h3>
+                            <p className="text-slate-500 dark:text-slate-400 mb-10 leading-relaxed">
+                                Are you sure you want to delete {isBulkDeleting ? `these ${selectedDraftIds.length} drafts` : 'this draft'}? This action cannot be undone.
+                            </p>
+                            <div className="flex justify-end gap-4">
+                                <Button variant="secondary" onClick={() => { setDraftToDelete(null); setIsBulkDeleting(false); }} className="rounded-none font-bold uppercase tracking-widest text-[10px]">Cancel</Button>
+                                <Button variant="danger" onClick={async () => {
+                                    if (draftToDelete) {
+                                        await handleRejectDraft(draftToDelete);
+                                    } else if (isBulkDeleting) {
+                                        for (const id of selectedDraftIds) {
+                                            await handleRejectDraft(id);
+                                        }
+                                        setSelectedDraftIds([]);
+                                    }
+                                    setDraftToDelete(null);
+                                    setIsBulkDeleting(false);
+                                }} className="rounded-none font-bold uppercase tracking-widest text-[10px]" isLoading={isRejecting}>Yes, Delete</Button>
+                            </div>
+                        </div>
+                    </div>
+                </Portal>
             )}
 
             {/* PREVIEW MODAL - Wrapped in Portal for absolute viewport centering */}
