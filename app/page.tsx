@@ -91,13 +91,13 @@ const DashboardContent = () => {
       {/* Floating Success Toast Notification */}
       {showSuccessToast && (
         <div className="fixed top-6 right-6 z-[9999] pointer-events-auto animate-slideIn">
-          <div className="bg-emerald-500 text-white border border-emerald-600 rounded-2xl px-7 py-5 shadow-[0_12px_40px_rgba(16,185,129,0.35)] flex items-center gap-4 min-w-[360px] animate-scaleIn">
-            <CheckCircle className="w-7 h-7 text-white shrink-0 animate-scaleIn" />
+          <div className="bg-emerald-500 text-white border border-emerald-600 rounded-2xl shadow-[0_12px_40px_rgba(16,185,129,0.35)] flex items-center gap-6 min-w-max animate-scaleIn" style={{ padding: '24px 40px' }}>
+            <CheckCircle className="w-8 h-8 text-white shrink-0 animate-scaleIn" />
             <div className="flex flex-col">
-              <span className="text-sm font-extrabold uppercase tracking-widest leading-none">
+              <span className="text-base font-extrabold uppercase tracking-widest leading-none">
                 {successType === 'text' ? 'Refinement Complete!' : 'Visual Updated!'}
               </span>
-              <span className="text-xs opacity-95 mt-2 font-semibold leading-normal">
+              <span className="text-sm opacity-95 mt-2 font-semibold leading-normal">
                 {successType === 'text' ? 'Post updated and auto-saved.' : 'New custom infographic generated.'}
               </span>
             </div>

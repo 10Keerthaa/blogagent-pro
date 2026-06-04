@@ -58,7 +58,7 @@ export async function POST(req: Request) {
 
     // Detect structural intent in user feedback to select the correct refinement engine
     const isStructuralFeedback = isSurgical && (
-      /reorganize|restructure|merge\s+(sections|headings|h2|h3)|consolidate|headings|structure|7\s+h2|5\s+core|outline|layout/i.test(feedback)
+      /\b(reorganize|restructure|merge\s+(sections|headings|h2|h3)|consolidate|headings|structure|7\s+h2|5\s+core|outline|layout)\b/i.test(feedback)
     );
 
     // --- GENERATION STRATEGY ---
@@ -129,6 +129,7 @@ export async function POST(req: Request) {
            - The Conclusion MUST end with a purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
            - DELETE any existing [[CTA_LINK]] placeholders; they are now deprecated.
         8. RELATIVE REFERENCE RESOLUTION: If the USER INSTRUCTION uses vague or relative language such as "the new subheading", "the section I just added", "the last heading", "the recently added block", or "the new section" — scan the GROUND TRUTH HTML structure from bottom to top and identify the most recently positioned <h2> or <h3> block as the target. Apply the requested action (INSERT, DELETE, or REPLACE) to that identified block. All other content must remain completely untouched.
+        9. ESCAPE HATCH: If the USER INSTRUCTION is clearly a massive outline for a completely new topic that contradicts the GROUND TRUTH HTML, you are permitted to ignore the "Zero Drift" and "Preserve Substance" rules. In this specific edge case, you must generate the new article from scratch to avoid logical contradictions.
 
         RESULT FORMAT:
         <title>...</title>
@@ -152,7 +153,8 @@ export async function POST(req: Request) {
         2. PRESERVE SUBSTANCE: You must retain all existing facts, numbers, dates, tables, and bullet points from the GROUND TRUTH HTML. Do not invent any new facts.
         3. COMPLETION GUARANTEE: You MUST output the entire redesigned HTML from the introduction to the FAQ section. Do NOT stop generating or truncate early.
         4. FORMAT: Return the final, fully merged HTML within <content> tags. Ensure the <title> and <meta> tags are also included.
-        5. MANDATORY STANDARDS: The post must end with an <h2>Conclusion</h2> containing a 3-sentence prose wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
+        5. ESCAPE HATCH: If the USER RESTRUCTURE INSTRUCTION is clearly a completely new topic or outline that has nothing to do with the GROUND TRUTH HTML, you are permitted to ignore the 'PRESERVE SUBSTANCE' rule and generate the new article from scratch to avoid logical contradictions.
+        6. MANDATORY STANDARDS: The post must end with an <h2>Conclusion</h2> containing a 3-sentence prose wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
 
         RESULT FORMAT:
         <title>...</title>
