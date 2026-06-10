@@ -24,7 +24,8 @@ export const SidebarForm = () => {
         targetPlatform, setTargetPlatform,
         referenceUrl1, setReferenceUrl1,
         referenceUrl2, setReferenceUrl2,
-        referenceUrl3, setReferenceUrl3
+        referenceUrl3, setReferenceUrl3,
+        ideaBox, setIdeaBox
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -33,6 +34,7 @@ export const SidebarForm = () => {
     const displayPrompt = selectedReviewDraft?.prompt || prompt;
     const displayKeywords = selectedReviewDraft ? (Array.isArray(selectedReviewDraft.keywords) ? selectedReviewDraft.keywords : (typeof selectedReviewDraft.keywords === 'string' ? selectedReviewDraft.keywords.split(',').map((k: string) => k.trim()) : [])) : keywords;
     const displayDescription = selectedReviewDraft?.metaDesc || description;
+    const displayIdeaBox = selectedReviewDraft?.ideaBox || ideaBox;
 
     return (
         <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-full border-r border-slate-400 dark:border-slate-800 transition-all duration-300 relative overflow-hidden">
@@ -218,6 +220,18 @@ export const SidebarForm = () => {
                         </p>
                     </section>
                 )}
+
+                {/* Idea Box */}
+                <section className="space-y-4">
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 !pl-4">Idea Box <span className="normal-case font-medium tracking-normal text-slate-300">(Optional)</span></label>
+                    <Textarea
+                        placeholder="Add details for the post content. E.g., 'Add a section with details about this page based on the URLs above...'"
+                        value={displayIdeaBox}
+                        onChange={(e) => setIdeaBox(e.target.value)}
+                        className="!min-h-[100px] !bg-slate-50/50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !pl-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all"
+                        readOnly={isReadOnly}
+                    />
+                </section>
             </div>
 
             {/* STICKY ACTION ZONE */}

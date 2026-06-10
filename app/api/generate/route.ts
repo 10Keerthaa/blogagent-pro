@@ -6,7 +6,7 @@ export const maxDuration = 60; // Set timeout for Vercel
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, referenceUrl1, referenceUrl2, referenceUrl3 } = body;
+    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, ideaBox, referenceUrl1, referenceUrl2, referenceUrl3 } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -76,6 +76,7 @@ export async function POST(req: Request) {
         - Every sentence must add unique technical value. ZERO FLUFF.
 
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
+        ${ideaBox ? `\nADDITIONAL CONTENT DETAILS & INSTRUCTIONS: \n${ideaBox}\n(CRITICAL: You MUST incorporate these specific details naturally into the content. Do NOT ignore this.)\n` : ""}
 
         STRICT REQUIREMENTS:
         1. BLOG TITLE: 50-60 characters inside <title> tags.
@@ -113,6 +114,7 @@ export async function POST(req: Request) {
 
         USER INSTRUCTION: ${feedback}
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL (USE FOR FACTS/DATA): \n${learnedContext}\n` : ""}
+        ${ideaBox ? `\nADDITIONAL CONTENT DETAILS & INSTRUCTIONS: \n${ideaBox}\n(CRITICAL: You MUST incorporate these specific details naturally into the content. Do NOT ignore this.)\n` : ""}
 
         STRICT SURGICAL CONTRACT — VIOLATING ANY OF THESE IS A FAILURE:
         1. ZERO DRIFT: You must return the GROUND TRUTH HTML with EXTREME PRECISION. Do not rephrase, move, or edit any sentence, heading, or paragraph that was not explicitly mentioned in the USER INSTRUCTION. **EXCEPTION:** If LEARNED CONTEXT is provided, you ARE allowed to "drift" solely to weave in new facts into existing sections.
@@ -147,6 +149,7 @@ export async function POST(req: Request) {
 
         USER RESTRUCTURE INSTRUCTION: ${feedback}
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL (USE FOR FACTS/DATA): \n${learnedContext}\n` : ""}
+        ${ideaBox ? `\nADDITIONAL CONTENT DETAILS & INSTRUCTIONS: \n${ideaBox}\n(CRITICAL: You MUST incorporate these specific details naturally into the content. Do NOT ignore this.)\n` : ""}
 
         STRICT STRUCTURAL REBUILD CONTRACT:
         1. RESTRUCTURE: You are hereby permitted and commanded to reorganize, merge, delete, or rename headings and paragraphs to match the USER RESTRUCTURE INSTRUCTION. Do not worry about the "Zero Drift" rule for this structural rewrite.

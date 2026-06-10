@@ -60,7 +60,8 @@ export const useBlogApi = () => {
             platform: data.platform || null,
             referenceUrl1: data.referenceUrl1 || null,
             referenceUrl2: data.referenceUrl2 || null,
-            referenceUrl3: data.referenceUrl3 || null
+            referenceUrl3: data.referenceUrl3 || null,
+            ideaBox: data.ideaBox || null
         };
     }, []);
 
@@ -476,6 +477,7 @@ export const useBlogApi = () => {
                 referenceUrl1: data.referenceUrl1 || null,
                 referenceUrl2: data.referenceUrl2 || null,
                 referenceUrl3: data.referenceUrl3 || null,
+                ideaBox: data.ideaBox || null,
                 last_edited_at: serverTimestamp()
             };
 

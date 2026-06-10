@@ -6,7 +6,7 @@ export const maxDuration = 60; // Set timeout for Vercel
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, sitemapLinks, referenceUrl1, referenceUrl2, referenceUrl3 } = body;
+    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, ideaBox, sitemapLinks, referenceUrl1, referenceUrl2, referenceUrl3 } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -80,6 +80,7 @@ export async function POST(req: Request) {
         ` : ""}
 
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
+        ${ideaBox ? `\nADDITIONAL CONTENT DETAILS & INSTRUCTIONS: \n${ideaBox}\n(CRITICAL: You MUST incorporate these specific details naturally into the content. Do NOT ignore this.)\n` : ""}
 
         STRICT REQUIREMENTS (FRAMER SPECIFIC):
         1. BLOG TITLE: Inside <title> tags. Generate a fresh, high-authority, and catchy blog title BASED on the provided topic. Do NOT simply repeat the topic verbatim; instead, refine it for maximum impact. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title under any circumstances. If the topic is short and needs only one part, keep it as a single bold statement without a colon.
@@ -117,6 +118,7 @@ export async function POST(req: Request) {
 
         USER INSTRUCTION: ${feedback}
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL (USE FOR FACTS/DATA): \n${learnedContext}\n` : ""}
+        ${ideaBox ? `\nADDITIONAL CONTENT DETAILS & INSTRUCTIONS: \n${ideaBox}\n(CRITICAL: You MUST incorporate these specific details naturally into the content. Do NOT ignore this.)\n` : ""}
         
         STRICT SURGICAL CONTRACT:
         1. ZERO DRIFT: You must return the GROUND TRUTH HTML with EXTREME PRECISION. Do not rephrase, move, or edit any sentence, heading, or paragraph that was not explicitly mentioned in the USER INSTRUCTION. **EXCEPTION:** If LEARNED CONTEXT is provided, you ARE allowed to "drift" solely to weave in new facts into existing sections.

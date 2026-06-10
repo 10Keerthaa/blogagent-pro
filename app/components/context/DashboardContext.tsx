@@ -24,6 +24,8 @@ interface DashboardContextType {
     setReferenceUrl2: (v: string) => void;
     referenceUrl3: string;
     setReferenceUrl3: (v: string) => void;
+    ideaBox: string;
+    setIdeaBox: (v: string) => void;
     activeTab: 'create' | 'review' | 'history';
     setActiveTab: (v: 'create' | 'review' | 'history') => void;
     preview: any | null;
@@ -127,6 +129,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [referenceUrl1, setReferenceUrl1] = useState('');
     const [referenceUrl2, setReferenceUrl2] = useState('');
     const [referenceUrl3, setReferenceUrl3] = useState('');
+    const [ideaBox, setIdeaBox] = useState('');
     const [activeTab, setActiveTab] = useState<'create' | 'review' | 'history'>('create');
     const [preview, setPreview] = useState<any | null>(null);
     const [reviewDrafts, setReviewDrafts] = useState<any[]>([]);
@@ -184,6 +187,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setReferenceUrl1('');
         setReferenceUrl2('');
         setReferenceUrl3('');
+        setIdeaBox('');
         setPreview(null);
         setInfographicUrl(null);
         setSelectedCategories([LOCKED_CATEGORY_ID]);
@@ -484,6 +488,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setReferenceUrl1('');
         setReferenceUrl2('');
         setReferenceUrl3('');
+        setIdeaBox('');
         setPreview(null);
         setInfographicUrl(null);
         setError(null);
@@ -591,6 +596,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setReferenceUrl1('');
         setReferenceUrl2('');
         setReferenceUrl3('');
+        setIdeaBox('');
         setPreview(null);
         setInfographicUrl(null);
         setError(null);
@@ -604,7 +610,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
             
             const fullRawText = await generationFn(
-                { prompt, keywords: keywords.join(', '), primaryKeyword, description, referenceUrl1: referenceUrl1.trim() || undefined, referenceUrl2: referenceUrl2.trim() || undefined, referenceUrl3: referenceUrl3.trim() || undefined, sitemapLinks: targetPlatform === 'wordpress' ? sitemapData : null },
+                { prompt, keywords: keywords.join(', '), primaryKeyword, description, ideaBox, referenceUrl1: referenceUrl1.trim() || undefined, referenceUrl2: referenceUrl2.trim() || undefined, referenceUrl3: referenceUrl3.trim() || undefined, sitemapLinks: targetPlatform === 'wordpress' ? sitemapData : null },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
@@ -670,7 +676,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     platform: targetPlatform,
                     referenceUrl1: referenceUrl1.trim() || null,
                     referenceUrl2: referenceUrl2.trim() || null,
-                    referenceUrl3: referenceUrl3.trim() || null
+                    referenceUrl3: referenceUrl3.trim() || null,
+                    ideaBox: ideaBox || null
                 });
             } catch (err) {
                 console.warn("Post-generation sync failed:", err);
@@ -756,7 +763,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         try {
             const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
             const fullRawText = await generationFn(
-                { prompt: preview?.title || prompt, keywords: keywords.join(', '), primaryKeyword, feedback, currentContent: preview?.content, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null },
+                { prompt: preview?.title || prompt, keywords: keywords.join(', '), primaryKeyword, feedback, currentContent: preview?.content, ideaBox, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
@@ -791,7 +798,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         try {
             const activeKeyword = primaryKeyword || '';
             const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
-            const fullRawText = await generationFn({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), primaryKeyword: activeKeyword, feedback, currentContent: selectedReviewDraft.content, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null }, () => { });
+            const fullRawText = await generationFn({ prompt: selectedReviewDraft.title, keywords: keywords.join(', '), primaryKeyword: activeKeyword, feedback, currentContent: selectedReviewDraft.content, ideaBox, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null }, () => { });
             const titleMatch = fullRawText.match(/<title>([\s\S]*?)<\/title>/i);
             const metaMatch = fullRawText.match(/<meta>([\s\S]*?)<\/meta>/i);
             const contentMatch = fullRawText.match(/<content>([\s\S]*?)<\/content>/i);
@@ -838,6 +845,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 infographicUrl: infographicUrl, 
                 prompt: prompt, 
                 keywords: keywords, 
+                ideaBox: ideaBox,
                 authorEmail: user?.email || '', 
                 createdBy: user?.uid || '',
                 status: 'review',
@@ -987,6 +995,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                 setReferenceUrl1(draft.referenceUrl1 || '');
                 setReferenceUrl2(draft.referenceUrl2 || '');
                 setReferenceUrl3(draft.referenceUrl3 || '');
+                setIdeaBox(draft.ideaBox || '');
                 setActiveTab('create');
                 
                 // Load categories
@@ -1129,6 +1138,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             if (draft) {
                 setSelectedReviewDraft(draft);
                 setPrompt(draft.prompt || ''); setDescription(draft.metaDesc || '');
+                setIdeaBox(draft.ideaBox || '');
                 setInfographicUrl(draft.infographicUrl || null); setPrimaryKeyword(draft.primaryKeyword || null);
                 if (Array.isArray(draft.keywords)) setKeywords(draft.keywords);
                 else if (typeof draft.keywords === 'string' && draft.keywords.trim()) setKeywords(draft.keywords.split(',').map((k: string) => k.trim()).filter(Boolean));
@@ -1163,7 +1173,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const value = {
-        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, referenceUrl1, setReferenceUrl1, referenceUrl2, setReferenceUrl2, referenceUrl3, setReferenceUrl3, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isProcessingFullPost, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, infographicFeedback, setInfographicFeedback, isInfographicRefining, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft, selectedCategories, setSelectedCategories,
+        prompt, setPrompt, keywordInput, setKeywordInput, keywords, setKeywords, feedback, setFeedback, description, setDescription, referenceUrl1, setReferenceUrl1, referenceUrl2, setReferenceUrl2, referenceUrl3, setReferenceUrl3, ideaBox, setIdeaBox, activeTab, setActiveTab, preview, setPreview, reviewDrafts, isFetchingDrafts: api.isFetchingDrafts, selectedReviewDraft, setSelectedReviewDraft, history, selectedHistoryItem, setSelectedHistoryItem, handleSelectHistoryItem, error, setError, isGenerating: api.isGenerating, isHumanizing: api.isHumanizing, isProcessingFullPost, isApplyingFeedback: api.isApplyingFeedback, isGeneratingDescription: api.isGeneratingDescription, isGeneratingInfographic: api.isGeneratingInfographic, infographicUrl, setInfographicUrl, infographicFeedback, setInfographicFeedback, isInfographicRefining, isSavingDraft: api.isSavingDraft, isRejecting: api.isRejecting, isSavingManual: api.isSavingManual, isSavingReview: api.isSavingReview, isPublished: api.isPublished, isFetchingKeywords: api.isFetchingKeywords, isFetchingUsers: api.isFetchingUsers, isUpdatingRole: api.isUpdatingRole, users, handleFetchUsers, isTeamManagementOpen, setIsTeamManagementOpen, isPerformanceOpen, setIsPerformanceOpen, handleUpdateUserRole, handleAddUser, handleDeleteUser, handleAddKeyword, removeKeyword, handleFetchKeywords, handleClearForm, handleGenerate, handleGenerateDescription, handleApplyFeedback, handleApplyReviewFeedback, handleSaveManualEdits, handleSaveDraft, handleRejectDraft, handleMarkAsReviewed, handleApproveDraft, handleGenerateInfographic, fetchDrafts, handleSelectReviewDraft, isFetchingDraftDetails, handleResumeDraft, isResuming, upsertPost: api.upsertPost, primaryKeyword, setPrimaryKeyword, resetEditorState, user, role, handleLogout, isRefiningSelection: api.isRefiningSelection, handleRefineSelection, reportData, handleFetchReport, isPreviewOpen, setIsPreviewOpen, humanizationError, setHumanizationError, handleRetryHumanization, hasResumeDraft, checkForResumeDraft, selectedCategories, setSelectedCategories,
         deleteInProgressDraft: api.deleteInProgressDraft,
         targetPlatform, setTargetPlatform,
         microsoftAccessToken, setMicrosoftAccessToken
