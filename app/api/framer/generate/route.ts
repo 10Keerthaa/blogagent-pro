@@ -101,6 +101,9 @@ export async function POST(req: Request) {
         7. CONCLUSION (MANDATORY): Include an "<h2>Conclusion</h2>" heading followed by exactly 3 to 4 sentences of professional wrap-up and this exact purple link: <a href="https://www.10xds.ai/contact/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
         8. FAQ SECTION (MANDATORY): Include an "<h2>FAQ Section</h2>" heading with EXACTLY 5 questions. Wrap each question in <p><b>...</b></p> tags and each answer in <p>...</p> tags. Add a <br /> after every answer to ensure a clear vertical gap between each Q&A pair. Do not nest them; they must be sequential blocks.
 
+        ABSOLUTE FINAL DIRECTIVE: 
+        Your ENTIRE generated output inside <content> MUST NOT EXCEED 2,100 WORDS under ANY circumstances. If LEARNED CONTEXT or ADDITIONAL INSTRUCTIONS are provided, you MUST compress your writing and weave those facts into the existing H4 sections. Do NOT skip any structural requirements (Intro, 5 H4s, Conclusion, FAQs), but you MUST ensure the total combined word count stays strictly at or below 2,100 words.
+
         RESULT FORMAT:
         <title>...</title>
         <meta>...</meta>

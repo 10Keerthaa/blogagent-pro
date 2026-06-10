@@ -5,10 +5,10 @@ export const maxDuration = 60;
 
 export async function POST(req: Request) {
     try {
-        const { paragraph, candidates, platform, knowledgeBase } = await req.json();
+        const { requests, platform, knowledgeBase } = await req.json();
 
-        if (!paragraph || !candidates) {
-            return NextResponse.json({ error: "Paragraph and candidates are required" }, { status: 400 });
+        if (!requests || !Array.isArray(requests)) {
+            return NextResponse.json({ error: "Requests array is required" }, { status: 400 });
         }
 
         const linker = new SemanticLinker();
@@ -18,11 +18,11 @@ export async function POST(req: Request) {
             await linker.init(platform);
         }
 
-        const match = await linker.matchContext(paragraph, candidates, platform);
+        const results = await linker.matchContextBatch(requests, platform);
 
-        return NextResponse.json({ match });
+        return NextResponse.json({ results });
     } catch (error: any) {
-        console.error("Contextual Linker API Error:", error);
+        console.error("Batch Contextualize API Error:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

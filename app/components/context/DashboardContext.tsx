@@ -144,6 +144,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [reportData, setReportData] = useState<any[]>([]);
     const [sitemapData, setSitemapData] = useState<Record<string, string>>({});
     const [anchorMap, setAnchorMap] = useState<Record<string, string[]>>({});
+    const [knowledgeBase, setKnowledgeBase] = useState<any[]>([]);
     const [primaryKeyword, setPrimaryKeyword] = useState<string | null>(null);
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
     const [isResuming, setIsResuming] = useState(false);
@@ -216,14 +217,20 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         if (targetPlatform === 'linkedin') {
             setSitemapData({});
             setAnchorMap({});
+            setKnowledgeBase([]);
             return;
         }
         try {
-            const r = await fetch(`/api/sitemap-urls?platform=${targetPlatform}`);
-            const d = await r.json();
+            const [sitemapResp, kbResp] = await Promise.all([
+                fetch(`/api/sitemap-urls?platform=${targetPlatform}`),
+                fetch(`/api/internal-links/knowledge?platform=${targetPlatform}`)
+            ]);
+            const d = await sitemapResp.json();
+            const kb = await kbResp.json();
             setSitemapData(d.keywordMap || {});
             setAnchorMap(d.anchorMap || {});
-        } catch (e) { console.error('Sitemap fetch failed'); }
+            setKnowledgeBase(kb.knowledge || []);
+        } catch (e) { console.error('Sitemap/Knowledge fetch failed'); }
     }, [targetPlatform]);
 
     const fetchHistory = useCallback(async () => {
@@ -321,83 +328,91 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             currentLinkCount++;
         }
 
+        const partsList: Array<{ type: 'heading'|'delimiter'|'text', content: string, wordCount?: number, reqId?: string, candidates?: string[] }> = [];
+        const batchRequests: Array<{ id: string, paragraph: string, candidates: string[] }> = [];
+        let tempUsedAnchors = new Set(usedAnchors);
+
         for (let block of primaryBlocks) {
             // RULE: Never link inside headings
             if (block.match(/<h[1-6]/i)) {
-                processedFullHtml.push(block);
+                partsList.push({ type: 'heading', content: block });
                 continue;
             }
 
             // Split non-heading content by paragraph/list tags
             const subBlocks = block.split(/(<\/p>|<\/li>)/i);
-            const processedSubBlocks: string[] = [];
 
             for (let part of subBlocks) {
                 // If it's a delimiter (</p> or </li>), just push it
                 if (part.match(/<\/(p|li)>/i)) {
-                    processedSubBlocks.push(part);
+                    partsList.push({ type: 'delimiter', content: part });
                     continue;
                 }
 
                 const wordCountInPart = part.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
                 
                 if (!part.trim() || currentLinkCount >= maxLinksLimit || globalWordCounter - lastLinkWordIndex < 100) {
-                    processedSubBlocks.push(part);
+                    partsList.push({ type: 'text', content: part, wordCount: wordCountInPart });
                     globalWordCounter += wordCountInPart;
                     continue;
                 }
 
-                let partLinked = false;
-
                 // Tier 1: Semantic Intent Matching
                 const candidatesInPart = sortedKeywords.filter(k => {
-                    if (usedAnchors.has(k.toLowerCase())) return false;
+                    if (tempUsedAnchors.has(k.toLowerCase())) return false;
                     const regex = new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
                     return regex.test(part);
                 }).slice(0, 5);
 
                 if (candidatesInPart.length > 0) {
-                    try {
-                        const resp = await fetch('/api/internal-links/contextualize', {
-                            method: 'POST',
-                            body: JSON.stringify({ paragraph: part.replace(/<[^>]+>/g, ' '), candidates: candidatesInPart, platform: targetPlatform })
-                        });
-                        const data = await resp.json();
-                        
-                        if (data.match) {
-                            const targetUrl = data.match.url;
+                    const reqId = `part_${partsList.length}`;
+                    partsList.push({ type: 'text', content: part, wordCount: wordCountInPart, reqId, candidates: candidatesInPart });
+                    batchRequests.push({ id: reqId, paragraph: part.replace(/<[^>]+>/g, ' '), candidates: candidatesInPart });
+                    // Temporarily lock candidates so we don't send duplicates in the batch
+                    candidatesInPart.forEach(c => tempUsedAnchors.add(c.toLowerCase()));
+                } else {
+                    partsList.push({ type: 'text', content: part, wordCount: wordCountInPart });
+                }
+                
+                globalWordCounter += wordCountInPart;
+            }
+        }
 
-                            const matchText = candidatesInPart.find(c => part.toLowerCase().includes(c.toLowerCase()));
-                            if (matchText && !usedAnchors.has(matchText.toLowerCase())) {
-                                const escapedMatch = matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        // Tier 1: Batch Request
+        if (batchRequests.length > 0) {
+            try {
+                const resp = await fetch('/api/internal-links/batch-contextualize', {
+                    method: 'POST',
+                    body: JSON.stringify({ requests: batchRequests, platform: targetPlatform, knowledgeBase })
+                });
+                const data = await resp.json();
+                
+                if (data.results) {
+                    for (const partObj of partsList) {
+                        if (partObj.reqId && data.results[partObj.reqId]) {
+                            const match = data.results[partObj.reqId];
+                            if (match && match.url && match.matchText && !usedAnchors.has(match.matchText.toLowerCase())) {
+                                const escapedMatch = match.matchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                                 const regex = new RegExp(`(?<!<[^>]*)\\b(${escapedMatch})\\b(?![^<]*>)`, 'i');
                                 const linkStyle = targetPlatform === 'framer'
                                     ? `style="color: #9333ea; text-decoration: underline; text-decoration-color: #9333ea; font-weight: 500;"`
                                     : `class="sitemap-link underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium"`;
-                                part = part.replace(regex, `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" ${linkStyle}>$1</a>`);
-                                usedAnchors.add(matchText.toLowerCase());
+                                
+                                partObj.content = partObj.content.replace(regex, `<a href="${match.url}" target="_blank" rel="noopener noreferrer" ${linkStyle}>$1</a>`);
+                                usedAnchors.add(match.matchText.toLowerCase());
                                 currentLinkCount++;
-                                lastLinkWordIndex = globalWordCounter;
-                                partLinked = true;
+                                lastLinkWordIndex = globalWordCounter; // Approximate, but keeps spacing
                             }
                         }
-                    } catch (e) {
-                        console.warn("Semantic matching failed, falling back to Tier 2...");
                     }
                 }
-
-                // Tier 2: Exact Match Fallback
-                // DISABLED: Strict business rule - if Semantic AI cannot find a high-confidence match in the correct platform database, do not create a link.
-
-
-                processedSubBlocks.push(part);
-                globalWordCounter += wordCountInPart;
+            } catch (e) {
+                console.warn("Batch semantic matching failed.", e);
             }
-            processedFullHtml.push(processedSubBlocks.join(''));
         }
 
-        return processedFullHtml.join('');
-    }, [sitemapData, anchorMap]);
+        return partsList.map(p => p.content).join('');
+    }, [sitemapData, anchorMap, knowledgeBase, targetPlatform]);
 
     const processKeywordsInContent = useCallback((html: string, allKeywords: string[], primary: string | null): string => {
         if (!html || allKeywords.length === 0) return html;

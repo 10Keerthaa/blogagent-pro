@@ -93,6 +93,9 @@ export async function POST(req: Request) {
         8. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content.
         9. CONCLUSION (MANDATORY): You MUST include a final "<h2>Conclusion</h2>" heading followed by exactly 1 paragraph of 3 to 4 sentences looking towards the future and ending on a strong, definitive statement celebrating the new operational era.
 
+        ABSOLUTE FINAL DIRECTIVE: 
+        Your ENTIRE generated output inside <content> MUST NOT EXCEED 2,100 WORDS under ANY circumstances. If LEARNED CONTEXT or ADDITIONAL INSTRUCTIONS are provided, you MUST compress your writing and weave those facts into the existing H2 sections. Do NOT skip any structural requirements, but you MUST ensure the total combined word count stays strictly at or below 2,100 words.
+
         RESULT FORMAT:
         <title>...</title>
         <meta>...</meta>
