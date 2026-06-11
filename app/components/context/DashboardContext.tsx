@@ -220,6 +220,11 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             setKnowledgeBase([]);
             return;
         }
+        // Immediately clear existing sitemap to prevent cross-contamination while fetching
+        setSitemapData({});
+        setAnchorMap({});
+        setKnowledgeBase([]);
+        
         try {
             const [sitemapResp, kbResp] = await Promise.all([
                 fetch(`/api/sitemap-urls?platform=${targetPlatform}`),
@@ -625,7 +630,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
             
             const fullRawText = await generationFn(
-                { prompt, keywords: keywords.join(', '), primaryKeyword, description, ideaBox, referenceUrl1: referenceUrl1.trim() || undefined, referenceUrl2: referenceUrl2.trim() || undefined, referenceUrl3: referenceUrl3.trim() || undefined, sitemapLinks: targetPlatform === 'wordpress' ? sitemapData : null },
+                { prompt, keywords: keywords.join(', '), primaryKeyword, description, ideaBox, referenceUrl1: referenceUrl1.trim() || undefined, referenceUrl2: referenceUrl2.trim() || undefined, referenceUrl3: referenceUrl3.trim() || undefined, sitemapLinks: targetPlatform === 'linkedin' ? null : sitemapData },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;
@@ -778,7 +783,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         try {
             const generationFn = targetPlatform === 'framer' ? api.generateFramerContent : targetPlatform === 'linkedin' ? api.generateLinkedInContent : api.generateContent;
             const fullRawText = await generationFn(
-                { prompt: preview?.title || prompt, keywords: keywords.join(', '), primaryKeyword, feedback, currentContent: preview?.content, ideaBox, sitemapLinks: targetPlatform === 'framer' ? sitemapData : null },
+                { prompt: preview?.title || prompt, keywords: keywords.join(', '), primaryKeyword, feedback, currentContent: preview?.content, ideaBox, sitemapLinks: targetPlatform === 'linkedin' ? null : sitemapData },
                 (chunk: string) => {
                     setPreview((prev: any) => {
                         const newContent = (prev?.content || '') + chunk;

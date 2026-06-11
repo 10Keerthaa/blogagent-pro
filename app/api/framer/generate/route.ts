@@ -89,7 +89,7 @@ export async function POST(req: Request) {
         ${ideaBox ? `\nADDITIONAL CONTENT DETAILS & INSTRUCTIONS: \n${ideaBox}\n(CRITICAL: You MUST incorporate these specific details naturally into the content. Do NOT ignore this.)\n` : ""}
 
         STRICT REQUIREMENTS (FRAMER SPECIFIC):
-        1. BLOG TITLE: Inside <title> tags. Generate a fresh, high-authority, and catchy blog title BASED on the provided topic. Do NOT simply repeat the topic verbatim; instead, refine it for maximum impact. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title under any circumstances. If the topic is short and needs only one part, keep it as a single bold statement without a colon.
+        1. BLOG TITLE: Inside <title> tags. Generate a fresh, high-authority, and catchy blog title BASED on the provided topic. STRICT CHARACTER LIMIT: The title MUST be between 50 and 60 characters to ensure perfect display without truncation. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title under any circumstances. If the topic is short and needs only one part, keep it as a single bold statement without a colon.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
         3. BLOG CONTENT: You MUST write a MINIMUM of 1600 words. Target 1600 to 1800 words. MAXIMUM 2000 words. DO NOT abruptly cut off the text; ensure the full structure is completely finished.
         4. STRUCTURE (Inside <content>):
@@ -143,7 +143,7 @@ export async function POST(req: Request) {
         ${ideaBox}
 
         STRICT REQUIREMENTS (FRAMER SPECIFIC):
-        1. BLOG TITLE: Inside <title> tags. Generate a fresh, high-authority, and catchy blog title BASED on the provided topic. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title.
+        1. BLOG TITLE: Inside <title> tags. Generate a fresh, high-authority, and catchy blog title BASED on the provided topic. STRICT CHARACTER LIMIT: The title MUST be between 50 and 60 characters to ensure perfect display without truncation. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
         3. BLOG CONTENT: Target 1600 to 1800 words. MAXIMUM 2000 words. DO NOT abruptly cut off the text.
         4. CUSTOM STRUCTURE (Inside <content>):
