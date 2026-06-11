@@ -213,7 +213,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         }
     }, []);
 
-    const fetchSitemap = useCallback(async () => {
+    const fetchSitemap = useCallback(async (signal?: AbortSignal) => {
         if (targetPlatform === 'linkedin') {
             setSitemapData({});
             setAnchorMap({});
@@ -227,8 +227,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         
         try {
             const [sitemapResp, kbResp] = await Promise.all([
-                fetch(`/api/sitemap-urls?platform=${targetPlatform}&t=${Date.now()}`),
-                fetch(`/api/internal-links/knowledge?platform=${targetPlatform}&t=${Date.now()}`)
+                fetch(`/api/sitemap-urls?platform=${targetPlatform}&t=${Date.now()}`, { signal }),
+                fetch(`/api/internal-links/knowledge?platform=${targetPlatform}&t=${Date.now()}`, { signal })
             ]);
             const d = await sitemapResp.json();
             const kb = await kbResp.json();
@@ -494,9 +494,14 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     // Re-fetch sitemap when platform or user changes
     useEffect(() => {
-        if (user) {
-            fetchSitemap();
-        }
+        if (!user) return;
+        
+        const controller = new AbortController();
+        fetchSitemap(controller.signal);
+        
+        return () => {
+            controller.abort(); // Kill switch: instantly cancels pending fetch if platform changes
+        };
     }, [user, targetPlatform, fetchSitemap]);
 
     // Safety Lock: Clear preview and selected draft if platform is toggled mid-generation
