@@ -61,6 +61,12 @@ export async function POST(req: Request) {
       /\b(reorganize|restructure|merge\s+(sections|headings|h2|h3)|consolidate|headings|structure|7\s+h2|5\s+core|outline|layout)\b/i.test(feedback)
     );
 
+    // Detect if the Idea Box contains a highly structured outline for Initial Generation
+    const isCustomOutline = !isSurgical && ideaBox && (
+      /\bsection\s*\d+\b/i.test(ideaBox) || 
+      (/\b(?:introduction|conclusion)\b/i.test(ideaBox) && ideaBox.split('\n').length > 4)
+    );
+
     // --- GENERATION STRATEGY ---
     const BASE_PROMPT = `
         You are an expert SEO copywriter. Generate a high-quality, long-form blog post.
@@ -100,6 +106,49 @@ export async function POST(req: Request) {
 
         ABSOLUTE FINAL DIRECTIVE: 
         Your ENTIRE generated output inside <content> MUST NOT EXCEED 2,100 WORDS under ANY circumstances. If LEARNED CONTEXT or ADDITIONAL INSTRUCTIONS are provided, you MUST compress your writing and weave those facts into the existing 5 H2 sections. Do NOT skip any structural requirements (Intro, 5 H2s, Conclusion, FAQs), but you MUST ensure the total combined word count stays strictly at or below 2,100 words.
+
+        RESULT FORMAT:
+        <title>...</title>
+        <meta>...</meta>
+        <content>...</content>
+    `;
+
+    const customOutlinePrompt = `
+        You are an expert SEO copywriter. Generate a high-quality, long-form blog post.
+        
+        Topic: ${prompt}
+        Keywords to include: ${keywords || "None"}
+        Primary Keyword: ${primaryKeyword || "None"}
+        
+        ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
+        - DO NOT invent data, statistics, names, or specific case studies not found in the context.
+        - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
+        - Every sentence must add unique technical value. ZERO FLUFF.
+
+        ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
+        
+        USER PROVIDED OUTLINE (STRICT ADHERENCE REQUIRED):
+        ${ideaBox}
+
+        STRICT REQUIREMENTS:
+        1. BLOG TITLE: 50-60 characters inside <title> tags.
+        2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be highly informative, action-oriented, and densely packed with keyword-rich insights. MUST include the primary keyword.
+        3. BLOG CONTENT: Target 1800 to 2100 words. MAXIMUM 2100 words. DO NOT abruptly cut off the text.
+        4. CUSTOM STRUCTURE (Inside <content>):
+           - You MUST strictly follow the exact structure, sections, and headings provided in the USER PROVIDED OUTLINE.
+           - DO NOT force 5 sections. Generate exactly as many sections as the outline requests.
+           - Use <h2> and <h3> for headings. NEVER use Markdown headers (#).
+           - **HEADING STYLE:** All H2 and H3 headings must be formal, declarative, and professional.
+           - **SECTION INTROS:** Every H2 section MUST begin with exactly 3 sentences of introductory prose before any sub-section or list.
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, weave facts naturally inside the most relevant sections of the outline.
+           - Format: Use HTML <b>Bold Headers:</b> for specific sub-points where needed, and <ul>/<li> for lists.
+        5. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content (except for the expert CTA).
+        6. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
+        7. CONCLUSION: Do NOT add a Conclusion unless it is explicitly requested in the USER PROVIDED OUTLINE. If it IS requested, it must be an "<h2>Conclusion</h2>" containing 3 to 4 sentences of wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
+        8. FAQ SECTION: Do NOT add an FAQ section unless it is explicitly requested in the USER PROVIDED OUTLINE. If it IS requested, format it with an "<h2>FAQ Section</h2>" heading, wrap each question in <p><b>...</b></p> tags, each answer in <p>...</p> tags, and add a <br /> after every answer to ensure a clear vertical gap between each Q&A pair.
+
+        ABSOLUTE FINAL DIRECTIVE: 
+        Your ENTIRE generated output inside <content> MUST NOT EXCEED 2,100 WORDS under ANY circumstances. You must fulfill the entire USER PROVIDED OUTLINE without exceeding this limit.
 
         RESULT FORMAT:
         <title>...</title>
@@ -170,7 +219,7 @@ export async function POST(req: Request) {
 
     const aiPrompt = isSurgical 
       ? (isStructuralFeedback ? structuralPrompt : surgicalPrompt)
-      : BASE_PROMPT;
+      : (isCustomOutline ? customOutlinePrompt : BASE_PROMPT);
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
 

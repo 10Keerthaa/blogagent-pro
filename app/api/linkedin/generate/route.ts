@@ -56,6 +56,12 @@ export async function POST(req: Request) {
     // Determine if we are in "Surgical Refinement" mode
     const isSurgical = !!(feedback && currentContent);
 
+    // Detect if the Idea Box contains a highly structured outline for Initial Generation
+    const isCustomOutline = !isSurgical && ideaBox && (
+      /\bsection\s*\d+\b/i.test(ideaBox) || 
+      (/\b(?:introduction|conclusion)\b/i.test(ideaBox) && ideaBox.split('\n').length > 4)
+    );
+
     // --- LINKEDIN GENERATION STRATEGY ---
     const BASE_PROMPT = `
         You are an elite B2B Executive Thought Leader, Industry Analyst, and Enterprise Strategist. Your objective is to write highly engaging, authoritative, and scannable articles or newsletters that analyze major paradigm shifts within a specific domain. Your target audience consists of C-suite executives, directors, and senior decision-makers who value strategic insights over tactical fluff.
@@ -102,6 +108,50 @@ export async function POST(req: Request) {
         <content>...</content>
     `;
 
+    const customLinkedInOutlinePrompt = `
+        You are an elite B2B Executive Thought Leader, Industry Analyst, and Enterprise Strategist. Your objective is to write highly engaging, authoritative, and scannable articles or newsletters.
+        
+        Topic: ${prompt}
+        Keywords to include: ${keywords || "None"}
+        Primary Keyword: ${primaryKeyword || "None"}
+        
+        ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
+        - DO NOT invent data, statistics, names, or specific case studies not found in the context.
+        - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
+        - Every sentence must add unique technical value. ZERO FLUFF.
+
+        ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
+        
+        USER PROVIDED OUTLINE (STRICT ADHERENCE REQUIRED):
+        ${ideaBox}
+
+        STRICT PROMPT BLUEPRINT & RULES:
+        1. TITLE: 50-60 characters inside <title> tags.
+        2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be action-oriented, densely packed with keyword-rich insights, and include the primary keyword.
+        3. CONTENT WORD COUNT: Target 1500 to 2000 words. MAXIMUM 2100 words. DO NOT abruptly cut off the text.
+        4. TONE PROFILE: Authoritative & Domain-Native, Visionary yet Pragmatic.
+        5. EXECUTIVE SCANNABILITY: Every single paragraph throughout the article MUST contain exactly 3 to 4 sentences, with TWO strict exceptions: the very first introductory paragraph MUST consist of exactly 3 sentences, and the introductory paragraph directly under every <h2> subheading MUST consist of exactly 2 sentences.
+        6. CUSTOM STRUCTURE (Inside <content>):
+           - You MUST strictly follow the exact structure, sections, and headings provided in the USER PROVIDED OUTLINE.
+           - Generate exactly as many sections as the outline requests.
+           - Use HTML <h2> and <h3> tags ONLY. NEVER use Markdown headers (#).
+           - **NO FAQs:** Do NOT include any FAQ sections or Q&A pairs under any circumstances, even if requested.
+           - **NO bullet lists under H3:** Under every <h3> heading, you must write ONLY prose paragraphs. No bullet points allowed under H3 headings.
+           - **H2 Bullet Point Placement:** Bullet points can ONLY be placed directly under main <h2> headings inside a standard HTML <ul> list. Every single bullet item MUST be inside its own separate <li> tag (e.g., <ul><li><b>Bolded Core Concept:</b> exactly 1 sentence of explanation.</li></ul>).
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, weave facts naturally inside the most relevant sections of the outline.
+        7. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content.
+        8. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
+        9. CONCLUSION: Do NOT add a Conclusion unless it is explicitly requested in the USER PROVIDED OUTLINE. If it IS requested, include a final "<h2>Conclusion</h2>" heading followed by exactly 1 paragraph of 3 to 4 sentences looking towards the future.
+
+        ABSOLUTE FINAL DIRECTIVE: 
+        Your ENTIRE generated output inside <content> MUST NOT EXCEED 2,100 WORDS under ANY circumstances. You must fulfill the entire USER PROVIDED OUTLINE without exceeding this limit.
+
+        RESULT FORMAT:
+        <title>...</title>
+        <meta>...</meta>
+        <content>...</content>
+    `;
+
     const aiPrompt = isSurgical ? `
         OBJECTIVE: Perform a STRATEGIC SURGICAL REFINEMENT on an existing LinkedIn article.
         
@@ -135,7 +185,7 @@ export async function POST(req: Request) {
         <title>...</title>
         <meta>...</meta>
         <content>Full Updated HTML with surgical changes applied</content>
-    ` : BASE_PROMPT;
+    ` : (isCustomOutline ? customLinkedInOutlinePrompt : BASE_PROMPT);
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
 

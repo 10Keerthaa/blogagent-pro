@@ -56,6 +56,12 @@ export async function POST(req: Request) {
     // Determine if we are in "Surgical Refinement" mode
     const isSurgical = !!(feedback && currentContent);
 
+    // Detect if the Idea Box contains a highly structured outline for Initial Generation
+    const isCustomOutline = !isSurgical && ideaBox && (
+      /\bsection\s*\d+\b/i.test(ideaBox) || 
+      (/\b(?:introduction|conclusion)\b/i.test(ideaBox) && ideaBox.split('\n').length > 4)
+    );
+
     // --- FRAMER GENERATION STRATEGY (H4 FOCUS) ---
     const FRAMER_PROMPT = `
         You are an expert SEO copywriter specialized in Framer CMS content. Generate a high-quality, long-form blog post.
@@ -110,6 +116,58 @@ export async function POST(req: Request) {
         <content>...</content>
     `;
 
+    const customFramerOutlinePrompt = `
+        You are an expert SEO copywriter specialized in Framer CMS content. Generate a high-quality, long-form blog post.
+        
+        Topic: ${prompt}
+        Keywords to include: ${keywords || "None"}
+        Primary Keyword: ${primaryKeyword || "None"}
+        
+        ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
+        - DO NOT invent data, statistics, names, or specific case studies not found in the context.
+        - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
+        - Every sentence must add unique technical value. ZERO FLUFF.
+
+        ${sitemapLinks ? `
+        ━━━ INTERNAL LINKING REPOSITORY (ELITE SEO)
+        From the sitemap data below, select ONLY the 8 to 10 keyword phrases that are MOST RELEVANT to the topic "${prompt}". Ignore all others.
+        STRICT ONE-LINK RULE: Each selected keyword phrase must be linked EXACTLY ONCE in the entire post. Once a phrase has been hyperlinked anywhere in the content, NEVER link that same phrase again — not in any other paragraph, section, or sentence.
+        ONLY link if the phrase fits the sentence perfectly. Do not force links.
+        SITEMAP DATA:
+        ${Object.entries(sitemapLinks).map(([k, v]) => `- "${k}": ${v}`).join('\n')}
+        ` : ""}
+
+        ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
+        
+        USER PROVIDED OUTLINE (STRICT ADHERENCE REQUIRED):
+        ${ideaBox}
+
+        STRICT REQUIREMENTS (FRAMER SPECIFIC):
+        1. BLOG TITLE: Inside <title> tags. Generate a fresh, high-authority, and catchy blog title BASED on the provided topic. STRICT FORMAT: Use "Main Title: Compelling Subtitle" with a colon separating them. FORBIDDEN: Do NOT append brand names, pipe characters (|), or "10xDS" to the title.
+        2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST include the primary keyword.
+        3. BLOG CONTENT: Target 1600 to 1800 words. MAXIMUM 2000 words. DO NOT abruptly cut off the text.
+        4. CUSTOM STRUCTURE (Inside <content>):
+           - **FORBIDDEN:** Do NOT wrap the content in markdown code blocks or fences like \`\`\`html.
+           - You MUST strictly follow the exact structure, sections, and headings provided in the USER PROVIDED OUTLINE.
+           - DO NOT force 5 sections. Generate exactly as many sections as the outline requests.
+           - **HEADINGS:** For the body of the post, you MUST use **<h4><b>** tags for all section headings to make them perfectly bold (e.g., <h4><b>The Strategic Role</b></h4>). NEVER use <h2> or <h3> for subheadings.
+           - **SECTION INTROS:** Every <h4> section MUST begin with exactly 3 sentences of introductory text before any list.
+           - **BULLET POINTS:** Use HTML <ul> and <li> tags. Do NOT use <b> bold text or asterisks (*) as a substitute for bullet points. Each <li> MUST begin on a brand-new line inside its own separate <li> tag.
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, weave facts naturally inside the most relevant sections of the outline.
+        5. INTERNAL LINKS: You are AUTHORIZED to use <a> tags ONLY for the phrases provided in the INTERNAL LINKING REPOSITORY. DO NOT invent links. ABSOLUTE RULE: Do NOT add any inline styles or class names to these internal links.
+        6. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
+        7. CONCLUSION: Do NOT add a Conclusion unless it is explicitly requested in the USER PROVIDED OUTLINE. If it IS requested, include an "<h2>Conclusion</h2>" heading followed by 3 to 4 sentences of wrap-up and this exact purple link: <a href="https://www.10xds.ai/contact/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
+        8. FAQ SECTION: Do NOT add an FAQ section unless it is explicitly requested in the USER PROVIDED OUTLINE. If it IS requested, include an "<h2>FAQ Section</h2>" heading, wrap each question in <p><b>...</b></p> tags and each answer in <p>...</p> tags. Add a <br /> after every answer.
+
+        ABSOLUTE FINAL DIRECTIVE: 
+        Your ENTIRE generated output inside <content> MUST NOT EXCEED 2,100 WORDS under ANY circumstances. You must fulfill the entire USER PROVIDED OUTLINE without exceeding this limit.
+
+        RESULT FORMAT:
+        <title>...</title>
+        <meta>...</meta>
+        <content>...</content>
+    `;
+
     const aiPrompt = isSurgical ? `
         OBJECTIVE: Perform a STRATEGIC SURGICAL REFINEMENT on an existing Framer blog post.
         
@@ -136,7 +194,7 @@ export async function POST(req: Request) {
         <title>...</title>
         <meta>...</meta>
         <content>Full Updated HTML with surgical changes applied</content>
-    ` : FRAMER_PROMPT;
+    ` : (isCustomOutline ? customFramerOutlinePrompt : FRAMER_PROMPT);
 
     const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
 
