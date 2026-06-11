@@ -227,8 +227,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         
         try {
             const [sitemapResp, kbResp] = await Promise.all([
-                fetch(`/api/sitemap-urls?platform=${targetPlatform}`),
-                fetch(`/api/internal-links/knowledge?platform=${targetPlatform}`)
+                fetch(`/api/sitemap-urls?platform=${targetPlatform}&t=${Date.now()}`),
+                fetch(`/api/internal-links/knowledge?platform=${targetPlatform}&t=${Date.now()}`)
             ]);
             const d = await sitemapResp.json();
             const kb = await kbResp.json();
