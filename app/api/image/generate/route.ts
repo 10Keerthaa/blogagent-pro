@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         - The imagery must be unmistakably and directly related to the specific topic '${cleanPrompt}'. Generic floating geometric shapes alone are NOT acceptable.
         - NO text, letters, words, numbers, or labels anywhere in the image.
         - NO cartoon, clipart, or flat vector illustration style.
-        - NO people, faces, hands, or human figures.
+        - If human figures are included, they MUST exclusively be men in professional business attire (suits/formal dress). NO female figures are allowed under any circumstances.
         
         8k photorealistic enterprise-grade conceptual art.`;
 
