@@ -90,7 +90,9 @@ export async function POST(req: Request) {
            - NEVER use Markdown headers (#).
            - Do not repeat the blog title as an <h1> inside the <content>.
         7. STRUCTURAL ARCS & LAYOUT RULES:
-           - **SECTION INTROS:** Every <h2> section MUST begin with exactly 2 sentences of introductory prose before any sub-section or list.
+           - **SECTION INTROS:** The introductory paragraph directly under every <h2> section MUST consist of STRICTLY EXACTLY 2 sentences (no more, no less) before presenting any sub-sections or lists.
+           - **ABBREVIATIONS:** You MUST expand every acronym or abbreviation on its first occurrence (e.g. Return on Investment (ROI)), and use the abbreviation strictly thereafter.
+           - **SENTENCE VARIETY:** Avoid repetitive sentence structures. Specifically, DO NOT repeatedly start sentences with words such as "This", "These", or "Additionally".
            - **NO FAQs:** Do NOT include any FAQ sections or Q&A pairs under any circumstances.
            - **NO bullet lists under H3:** Under every <h3> heading, you must write ONLY prose paragraphs of exactly 3 to 4 sentences. No bullet points or numbered lists are allowed under H3 headings.
            - **H2 Bullet Point Placement & HTML Structure:** Bullet points can ONLY be placed directly under main <h2> headings. You MUST use a standard HTML <ul> list, and every single bullet item MUST be placed inside its own separate <li> tag (e.g., <ul><li><b>Bolded Core Concept:</b> exactly 1 sentence of explanation.</li><li><b>Another Concept:</b> ...</li></ul>).
@@ -128,12 +130,13 @@ export async function POST(req: Request) {
         STRICT PROMPT BLUEPRINT & RULES:
         1. TITLE: 50-60 characters inside <title> tags.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be action-oriented, densely packed with keyword-rich insights, and include the primary keyword.
-        3. CONTENT WORD COUNT: Target 1500 to 2000 words. MAXIMUM 2100 words. DO NOT abruptly cut off the text.
+        3. CONTENT WORD COUNT: You MUST deeply expand on the provided outline to reach a target of 1500 to 2000 words. DO NOT write a short summary. Write comprehensively for every single bullet point to ensure you hit the word count. MAXIMUM 2100 words. DO NOT abruptly cut off the text.
         4. TONE PROFILE: Authoritative & Domain-Native, Visionary yet Pragmatic.
         5. EXECUTIVE SCANNABILITY: Every single paragraph throughout the article MUST contain exactly 3 to 4 sentences, with TWO strict exceptions: the very first introductory paragraph MUST consist of exactly 3 sentences, and the introductory paragraph directly under every <h2> subheading MUST consist of exactly 2 sentences.
         6. CUSTOM STRUCTURE (Inside <content>):
-           - You MUST strictly follow the exact structure, sections, and headings provided in the USER PROVIDED OUTLINE.
-           - Generate exactly as many sections as the outline requests.
+           - ZERO STRUCTURAL HALLUCINATION: You MUST strictly mirror the EXACT headings and sections provided in the USER PROVIDED OUTLINE. Do NOT invent new headings. Do NOT convert bullet points into subheadings.
+           - HEADING ENFORCEMENT: The very first line of your <content> output MUST be the <h2> heading for the first section of the outline. Do NOT skip the first heading. Do NOT write a generic introduction paragraph above the first heading unless "Introduction" is explicitly in the outline.
+           - ONLY use the headings explicitly written in the outline. Do not add outside topics.
            - Use HTML <h2> and <h3> tags ONLY. NEVER use Markdown headers (#).
            - **NO FAQs:** Do NOT include any FAQ sections or Q&A pairs under any circumstances, even if requested.
            - **NO bullet lists under H3:** Under every <h3> heading, you must write ONLY prose paragraphs. No bullet points allowed under H3 headings.

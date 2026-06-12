@@ -80,6 +80,9 @@ export async function POST(req: Request) {
         - DO NOT invent data, statistics, names, or specific case studies not found in the context.
         - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
         - Every sentence must add unique technical value. ZERO FLUFF.
+        - BRAND NEUTRALITY: Do not mention or reuse product names, brand names, or company names from reference URLs or learned context unless explicitly referring to 10xDS. Rewrite all examples and references in a generic manner.
+        - STATISTICS & CLAIMS: Provide credible attribution from the LEARNED CONTEXT for all statistics, percentages, and numerical claims. If a verifiable source is not available, completely remove the statistic or performance claim. Do not fabricate numbers.
+        - EXAMPLES: Do not use fabricated or generic examples containing fake statistics (e.g., "a pet store chain achieved a 10% increase in sales"). Use only real, verifiable examples with proper attribution, or keep the example entirely conceptual without specific numerical claims.
 
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
         ${ideaBox ? `\nADDITIONAL CONTENT DETAILS & INSTRUCTIONS: \n${ideaBox}\n(CRITICAL: You MUST incorporate these specific details naturally into the content. Do NOT ignore this.)\n` : ""}
@@ -93,9 +96,11 @@ export async function POST(req: Request) {
            - **DYNAMIC H2 COUNT:** If the Topic title contains a number (e.g., "7 Steps", "8 Ways"), you MUST write exactly that many content H2 sections. If the title has NO numbers, default to exactly 5 content H2 sections.
            - **MANDATORY ADDITIONS:** After your content H2s, you MUST always append exactly 1 Conclusion H2 and 1 FAQ H2.
            - **HEADING STYLE:** All H2 and H3 headings must be formal, declarative, and professional (e.g., "The Strategic Role of Autonomous Systems"). Do NOT force them to be questions.
-           - **H3 SUB-SECTIONS:** Use <h3> sub-headings to break down complex H2 topics where appropriate. Each <h3> section must be followed by exactly 3 sentences of prose before any list.
-           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, extract 2-3 facts that are HIGHLY RELEVANT to the main blog topic. Weave these facts naturally inside the most relevant existing H2 section. DO NOT create a separate summary section for them. DO NOT copy exact wording from the URLs (no plagiarism, synthesize in your own words). DO NOT use exact phrases from the URLs as subheadings. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
-           - **SECTION INTROS:** Every H2 section MUST begin with exactly 3 sentences of introductory prose before any sub-section or list.
+           - **H3 SUB-SECTIONS:** Use <h3> sub-headings to break down complex H2 topics where appropriate. The introductory paragraph directly under each <h3> section MUST consist of STRICTLY EXACTLY 2 sentences (no more, no less) before any lists.
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, extract 2-3 facts that are HIGHLY RELEVANT to the main blog topic. Weave these facts naturally inside the most relevant existing H2 section. DO NOT create a separate summary section for them. DO NOT copy exact wording from the URLs. Properly paraphrase and synthesize all source material in your own words. Do not closely follow the sentence structure of the reference content. DO NOT use exact phrases from the URLs as subheadings. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
+           - **SECTION INTROS:** The introductory paragraph directly under every H2 section MUST consist of STRICTLY EXACTLY 2 sentences (no more, no less) before presenting any sub-sections or lists.
+           - **ABBREVIATIONS:** You MUST expand every acronym or abbreviation on its first occurrence (e.g., Artificial Intelligence (AI)), and use the abbreviation strictly thereafter.
+           - **SENTENCE VARIETY:** Avoid repetitive sentence structures. Specifically, DO NOT repeatedly start sentences with words such as "This", "These", or "Additionally". Ensure dynamic and varied sentence transitions.
            - **BULLET POINTS:** Use HTML <ul> and <li> tags ONLY where contextually appropriate (e.g., listing features, steps, or comparisons). Do NOT force bullet points into every section. Where bullets are used, each <li> can be 1 or 2 sentences.
            - Formatting: Use HTML <b>Bold Headers:</b> for specific sub-points where needed.
         5. Use <h2> and <h3> for headings. NEVER use Markdown headers (#).
@@ -133,14 +138,17 @@ export async function POST(req: Request) {
         STRICT REQUIREMENTS:
         1. BLOG TITLE: 50-60 characters inside <title> tags.
         2. META DESCRIPTION: Exactly 155 characters inside <meta> tags. MUST be highly informative, action-oriented, and densely packed with keyword-rich insights. MUST include the primary keyword.
-        3. BLOG CONTENT: Target 1800 to 2100 words. MAXIMUM 2100 words. DO NOT abruptly cut off the text.
+        3. BLOG CONTENT: You MUST deeply expand on the provided outline to reach a target of 1800 to 2100 words. DO NOT write a short summary. Write comprehensively for every single bullet point to ensure you hit the word count. MAXIMUM 2100 words. DO NOT abruptly cut off the text.
         4. CUSTOM STRUCTURE (Inside <content>):
-           - You MUST strictly follow the exact structure, sections, and headings provided in the USER PROVIDED OUTLINE.
-           - DO NOT force 5 sections. Generate exactly as many sections as the outline requests.
-           - Use <h2> and <h3> for headings. NEVER use Markdown headers (#).
+           - ZERO STRUCTURAL HALLUCINATION: You MUST strictly mirror the EXACT headings and sections provided in the USER PROVIDED OUTLINE. Do NOT invent new headings. Do NOT convert bullet points into subheadings.
+           - HEADING ENFORCEMENT: The very first line of your <content> output MUST be the <h2> heading for the first section of the outline. Do NOT skip the first heading. Do NOT write a generic introduction paragraph above the first heading unless "Introduction" is explicitly in the outline.
+           - ONLY use the headings explicitly written in the outline. Do not add outside topics.
+           - Use <h2> for main outline sections. NEVER use Markdown headers (#).
            - **HEADING STYLE:** All H2 and H3 headings must be formal, declarative, and professional.
-           - **SECTION INTROS:** Every H2 section MUST begin with exactly 3 sentences of introductory prose before any sub-section or list.
-           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, weave facts naturally inside the most relevant sections of the outline.
+           - **SECTION INTROS:** The introductory paragraph directly under every H2 section MUST consist of STRICTLY EXACTLY 2 sentences (no more, no less) before presenting any sub-sections or lists.
+           - **URL INTEGRATION:** If LEARNED CONTEXT is provided, weave facts naturally inside the most relevant sections of the outline. Properly paraphrase all source material; do not closely follow the reference content's wording.
+           - **ABBREVIATIONS:** You MUST expand every acronym or abbreviation on its first occurrence, and use the abbreviation strictly thereafter.
+           - **SENTENCE VARIETY:** Avoid repetitive sentence structures. Specifically, DO NOT repeatedly start sentences with words such as "This", "These", or "Additionally".
            - Format: Use HTML <b>Bold Headers:</b> for specific sub-points where needed, and <ul>/<li> for lists.
         5. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content (except for the expert CTA).
         6. NO REDUNDANCY: Do not repeat the blog title as an <h1>.

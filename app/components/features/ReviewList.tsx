@@ -372,7 +372,11 @@ export const ReviewList = () => {
                                                         </h1>
                                                     )}
                                                 </div>
-                                                {/* Logo baked into PNG */}
+                                                {targetPlatform !== 'framer' && (
+                                                    <div className="absolute bottom-[60px] lg:bottom-[80px] right-[30px] lg:right-[60px] pointer-events-none flex z-50">
+                                                        <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     )}
