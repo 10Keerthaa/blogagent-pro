@@ -226,7 +226,7 @@ export const PostPreview = () => {
     return (
         <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12">
             {/* MAIN EDITOR AREA - CENTERED COLUMN */}
-            <div className="w-full max-w-[1000px] mx-auto px-6 pb-12 relative">
+            <div className="w-full pb-12 relative">
                 {selectionRect && (
                     <FloatingToolbar
                         isVisible={isToolbarVisible}
@@ -302,7 +302,7 @@ export const PostPreview = () => {
                                 setPreview({ ...preview, title: newTitle });
                                 handleAutoSave({ ...preview, title: newTitle });
                             }}
-                            className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg lg:px-12 px-6 transition-all"
+                            className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-12 font-serif text-center focus:outline-none focus:ring-2 focus:ring-violet-500/10 rounded-lg transition-all"
                         >
                             {preview.title}
                         </h1>
@@ -389,7 +389,7 @@ export const PostPreview = () => {
                         setPreview({ ...preview, content: newContent });
                         handleAutoSave({ ...preview, content: newContent });
                     }}
-                    className={`editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif lg:px-12 px-6 platform-${targetPlatform}`}
+                    className={`editor-content prose prose-lg prose-stone dark:prose-invert max-w-none focus:outline-none text-slate-800 dark:text-slate-200 leading-relaxed font-serif platform-${targetPlatform}`}
                     style={{ minHeight: '50vh' }}
                     onMouseUp={updateSelectionRect}
                     onSelect={updateSelectionRect}
