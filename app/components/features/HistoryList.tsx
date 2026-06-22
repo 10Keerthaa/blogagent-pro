@@ -142,6 +142,15 @@ export const HistoryList = () => {
                     <section className="prose prose-slate dark:prose-invert max-w-none">
                         <Card className="p-12 md:p-16 border-slate-100 dark:border-slate-800 shadow-xl bg-white dark:bg-[#0d0d0d]">
                             <div 
+                                onDoubleClick={(e) => {
+                                    const target = e.target as HTMLElement;
+                                    if (target.classList.contains('stat-highlight')) {
+                                        const sourceUrl = target.getAttribute('data-source');
+                                        if (sourceUrl) {
+                                            window.open(sourceUrl, '_blank');
+                                        }
+                                    }
+                                }}
                                 className="blog-content-view text-slate-700 dark:text-slate-300 leading-loose"
                                 dangerouslySetInnerHTML={{ __html: selectedHistoryItem.content || '<p class="text-slate-400 italic">Historical content body not found in cache.</p>' }}
                             />

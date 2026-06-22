@@ -442,6 +442,15 @@ export const PostPreview = () => {
                             }
                         }
                     }}
+                    onDoubleClick={(e) => {
+                        const target = e.target as HTMLElement;
+                        if (target.classList.contains('stat-highlight')) {
+                            const sourceUrl = target.getAttribute('data-source');
+                            if (sourceUrl) {
+                                window.open(sourceUrl, '_blank');
+                            }
+                        }
+                    }}
                     onMouseDown={(e) => {
                         // If we click a link, handle special interactions (Ctrl+Click or Double-Click)
                         const target = (e.target as HTMLElement).closest('a');

@@ -445,6 +445,15 @@ export const ReviewList = () => {
                                     if (url) handleToolbarAction('link', url);
                                 }
                             }}
+                            onDoubleClick={(e) => {
+                                const target = e.target as HTMLElement;
+                                if (target.classList.contains('stat-highlight')) {
+                                    const sourceUrl = target.getAttribute('data-source');
+                                    if (sourceUrl) {
+                                        window.open(sourceUrl, '_blank');
+                                    }
+                                }
+                            }}
                             onMouseDown={(e) => {
                                 // If we click a link, handle special interactions (Ctrl+Click or Double-Click)
                                 const target = (e.target as HTMLElement).closest('a');
@@ -795,7 +804,19 @@ export const ReviewList = () => {
                                             )}
                                         </>
                                     )}
-                                    <article dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }} className="text-black dark:text-white text-lg leading-relaxed prose prose-stone dark:prose-invert max-w-none prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold" />
+                                    <article 
+                                        onDoubleClick={(e) => {
+                                            const target = e.target as HTMLElement;
+                                            if (target.classList.contains('stat-highlight')) {
+                                                const sourceUrl = target.getAttribute('data-source');
+                                                if (sourceUrl) {
+                                                    window.open(sourceUrl, '_blank');
+                                                }
+                                            }
+                                        }}
+                                        dangerouslySetInnerHTML={{ __html: selectedReviewDraft.content }} 
+                                        className="text-black dark:text-white text-lg leading-relaxed prose prose-stone dark:prose-invert max-w-none prose-headings:text-black dark:prose-headings:text-white prose-headings:font-bold" 
+                                    />
                                     {selectedReviewDraft.infographicUrl && (
                                         <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800/50">
                                             <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8 text-center">Visual Summary</h4>

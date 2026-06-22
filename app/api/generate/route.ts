@@ -42,7 +42,7 @@ export async function POST(req: Request) {
         });
 
         const results = await Promise.all(fetchPromises);
-        learnedContext = results.filter(text => text.length > 0).join("\n\n---\n\n");
+        learnedContext = results.map((text, index) => text.length > 0 ? `SOURCE_URL: ${urlsToFetch[index]}\nCONTENT: ${text}` : "").filter(text => text.length > 0).join("\n\n---\n\n");
       } catch (err) {
         console.error("Reference URLs Crawling Failed:", err);
       }
@@ -77,11 +77,11 @@ export async function POST(req: Request) {
         STRICT CONSTRAINT: Stay strictly focused on ${prompt}.
         
         ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
-        - DO NOT invent data, statistics, names, or specific case studies not found in the context.
+        - DO NOT invent fake data, fake statistics, fake names, or fake case studies. You ARE encouraged to use real-world statistics from your internal knowledge of external sites if LEARNED CONTEXT is not provided.
         - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
         - Every sentence must add unique technical value. ZERO FLUFF.
         - BRAND NEUTRALITY: Do not mention or reuse product names, brand names, or company names from reference URLs or learned context unless explicitly referring to 10xDS. Rewrite all examples and references in a generic manner.
-        - STATISTICS & CLAIMS: Provide credible attribution from the LEARNED CONTEXT for all statistics, percentages, and numerical claims. If a verifiable source is not available, completely remove the statistic or performance claim. Do not fabricate numbers.
+        - STATISTICS & CLAIMS: You are encouraged to include real-world statistics, percentages, and numerical claims from your internal knowledge or the LEARNED CONTEXT. Whenever you include a statistic, you MUST format it as a double-clickable span using the source's actual URL. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_SOURCE_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics. Do not fabricate numbers; only use real data from credible external sites.
         - EXAMPLES: Do not use fabricated or generic examples containing fake statistics (e.g., "a pet store chain achieved a 10% increase in sales"). Use only real, verifiable examples with proper attribution, or keep the example entirely conceptual without specific numerical claims.
 
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
@@ -126,9 +126,10 @@ export async function POST(req: Request) {
         Primary Keyword: ${primaryKeyword || "None"}
         
         ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
-        - DO NOT invent data, statistics, names, or specific case studies not found in the context.
+        - DO NOT invent fake data, fake statistics, fake names, or fake case studies. You ARE encouraged to use real-world statistics from your internal knowledge of external sites if LEARNED CONTEXT is not provided.
         - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
         - Every sentence must add unique technical value. ZERO FLUFF.
+        - STATISTICS & CLAIMS: Whenever you include a statistic from the LEARNED CONTEXT or external knowledge, you MUST format it as a double-clickable span using the SOURCE_URL. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: green; font-weight: bold; cursor: pointer;" data-source="[INSERT_SOURCE_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
 
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
         
