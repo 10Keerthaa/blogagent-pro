@@ -104,8 +104,8 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
             container = container.parentNode as Node;
         }
 
-        // Check if the container or any parent is an <a> tag
-        return !!(container instanceof HTMLElement && container.closest('a'));
+        // Check if the container or any parent is an <a> tag or stat-highlight
+        return !!(container instanceof HTMLElement && (container.closest('a') || container.closest('span.stat-highlight')));
     };
 
     const isLink = isLinkProp !== undefined ? isLinkProp : getIsLink();
@@ -147,18 +147,18 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                             const selection = window.getSelection();
                             if (selection && selection.rangeCount > 0) {
                                 const range = selection.getRangeAt(0);
-                                let anchor: HTMLAnchorElement | null = null;
+                                let anchor: HTMLElement | null = null;
                                 
                                 // Check 1: Selection start container
                                 let startNode = range.startContainer;
                                 if (startNode.nodeType === 3) startNode = startNode.parentNode as Node;
-                                if (startNode instanceof HTMLElement) anchor = startNode.closest('a');
+                                if (startNode instanceof HTMLElement) anchor = startNode.closest('a') || startNode.closest('span.stat-highlight');
                                 
                                 // Check 2: Selection end container
                                 if (!anchor) {
                                     let endNode = range.endContainer;
                                     if (endNode.nodeType === 3) endNode = endNode.parentNode as Node;
-                                    if (endNode instanceof HTMLElement) anchor = endNode.closest('a');
+                                    if (endNode instanceof HTMLElement) anchor = endNode.closest('a') || endNode.closest('span.stat-highlight');
                                 }
                                 
                                 // Check 3: Common ancestor contains or is an anchor
@@ -166,12 +166,16 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                                     let container = range.commonAncestorContainer;
                                     if (container.nodeType === 3) container = container.parentNode as Node;
                                     if (container instanceof HTMLElement) {
-                                        anchor = container.closest('a') || container.querySelector('a');
+                                        anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
                                     }
                                 }
                                 
                                 if (anchor) {
-                                    existingUrl = anchor.getAttribute('href') || '';
+                                    if (anchor.tagName.toLowerCase() === 'a') {
+                                        existingUrl = anchor.getAttribute('href') || '';
+                                    } else {
+                                        existingUrl = anchor.getAttribute('data-source') || '';
+                                    }
                                 }
                             }
                             setLinkUrl(existingUrl);

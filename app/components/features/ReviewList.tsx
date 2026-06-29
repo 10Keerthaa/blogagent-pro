@@ -92,7 +92,10 @@ export const ReviewList = () => {
             
             const activeLink = element?.closest('a') || 
                              selection.anchorNode?.parentElement?.closest('a') || 
-                             selection.focusNode?.parentElement?.closest('a');
+                             selection.focusNode?.parentElement?.closest('a') ||
+                             element?.closest('span.stat-highlight') ||
+                             selection.anchorNode?.parentElement?.closest('span.stat-highlight') ||
+                             selection.focusNode?.parentElement?.closest('span.stat-highlight');
             
             const isInsideLink = !!activeLink;
             setIsLinkActive(isInsideLink);
@@ -126,7 +129,24 @@ export const ReviewList = () => {
             case 'unlink':
                 if (editorRef.current && selectedReviewDraft) {
                     editorRef.current.focus();
-                    document.execCommand('unlink', false, undefined);
+                    
+                    let unlinkedStat = false;
+                    const sel = window.getSelection();
+                    if (sel && sel.rangeCount > 0) {
+                        let container = sel.getRangeAt(0).commonAncestorContainer;
+                        if (container.nodeType === 3) container = container.parentNode as Node;
+                        const statSpan = container instanceof HTMLElement ? container.closest('span.stat-highlight') : null;
+                        if (statSpan) {
+                            const text = document.createTextNode(statSpan.textContent || '');
+                            statSpan.parentNode?.replaceChild(text, statSpan);
+                            unlinkedStat = true;
+                        }
+                    }
+
+                    if (!unlinkedStat) {
+                        document.execCommand('unlink', false, undefined);
+                    }
+
                     const latestHtml = editorRef.current.innerHTML;
                     const updatedDraft = { ...selectedReviewDraft, content: latestHtml };
                     setSelectedReviewDraft(updatedDraft);
@@ -139,13 +159,27 @@ export const ReviewList = () => {
                 const sel = window.getSelection();
                 if (!sel || sel.isCollapsed || !value) return;
                 const range = sel.getRangeAt(0);
-                const anchor = document.createElement('a');
-                anchor.href = value;
-                anchor.target = '_blank';
-                anchor.rel = 'noopener noreferrer';
-                anchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
-                anchor.appendChild(range.extractContents());
-                range.insertNode(anchor);
+
+                let container = range.commonAncestorContainer;
+                if (container.nodeType === 3) container = container.parentNode as Node;
+                const existingElement = container instanceof HTMLElement ? (container.closest('a') || container.closest('span.stat-highlight')) : null;
+
+                if (existingElement) {
+                    if (existingElement.tagName.toLowerCase() === 'a') {
+                        (existingElement as HTMLAnchorElement).href = value;
+                    } else {
+                        existingElement.setAttribute('data-source', value);
+                    }
+                } else {
+                    const anchor = document.createElement('a');
+                    anchor.href = value;
+                    anchor.target = '_blank';
+                    anchor.rel = 'noopener noreferrer';
+                    anchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
+                    anchor.appendChild(range.extractContents());
+                    range.insertNode(anchor);
+                }
+
                 sel.collapseToEnd();
                 if (editorRef.current && selectedReviewDraft) {
                     const html = editorRef.current.innerHTML;
@@ -413,18 +447,18 @@ export const ReviewList = () => {
                                     const sel = window.getSelection();
                                     if (sel && sel.rangeCount > 0) {
                                         const range = sel.getRangeAt(0);
-                                        let anchor: HTMLAnchorElement | null = null;
+                                        let anchor: HTMLElement | null = null;
                                         
                                         // Check 1: Selection start container
                                         let startNode = range.startContainer;
                                         if (startNode.nodeType === 3) startNode = startNode.parentNode as Node;
-                                        if (startNode instanceof HTMLElement) anchor = startNode.closest('a');
+                                        if (startNode instanceof HTMLElement) anchor = startNode.closest('a') || startNode.closest('span.stat-highlight');
                                         
                                         // Check 2: Selection end container
                                         if (!anchor) {
                                             let endNode = range.endContainer;
                                             if (endNode.nodeType === 3) endNode = endNode.parentNode as Node;
-                                            if (endNode instanceof HTMLElement) anchor = endNode.closest('a');
+                                            if (endNode instanceof HTMLElement) anchor = endNode.closest('a') || endNode.closest('span.stat-highlight');
                                         }
                                         
                                         // Check 3: Common ancestor contains or is an anchor
@@ -432,12 +466,16 @@ export const ReviewList = () => {
                                             let container = range.commonAncestorContainer;
                                             if (container.nodeType === 3) container = container.parentNode as Node;
                                             if (container instanceof HTMLElement) {
-                                                anchor = container.closest('a') || container.querySelector('a');
+                                                anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
                                             }
                                         }
                                         
                                         if (anchor) {
-                                            existingUrl = anchor.getAttribute('href') || '';
+                                            if (anchor.tagName.toLowerCase() === 'a') {
+                                                existingUrl = anchor.getAttribute('href') || '';
+                                            } else {
+                                                existingUrl = anchor.getAttribute('data-source') || '';
+                                            }
                                         }
                                     }
 

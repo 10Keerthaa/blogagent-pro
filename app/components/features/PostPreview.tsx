@@ -57,10 +57,13 @@ export const PostPreview = () => {
             const container = range.commonAncestorContainer;
             const element = container.nodeType === 3 ? container.parentElement : container as HTMLElement;
 
-            // Robust Detection: Check both the container and selection nodes for an <a> tag
+            // Robust Detection: Check both the container and selection nodes for an <a> tag or stat-highlight
             const activeLink = element?.closest('a') ||
                 selection.anchorNode?.parentElement?.closest('a') ||
-                selection.focusNode?.parentElement?.closest('a');
+                selection.focusNode?.parentElement?.closest('a') ||
+                element?.closest('span.stat-highlight') ||
+                selection.anchorNode?.parentElement?.closest('span.stat-highlight') ||
+                selection.focusNode?.parentElement?.closest('span.stat-highlight');
 
             const isInsideLink = !!activeLink;
 
@@ -129,7 +132,23 @@ export const PostPreview = () => {
                 if (editorRef.current && preview) {
                     // Restore focus just in case, though preventDefault should handle it
                     editorRef.current.focus();
-                    document.execCommand('unlink', false, undefined);
+                    
+                    let unlinkedStat = false;
+                    const sel = window.getSelection();
+                    if (sel && sel.rangeCount > 0) {
+                        let container = sel.getRangeAt(0).commonAncestorContainer;
+                        if (container.nodeType === 3) container = container.parentNode as Node;
+                        const statSpan = container instanceof HTMLElement ? container.closest('span.stat-highlight') : null;
+                        if (statSpan) {
+                            const text = document.createTextNode(statSpan.textContent || '');
+                            statSpan.parentNode?.replaceChild(text, statSpan);
+                            unlinkedStat = true;
+                        }
+                    }
+
+                    if (!unlinkedStat) {
+                        document.execCommand('unlink', false, undefined);
+                    }
 
                     // Capture and Sync
                     const latestHtml = editorRef.current.innerHTML;
@@ -154,10 +173,14 @@ export const PostPreview = () => {
                 if (container.nodeType === 3) {
                     container = container.parentNode as Node;
                 }
-                const existingAnchor = container instanceof HTMLElement ? container.closest('a') : null;
+                const existingAnchor = container instanceof HTMLElement ? (container.closest('a') || container.closest('span.stat-highlight')) : null;
 
                 if (existingAnchor) {
-                    existingAnchor.href = value;
+                    if (existingAnchor.tagName.toLowerCase() === 'a') {
+                        (existingAnchor as HTMLAnchorElement).href = value;
+                    } else {
+                        existingAnchor.setAttribute('data-source', value);
+                    }
                 } else {
                     const anchor = document.createElement('a');
                     anchor.href = value;
@@ -408,18 +431,18 @@ export const PostPreview = () => {
                             const sel = window.getSelection();
                             if (sel && sel.rangeCount > 0) {
                                 const range = sel.getRangeAt(0);
-                                let anchor: HTMLAnchorElement | null = null;
+                                let anchor: HTMLElement | null = null;
                                 
                                 // Check 1: Selection start container
                                 let startNode = range.startContainer;
                                 if (startNode.nodeType === 3) startNode = startNode.parentNode as Node;
-                                if (startNode instanceof HTMLElement) anchor = startNode.closest('a');
+                                if (startNode instanceof HTMLElement) anchor = startNode.closest('a') || startNode.closest('span.stat-highlight');
                                 
                                 // Check 2: Selection end container
                                 if (!anchor) {
                                     let endNode = range.endContainer;
                                     if (endNode.nodeType === 3) endNode = endNode.parentNode as Node;
-                                    if (endNode instanceof HTMLElement) anchor = endNode.closest('a');
+                                    if (endNode instanceof HTMLElement) anchor = endNode.closest('a') || endNode.closest('span.stat-highlight');
                                 }
                                 
                                 // Check 3: Common ancestor contains or is an anchor
@@ -427,12 +450,16 @@ export const PostPreview = () => {
                                     let container = range.commonAncestorContainer;
                                     if (container.nodeType === 3) container = container.parentNode as Node;
                                     if (container instanceof HTMLElement) {
-                                        anchor = container.closest('a') || container.querySelector('a');
+                                        anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
                                     }
                                 }
                                 
                                 if (anchor) {
-                                    existingUrl = anchor.getAttribute('href') || '';
+                                    if (anchor.tagName.toLowerCase() === 'a') {
+                                        existingUrl = anchor.getAttribute('href') || '';
+                                    } else {
+                                        existingUrl = anchor.getAttribute('data-source') || '';
+                                    }
                                 }
                             }
 

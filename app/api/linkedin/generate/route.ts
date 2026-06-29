@@ -75,7 +75,7 @@ export async function POST(req: Request) {
         - DO NOT invent fake data, fake statistics, fake names, or fake case studies. You ARE encouraged to use real-world statistics from your internal knowledge of external sites if LEARNED CONTEXT is not provided.
         - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
         - Every sentence must add unique technical value. ZERO FLUFF.
-        - STATISTICS & CLAIMS: You are encouraged to include real-world statistics, percentages, and numerical claims from your internal knowledge or the LEARNED CONTEXT. Whenever you include a statistic, you MUST format it as a double-clickable span using the source's actual URL. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_SOURCE_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics. Do not fabricate numbers; only use real data from credible external sites.
+        - STATISTICS & CLAIMS: You are encouraged to include real-world statistics, percentages, and numerical claims. CRITICAL: You MUST ONLY use present-day data or futuristic projections (e.g., 'By 2030, the market is expected to...'). DO NOT include past statistics or historical data. CRITICAL URL RULE: You are FORBIDDEN from guessing or hallucinating URLs. If you are not 100% certain of the EXACT, LIVE, REAL website link, you MUST NOT use the <span class="stat-highlight"> tag and you MUST NOT write the statistic at all. It is better to write zero statistics than to give a fake link. Only provide statistics based on the topic content that are real and available on real sites. DO NOT create or invent them. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_REAL_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
 
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
         ${ideaBox ? `\nADDITIONAL CONTENT DETAILS & INSTRUCTIONS: \n${ideaBox}\n(CRITICAL: You MUST incorporate these specific details naturally into the content. Do NOT ignore this.)\n` : ""}
@@ -122,7 +122,7 @@ export async function POST(req: Request) {
         - DO NOT invent fake data, fake statistics, fake names, or fake case studies. You ARE encouraged to use real-world statistics from your internal knowledge of external sites if LEARNED CONTEXT is not provided.
         - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
         - Every sentence must add unique technical value. ZERO FLUFF.
-        - STATISTICS & CLAIMS: You are encouraged to include real-world statistics, percentages, and numerical claims from your internal knowledge or the LEARNED CONTEXT. Whenever you include a statistic, you MUST format it as a double-clickable span using the source's actual URL. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_SOURCE_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics. Do not fabricate numbers; only use real data from credible external sites.
+        - STATISTICS & CLAIMS: You are encouraged to include real-world statistics, percentages, and numerical claims. CRITICAL: You MUST ONLY use present-day data or futuristic projections (e.g., 'By 2030, the market is expected to...'). DO NOT include past statistics or historical data. CRITICAL URL RULE: You are FORBIDDEN from guessing or hallucinating URLs. If you are not 100% certain of the EXACT, LIVE, REAL website link, you MUST NOT use the <span class="stat-highlight"> tag and you MUST NOT write the statistic at all. It is better to write zero statistics than to give a fake link. Only provide statistics based on the topic content that are real and available on real sites. DO NOT create or invent them. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_REAL_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
 
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
         
@@ -192,7 +192,7 @@ export async function POST(req: Request) {
         <content>Full Updated HTML with surgical changes applied</content>
     ` : (isCustomOutline ? customLinkedInOutlinePrompt : BASE_PROMPT);
 
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
     const response = await client.request({
       url,

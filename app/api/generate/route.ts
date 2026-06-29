@@ -6,7 +6,7 @@ export const maxDuration = 60; // Set timeout for Vercel
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, ideaBox, referenceUrl1, referenceUrl2, referenceUrl3 } = body;
+    const { prompt, keywords, primaryKeyword, feedback, currentContent, description, ideaBox, sitemapLinks, referenceUrl1, referenceUrl2, referenceUrl3 } = body;
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -81,9 +81,16 @@ export async function POST(req: Request) {
         - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
         - Every sentence must add unique technical value. ZERO FLUFF.
         - BRAND NEUTRALITY: Do not mention or reuse product names, brand names, or company names from reference URLs or learned context unless explicitly referring to 10xDS. Rewrite all examples and references in a generic manner.
-        - STATISTICS & CLAIMS: You are encouraged to include real-world statistics, percentages, and numerical claims from your internal knowledge or the LEARNED CONTEXT. Whenever you include a statistic, you MUST format it as a double-clickable span using the source's actual URL. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_SOURCE_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics. Do not fabricate numbers; only use real data from credible external sites.
+        - STATISTICS & CLAIMS: You are encouraged to include real-world statistics, percentages, and numerical claims. CRITICAL: You MUST ONLY use present-day data or futuristic projections (e.g., 'By 2030, the market is expected to...'). DO NOT include past statistics or historical data. CRITICAL URL RULE: You are FORBIDDEN from guessing or hallucinating URLs. If you are not 100% certain of the EXACT, LIVE, REAL website link, you MUST NOT use the <span class="stat-highlight"> tag and you MUST NOT write the statistic at all. It is better to write zero statistics than to give a fake link. Only provide statistics based on the topic content that are real and available on real sites. DO NOT create or invent them. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_REAL_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
         - EXAMPLES: Do not use fabricated or generic examples containing fake statistics (e.g., "a pet store chain achieved a 10% increase in sales"). Use only real, verifiable examples with proper attribution, or keep the example entirely conceptual without specific numerical claims.
 
+        ${sitemapLinks ? `
+        ━━━ INTERNAL LINKING REPOSITORY (ELITE SEO)
+        You have been provided with a strict repository of internal pages to link to. 
+        Available Pages and their exact URLs:
+        ${Object.entries(sitemapLinks).map(([k, v]) => `- "${k}": ${v}`).join('\n')}
+        ` : ""}
+        
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
         ${ideaBox ? `\nADDITIONAL CONTENT DETAILS & INSTRUCTIONS: \n${ideaBox}\n(CRITICAL: You MUST incorporate these specific details naturally into the content. Do NOT ignore this.)\n` : ""}
 
@@ -96,6 +103,7 @@ export async function POST(req: Request) {
            - **DYNAMIC H2 COUNT:** If the Topic title contains a number (e.g., "7 Steps", "8 Ways"), you MUST write exactly that many content H2 sections. If the title has NO numbers, default to exactly 5 content H2 sections.
            - **MANDATORY ADDITIONS:** After your content H2s, you MUST always append exactly 1 Conclusion H2 and 1 FAQ H2.
            - **HEADING STYLE:** All H2 and H3 headings must be formal, declarative, and professional (e.g., "The Strategic Role of Autonomous Systems"). Do NOT force them to be questions.
+           - **INTERNAL LINKS:** You are AUTHORIZED to use <a> tags ONLY for the phrases provided in the INTERNAL LINKING REPOSITORY. DO NOT invent links. Ensure all internal links are contextually relevant to the surrounding content; only hyperlink a phrase if it fits naturally. ABSOLUTE RULE: You MUST add this exact inline style to every internal link you generate: style="color: #9333ea; text-decoration: underline; text-decoration-color: #9333ea; font-weight: 500;". CRITICAL: Each keyword phrase must appear as a hyperlink ONLY ONCE in the entire post. If you have already linked a phrase earlier, you MUST write it as plain text in all subsequent occurrences — never as a link again.
            - **H3 SUB-SECTIONS:** Use <h3> sub-headings to break down complex H2 topics where appropriate. The introductory paragraph directly under each <h3> section MUST consist of STRICTLY EXACTLY 2 sentences (no more, no less) before any lists.
            - **URL INTEGRATION:** If LEARNED CONTEXT is provided, extract 2-3 facts that are HIGHLY RELEVANT to the main blog topic. Weave these facts naturally inside the most relevant existing H2 section. DO NOT create a separate summary section for them. DO NOT copy exact wording from the URLs. Properly paraphrase and synthesize all source material in your own words. Do not closely follow the sentence structure of the reference content. DO NOT use exact phrases from the URLs as subheadings. **FORBIDDEN:** Do NOT use phrases like "According to the learned context" or "Based on the provided URL". Act as if you already knew these facts.
            - **SECTION INTROS:** The introductory paragraph directly under every H2 section MUST consist of STRICTLY EXACTLY 2 sentences (no more, no less) before presenting any sub-sections or lists.
@@ -129,8 +137,15 @@ export async function POST(req: Request) {
         - DO NOT invent fake data, fake statistics, fake names, or fake case studies. You ARE encouraged to use real-world statistics from your internal knowledge of external sites if LEARNED CONTEXT is not provided.
         - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
         - Every sentence must add unique technical value. ZERO FLUFF.
-        - STATISTICS & CLAIMS: Whenever you include a statistic from the LEARNED CONTEXT or external knowledge, you MUST format it as a double-clickable span using the SOURCE_URL. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: green; font-weight: bold; cursor: pointer;" data-source="[INSERT_SOURCE_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
+        - STATISTICS & CLAIMS: Whenever you include a statistic from the LEARNED CONTEXT or external knowledge, CRITICAL: You MUST ONLY use present-day data or futuristic projections (e.g., 'By 2030, the market is expected to...'). DO NOT include past statistics or historical data. CRITICAL URL RULE: You are FORBIDDEN from guessing or hallucinating URLs. If you are not 100% certain of the EXACT, LIVE, REAL website link, you MUST NOT use the <span class="stat-highlight"> tag and you MUST NOT write the statistic at all. It is better to write zero statistics than to give a fake link. Only provide statistics based on the topic content that are real and available on real sites. DO NOT create or invent them. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: green; font-weight: bold; cursor: pointer;" data-source="[INSERT_REAL_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
 
+        ${sitemapLinks ? `
+        ━━━ INTERNAL LINKING REPOSITORY (ELITE SEO)
+        You have been provided with a strict repository of internal pages to link to. 
+        Available Pages and their exact URLs:
+        ${Object.entries(sitemapLinks).map(([k, v]) => `- "${k}": ${v}`).join('\n')}
+        ` : ""}
+        
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL: \n${learnedContext}\n` : ""}
         
         USER PROVIDED OUTLINE (STRICT ADHERENCE REQUIRED):
@@ -151,7 +166,7 @@ export async function POST(req: Request) {
            - **ABBREVIATIONS:** You MUST expand every acronym or abbreviation on its first occurrence, and use the abbreviation strictly thereafter.
            - **SENTENCE VARIETY:** Avoid repetitive sentence structures. Specifically, DO NOT repeatedly start sentences with words such as "This", "These", or "Additionally".
            - Format: Use HTML <b>Bold Headers:</b> for specific sub-points where needed, and <ul>/<li> for lists.
-        5. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content (except for the expert CTA).
+        5. INTERNAL LINKS: You are AUTHORIZED to use <a> tags ONLY for the phrases provided in the INTERNAL LINKING REPOSITORY. DO NOT invent links. Ensure all internal links are contextually relevant to the surrounding content; only hyperlink a phrase if it fits naturally. ABSOLUTE RULE: You MUST add this exact inline style to every internal link you generate: style="color: #9333ea; text-decoration: underline; text-decoration-color: #9333ea; font-weight: 500;". CRITICAL: Each keyword phrase must appear as a hyperlink ONLY ONCE in the entire post.
         6. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
         7. CONCLUSION: Do NOT add a Conclusion unless it is explicitly requested in the USER PROVIDED OUTLINE. If it IS requested, it must be an "<h2>Conclusion</h2>" containing 3 to 4 sentences of wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
         8. FAQ SECTION: Do NOT add an FAQ section unless it is explicitly requested in the USER PROVIDED OUTLINE. If it IS requested, format it with an "<h2>FAQ Section</h2>" heading, wrap each question in <p><b>...</b></p> tags, each answer in <p>...</p> tags, and add a <br /> after every answer to ensure a clear vertical gap between each Q&A pair.
@@ -172,6 +187,7 @@ export async function POST(req: Request) {
         ---
         ${currentContent}
         ---
+        ${sitemapLinks ? `\nINTERNAL LINKING REFERENCE: ${JSON.stringify(sitemapLinks)}\n(Note: you must preserve all existing internal links that match this reference, and you are authorized to add new ones ONLY from this reference if contextually appropriate.)` : ""}
 
         USER INSTRUCTION: ${feedback}
         ${learnedContext ? `\nLEARNED CONTEXT FROM URL (USE FOR FACTS/DATA): \n${learnedContext}\n` : ""}
@@ -219,6 +235,8 @@ export async function POST(req: Request) {
         4. FORMAT: Return the final, fully merged HTML within <content> tags. Ensure the <title> and <meta> tags are also included.
         5. ESCAPE HATCH: If the USER RESTRUCTURE INSTRUCTION is clearly a completely new topic or outline that has nothing to do with the GROUND TRUTH HTML, you are permitted to ignore the 'PRESERVE SUBSTANCE' rule and generate the new article from scratch to avoid logical contradictions.
         6. MANDATORY STANDARDS: The post must end with an <h2>Conclusion</h2> containing a 3-sentence prose wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
+        
+        ${sitemapLinks ? `\nINTERNAL LINKING REFERENCE: ${JSON.stringify(sitemapLinks)}\n(Note: you must preserve all existing internal links that match this reference, and you are authorized to add new ones ONLY from this reference if contextually appropriate.)` : ""}
 
         RESULT FORMAT:
         <title>...</title>
@@ -230,7 +248,7 @@ export async function POST(req: Request) {
       ? (isStructuralFeedback ? structuralPrompt : surgicalPrompt)
       : (isCustomOutline ? customOutlinePrompt : BASE_PROMPT);
 
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent`;
 
     const response = await client.request({
       url,
