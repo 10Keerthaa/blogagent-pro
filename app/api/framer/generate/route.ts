@@ -72,11 +72,10 @@ export async function POST(req: Request) {
         STRICT CONSTRAINT: Stay strictly focused on ${prompt}.
         
         ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
-        - DO NOT invent fake data, fake statistics, fake names, or fake case studies. You ARE encouraged to use real-world statistics from your internal knowledge of external sites if LEARNED CONTEXT is not provided.
-        - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
+        - DO NOT invent fake data, fake statistics, fake names, or fake case studies. You MUST use real-world statistics from your internal knowledge of external sites.
         - Every sentence must add unique technical value. ZERO FLUFF.
         - BRAND NEUTRALITY: Do not mention or reuse product names, brand names, or company names from reference URLs or learned context unless explicitly referring to 10xDS. Rewrite all examples and references in a generic manner.
-        - STATISTICS & CLAIMS: You are encouraged to include real-world statistics, percentages, and numerical claims. CRITICAL: You MUST ONLY use present-day data or futuristic projections (e.g., 'By 2030, the market is expected to...'). DO NOT include past statistics or historical data. CRITICAL URL RULE: You are FORBIDDEN from guessing or hallucinating URLs. If you are not 100% certain of the EXACT, LIVE, REAL website link, you MUST NOT use the <span class="stat-highlight"> tag and you MUST NOT write the statistic at all. It is better to write zero statistics than to give a fake link. Only provide statistics based on the topic content that are real and available on real sites. DO NOT create or invent them. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_REAL_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
+        - STATISTICS & CLAIMS: You MUST pull diverse statistics from external, real-world industry reports and websites. You are FORBIDDEN from using the provided LEARNED CONTEXT (Reference URLs) as the source for your statistics. You must use diverse, external real live sites. CRITICAL: You MUST ONLY use present-day data or futuristic projections (e.g., 'By 2030, the market is expected to...'). DO NOT include past statistics or historical data. CRITICAL URL RULE: If real data is not found, DO NOT tag URLs or statistic data and NEVER create fake URLs and data. If you are not 100% certain of the EXACT, LIVE, REAL website link, you MUST NOT use the <span class="stat-highlight"> tag and you MUST NOT write the statistic at all. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_REAL_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
         - EXAMPLES: Do not use fabricated or generic examples containing fake statistics (e.g., "a pet store chain achieved a 10% increase in sales"). Use only real, verifiable examples with proper attribution, or keep the example entirely conceptual without specific numerical claims.
 
         ${sitemapLinks ? `
@@ -129,10 +128,9 @@ export async function POST(req: Request) {
         Primary Keyword: ${primaryKeyword || "None"}
         
         ━━━ ANTI-HALLUCINATION CONTRACT (STRICT)
-        - DO NOT invent fake data, fake statistics, fake names, or fake case studies. You ARE encouraged to use real-world statistics from your internal knowledge of external sites if LEARNED CONTEXT is not provided.
-        - If LEARNED CONTEXT is provided, it is your SINGLE SOURCE OF TRUTH for facts.
+        - DO NOT invent fake data, fake statistics, fake names, or fake case studies. You MUST use real-world statistics from your internal knowledge of external sites.
         - Every sentence must add unique technical value. ZERO FLUFF.
-        - STATISTICS & CLAIMS: You are encouraged to include real-world statistics, percentages, and numerical claims. CRITICAL: You MUST ONLY use present-day data or futuristic projections (e.g., 'By 2030, the market is expected to...'). DO NOT include past statistics or historical data. CRITICAL URL RULE: You are FORBIDDEN from guessing or hallucinating URLs. If you are not 100% certain of the EXACT, LIVE, REAL website link, you MUST NOT use the <span class="stat-highlight"> tag and you MUST NOT write the statistic at all. It is better to write zero statistics than to give a fake link. Only provide statistics based on the topic content that are real and available on real sites. DO NOT create or invent them. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_REAL_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
+        - STATISTICS & CLAIMS: You MUST pull diverse statistics from external, real-world industry reports and websites. You are FORBIDDEN from using the provided LEARNED CONTEXT (Reference URLs) as the source for your statistics. You must use diverse, external real live sites. CRITICAL: You MUST ONLY use present-day data or futuristic projections (e.g., 'By 2030, the market is expected to...'). DO NOT include past statistics or historical data. CRITICAL URL RULE: If real data is not found, DO NOT tag URLs or statistic data and NEVER create fake URLs and data. If you are not 100% certain of the EXACT, LIVE, REAL website link, you MUST NOT use the <span class="stat-highlight"> tag and you MUST NOT write the statistic at all. Wrap the exact statistic text in this HTML tag: <span class="stat-highlight" style="color: red; font-weight: bold; cursor: pointer;" data-source="[INSERT_REAL_URL]">[INSERT_STATISTIC]</span>. DO NOT use standard <a> tags for statistics.
 
         ${sitemapLinks ? `
         ━━━ INTERNAL LINKING REPOSITORY (ELITE SEO)
@@ -216,7 +214,7 @@ export async function POST(req: Request) {
         generationConfig: {
           temperature: 0.4,
           topP: 0.95,
-          maxOutputTokens: 4500, // Increased budget to ensure 1900-word posts can finish and close all HTML tags
+          maxOutputTokens: 8192,
         }
       }
     });
