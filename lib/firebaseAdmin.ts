@@ -5,7 +5,7 @@ import fs from 'fs';
 let db: admin.firestore.Firestore;
 
 if (!admin.apps.length) {
-    let credsEnv = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+    let credsEnv = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
 
     try {
         if (credsEnv) {
