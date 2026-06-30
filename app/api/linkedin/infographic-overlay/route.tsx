@@ -400,7 +400,9 @@ export async function POST(request: Request) {
               flexWrap: 'wrap',
               gap: '12px 15px',
               width: '710px',
-              height: '620px'
+              flex: 1,
+              alignContent: 'space-evenly',
+              paddingBottom: '20px'
             }}>
               {data.blocks.slice(0, 8).map((block: any, idx: number) => (
                 <div key={idx} style={{
