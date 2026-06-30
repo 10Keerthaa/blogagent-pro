@@ -16,13 +16,14 @@ export async function POST(req: Request) {
     }
 
     const auth = await getGoogleAuth(['https://www.googleapis.com/auth/cloud-platform']);
+    const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
     // The SDK expects a specific type of AuthClient, but we cast it as any to bypass version mismatch
     const vertex = createVertex({
       project: projectId,
       location: 'us-central1',
-      googleAuthOptions: { authClient: auth as any }
+      googleAuthOptions: { authClient: client as any }
     });
 
     const urlsToFetch = [referenceUrl1, referenceUrl2, referenceUrl3].filter(url => url && url.startsWith('http'));
