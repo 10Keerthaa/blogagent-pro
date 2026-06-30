@@ -147,8 +147,7 @@ export async function POST(req: Request) {
            - **SECTION INTROS:** The introductory paragraph directly under every H2 section MUST consist of STRICTLY EXACTLY 2 sentences (no more, no less) before presenting any sub-sections or lists.
            - **ABBREVIATIONS:** You MUST expand every acronym or abbreviation on its first occurrence.
            - **SENTENCE VARIETY:** Avoid repetitive sentence structures.
-           - **BULLET POINTS:** Use HTML <ul> and <li> tags ONLY where contextually appropriate.
-           - Formatting: Use HTML <b>Bold Headers:</b> for specific sub-points where needed.
+           - **BULLET POINTS:** Use HTML <ul> and <li> tags ONLY where contextually appropriate. Each <li> MUST follow this exact format: <b>Bolded Core Concept:</b> exactly 1 sentence of detailed explanation.
         5. Use <h2> and <h3> for headings. NEVER use Markdown headers (#).
         6. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content (except for the expert CTA).
         7. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
@@ -191,7 +190,7 @@ export async function POST(req: Request) {
            - ONLY use the headings explicitly written in the outline.
            - Use <h2> for main outline sections. NEVER use Markdown headers (#).
            - **SECTION INTROS:** The introductory paragraph directly under every H2 section MUST consist of STRICTLY EXACTLY 2 sentences.
-           - Format: Use HTML <b>Bold Headers:</b> for specific sub-points where needed, and <ul>/<li> for lists.
+           - Format: Use HTML <b>Bold Headers:</b> for specific sub-points where needed, and <ul>/<li> for lists. Each <li> MUST follow this exact format: <b>Bolded Core Concept:</b> exactly 1 sentence of detailed explanation.
         5. INTERNAL LINKS: You are AUTHORIZED to use <a> tags ONLY for the phrases returned by the queryInternalSitemapTool. ABSOLUTE RULE: You MUST add this exact inline style to every internal link you generate: style="color: #9333ea; text-decoration: underline; text-decoration-color: #9333ea; font-weight: 500;".
         6. NO REDUNDANCY: Do not repeat the blog title as an <h1>.
         7. CONCLUSION: Do NOT add a Conclusion unless it is explicitly requested in the USER PROVIDED OUTLINE. If requested, it must be an "<h2>Conclusion</h2>" containing 3 to 4 sentences of wrap-up and this exact purple link: <a href="https://10xds.com/ask-the-expert/" style="color: #9333ea; font-weight: 700; text-decoration: none;">Talk to our experts to learn more</a>.
