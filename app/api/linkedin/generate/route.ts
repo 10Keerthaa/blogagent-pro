@@ -58,6 +58,7 @@ export async function POST(req: Request) {
           query: z.string().describe('The search query for the statistic (e.g., "2026 AI in healthcare market size report")'),
         }),
         execute: async ({ query }: { query: string }) => {
+          console.log(`[AGENT TOOL] Tavily searching for: "${query}"`);
           try {
             const apiKey = process.env.TAVILY_API_KEY;
             if (!apiKey) return "TAVILY_API_KEY is not set in environment variables.";
