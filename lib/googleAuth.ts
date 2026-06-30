@@ -8,7 +8,7 @@ import fs from 'fs';
  * 2. Vercel/Production (GOOGLE_APPLICATION_CREDENTIALS as JSON string or Base64)
  */
 export async function getGoogleAuth(scopes: string[]) {
-    let credsEnv = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+    let credsEnv = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
 
     if (credsEnv) {
         try {
