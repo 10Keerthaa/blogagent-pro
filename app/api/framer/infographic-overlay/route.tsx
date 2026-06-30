@@ -141,7 +141,7 @@ export async function POST(request: Request) {
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px 15px', width: '710px', flex: 1, alignContent: 'space-evenly', paddingBottom: '20px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px 15px', width: '710px', flex: 1, alignContent: 'space-between', paddingBottom: '20px' }}>
               {data.blocks.slice(0, 8).map((block: any, idx: number) => (
                 <div key={idx} style={{ width: '347px', height: '135px', backgroundColor: 'rgba(255, 255, 255, 0.05)', borderLeft: '4px solid #2DD4BF', borderRadius: '10px', padding: '10px 15px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <span style={{ fontSize: '13px', fontFamily: 'EliteBold', color: '#FFD700', textTransform: 'uppercase', marginBottom: '6px', display: 'flex' }}>{block.title}</span>

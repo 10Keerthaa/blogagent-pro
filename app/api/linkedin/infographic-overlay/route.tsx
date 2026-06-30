@@ -401,7 +401,7 @@ export async function POST(request: Request) {
               gap: '12px 15px',
               width: '710px',
               flex: 1,
-              alignContent: 'space-evenly',
+              alignContent: 'space-between',
               paddingBottom: '20px'
             }}>
               {data.blocks.slice(0, 8).map((block: any, idx: number) => (
