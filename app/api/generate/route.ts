@@ -161,6 +161,7 @@ export async function POST(req: Request) {
         RESULT FORMAT:
         <title>...</title>
         <meta>...</meta>
+        CRITICAL REMINDER: If you used Tavily for a statistic, you MUST inject the EXACT "https://..." link into the data-source attribute of the <span class="stat-highlight"> tag. DO NOT write "undefined"!
         <content>...</content>
     `;
 
@@ -203,6 +204,7 @@ export async function POST(req: Request) {
         RESULT FORMAT:
         <title>...</title>
         <meta>...</meta>
+        CRITICAL REMINDER: If you used Tavily for a statistic, you MUST inject the EXACT "https://..." link into the data-source attribute of the <span class="stat-highlight"> tag. DO NOT write "undefined"!
         <content>...</content>
     `;
 
