@@ -53,11 +53,16 @@ export async function POST(req: Request) {
         },
       } as any),
       tavilySearchTool: tool({
-        description: 'Search the live web for present-day or futuristic statistics related to the topic.',
+        description: 'CRITICAL: You MUST provide a specific string for the searchQuery parameter. Search the live web for statistics.',
         parameters: z.object({
-          query: z.string().describe('The search query for the statistic (e.g., "2026 AI in healthcare market size report")'),
+          searchQuery: z.string().min(3).describe('REQUIRED: The specific Google-style search query string to find statistics (e.g., "2024 remote work retention statistics"). DO NOT LEAVE EMPTY.'),
         }),
-        execute: async ({ query }: { query: string }) => {
+        execute: async ({ searchQuery }: { searchQuery: string }) => {
+          const query = searchQuery;
+          if (!query || query === "undefined" || query.trim() === "") {
+            console.log(`[AGENT TOOL] Tavily search rejected: AI passed undefined or empty query.`);
+            return "ERROR: You MUST provide a specific string for the 'query' parameter. Please try calling the tool again with a real search query.";
+          }
           console.log(`[AGENT TOOL] Tavily searching for: "${query}"`);
           try {
             const apiKey = process.env.TAVILY_API_KEY;
@@ -83,7 +88,7 @@ export async function POST(req: Request) {
 
     const toolDirectives = `
         ${urlsToFetch.length > 0 ? `\n- OPTIONAL CONTEXT: You can use the 'scrapeReferenceUrlTool' to read these reference URLs if needed: ${urlsToFetch.join(', ')}\n` : ""}
-        \n- STATISTICS REQUIREMENT: You MUST attempt to use the 'tavilySearchTool' to search for live statistics for your 'stat-highlight' tags. If the tool fails, returns an error, or finds nothing, you may provide statistics from memory, but DO NOT wrap them in 'stat-highlight' tags and DO NOT guess URLs. ONLY use 'stat-highlight' tags for URLs directly returned by the Tavily tool.\n
+        \n- STATISTICS REQUIREMENT: You MUST attempt to use the 'tavilySearchTool' to search for live statistics for your 'stat-highlight' tags. CRITICAL TOOL RULE: When you trigger the tavilySearchTool, you are strictly forbidden from leaving the 'searchQuery' field blank. You MUST invent and provide a real Google-style search phrase into that field (e.g. "2024 remote work stats"). If the tool fails, returns an error, or finds nothing, you may provide statistics from memory, but DO NOT wrap them in 'stat-highlight' tags and DO NOT guess URLs. ONLY use 'stat-highlight' tags for URLs directly returned by the Tavily tool.\n
     `;
 
     const isSurgical = !!(feedback && currentContent);
