@@ -632,21 +632,21 @@ export const ReviewList = () => {
                         ) : filteredDrafts.length > 0 ? (
                             filteredDrafts.map((draft) => (
                                 <Card key={draft.id} hoverable className="p-4 lg:p-6 cursor-pointer group border-slate-200 dark:border-slate-800" onClick={() => handleSelectReviewDraft(draft.id)}>
-                                    <div className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-violet-100/10 dark:bg-violet-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
-                                        <div className="flex items-center gap-6 pl-4 lg:pl-6">
+                                    <div className={`flex items-center justify-between px-8 py-4 rounded-2xl cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-violet-100/10 dark:bg-violet-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                                        <div className="flex items-center gap-6">
                                             <div 
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     setSelectedDraftIds(prev => prev.includes(draft.id) ? prev.filter(i => i !== draft.id) : [...prev, draft.id]);
                                                 }}
-                                                className={`w-6 h-6 rounded border ${selectedDraftIds.includes(draft.id) ? 'bg-violet-500 border-violet-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:border-violet-400'} flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-sm ml-2`}
+                                                className={`w-6 h-6 rounded border ${selectedDraftIds.includes(draft.id) ? 'bg-violet-500 border-violet-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:border-violet-400'} flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-sm`}
                                             >
                                                 {selectedDraftIds.includes(draft.id) && <CheckSquare className="w-4 h-4" />}
                                             </div>
                                             <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm shrink-0"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
                                             <div className="space-y-2"><h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3><div className="flex items-center gap-6"><span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" />{new Date(draft.createdAt || draft.created_at).toLocaleDateString()}</span>{draft.authorEmail && <span className="text-[10px] font-medium text-violet-400 lowercase italic">by {draft.authorEmail}</span>}<Badge variant="outline" className="px-3">Draft</Badge>{draft.platform === 'framer' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700">Framer</span> : draft.platform === 'linkedin' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400 border border-sky-200 dark:border-sky-800">LinkedIn</span> : <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border border-violet-200 dark:border-violet-800">WordPress</span>}</div></div>
                                         </div>
-                                        <div className="flex items-center gap-3 pr-6">
+                                        <div className="flex items-center gap-3">
                                             <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0 flex items-center gap-2">
                                                 <span className="text-[11px] font-extrabold uppercase tracking-widest text-violet-500 whitespace-nowrap">Launch Review</span>
                                                 <ArrowRight className="w-5 h-5 text-violet-500 shrink-0" />
