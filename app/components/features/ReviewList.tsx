@@ -676,11 +676,11 @@ export const ReviewList = () => {
 
             {/* FLOATING ACTION BAR FOR BULK DELETE */}
             {selectedDraftIds.length > 0 && !selectedReviewDraft && (
-                <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white px-10 py-5 rounded-md shadow-2xl flex items-center justify-center gap-8 z-50 animate-fadeIn border border-slate-700 w-auto min-w-max">
-                    <span className="text-base font-bold whitespace-nowrap">{selectedDraftIds.length} Draft{selectedDraftIds.length > 1 ? 's' : ''} Selected</span>
+                <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white px-16 py-8 rounded-md shadow-2xl flex items-center justify-center gap-16 z-50 animate-fadeIn border border-slate-700 w-auto min-w-max">
+                    <span className="text-2xl font-bold whitespace-nowrap">{selectedDraftIds.length} Draft{selectedDraftIds.length > 1 ? 's' : ''} Selected</span>
                     <button 
                         onClick={() => setIsBulkDeleting(true)}
-                        className="bg-red-600 hover:bg-red-700 text-white rounded-md px-6 py-3 uppercase tracking-widest text-[11px] font-bold whitespace-nowrap transition-colors border-none outline-none flex items-center justify-center"
+                        className="bg-red-600 hover:bg-red-700 text-white rounded-md px-8 py-4 uppercase tracking-widest text-sm font-bold whitespace-nowrap transition-colors border-none outline-none flex items-center justify-center"
                     >
                         Delete Selected
                     </button>

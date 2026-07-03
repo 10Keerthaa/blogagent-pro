@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       4. DO NOT use Markdown formatting unless it was present in the original (usually plain text).
     `;
 
-        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.0-flash:streamGenerateContent`;
+        const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/gemini-2.5-flash:streamGenerateContent`;
 
         const response = await client.request({
             url,
