@@ -589,7 +589,7 @@ export const ReviewList = () => {
                         {!isReadOnly && (
                             <div className="mt-32 pt-16 border-t border-slate-100 dark:border-slate-800/50 flex flex-col items-center gap-10">
                                 <div className="flex flex-wrap items-center justify-center gap-6 w-full">
-                                    <Button variant="secondary" onClick={handleSaveManualEdits} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none uppercase font-black tracking-widest text-[10px]">
+                                    <Button variant="secondary" onClick={() => handleSaveManualEdits()} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none uppercase font-black tracking-widest text-[10px]">
                                         Save Edits
                                     </Button>
                                     <Button variant="secondary" onClick={() => handleMarkAsReviewed(selectedReviewDraft.id)} disabled={selectedReviewDraft.auditLog?.some((log: any) => log.email === user?.email)} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[200px] bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 disabled:opacity-50 disabled:bg-emerald-50 disabled:text-emerald-700 disabled:border-emerald-100 transition-all shadow-none font-bold uppercase tracking-widest text-[10px]">
