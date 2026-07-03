@@ -639,14 +639,15 @@ export const ReviewList = () => {
                                                     e.stopPropagation();
                                                     setSelectedDraftIds(prev => prev.includes(draft.id) ? prev.filter(i => i !== draft.id) : [...prev, draft.id]);
                                                 }}
-                                                className={`w-6 h-6 rounded border ${selectedDraftIds.includes(draft.id) ? 'bg-violet-500 border-violet-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:border-violet-400'} flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-sm ml-6`}
+                                                className={`w-6 h-6 rounded border ${selectedDraftIds.includes(draft.id) ? 'bg-violet-500 border-violet-500 text-white' : 'border-violet-300 dark:border-violet-700 bg-white dark:bg-slate-900 hover:border-violet-400'} flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-sm`}
+                                                style={{ marginLeft: '32px' }}
                                             >
                                                 {selectedDraftIds.includes(draft.id) && <CheckSquare className="w-4 h-4" />}
                                             </div>
                                             <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm shrink-0"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
                                             <div className="space-y-2"><h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3><div className="flex items-center gap-6"><span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" />{new Date(draft.createdAt || draft.created_at).toLocaleDateString()}</span>{draft.authorEmail && <span className="text-[10px] font-medium text-violet-400 lowercase italic">by {draft.authorEmail}</span>}<Badge variant="outline" className="px-3">Draft</Badge>{draft.platform === 'framer' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700">Framer</span> : draft.platform === 'linkedin' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400 border border-sky-200 dark:border-sky-800">LinkedIn</span> : <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border border-violet-200 dark:border-violet-800">WordPress</span>}</div></div>
                                         </div>
-                                        <div className="flex items-center gap-3 mr-6">
+                                        <div className="flex items-center gap-3" style={{ marginRight: '32px' }}>
                                             <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0 flex items-center gap-2">
                                                 <span className="text-[11px] font-extrabold uppercase tracking-widest text-violet-500 whitespace-nowrap">Launch Review</span>
                                                 <ArrowRight className="w-5 h-5 text-violet-500 shrink-0" />
@@ -656,7 +657,7 @@ export const ReviewList = () => {
                                                     e.stopPropagation();
                                                     setDraftToDelete(draft.id);
                                                 }}
-                                                className="ml-4 p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full transition-all group-hover:opacity-100 shrink-0 border border-transparent hover:border-red-100 dark:hover:border-red-900/30"
+                                                className="ml-4 p-2.5 text-violet-400 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/30 rounded-full transition-all group-hover:opacity-100 shrink-0 border border-violet-200 dark:border-violet-800 hover:border-violet-300 dark:hover:border-violet-700"
                                             >
                                                 <Trash2 className="w-5 h-5" />
                                             </button>
@@ -676,11 +677,15 @@ export const ReviewList = () => {
 
             {/* FLOATING ACTION BAR FOR BULK DELETE */}
             {selectedDraftIds.length > 0 && !selectedReviewDraft && (
-                <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white px-16 py-8 rounded-md shadow-2xl flex items-center justify-center gap-16 z-50 animate-fadeIn border border-slate-700 w-auto min-w-max">
-                    <span className="text-2xl font-bold whitespace-nowrap">{selectedDraftIds.length} Draft{selectedDraftIds.length > 1 ? 's' : ''} Selected</span>
+                <div 
+                    className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-violet-900 dark:bg-violet-950 text-white rounded-2xl shadow-2xl shadow-violet-500/20 flex items-center justify-center z-50 animate-fadeIn border-2 border-violet-500/50 w-auto min-w-max"
+                    style={{ padding: '24px 48px', gap: '48px' }}
+                >
+                    <span className="text-2xl font-bold whitespace-nowrap tracking-tight">{selectedDraftIds.length} Draft{selectedDraftIds.length > 1 ? 's' : ''} Selected</span>
                     <button 
                         onClick={() => setIsBulkDeleting(true)}
-                        className="bg-red-600 hover:bg-red-700 text-white rounded-md px-8 py-4 uppercase tracking-widest text-sm font-bold whitespace-nowrap transition-colors border-none outline-none flex items-center justify-center"
+                        className="bg-violet-500 hover:bg-violet-400 text-white rounded-xl uppercase tracking-widest text-sm font-black whitespace-nowrap transition-colors border-none outline-none flex items-center justify-center shadow-lg"
+                        style={{ padding: '16px 32px' }}
                     >
                         Delete Selected
                     </button>
