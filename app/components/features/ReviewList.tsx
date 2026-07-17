@@ -630,41 +630,92 @@ export const ReviewList = () => {
                                 </div>
                             ))
                         ) : filteredDrafts.length > 0 ? (
-                            filteredDrafts.map((draft) => (
-                                <Card key={draft.id} hoverable className="p-4 lg:p-6 cursor-pointer group border-slate-200 dark:border-slate-800" onClick={() => handleSelectReviewDraft(draft.id)}>
-                                    <div className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-violet-100/10 dark:bg-violet-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
-                                        <div className="flex items-center gap-6">
-                                            <div 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setSelectedDraftIds(prev => prev.includes(draft.id) ? prev.filter(i => i !== draft.id) : [...prev, draft.id]);
-                                                }}
-                                                className={`w-6 h-6 rounded border ${selectedDraftIds.includes(draft.id) ? 'bg-violet-500 border-violet-500 text-white' : 'border-violet-300 dark:border-violet-700 bg-white dark:bg-slate-900 hover:border-violet-400'} flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-sm`}
-                                                style={{ marginLeft: '32px' }}
-                                            >
-                                                {selectedDraftIds.includes(draft.id) && <CheckSquare className="w-4 h-4" />}
+                            filteredDrafts.map((draft) => {
+                                const reviewers = draft.auditLog
+                                    ?.filter((log: any) => log.action === 'reviewed')
+                                    .map((log: any) => log.email) || [];
+                                const isReviewed = reviewers.length > 0;
+
+                                return (
+                                    <Card 
+                                        key={draft.id} 
+                                        hoverable 
+                                        className={`p-4 lg:p-6 cursor-pointer group border-slate-200 dark:border-slate-800 !overflow-visible transition-all ${
+                                            isReviewed ? 'opacity-70 bg-slate-50/50 dark:bg-slate-900/40' : ''
+                                        }`} 
+                                        onClick={() => handleSelectReviewDraft(draft.id)}
+                                    >
+                                        <div className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-violet-100/10 dark:bg-violet-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                                            <div className="flex items-center gap-6">
+                                                <div 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedDraftIds(prev => prev.includes(draft.id) ? prev.filter(i => i !== draft.id) : [...prev, draft.id]);
+                                                    }}
+                                                    className={`w-6 h-6 rounded border ${selectedDraftIds.includes(draft.id) ? 'bg-violet-500 border-violet-500 text-white' : 'border-violet-300 dark:border-violet-700 bg-white dark:bg-slate-900 hover:border-violet-400'} flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-sm`}
+                                                    style={{ marginLeft: '32px' }}
+                                                >
+                                                    {selectedDraftIds.includes(draft.id) && <CheckSquare className="w-4 h-4" />}
+                                                </div>
+                                                <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm shrink-0"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
+                                                <div className="space-y-2">
+                                                    <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3>
+                                                    <div className="flex items-center gap-6">
+                                                        <span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" />{new Date(draft.createdAt || draft.created_at).toLocaleDateString()}</span>
+                                                        {draft.authorEmail && <span className="text-[10px] font-medium text-violet-400 lowercase italic">by {draft.authorEmail}</span>}
+                                                        <Badge variant="outline" className="px-3">Draft</Badge>
+                                                        {draft.platform === 'framer' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700">Framer</span> : draft.platform === 'linkedin' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400 border border-sky-200 dark:border-sky-800">LinkedIn</span> : <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border border-violet-200 dark:border-violet-800">WordPress</span>}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm shrink-0"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
-                                            <div className="space-y-2"><h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3><div className="flex items-center gap-6"><span className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" />{new Date(draft.createdAt || draft.created_at).toLocaleDateString()}</span>{draft.authorEmail && <span className="text-[10px] font-medium text-violet-400 lowercase italic">by {draft.authorEmail}</span>}<Badge variant="outline" className="px-3">Draft</Badge>{draft.platform === 'framer' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700">Framer</span> : draft.platform === 'linkedin' ? <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400 border border-sky-200 dark:border-sky-800">LinkedIn</span> : <span className="px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border border-violet-200 dark:border-violet-800">WordPress</span>}</div></div>
-                                        </div>
-                                        <div className="flex items-center gap-3" style={{ marginRight: '32px' }}>
-                                            <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0 flex items-center gap-2">
-                                                <span className="text-[11px] font-extrabold uppercase tracking-widest text-violet-500 whitespace-nowrap">Launch Review</span>
-                                                <ArrowRight className="w-5 h-5 text-violet-500 shrink-0" />
+                                            <div className="flex items-center gap-3" style={{ marginRight: '32px' }}>
+                                                {isReviewed ? (
+                                                    <div className="relative group/tooltip" onClick={(e) => e.stopPropagation()}>
+                                                        <Badge variant="success" className="inline-flex items-center gap-1 shadow-none border-emerald-100 dark:border-emerald-900/40 cursor-help">
+                                                            <CheckCircle className="w-3 h-3 text-emerald-500 shrink-0" /> Reviewed ({reviewers.length})
+                                                        </Badge>
+                                                        
+                                                        {/* Styled Tooltip Box */}
+                                                        <div className="absolute right-0 bottom-full mb-4 hidden group-hover/tooltip:block w-[380px] bg-slate-950/98 dark:bg-slate-950/98 text-slate-100 rounded-3xl p-8 shadow-2xl border-2 border-slate-800/80 backdrop-blur-lg z-50 text-center select-none" onClick={(e) => e.stopPropagation()}>
+                                                            {/* Tooltip Header */}
+                                                            <p className="font-black uppercase tracking-[0.2em] text-[10px] text-violet-400 mb-4 border-b border-slate-800/80 pb-3">
+                                                                Review History
+                                                            </p>
+                                                            
+                                                            {/* Reviewers List */}
+                                                            <div className="space-y-4 max-h-60 overflow-y-auto pr-1">
+                                                                {draft.auditLog?.filter((log: any) => log.action === 'reviewed').map((log: any, idx: number) => (
+                                                                    <div key={idx} className="flex flex-col gap-1.5 py-1 border-b border-slate-900/60 last:border-0 last:pb-0">
+                                                                        <span className="font-extrabold text-slate-100 text-sm break-all px-4 block">
+                                                                            {log.email}
+                                                                        </span>
+                                                                        <span className="text-[10px] text-slate-400 font-semibold tracking-wider">
+                                                                            {new Date(log.timestamp).toLocaleString()}
+                                                                        </span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <Badge variant="warning" className="inline-flex items-center gap-1 shadow-none border-amber-100 dark:border-amber-900/40">
+                                                        <AlertCircle className="w-3 h-3 text-amber-500 shrink-0" /> Pending Review
+                                                    </Badge>
+                                                )}
+                                                <button 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setDraftToDelete(draft.id);
+                                                    }}
+                                                    className="ml-4 p-2.5 text-violet-400 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/30 rounded-full transition-all group-hover:opacity-100 shrink-0 border border-violet-200 dark:border-violet-800 hover:border-violet-300 dark:hover:border-violet-700"
+                                                >
+                                                    <Trash2 className="w-5 h-5" />
+                                                </button>
                                             </div>
-                                            <button 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setDraftToDelete(draft.id);
-                                                }}
-                                                className="ml-4 p-2.5 text-violet-400 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/30 rounded-full transition-all group-hover:opacity-100 shrink-0 border border-violet-200 dark:border-violet-800 hover:border-violet-300 dark:hover:border-violet-700"
-                                            >
-                                                <Trash2 className="w-5 h-5" />
-                                            </button>
                                         </div>
-                                    </div>
-                                </Card>
-                            ))
+                                    </Card>
+                                );
+                            })
                         ) : (
                             <div className="bg-white/40 dark:bg-violet-950/5 backdrop-blur-sm border-2 border-dashed border-violet-100 dark:border-violet-900/40 rounded-3xl p-16 text-center shadow-sm">
                                 <div className="w-20 h-20 bg-violet-50 dark:bg-violet-950/30 rounded-2xl flex items-center justify-center mx-auto mb-8 ring-1 ring-violet-100 dark:ring-violet-900/50 shadow-inner"><Zap className="w-10 h-10 text-violet-500 animate-pulse" /></div>
