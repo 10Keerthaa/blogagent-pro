@@ -676,7 +676,7 @@ export const ReviewList = () => {
                                                         </Badge>
                                                         
                                                         {/* Styled Tooltip Box */}
-                                                        <div className="absolute right-0 bottom-full mb-4 hidden group-hover/tooltip:block w-[380px] bg-slate-950/98 dark:bg-slate-950/98 text-slate-100 rounded-3xl p-8 shadow-2xl border-2 border-slate-800/80 backdrop-blur-lg z-50 text-center select-none" onClick={(e) => e.stopPropagation()}>
+                                                        <div className="absolute right-full top-1/2 -translate-y-1/2 mr-4 hidden group-hover/tooltip:block w-[380px] bg-slate-950/98 dark:bg-slate-950/98 text-slate-100 rounded-3xl p-8 shadow-2xl border-2 border-slate-800/80 backdrop-blur-lg z-50 text-center select-none" onClick={(e) => e.stopPropagation()}>
                                                             {/* Tooltip Header */}
                                                             <p className="font-black uppercase tracking-[0.2em] text-[10px] text-violet-400 mb-4 border-b border-slate-800/80 pb-3">
                                                                 Review History
