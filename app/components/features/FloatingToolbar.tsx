@@ -303,23 +303,35 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                 // --- Clean Rectangular Delete-Modal Style URL Pop-Up Card ---
                 <form
                     onSubmit={handleLinkSubmit}
-                    className="flex flex-col p-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl w-[440px] sm:w-[480px]"
+                    className="flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl"
+                    style={{
+                        padding: '32px',
+                        width: '480px',
+                        maxWidth: '92vw',
+                        borderRadius: '16px',
+                        boxSizing: 'border-box'
+                    }}
                     onMouseDown={(e) => e.stopPropagation()}
                 >
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 tracking-tight">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight" style={{ margin: '0 0 4px 0' }}>
                         Edit Hyperlink
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-5 leading-relaxed">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed" style={{ margin: '0 0 20px 0' }}>
                         Enter or paste the target URL for your selected text.
                     </p>
 
-                    <div className="flex flex-col gap-2 mb-6">
+                    <div className="flex flex-col gap-2" style={{ margin: '0 0 24px 0' }}>
                         <input
                             ref={inputRef}
                             autoFocus
                             type="text"
                             placeholder="https://example.com"
-                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-violet-600 rounded-md px-4 py-3 text-sm font-mono text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-violet-500/20 outline-none shadow-sm transition-all"
+                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-violet-600 text-sm font-mono text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-violet-500/20 outline-none shadow-sm transition-all"
+                            style={{
+                                padding: '12px 16px',
+                                borderRadius: '8px',
+                                boxSizing: 'border-box'
+                            }}
                             value={linkUrl}
                             onChange={(e) => setLinkUrl(e.target.value)}
                             onKeyDown={(e) => {
@@ -331,17 +343,25 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                         />
                     </div>
 
-                    <div className="flex items-center justify-end gap-3 pt-3">
+                    <div className="flex items-center justify-end gap-3" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', paddingTop: '8px' }}>
                         <button
                             type="button"
                             onClick={() => setShowLinkInput(false)}
-                            className="px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md transition-colors"
+                            className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                            style={{
+                                padding: '10px 20px',
+                                borderRadius: '8px'
+                            }}
                         >
                             CANCEL
                         </button>
                         <button
                             type="submit"
-                            className="px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-violet-600 hover:bg-violet-700 active:scale-95 rounded-md shadow-sm transition-all"
+                            className="text-xs font-bold uppercase tracking-wider text-white bg-violet-600 hover:bg-violet-700 active:scale-95 shadow-sm transition-all"
+                            style={{
+                                padding: '10px 24px',
+                                borderRadius: '8px'
+                            }}
                         >
                             SAVE LINK
                         </button>
