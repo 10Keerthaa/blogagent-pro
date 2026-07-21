@@ -10,7 +10,7 @@ import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
     FileText, Calendar, ArrowLeft, ArrowRight, X, CheckCircle, XCircle, Zap, Sparkles, Users,
-    AlertCircle, Loader2, Trash2, CheckSquare
+    AlertCircle, Loader2, Trash2, CheckSquare, RefreshCw, Upload
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 import { Portal } from '../ui/Portal';
@@ -34,18 +34,65 @@ export const ReviewList = () => {
         handleRefineSelection, primaryKeyword,
         handleMarkAsReviewed, isPreviewOpen, setIsPreviewOpen,
         selectedCategories, setSelectedCategories,
-        isGenerating, targetPlatform
+        isGenerating, targetPlatform, generateFeaturedImage
     } = useDashboard();
 
     const [selectionRect, setSelectionRect] = React.useState<DOMRect | null>(null);
     const [isToolbarVisible, setIsToolbarVisible] = React.useState(false);
     const [isLinkActive, setIsLinkActive] = React.useState(false);
     const [isEditorFocused, setIsEditorFocused] = React.useState(false);
+    const [savedRange, setSavedRange] = React.useState<Range | null>(null);
+    const [isRegeneratingImage, setIsRegeneratingImage] = React.useState(false);
+    const [isUploadingImage, setIsUploadingImage] = React.useState(false);
     const [isRefiningVisual, setIsRefiningVisual] = React.useState(false);
     const [selectedDraftIds, setSelectedDraftIds] = React.useState<string[]>([]);
     const [draftToDelete, setDraftToDelete] = React.useState<string | null>(null);
     const [isBulkDeleting, setIsBulkDeleting] = React.useState(false);
     const editorRef = React.useRef<HTMLDivElement>(null);
+
+    const handleRegenerateFeaturedImage = async () => {
+        if (!selectedReviewDraft?.title || isRegeneratingImage || isUploadingImage) return;
+        setIsRegeneratingImage(true);
+        try {
+            const newUrl = await generateFeaturedImage({
+                prompt: selectedReviewDraft.prompt || selectedReviewDraft.title,
+                title: selectedReviewDraft.title,
+                keywords: selectedReviewDraft.keywords || [],
+                platform: selectedReviewDraft.platform || targetPlatform
+            });
+            if (newUrl && selectedReviewDraft) {
+                const updated = { ...selectedReviewDraft, imageUrl: newUrl };
+                setSelectedReviewDraft(updated);
+                handleSaveManualEdits(updated);
+            }
+        } catch (err) {
+            console.error("Failed to regenerate featured image in review:", err);
+        } finally {
+            setIsRegeneratingImage(false);
+        }
+    };
+
+    const handleUploadFeaturedImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || isRegeneratingImage || isUploadingImage) return;
+        setIsUploadingImage(true);
+        try {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64Url = reader.result as string;
+                if (base64Url && selectedReviewDraft) {
+                    const updated = { ...selectedReviewDraft, imageUrl: base64Url };
+                    setSelectedReviewDraft(updated);
+                    handleSaveManualEdits(updated);
+                }
+                setIsUploadingImage(false);
+            };
+            reader.readAsDataURL(file);
+        } catch (err) {
+            console.error("Failed to upload featured image in review:", err);
+            setIsUploadingImage(false);
+        }
+    };
 
     const refinementRef = React.useRef<HTMLDivElement>(null);
 
@@ -69,12 +116,12 @@ export const ReviewList = () => {
         }
     }, [selectedReviewDraft?.id]);
 
-    // Sync HTML content into the editor DOM only when NOT focused
+    // Sync HTML content into the editor DOM only when NOT focused & toolbar closed
     React.useEffect(() => {
-        if (!isEditorFocused && editorRef.current && selectedReviewDraft?.content) {
+        if (!isEditorFocused && !isToolbarVisible && editorRef.current && selectedReviewDraft?.content) {
             editorRef.current.innerHTML = selectedReviewDraft.content;
         }
-    }, [selectedReviewDraft?.content, isEditorFocused]);
+    }, [selectedReviewDraft?.content, isEditorFocused, isToolbarVisible]);
 
     const updateSelectionRect = React.useCallback(() => {
         setTimeout(() => {
@@ -102,6 +149,7 @@ export const ReviewList = () => {
             const rect = range.getBoundingClientRect();
 
             if (rect.width > 0 && !selection.isCollapsed) {
+                setSavedRange(range.cloneRange());
                 setSelectionRect(rect);
                 setIsToolbarVisible(true);
             } else {
@@ -156,31 +204,70 @@ export const ReviewList = () => {
                 }
                 break;
             case 'link': {
-                const sel = window.getSelection();
-                if (!sel || sel.isCollapsed || !value) return;
-                const range = sel.getRangeAt(0);
+                let sel = window.getSelection();
+                let range: Range | null = null;
 
-                let container = range.commonAncestorContainer;
-                if (container.nodeType === 3) container = container.parentNode as Node;
-                const existingElement = container instanceof HTMLElement ? (container.closest('a') || container.closest('span.stat-highlight')) : null;
-
-                if (existingElement) {
-                    if (existingElement.tagName.toLowerCase() === 'a') {
-                        (existingElement as HTMLAnchorElement).href = value;
-                    } else {
-                        existingElement.setAttribute('data-source', value);
+                if (sel && sel.rangeCount > 0 && !sel.isCollapsed && editorRef.current?.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+                    range = sel.getRangeAt(0);
+                } else if (savedRange && editorRef.current?.contains(savedRange.commonAncestorContainer)) {
+                    range = savedRange;
+                    sel = window.getSelection();
+                    if (sel) {
+                        sel.removeAllRanges();
+                        sel.addRange(range);
                     }
-                } else {
-                    const anchor = document.createElement('a');
-                    anchor.href = value;
-                    anchor.target = '_blank';
-                    anchor.rel = 'noopener noreferrer';
-                    anchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
-                    anchor.appendChild(range.extractContents());
-                    range.insertNode(anchor);
                 }
 
-                sel.collapseToEnd();
+                if (!range || !value) return;
+
+                let formattedUrl = value.trim();
+                if (formattedUrl && !/^https?:\/\//i.test(formattedUrl) && !formattedUrl.startsWith('mailto:') && !formattedUrl.startsWith('#')) {
+                    formattedUrl = `https://${formattedUrl}`;
+                }
+
+                // Find existing URL using robust 3-way check
+                let anchor: HTMLElement | null = null;
+
+                // Check 1: Selection start container
+                let startNode = range.startContainer;
+                if (startNode.nodeType === 3) startNode = startNode.parentNode as Node;
+                if (startNode instanceof HTMLElement) anchor = startNode.closest('a') || startNode.closest('span.stat-highlight');
+
+                // Check 2: Selection end container
+                if (!anchor) {
+                    let endNode = range.endContainer;
+                    if (endNode.nodeType === 3) endNode = endNode.parentNode as Node;
+                    if (endNode instanceof HTMLElement) anchor = endNode.closest('a') || endNode.closest('span.stat-highlight');
+                }
+
+                // Check 3: Common ancestor contains or is an anchor
+                if (!anchor) {
+                    let container = range.commonAncestorContainer;
+                    if (container.nodeType === 3) container = container.parentNode as Node;
+                    if (container instanceof HTMLElement) {
+                        anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
+                    }
+                }
+
+                if (anchor) {
+                    if (anchor.tagName.toLowerCase() === 'a') {
+                        (anchor as HTMLAnchorElement).href = formattedUrl;
+                    } else {
+                        anchor.setAttribute('data-source', formattedUrl);
+                    }
+                } else {
+                    const newAnchor = document.createElement('a');
+                    newAnchor.href = formattedUrl;
+                    newAnchor.target = '_blank';
+                    newAnchor.rel = 'noopener noreferrer';
+                    newAnchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
+                    newAnchor.appendChild(range.extractContents());
+                    range.insertNode(newAnchor);
+                }
+
+                if (sel) sel.collapseToEnd();
+                setSavedRange(null);
+
                 if (editorRef.current && selectedReviewDraft) {
                     const html = editorRef.current.innerHTML;
                     const updatedDraft = { ...selectedReviewDraft, content: html };
@@ -189,6 +276,7 @@ export const ReviewList = () => {
                 }
                 break;
             }
+            case 'humanize':
             case 'rephrase':
             case 'shorten':
             case 'expand': {
@@ -345,6 +433,37 @@ export const ReviewList = () => {
                                                     <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
                                                 </div>
                                             </div>
+
+                                            {/* Layer 4: Docked Top-Right Square Glass Buttons for Regenerate & Upload */}
+                                            <div className="absolute top-6 right-6 z-[60] flex items-center gap-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto">
+                                                <button
+                                                    type="button"
+                                                    disabled={isRegeneratingImage || isUploadingImage}
+                                                    onClick={handleRegenerateFeaturedImage}
+                                                    className="w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-violet-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-violet-400 shadow-xl transition-all duration-200 active:scale-95 disabled:opacity-50 group/btn"
+                                                    title="Regenerate Image"
+                                                >
+                                                    {isRegeneratingImage ? (
+                                                        <Loader2 className="w-5 h-5 animate-spin text-violet-300" />
+                                                    ) : (
+                                                        <RefreshCw className="w-5 h-5 text-violet-300 group-hover/btn:text-white transition-colors" />
+                                                    )}
+                                                </button>
+                                                <label className={`w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-emerald-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-emerald-400 shadow-xl transition-all duration-200 active:scale-95 cursor-pointer group/btn ${isRegeneratingImage || isUploadingImage ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Custom Image">
+                                                    {isUploadingImage ? (
+                                                        <Loader2 className="w-5 h-5 animate-spin text-emerald-300" />
+                                                    ) : (
+                                                        <Upload className="w-5 h-5 text-emerald-300 group-hover/btn:text-white transition-colors" />
+                                                    )}
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={handleUploadFeaturedImage}
+                                                        disabled={isRegeneratingImage || isUploadingImage}
+                                                    />
+                                                </label>
+                                            </div>
                                         </div>
                                     )}
 
@@ -411,6 +530,37 @@ export const ReviewList = () => {
                                                         <img src="/10xDS.png" alt="10xDS" className="h-8 lg:h-12 w-auto object-contain" />
                                                     </div>
                                                 )}
+                                            </div>
+
+                                            {/* Layer 4: Docked Top-Right Square Glass Buttons for Regenerate & Upload */}
+                                            <div className="absolute top-6 right-6 z-[60] flex items-center gap-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto">
+                                                <button
+                                                    type="button"
+                                                    disabled={isRegeneratingImage || isUploadingImage}
+                                                    onClick={handleRegenerateFeaturedImage}
+                                                    className="w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-violet-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-violet-400 shadow-xl transition-all duration-200 active:scale-95 disabled:opacity-50 group/btn"
+                                                    title="Regenerate Image"
+                                                >
+                                                    {isRegeneratingImage ? (
+                                                        <Loader2 className="w-5 h-5 animate-spin text-violet-300" />
+                                                    ) : (
+                                                        <RefreshCw className="w-5 h-5 text-violet-300 group-hover/btn:text-white transition-colors" />
+                                                    )}
+                                                </button>
+                                                <label className={`w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-emerald-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-emerald-400 shadow-xl transition-all duration-200 active:scale-95 cursor-pointer group/btn ${isRegeneratingImage || isUploadingImage ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Custom Image">
+                                                    {isUploadingImage ? (
+                                                        <Loader2 className="w-5 h-5 animate-spin text-emerald-300" />
+                                                    ) : (
+                                                        <Upload className="w-5 h-5 text-emerald-300 group-hover/btn:text-white transition-colors" />
+                                                    )}
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={handleUploadFeaturedImage}
+                                                        disabled={isRegeneratingImage || isUploadingImage}
+                                                    />
+                                                </label>
                                             </div>
                                         </div>
                                     )}

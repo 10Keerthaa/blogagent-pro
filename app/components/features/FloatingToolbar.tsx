@@ -29,12 +29,20 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
     const [linkUrl, setLinkUrl] = useState('');
     const [loadingAction, setLoadingAction] = useState<string | null>(null);
     const toolbarRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
         return () => setMounted(false);
     }, []);
+
+    // Auto-focus URL input cleanly when link panel opens
+    useEffect(() => {
+        if (showLinkInput && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [showLinkInput]);
 
     // Reset link input when toolbar hides
     useEffect(() => {
@@ -61,13 +69,16 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
 
     const TOOLBAR_HEIGHT = 60;
     
-    // --- 1. Bulletproof Math Strategy ---
-    // Calculate the top position relative to viewport.
-    // Fixed positioning handles the scroll naturally if we use rect coordinates directly.
+    // --- 1. Viewport Boundary Clamped Strategy ---
     const topPosition = rect.top - TOOLBAR_HEIGHT - 10;
     const finalTop = topPosition < 0 ? rect.bottom + 10 : topPosition;
 
-    const finalLeft = rect.left + rect.width / 2;
+    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+    const cardWidth = showLinkInput ? 440 : 540;
+    const halfWidth = cardWidth / 2;
+    const rawLeft = rect.left + rect.width / 2;
+    // Safely clamp X coordinate inside viewport boundaries (min 20px from screen edges)
+    const finalLeft = Math.min(Math.max(halfWidth + 20, rawLeft), screenWidth - halfWidth - 20);
 
     // --- 2. Per-button loading handler ---
     const handleAiAction = async (action: string) => {
@@ -113,7 +124,11 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
     const toolbarContent = (
         <div
             ref={toolbarRef}
-            className="fixed z-[9999] pointer-events-auto -translate-x-1/2 flex items-center gap-1.5 p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-violet-100/50 dark:border-violet-900/50 rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200 select-none"
+            className={
+                showLinkInput
+                    ? "fixed z-[9999] pointer-events-auto -translate-x-1/2 flex flex-col animate-in fade-in zoom-in-95 duration-200 select-none drop-shadow-2xl"
+                    : "fixed z-[9999] pointer-events-auto -translate-x-1/2 flex items-center gap-2 px-3.5 py-2.5 bg-white dark:bg-slate-900 border-2 border-violet-500/30 ring-4 ring-violet-500/10 shadow-2xl rounded-2xl animate-in fade-in zoom-in duration-200 select-none min-w-[500px] justify-between"
+            }
             style={{
                 top: finalTop,
                 left: finalLeft
@@ -189,55 +204,51 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     {/* Conditional Unlink Button */}
                     {isLink && (
                         <button
-                            onMouseDown={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }}
-                            onClick={() => {
-                                onAction('unlink');
-                            }}
-                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors rounded-lg group"
+                            onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                            onClick={() => onAction('unlink')}
+                            className="p-2 hover:bg-red-50 dark:hover:bg-red-950/30 text-red-500 transition-colors rounded-lg group"
                             title="Remove Link"
                         >
-                            <Link2Off className="w-4 h-4" />
+                            <X className="w-4 h-4" />
                         </button>
                     )}
 
                     <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1" />
 
+                    {/* --- AI Formatting Buttons --- */}
                     {/* --- AI Action: Humanize --- */}
                     <button
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => handleAiAction('humanize')}
-                        className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-lg transition-colors group flex items-center gap-2 disabled:opacity-50"
-                        title="AI Humanize"
+                        className="p-2 hover:bg-amber-50 dark:hover:bg-amber-950/30 rounded-lg transition-colors group flex items-center gap-1.5 disabled:opacity-50"
+                        title="Humanize Writing"
                         disabled={!!loadingAction}
                     >
                         {loadingAction === 'humanize' ? (
-                            <Loader2 className="w-4 h-4 text-indigo-500 animate-spin" />
+                            <Loader2 className="w-4 h-4 text-amber-500 animate-spin" />
                         ) : (
-                            <Sparkles className="w-4 h-4 text-indigo-500" />
+                            <Sparkles className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-amber-500" />
                         )}
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-500 hidden sm:inline">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500 hidden sm:inline">
                             {loadingAction === 'humanize' ? '...' : 'Humanize'}
                         </span>
                     </button>
 
-                    {/* --- AI Action: Rephrase --- */}
+                    {/* --- AI Action: Improve --- */}
                     <button
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                        onClick={() => handleAiAction('rephrase')}
-                        className="p-2 hover:bg-violet-50 dark:hover:bg-violet-950/30 rounded-lg transition-colors group flex items-center gap-2 disabled:opacity-50"
-                        title="AI Re-phrase"
+                        onClick={() => handleAiAction('improve')}
+                        className="p-2 hover:bg-violet-50 dark:hover:bg-violet-950/30 rounded-lg transition-colors group flex items-center gap-1.5 disabled:opacity-50"
+                        title="Improve Writing"
                         disabled={!!loadingAction}
                     >
-                        {loadingAction === 'rephrase' ? (
-                            <Loader2 className="w-4 h-4 text-violet-500 animate-spin" />
+                        {loadingAction === 'improve' ? (
+                            <Loader2 className="w-4 h-4 text-violet-600 animate-spin" />
                         ) : (
-                            <Wand2 className="w-4 h-4 text-violet-500" />
+                            <Wand2 className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-violet-600" />
                         )}
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-violet-500 hidden sm:inline">
-                            {loadingAction === 'rephrase' ? 'Working...' : 'Rephrase'}
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-violet-600 hidden sm:inline">
+                            {loadingAction === 'improve' ? '...' : 'Improve'}
                         </span>
                     </button>
 
@@ -245,16 +256,16 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     <button
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => handleAiAction('shorten')}
-                        className="p-2 hover:bg-amber-50 dark:hover:bg-amber-950/20 rounded-lg transition-colors group flex items-center gap-1 disabled:opacity-50"
+                        className="p-2 hover:bg-blue-50 dark:hover:bg-blue-950/20 rounded-lg transition-colors group flex items-center gap-1.5 disabled:opacity-50"
                         title="Shorten"
                         disabled={!!loadingAction}
                     >
                         {loadingAction === 'shorten' ? (
-                            <Loader2 className="w-4 h-4 text-amber-500 animate-spin" />
+                            <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
                         ) : (
-                            <AlignLeft className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-amber-500" />
+                            <AlignLeft className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-blue-500" />
                         )}
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500 hidden sm:inline">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500 hidden sm:inline">
                             {loadingAction === 'shorten' ? '...' : 'Shorten'}
                         </span>
                     </button>
@@ -263,7 +274,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     <button
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={() => handleAiAction('expand')}
-                        className="p-2 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 rounded-lg transition-colors group flex items-center gap-1 disabled:opacity-50"
+                        className="p-2 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 rounded-lg transition-colors group flex items-center gap-1.5 disabled:opacity-50"
                         title="Expand"
                         disabled={!!loadingAction}
                     >
@@ -289,36 +300,52 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                     </button>
                 </>
             ) : (
-                // --- Link Input Panel ---
+                // --- Clean Rectangular Delete-Modal Style URL Pop-Up Card ---
                 <form
                     onSubmit={handleLinkSubmit}
-                    className="flex items-center gap-2 px-2 py-1"
-                    onMouseDown={(e) => e.preventDefault()}
+                    className="flex flex-col p-6 sm:p-7 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl w-[380px] sm:w-[440px]"
+                    onMouseDown={(e) => e.stopPropagation()}
                 >
-                    <LinkIcon className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
-                    <input
-                        autoFocus
-                        type="url"
-                        placeholder="Paste URL..."
-                        className="bg-transparent border-none outline-none text-xs text-slate-700 dark:text-slate-200 w-44 placeholder:text-slate-400 border-b border-violet-200 pb-0.5"
-                        value={linkUrl}
-                        onChange={(e) => setLinkUrl(e.target.value)}
-                    />
-                    <button
-                        type="submit"
-                        onMouseDown={(e) => e.preventDefault()}
-                        className="p-1.5 bg-violet-500 text-white rounded-md hover:bg-violet-600 flex items-center justify-center"
-                    >
-                        <Check className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                        type="button"
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => setShowLinkInput(false)}
-                        className="p-1.5 text-slate-400 hover:text-slate-600"
-                    >
-                        <X className="w-3.5 h-3.5" />
-                    </button>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 tracking-tight">
+                        Edit Hyperlink
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
+                        Enter or paste the target URL for your selected text.
+                    </p>
+
+                    <div className="flex flex-col gap-2 my-2 mb-6">
+                        <input
+                            ref={inputRef}
+                            autoFocus
+                            type="text"
+                            placeholder="https://example.com"
+                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-violet-600 rounded-md px-4 py-3 text-sm font-mono text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-violet-500/20 outline-none shadow-sm transition-all"
+                            value={linkUrl}
+                            onChange={(e) => setLinkUrl(e.target.value)}
+                            onKeyDown={(e) => {
+                                e.stopPropagation();
+                                if (e.key === 'Escape') {
+                                    setShowLinkInput(false);
+                                }
+                            }}
+                        />
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-2">
+                        <button
+                            type="button"
+                            onClick={() => setShowLinkInput(false)}
+                            className="px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md transition-colors"
+                        >
+                            CANCEL
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-violet-600 hover:bg-violet-700 active:scale-95 rounded-md shadow-sm transition-all"
+                        >
+                            SAVE LINK
+                        </button>
+                    </div>
                 </form>
             )}
         </div>
