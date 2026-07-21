@@ -303,17 +303,17 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                 // --- Clean Rectangular Delete-Modal Style URL Pop-Up Card ---
                 <form
                     onSubmit={handleLinkSubmit}
-                    className="flex flex-col p-6 sm:p-7 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl w-[380px] sm:w-[440px]"
+                    className="flex flex-col p-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl w-[440px] sm:w-[480px]"
                     onMouseDown={(e) => e.stopPropagation()}
                 >
                     <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 tracking-tight">
                         Edit Hyperlink
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-5 leading-relaxed">
                         Enter or paste the target URL for your selected text.
                     </p>
 
-                    <div className="flex flex-col gap-2 my-2 mb-6">
+                    <div className="flex flex-col gap-2 mb-6">
                         <input
                             ref={inputRef}
                             autoFocus
@@ -331,17 +331,17 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                         />
                     </div>
 
-                    <div className="flex items-center justify-end gap-3 pt-2">
+                    <div className="flex items-center justify-end gap-3 pt-3">
                         <button
                             type="button"
                             onClick={() => setShowLinkInput(false)}
-                            className="px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md transition-colors"
+                            className="px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md transition-colors"
                         >
                             CANCEL
                         </button>
                         <button
                             type="submit"
-                            className="px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-violet-600 hover:bg-violet-700 active:scale-95 rounded-md shadow-sm transition-all"
+                            className="px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-violet-600 hover:bg-violet-700 active:scale-95 rounded-md shadow-sm transition-all"
                         >
                             SAVE LINK
                         </button>
