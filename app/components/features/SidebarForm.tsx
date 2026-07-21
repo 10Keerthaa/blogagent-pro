@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { Zap, Loader2, X, RefreshCw, Star, AlertCircle, Check, AlertTriangle, Plus, Globe, Code, Link2, Linkedin } from 'lucide-react';
+import { Zap, Loader2, X, RefreshCw, Star, AlertCircle, Check, AlertTriangle, Plus, Globe, Code, Link2, Linkedin, Sparkles } from 'lucide-react';
 import { useDashboard } from '../context/DashboardContext';
 import { Textarea } from '../ui/Textarea';
 import { Button } from '../ui/Button';
@@ -25,7 +25,8 @@ export const SidebarForm = () => {
         referenceUrl1, setReferenceUrl1,
         referenceUrl2, setReferenceUrl2,
         referenceUrl3, setReferenceUrl3,
-        ideaBox, setIdeaBox
+        ideaBox, setIdeaBox,
+        refinementHistory
     } = useDashboard();
 
     const isReadOnly = !!selectedReviewDraft;
@@ -35,6 +36,7 @@ export const SidebarForm = () => {
     const displayKeywords = selectedReviewDraft ? (Array.isArray(selectedReviewDraft.keywords) ? selectedReviewDraft.keywords : (typeof selectedReviewDraft.keywords === 'string' ? selectedReviewDraft.keywords.split(',').map((k: string) => k.trim()) : [])) : keywords;
     const displayDescription = selectedReviewDraft?.metaDesc || description;
     const displayIdeaBox = selectedReviewDraft?.ideaBox || ideaBox;
+    const displayRefinements = selectedReviewDraft ? (Array.isArray(selectedReviewDraft.refinementHistory) ? selectedReviewDraft.refinementHistory : []) : refinementHistory;
 
     return (
         <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-full border-r border-slate-400 dark:border-slate-800 transition-all duration-300 relative overflow-hidden">
@@ -231,6 +233,40 @@ export const SidebarForm = () => {
                         className="!min-h-[100px] !bg-slate-50/50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-800 !rounded-xl !p-4 !pl-4 !text-sm !font-medium focus:!border-violet-500 focus:!ring-4 focus:!ring-violet-500/5 transition-all"
                         readOnly={isReadOnly}
                     />
+                </section>
+
+                {/* Refinement History */}
+                <section className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800/60">
+                    <div className="flex items-center justify-between !pl-4">
+                        <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 flex items-center gap-1.5">
+                            <Sparkles className="w-3.5 h-3.5 text-violet-500" />
+                            Refinement History ({displayRefinements.length})
+                        </label>
+                    </div>
+
+                    {displayRefinements.length > 0 ? (
+                        <div className="space-y-3">
+                            {displayRefinements.map((item: any, idx: number) => (
+                                <div 
+                                    key={idx} 
+                                    className="p-3.5 bg-violet-50/60 dark:bg-violet-950/20 border border-violet-100/80 dark:border-violet-900/40 rounded-xl space-y-2 text-xs shadow-sm"
+                                >
+                                    <p className="font-semibold text-slate-800 dark:text-slate-200 leading-relaxed">
+                                        <span className="text-violet-600 dark:text-violet-400 font-bold mr-1.5">✦</span>
+                                        "{item.directive}"
+                                    </p>
+                                    <div className="flex items-center justify-between gap-2 text-[10px] text-slate-400 font-medium pt-2 border-t border-violet-100 dark:border-violet-900/30">
+                                        <span className="truncate">Applied by <strong className="text-violet-600 dark:text-violet-400 font-semibold">{item.authorEmail || 'Editor'}</strong></span>
+                                        <span className="whitespace-nowrap shrink-0">{item.timestamp ? new Date(item.timestamp).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="p-4 bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/60 dark:border-slate-800/50 rounded-xl text-center">
+                            <p className="text-[11px] font-medium text-slate-400">No AI refinements applied yet.</p>
+                        </div>
+                    )}
                 </section>
             </div>
 

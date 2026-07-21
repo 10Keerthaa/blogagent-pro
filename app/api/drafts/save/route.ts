@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { title, content, metaDesc, imageUrl, infographicUrl, prompt, keywords, primaryKeyword, createdBy, authorEmail, status, categories } = body;
+        const { title, content, metaDesc, imageUrl, infographicUrl, prompt, keywords, primaryKeyword, createdBy, authorEmail, status, categories, refinementHistory } = body;
 
         if (!title || !content) {
             return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
@@ -24,6 +24,7 @@ export async function POST(req: Request) {
             primaryKeyword: primaryKeyword || '',
             status: status || 'pending', // Standardized status for editorial review
             categories: categories || [253],
+            refinementHistory: refinementHistory || [],
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             last_edited_at: admin.firestore.FieldValue.serverTimestamp(),
             created_by: createdBy || 'anonymous',

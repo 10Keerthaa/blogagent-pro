@@ -61,7 +61,8 @@ export const useBlogApi = () => {
             referenceUrl1: data.referenceUrl1 || null,
             referenceUrl2: data.referenceUrl2 || null,
             referenceUrl3: data.referenceUrl3 || null,
-            ideaBox: data.ideaBox || null
+            ideaBox: data.ideaBox || null,
+            refinementHistory: data.refinementHistory || data.refinement_history || []
         };
     }, []);
 
@@ -373,6 +374,7 @@ export const useBlogApi = () => {
             if (updateData?.metaDesc) payload.metaDesc = updateData.metaDesc;
             if (updateData?.infographicUrl) payload.infographicUrl = updateData.infographicUrl;
             if (updateData?.categories) payload.categories = updateData.categories;
+            if (updateData?.refinementHistory) payload.refinementHistory = updateData.refinementHistory;
             if (wpUrl) payload.wpUrl = wpUrl;
 
             await updateDoc(docRef, payload);
@@ -478,6 +480,7 @@ export const useBlogApi = () => {
                 referenceUrl2: data.referenceUrl2 || null,
                 referenceUrl3: data.referenceUrl3 || null,
                 ideaBox: data.ideaBox || null,
+                refinementHistory: data.refinementHistory || [],
                 last_edited_at: serverTimestamp()
             };
 
