@@ -17,7 +17,7 @@ export const PostPreview = () => {
         description, primaryKeyword, prompt: mainTopic, keywords,
         handleRefineSelection, infographicFeedback, setInfographicFeedback, isInfographicRefining,
         isGenerating, deleteInProgressDraft, checkForResumeDraft, targetPlatform, resetEditorState,
-        generateFeaturedImage
+        generateFeaturedImage, ideaBox, referenceUrl1, referenceUrl2, referenceUrl3
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
@@ -147,10 +147,14 @@ export const PostPreview = () => {
             authorEmail: user.email,
             platform: targetPlatform,
             prompt: mainTopic || updatedPreview.prompt || '',
-            keywords: keywords.length > 0 ? keywords : (updatedPreview.keywords || [])
+            keywords: keywords.length > 0 ? keywords : (updatedPreview.keywords || []),
+            ideaBox: ideaBox,
+            referenceUrl1: referenceUrl1,
+            referenceUrl2: referenceUrl2,
+            referenceUrl3: referenceUrl3
         });
         if (result?.id) setCurrentPostId(result.id);
-    }, [user, currentPostId, infographicUrl, upsertPost, isSavingManual, isSavingReview, description, primaryKeyword, mainTopic, keywords]);
+    }, [user, currentPostId, infographicUrl, upsertPost, isSavingManual, isSavingReview, description, primaryKeyword, mainTopic, keywords, ideaBox, referenceUrl1, referenceUrl2, referenceUrl3]);
 
     if (!preview) return null;
 
@@ -761,7 +765,11 @@ export const PostPreview = () => {
                                     authorEmail: user.email,
                                     prompt: mainTopic || preview.prompt || '',
                                     keywords: keywords.length > 0 ? keywords : (preview.keywords || []),
-                                    primaryKeyword: primaryKeyword
+                                    primaryKeyword: primaryKeyword,
+                                    ideaBox: ideaBox,
+                                    referenceUrl1: referenceUrl1,
+                                    referenceUrl2: referenceUrl2,
+                                    referenceUrl3: referenceUrl3
                                 });
 
                                 // Clean up the in-progress draft after successful save to review
