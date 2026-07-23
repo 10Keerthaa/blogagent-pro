@@ -127,7 +127,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
             className={
                 showLinkInput
                     ? "fixed z-[9999] pointer-events-auto -translate-x-1/2 flex flex-col animate-in fade-in zoom-in-95 duration-200 select-none drop-shadow-2xl"
-                    : "fixed z-[9999] pointer-events-auto -translate-x-1/2 flex items-center gap-2 px-3.5 py-2.5 bg-white dark:bg-slate-900 border-2 border-violet-500/30 ring-4 ring-violet-500/10 shadow-2xl rounded-2xl animate-in fade-in zoom-in duration-200 select-none min-w-[500px] justify-between"
+                    : "fixed z-[9999] pointer-events-auto -translate-x-1/2 flex items-center gap-2 px-6 py-4 bg-white dark:bg-slate-900 border-2 border-violet-500/30 ring-4 ring-violet-500/10 shadow-2xl rounded-none animate-in fade-in zoom-in duration-200 select-none min-w-[500px] justify-between"
             }
             style={{
                 top: finalTop,
@@ -308,7 +308,7 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                         padding: '32px',
                         width: '480px',
                         maxWidth: '92vw',
-                        borderRadius: '16px',
+                        borderRadius: '0px',
                         boxSizing: 'border-box'
                     }}
                     onMouseDown={(e) => e.stopPropagation()}
