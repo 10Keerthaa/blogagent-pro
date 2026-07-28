@@ -217,7 +217,7 @@ export const TeamManagement = () => {
                 {/* Footer Info */}
                 <div className="p-6 border-t border-slate-100 dark:border-slate-900 bg-slate-50/50 dark:bg-slate-900/20 text-center">
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em]">
-                        &copy; 2026 10xBlogagent &bull; Security Cleared: Level 5
+                        &copy; 2026 10xBlogAgent &bull; Security Cleared: Level 5
                     </p>
                 </div>
             </Card>

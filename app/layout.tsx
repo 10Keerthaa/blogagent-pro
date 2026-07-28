@@ -13,7 +13,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "10xBlogagent",
+  title: "10xBlogAgent",
   description: "The elite content engine for high-intent SaaS teams.",
 };
 

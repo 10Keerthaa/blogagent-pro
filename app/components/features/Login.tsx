@@ -99,7 +99,7 @@ export const Login = () => {
                             <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xl overflow-hidden shrink-0">
                                 <Zap className="w-7 h-7 text-white fill-current" />
                             </div>
-                            <span className="text-xl font-black text-white tracking-tighter uppercase">10x<span className="text-violet-200">Blogagent</span></span>
+                            <span className="text-xl font-black text-white tracking-tighter">10x<span className="text-violet-200">BlogAgent</span></span>
                         </div>
                     </div>
 

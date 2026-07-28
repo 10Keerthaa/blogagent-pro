@@ -47,7 +47,7 @@ export const TabNavigation = () => {
                         <Zap className="text-white w-6 h-6 fill-current" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-[17px] font-black tracking-tight text-slate-800 dark:text-white leading-tight">10x<span className="text-violet-600">Blogagent</span></span>
+                        <span className="text-[17px] font-black tracking-tight text-slate-800 dark:text-white leading-tight">10x<span className="text-violet-600">BlogAgent</span></span>
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 leading-tight">Enterprise Engine v3.0</span>
                     </div>
                 </div>

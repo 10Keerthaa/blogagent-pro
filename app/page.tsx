@@ -206,7 +206,7 @@ const DashboardContent = () => {
   );
 };
 
-export default function TenXBlogagent() {
+export default function TenXBlogAgent() {
   return (
     <DashboardProvider>
       <DashboardContent />
