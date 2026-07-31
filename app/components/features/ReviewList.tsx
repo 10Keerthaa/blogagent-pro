@@ -191,7 +191,20 @@ export const ReviewList = () => {
                         }
                     }
 
-                    if (!unlinkedStat) {
+                    let unlinkedFramer = false;
+                    const activePlatform = selectedReviewDraft?.platform || targetPlatform;
+                    if (!unlinkedStat && activePlatform === 'framer' && sel && sel.rangeCount > 0) {
+                        let container = sel.getRangeAt(0).commonAncestorContainer;
+                        if (container.nodeType === 3) container = container.parentNode as Node;
+                        const anchor = container instanceof HTMLElement ? container.closest('a') : null;
+                        if (anchor) {
+                            const text = document.createTextNode(anchor.textContent || '');
+                            anchor.parentNode?.replaceChild(text, anchor);
+                            unlinkedFramer = true;
+                        }
+                    }
+
+                    if (!unlinkedStat && !unlinkedFramer) {
                         document.execCommand('unlink', false, undefined);
                     }
 
@@ -260,7 +273,12 @@ export const ReviewList = () => {
                     newAnchor.href = formattedUrl;
                     newAnchor.target = '_blank';
                     newAnchor.rel = 'noopener noreferrer';
-                    newAnchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
+                    const activePlatform = selectedReviewDraft?.platform || targetPlatform;
+                    if (activePlatform === 'framer') {
+                        newAnchor.setAttribute('style', 'color: #9333ea; text-decoration: underline; text-decoration-color: #9333ea; font-weight: 500;');
+                    } else {
+                        newAnchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
+                    }
                     newAnchor.appendChild(range.extractContents());
                     range.insertNode(newAnchor);
                 }
