@@ -269,7 +269,22 @@ export const ReviewList = () => {
 
                 if (anchor) {
                     if (anchor.tagName.toLowerCase() === 'a') {
+                        const has10xds = /10xds/i.test(formattedUrl);
                         (anchor as HTMLAnchorElement).href = formattedUrl;
+                        const activePlatform = selectedReviewDraft?.platform || targetPlatform;
+                        if (activePlatform === 'framer') {
+                            if (has10xds) {
+                                anchor.setAttribute('style', 'color: #9333ea; text-decoration: underline; text-decoration-color: #9333ea; font-weight: 500;');
+                            } else {
+                                anchor.setAttribute('style', 'color: #ef4444; text-decoration: underline; text-decoration-color: #ef4444; font-weight: 500;');
+                            }
+                        } else {
+                            if (has10xds) {
+                                anchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
+                            } else {
+                                anchor.className = 'text-red-500 underline decoration-red-300 underline-offset-4 hover:decoration-red-600 transition-all font-medium';
+                            }
+                        }
                     } else {
                         anchor.setAttribute('data-source', formattedUrl);
                     }
@@ -279,10 +294,19 @@ export const ReviewList = () => {
                     newAnchor.target = '_blank';
                     newAnchor.rel = 'noopener noreferrer';
                     const activePlatform = selectedReviewDraft?.platform || targetPlatform;
+                    const has10xds = /10xds/i.test(formattedUrl);
                     if (activePlatform === 'framer') {
-                        newAnchor.setAttribute('style', 'color: #9333ea; text-decoration: underline; text-decoration-color: #9333ea; font-weight: 500;');
+                        if (has10xds) {
+                            newAnchor.setAttribute('style', 'color: #9333ea; text-decoration: underline; text-decoration-color: #9333ea; font-weight: 500;');
+                        } else {
+                            newAnchor.setAttribute('style', 'color: #ef4444; text-decoration: underline; text-decoration-color: #ef4444; font-weight: 500;');
+                        }
                     } else {
-                        newAnchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
+                        if (has10xds) {
+                            newAnchor.className = 'text-violet-500 underline decoration-violet-300 underline-offset-4 hover:decoration-violet-600 transition-all font-medium';
+                        } else {
+                            newAnchor.className = 'text-red-500 underline decoration-red-300 underline-offset-4 hover:decoration-red-600 transition-all font-medium';
+                        }
                     }
                     newAnchor.appendChild(range.extractContents());
                     range.insertNode(newAnchor);
