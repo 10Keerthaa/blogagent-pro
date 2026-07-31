@@ -269,7 +269,11 @@ export const PostPreview = () => {
                     let container = range.commonAncestorContainer;
                     if (container.nodeType === 3) container = container.parentNode as Node;
                     if (container instanceof HTMLElement) {
-                        anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
+                        if (targetPlatform === 'framer') {
+                            anchor = container.closest('a') || container.closest('span.stat-highlight');
+                        } else {
+                            anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
+                        }
                     }
                 }
 
@@ -615,7 +619,11 @@ export const PostPreview = () => {
                                     let container = range.commonAncestorContainer;
                                     if (container.nodeType === 3) container = container.parentNode as Node;
                                     if (container instanceof HTMLElement) {
-                                        anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
+                                        if (targetPlatform === 'framer') {
+                                            anchor = container.closest('a') || container.closest('span.stat-highlight');
+                                        } else {
+                                            anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
+                                        }
                                     }
                                 }
                                 

@@ -16,6 +16,8 @@ import {
     Loader2
 } from 'lucide-react';
 
+import { useDashboard } from '../context/DashboardContext';
+
 interface FloatingToolbarProps {
     isVisible: boolean;
     rect: DOMRect | null;
@@ -25,6 +27,7 @@ interface FloatingToolbarProps {
 }
 
 export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: isLinkProp }: FloatingToolbarProps) => {
+    const { targetPlatform, selectedReviewDraft } = useDashboard();
     const [showLinkInput, setShowLinkInput] = useState(false);
     const [linkUrl, setLinkUrl] = useState('');
     const [loadingAction, setLoadingAction] = useState<string | null>(null);
@@ -176,14 +179,19 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                                     if (endNode instanceof HTMLElement) anchor = endNode.closest('a') || endNode.closest('span.stat-highlight');
                                 }
                                 
-                                // Check 3: Common ancestor contains or is an anchor
-                                if (!anchor) {
-                                    let container = range.commonAncestorContainer;
-                                    if (container.nodeType === 3) container = container.parentNode as Node;
-                                    if (container instanceof HTMLElement) {
-                                        anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
-                                    }
-                                }
+                                 // Check 3: Common ancestor contains or is an anchor
+                                 if (!anchor) {
+                                     let container = range.commonAncestorContainer;
+                                     if (container.nodeType === 3) container = container.parentNode as Node;
+                                     if (container instanceof HTMLElement) {
+                                         const activePlatform = selectedReviewDraft?.platform || targetPlatform;
+                                         if (activePlatform === 'framer') {
+                                             anchor = container.closest('a') || container.closest('span.stat-highlight');
+                                         } else {
+                                             anchor = container.closest('a') || container.querySelector('a') || container.closest('span.stat-highlight') || container.querySelector('span.stat-highlight');
+                                         }
+                                     }
+                                 }
                                 
                                 if (anchor) {
                                     if (anchor.tagName.toLowerCase() === 'a') {
