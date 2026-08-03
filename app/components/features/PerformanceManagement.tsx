@@ -98,15 +98,15 @@ export const PerformanceManagement = () => {
                                         </div>
 
                                         <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-                                            <div className="flex flex-col justify-center bg-slate-50/60 px-5 py-3 border border-slate-150 rounded-xl min-w-[150px] min-h-[64px] shadow-inner">
+                                            <div className="flex flex-col justify-center items-center text-center bg-slate-50/60 px-5 py-3 border border-slate-150 rounded-xl min-w-[150px] min-h-[64px] shadow-inner">
                                                 <div className="text-[9px] uppercase tracking-[0.2em] text-slate-450 font-bold leading-tight mb-1">{targetPlatform} Drafts</div>
                                                 <div className="text-2xl font-black text-slate-800 leading-none">{created || 0}</div>
                                             </div>
-                                            <div className="flex flex-col justify-center bg-slate-50/60 px-5 py-3 border border-slate-150 rounded-xl min-w-[150px] min-h-[64px] shadow-inner">
+                                            <div className="flex flex-col justify-center items-center text-center bg-slate-50/60 px-5 py-3 border border-slate-150 rounded-xl min-w-[150px] min-h-[64px] shadow-inner">
                                                 <div className="text-[9px] uppercase tracking-[0.2em] text-slate-450 font-bold leading-tight mb-1">Live {targetPlatform}</div>
                                                 <div className="text-2xl font-black text-emerald-600 leading-none">{published || 0}</div>
                                             </div>
-                                            <div className="px-5 py-3 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center gap-3 min-h-[64px]">
+                                            <div className="px-5 py-3 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-center gap-3 min-h-[64px] min-w-[130px]">
                                                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 leading-none">Live Session</span>
                                             </div>
