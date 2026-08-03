@@ -93,38 +93,43 @@ export const TeamManagement = () => {
                 {/* Main Content */}
                 <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
                     {/* Add Member Bar */}
-                    <div className="mb-10 p-6 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-end gap-6 group/add">
-                        <div className="flex-1 space-y-2 w-full">
+                    <div className="mb-10 p-6 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 grid grid-cols-1 md:grid-cols-12 gap-4 items-end group/add">
+                        <div className="md:col-span-7 space-y-2 w-full">
                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Add New Team Member</label>
-                            <input 
-                                type="email"
-                                placeholder="Enter email address..."
-                                value={newEmail}
-                                onChange={(e) => setNewEmail(e.target.value)}
-                                className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all font-medium text-slate-700 dark:text-slate-300"
-                            />
+                            <div className="relative">
+                                <input 
+                                    type="email"
+                                    placeholder="Enter email address..."
+                                    value={newEmail}
+                                    onChange={(e) => setNewEmail(e.target.value)}
+                                    className="w-full h-[46px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all font-medium text-slate-700 dark:text-slate-300"
+                                />
+                                <UserPlus className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                            </div>
                         </div>
-                        <div className="w-full md:w-48 space-y-2">
+                        <div className="md:col-span-2 space-y-2 w-full">
                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Assigned Role</label>
                             <div className="relative">
                                 <select 
                                     value={newRole}
                                     onChange={(e) => setNewRole(e.target.value)}
-                                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-3 text-xs font-bold appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all uppercase tracking-widest text-slate-700 dark:text-slate-300"
+                                    className="w-full h-[46px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-3 text-xs font-bold appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all uppercase tracking-widest text-slate-700 dark:text-slate-300"
                                 >
                                     {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
                                 </select>
                                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
                             </div>
                         </div>
-                        <button 
-                            onClick={onAddUser}
-                            disabled={isAdding || !newEmail}
-                            className="bg-violet-600 hover:bg-violet-700 text-white px-8 py-3.5 text-[11px] font-black uppercase tracking-widest flex items-center gap-3 transition-all disabled:opacity-50 shadow-lg shadow-violet-500/20"
-                        >
-                            {isAdding ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
-                            Grant Access
-                        </button>
+                        <div className="md:col-span-3 w-full">
+                            <button 
+                                onClick={onAddUser}
+                                disabled={isAdding || !newEmail}
+                                className="w-full h-[46px] bg-violet-600 hover:bg-violet-700 text-white text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all disabled:opacity-50 shadow-lg shadow-violet-500/20"
+                            >
+                                {isAdding ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+                                Grant Access
+                            </button>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 gap-4">
