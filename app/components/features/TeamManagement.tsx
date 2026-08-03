@@ -102,7 +102,8 @@ export const TeamManagement = () => {
                                     placeholder="Enter email address..."
                                     value={newEmail}
                                     onChange={(e) => setNewEmail(e.target.value)}
-                                    className="w-full h-[46px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all font-medium text-slate-700 dark:text-slate-300"
+                                    style={{ paddingLeft: '2.75rem' }}
+                                    className="w-full h-[46px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all font-medium text-slate-700 dark:text-slate-300"
                                 />
                                 <UserPlus className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                             </div>
@@ -155,8 +156,6 @@ export const TeamManagement = () => {
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-3 text-[11px] text-slate-400 font-medium">
-                                                <span>UUID: {u.id.slice(0, 8)}...</span>
-                                                <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
                                                 <span>Status: Optimized</span>
                                             </div>
                                         </div>
