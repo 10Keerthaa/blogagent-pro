@@ -42,7 +42,7 @@ export const SidebarForm = () => {
     return (
         <aside className="w-full shrink-0 bg-white dark:bg-slate-900 flex flex-col h-full border-r border-slate-400 dark:border-slate-800 transition-all duration-300 relative overflow-hidden">
             {/* STICKY TARGET ZONE - Multi-Platform Orchestration Switch */}
-            <div className="px-8 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
+            <div className="px-4 py-8 border-b border-slate-50 dark:border-slate-800/50 shrink-0">
                 <div className="space-y-4">
                     <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 !pl-4">Target Platform</label>
                     <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner h-14">
@@ -83,7 +83,7 @@ export const SidebarForm = () => {
             </div>
 
             {/* SCROLLABLE INPUT ZONE */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-8 space-y-10">
+            <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-8 space-y-10">
                 {/* Blog Topic */}
                 <section className="space-y-4">
                     <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 !pl-4">Main Blog Topic</label>
@@ -272,7 +272,7 @@ export const SidebarForm = () => {
             </div>
 
             {/* STICKY ACTION ZONE */}
-            <div className={`px-8 py-8 border-t border-slate-100 dark:border-slate-800 space-y-3 shrink-0 ${isReadOnly ? 'hidden' : ''}`}>
+            <div className={`px-4 py-8 border-t border-slate-100 dark:border-slate-800 space-y-3 shrink-0 ${isReadOnly ? 'hidden' : ''}`}>
                 {user && (
                     <Button
                         variant="secondary"
