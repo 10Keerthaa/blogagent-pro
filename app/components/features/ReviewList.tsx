@@ -124,6 +124,7 @@ export const ReviewList = () => {
     }, [selectedReviewDraft?.content, isEditorFocused, isToolbarVisible]);
 
     const updateSelectionRect = React.useCallback(() => {
+        if (isReadOnly) return;
         setTimeout(() => {
             const selection = window.getSelection();
             if (!selection || selection.rangeCount === 0 || !editorRef.current) {
@@ -156,7 +157,7 @@ export const ReviewList = () => {
                 setIsToolbarVisible(false);
             }
         }, 0);
-    }, []);
+    }, [isReadOnly]);
 
     const execCommand = (command: string, value: any = null) => {
         document.execCommand(command, false, value);
@@ -419,7 +420,7 @@ export const ReviewList = () => {
 
                     {/* Content Section */}
                     <section className="w-full space-y-12 relative lg:px-12 px-6">
-                        {selectionRect && (
+                        {!isReadOnly && selectionRect && (
                             <FloatingToolbar
                                 isVisible={isToolbarVisible}
                                 rect={selectionRect}
