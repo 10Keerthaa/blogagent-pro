@@ -339,9 +339,16 @@ export const useBlogApi = () => {
     const saveDraft = useCallback(async (data: any) => {
         setIsSavingDraft(true);
         try {
+            const user = auth.currentUser;
+            const token = user ? await user.getIdToken() : null;
+            const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
             const r = await fetch('/api/drafts/save', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify(data)
             });
             const d = await r.json();

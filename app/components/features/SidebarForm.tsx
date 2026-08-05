@@ -26,10 +26,11 @@ export const SidebarForm = () => {
         referenceUrl2, setReferenceUrl2,
         referenceUrl3, setReferenceUrl3,
         ideaBox, setIdeaBox,
-        refinementHistory
+        refinementHistory,
+        role
     } = useDashboard();
 
-    const isReadOnly = !!selectedReviewDraft;
+    const isReadOnly = !!selectedReviewDraft || role === 'viewer';
 
     // Prioritize values from selectedReviewDraft if available
     const displayPrompt = selectedReviewDraft?.prompt || prompt;
@@ -46,15 +47,15 @@ export const SidebarForm = () => {
                     <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 !pl-4">Target Platform</label>
                     <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex relative shadow-inner h-14">
                         <button
-                            onClick={() => setTargetPlatform('wordpress')}
-                            className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            onClick={() => !isReadOnly && setTargetPlatform('wordpress')}
+                            className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'wordpress' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'} ${isReadOnly ? 'cursor-not-allowed opacity-80' : ''}`}
                         >
                             <span className={`text-[11px] font-black leading-none transition-transform duration-300 ${targetPlatform === 'wordpress' ? 'scale-110 text-slate-900 dark:text-white' : 'scale-100 text-slate-400 opacity-70'}`}>W</span>
                             WordPress
                         </button>
                         <button
-                            onClick={() => setTargetPlatform('framer')}
-                            className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            onClick={() => !isReadOnly && setTargetPlatform('framer')}
+                            className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'framer' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'} ${isReadOnly ? 'cursor-not-allowed opacity-80' : ''}`}
                         >
                             <svg viewBox="0 0 24 24" className={`w-3.5 h-3.5 fill-current transition-transform duration-300 ${targetPlatform === 'framer' ? 'scale-110' : 'scale-100 opacity-70'}`} xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5 2h14v6H5zm0 6h14l-7 7H5zm7 7h7l-7 7z"/>
@@ -62,8 +63,8 @@ export const SidebarForm = () => {
                             Framer
                         </button>
                         <button
-                            onClick={() => setTargetPlatform('linkedin')}
-                            className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'linkedin' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                            onClick={() => !isReadOnly && setTargetPlatform('linkedin')}
+                            className={`flex-1 flex items-center justify-center gap-2 h-full text-[10px] font-bold transition-all relative z-10 ${targetPlatform === 'linkedin' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600'} ${isReadOnly ? 'cursor-not-allowed opacity-80' : ''}`}
                         >
                             <Linkedin className={`w-3.5 h-3.5 transition-transform duration-300 ${targetPlatform === 'linkedin' ? 'scale-110' : 'scale-100 opacity-70'}`} />
                             LinkedIn

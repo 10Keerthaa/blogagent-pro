@@ -26,8 +26,8 @@ export const TabNavigation = () => {
 
     const formattedEmail = user?.email?.split('@')[0] || 'User';
 
-    // Improved role display for Admin/Editor
-    const displayRole = role?.toLowerCase() === 'admin' ? 'Elite Admin' : 'Elite Editor';
+    // Improved role display for Admin/Editor/Viewer
+    const displayRole = role === 'admin' ? 'Elite Admin' : role === 'viewer' ? 'Elite Viewer' : 'Elite Editor';
 
     const tabs = [
         { id: 'create', label: 'Editor' },

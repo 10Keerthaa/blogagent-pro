@@ -1,8 +1,31 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/firebaseAdmin";
+import * as admin from 'firebase-admin';
 
 export async function POST(req: Request) {
     try {
+        // Verify token & role
+        const authHeader = req.headers.get("Authorization");
+        const token = authHeader?.split(' ')[1];
+
+        if (!token) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        let decodedToken;
+        try {
+            decodedToken = await admin.auth().verifyIdToken(token);
+        } catch (e) {
+            return NextResponse.json({ error: 'Invalid authentication token' }, { status: 401 });
+        }
+
+        // Check user role
+        const userSnap = await db.collection('user_profiles').doc(decodedToken.uid).get();
+        const role = userSnap.exists ? userSnap.data()?.role : null;
+        if (role === 'viewer') {
+            return NextResponse.json({ error: 'Forbidden: Viewers are read-only' }, { status: 403 });
+        }
+
         const { id, action, updateData } = await req.json();
 
         if (!id || !action) {

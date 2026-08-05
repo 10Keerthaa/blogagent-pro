@@ -100,7 +100,7 @@ export const ReviewList = () => {
         refinementRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    const isReadOnly = role === 'editor';
+    const isReadOnly = role === 'editor' || role === 'viewer';
 
     // Ensure we start at the top when a draft is selected
     const scrollContainerRef = React.useRef<HTMLDivElement>(null);
@@ -366,7 +366,7 @@ export const ReviewList = () => {
             return d.platform === 'wordpress' || !d.platform;
         });
 
-        if (role === 'admin') return platformBase;
+        if (role === 'admin' || role === 'viewer') return platformBase;
         return platformBase.filter(d => d.createdBy === user?.uid);
     }, [reviewDrafts, role, user, targetPlatform]);
 
@@ -712,38 +712,42 @@ export const ReviewList = () => {
                                     <div className="flex-1" />
                                     <h4 className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest text-center">Visual Insight</h4>
                                     <div className="flex-1 flex justify-end">
-                                        <Button 
-                                            variant="ghost" 
-                                            size="sm" 
-                                            onClick={() => setIsRefiningVisual(!isRefiningVisual)}
-                                            className="text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:text-violet-400 hover:text-violet-900 dark:hover:text-white flex items-center gap-2"
-                                        >
-                                            {isRefiningVisual ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
-                                            {isRefiningVisual ? 'Close' : 'Refine'}
-                                        </Button>
+                                        {role !== 'viewer' && (
+                                            <Button 
+                                                variant="ghost" 
+                                                size="sm" 
+                                                onClick={() => setIsRefiningVisual(!isRefiningVisual)}
+                                                className="text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:text-violet-400 hover:text-violet-900 dark:hover:text-white flex items-center gap-2"
+                                            >
+                                                {isRefiningVisual ? <X className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
+                                                {isRefiningVisual ? 'Close' : 'Refine'}
+                                            </Button>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="w-full space-y-6">
-                                    <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isRefiningVisual ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-inner mb-6">
-                                            <Textarea
-                                                value={infographicFeedback}
-                                                onChange={(e) => setInfographicFeedback(e.target.value)}
-                                                placeholder="Describe visual corrections..."
-                                                className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 min-h-[100px] text-sm focus:ring-1 focus:ring-violet-500 p-4"
-                                            />
-                                            <Button
-                                                variant="primary"
-                                                size="sm"
-                                                onClick={() => handleGenerateInfographic(infographicFeedback)}
-                                                isLoading={isInfographicRefining}
-                                                disabled={!infographicFeedback.trim()}
-                                                className="w-full h-12 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[10px] font-bold"
-                                            >
-                                                Update Graphic
-                                            </Button>
+                                    {role !== 'viewer' && (
+                                        <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isRefiningVisual ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-inner mb-6">
+                                                <Textarea
+                                                    value={infographicFeedback}
+                                                    onChange={(e) => setInfographicFeedback(e.target.value)}
+                                                    placeholder="Describe visual corrections..."
+                                                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 min-h-[100px] text-sm focus:ring-1 focus:ring-violet-500 p-4"
+                                                />
+                                                <Button
+                                                    variant="primary"
+                                                    size="sm"
+                                                    onClick={() => handleGenerateInfographic(infographicFeedback)}
+                                                    isLoading={isInfographicRefining}
+                                                    disabled={!infographicFeedback.trim()}
+                                                    className="w-full h-12 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[10px] font-bold"
+                                                >
+                                                    Update Graphic
+                                                </Button>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
 
                                     <div className="bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden shadow-2xl relative group">
                                         <img src={selectedReviewDraft.infographicUrl} alt="Infographic" className="w-full h-auto" />
@@ -788,7 +792,7 @@ export const ReviewList = () => {
                         )}
 
                         {/* Review Actions (Relocated to bottom of post) */}
-                        {!isReadOnly && (
+                        {role !== 'viewer' && (
                             <div className="mt-32 pt-16 border-t border-slate-100 dark:border-slate-800/50 flex flex-col items-center gap-10">
                                 <div className="flex flex-wrap items-center justify-center gap-6 w-full">
                                     <Button variant="secondary" onClick={() => handleSaveManualEdits()} isLoading={isSavingManual} className="whitespace-nowrap px-10 py-4 rounded-none h-14 min-w-[180px] bg-violet-50/80 text-violet-700 border-violet-200 hover:bg-violet-100 hover:border-violet-300 transition-colors shadow-none uppercase font-black tracking-widest text-[10px]">
@@ -814,7 +818,7 @@ export const ReviewList = () => {
                     <div className="flex items-center justify-between mb-2 px-1">
                         <div className="flex items-center gap-4">
                             <h2 className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Editorial Buffer ({filteredDrafts?.length || 0})</h2>
-                            {filteredDrafts && filteredDrafts.length > 0 && (
+                            {filteredDrafts && filteredDrafts.length > 0 && role !== 'viewer' && (
                                 <button
                                     onClick={() => setSelectedDraftIds(selectedDraftIds.length === filteredDrafts.length ? [] : filteredDrafts.map(d => d.id))}
                                     className="text-[10px] font-bold tracking-widest uppercase text-violet-500 hover:text-violet-600 transition-colors"
@@ -849,16 +853,18 @@ export const ReviewList = () => {
                                     >
                                         <div className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-colors ${selectedReviewDraft?.id === draft.id ? 'bg-violet-100/10 dark:bg-violet-900/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
                                             <div className="flex items-center gap-6">
-                                                <div 
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setSelectedDraftIds(prev => prev.includes(draft.id) ? prev.filter(i => i !== draft.id) : [...prev, draft.id]);
-                                                    }}
-                                                    className={`w-6 h-6 rounded border ${selectedDraftIds.includes(draft.id) ? 'bg-violet-500 border-violet-500 text-white' : 'border-violet-300 dark:border-violet-700 bg-white dark:bg-slate-900 hover:border-violet-400'} flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-sm`}
-                                                    style={{ marginLeft: '32px' }}
-                                                >
-                                                    {selectedDraftIds.includes(draft.id) && <CheckSquare className="w-4 h-4" />}
-                                                </div>
+                                                {role !== 'viewer' && (
+                                                    <div 
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setSelectedDraftIds(prev => prev.includes(draft.id) ? prev.filter(i => i !== draft.id) : [...prev, draft.id]);
+                                                        }}
+                                                        className={`w-6 h-6 rounded border ${selectedDraftIds.includes(draft.id) ? 'bg-violet-500 border-violet-500 text-white' : 'border-violet-300 dark:border-violet-700 bg-white dark:bg-slate-900 hover:border-violet-400'} flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-sm`}
+                                                        style={{ marginLeft: '32px' }}
+                                                    >
+                                                        {selectedDraftIds.includes(draft.id) && <CheckSquare className="w-4 h-4" />}
+                                                    </div>
+                                                )}
                                                 <div className="w-16 h-16 rounded-[1.25rem] bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 flex items-center justify-center group-hover:bg-violet-600 group-hover:border-violet-600 transition-all duration-500 shadow-sm shrink-0"><FileText className="w-8 h-8 text-violet-400 group-hover:text-white transition-colors" /></div>
                                                 <div className="space-y-2">
                                                     <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors tracking-tight">{draft.title}</h3>
@@ -904,15 +910,17 @@ export const ReviewList = () => {
                                                         <AlertCircle className="w-3 h-3 text-amber-500 shrink-0" /> Pending Review
                                                     </Badge>
                                                 )}
-                                                <button 
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setDraftToDelete(draft.id);
-                                                    }}
-                                                    className="ml-4 p-2.5 text-violet-400 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/30 rounded-full transition-all group-hover:opacity-100 shrink-0 border border-violet-200 dark:border-violet-800 hover:border-violet-300 dark:hover:border-violet-700"
-                                                >
-                                                    <Trash2 className="w-5 h-5" />
-                                                </button>
+                                                {role !== 'viewer' && (
+                                                    <button 
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setDraftToDelete(draft.id);
+                                                        }}
+                                                        className="ml-4 p-2.5 text-violet-400 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/30 rounded-full transition-all group-hover:opacity-100 shrink-0 border border-violet-200 dark:border-violet-800 hover:border-violet-300 dark:hover:border-violet-700"
+                                                    >
+                                                        <Trash2 className="w-5 h-5" />
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     </Card>
@@ -929,7 +937,7 @@ export const ReviewList = () => {
             )}
 
             {/* FLOATING ACTION BAR FOR BULK DELETE */}
-            {selectedDraftIds.length > 0 && !selectedReviewDraft && (
+            {selectedDraftIds.length > 0 && !selectedReviewDraft && role !== 'viewer' && (
                 <div 
                     className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-violet-900 dark:bg-violet-950 text-white rounded-2xl shadow-2xl shadow-violet-500/20 flex items-center justify-center z-50 animate-fadeIn border-2 border-violet-500/50 w-auto min-w-max"
                     style={{ padding: '24px 48px', gap: '48px' }}
@@ -1123,10 +1131,14 @@ export const ReviewList = () => {
                             </div>
                             {/* Modal Footer Actions */}
                             <div className="p-8 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4 bg-slate-50/50 dark:bg-slate-900/50">
-                                <Button variant="secondary" onClick={() => setIsPreviewOpen(false)} className="px-8 h-14 rounded-none border border-slate-200 dark:border-slate-800">Continue Editing</Button>
-                                <Button variant="primary" onClick={() => { handleApproveDraft(selectedReviewDraft); setIsPreviewOpen(false); }} isLoading={isPublished} className="px-8 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-none shadow-lg shadow-emerald-600/10">
-                                    <CheckCircle className="w-4 h-4 mr-2" />Approve & Publish Now
+                                <Button variant="secondary" onClick={() => setIsPreviewOpen(false)} className="px-8 h-14 rounded-none border border-slate-200 dark:border-slate-800">
+                                    {role === 'viewer' ? 'Close Preview' : 'Continue Editing'}
                                 </Button>
+                                {role !== 'viewer' && (
+                                    <Button variant="primary" onClick={() => { handleApproveDraft(selectedReviewDraft); setIsPreviewOpen(false); }} isLoading={isPublished} className="px-8 h-14 bg-emerald-600 hover:bg-emerald-700 rounded-none shadow-lg shadow-emerald-600/10">
+                                        <CheckCircle className="w-4 h-4 mr-2" />Approve & Publish Now
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     </div>

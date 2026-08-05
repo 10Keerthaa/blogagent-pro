@@ -75,7 +75,7 @@ interface DashboardContextType {
     primaryKeyword: string | null;
     setPrimaryKeyword: (v: string | null) => void;
     user: FirebaseUser | null;
-    role: 'admin' | 'editor' | null;
+    role: 'admin' | 'editor' | 'viewer' | null;
     handleLogout: () => Promise<void>;
     isPreviewOpen: boolean;
     setIsPreviewOpen: (v: boolean) => void;
@@ -153,7 +153,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     const [isFetchingDraftDetails, setIsFetchingDraftDetails] = useState(false);
     const [isResuming, setIsResuming] = useState(false);
     const [user, setUser] = useState<FirebaseUser | null>(null);
-    const [role, setRole] = useState<'admin' | 'editor' | null>(null);
+    const [role, setRole] = useState<'admin' | 'editor' | 'viewer' | null>(null);
     const [microsoftAccessToken, setMicrosoftAccessTokenState] = useState<string | null>(() => {
         if (typeof window !== 'undefined') {
             return sessionStorage.getItem('ms_access_token');

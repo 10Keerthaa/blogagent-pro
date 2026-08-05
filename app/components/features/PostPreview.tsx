@@ -17,7 +17,8 @@ export const PostPreview = () => {
         description, primaryKeyword, prompt: mainTopic, keywords,
         handleRefineSelection, infographicFeedback, setInfographicFeedback, isInfographicRefining,
         isGenerating, deleteInProgressDraft, checkForResumeDraft, targetPlatform, resetEditorState,
-        generateFeaturedImage, ideaBox, referenceUrl1, referenceUrl2, referenceUrl3
+        generateFeaturedImage, ideaBox, referenceUrl1, referenceUrl2, referenceUrl3,
+        role
     } = useDashboard();
 
     const [currentPostId, setCurrentPostId] = useState<string | null>(null);
@@ -380,7 +381,7 @@ export const PostPreview = () => {
         <div className="relative min-h-screen bg-white dark:bg-slate-950 flex flex-col pt-12">
             {/* MAIN EDITOR AREA - CENTERED COLUMN */}
             <div className="w-full pb-12 relative">
-                {selectionRect && (
+                {selectionRect && role !== 'viewer' && (
                     <FloatingToolbar
                         isVisible={isToolbarVisible}
                         rect={selectionRect}
@@ -436,35 +437,37 @@ export const PostPreview = () => {
                             </div>
 
                             {/* Layer 4: Docked Top-Right Square Glass Buttons for Regenerate & Upload */}
-                            <div className="absolute top-6 right-6 z-[60] flex items-center gap-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto">
-                                <button
-                                    type="button"
-                                    disabled={isRegeneratingImage || isUploadingImage}
-                                    onClick={handleRegenerateFeaturedImage}
-                                    className="w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-violet-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-violet-400 shadow-xl transition-all duration-200 active:scale-95 disabled:opacity-50 group/btn"
-                                    title="Regenerate Image"
-                                >
-                                    {isRegeneratingImage ? (
-                                        <Loader2 className="w-5 h-5 animate-spin text-violet-300" />
-                                    ) : (
-                                        <RefreshCw className="w-5 h-5 text-violet-300 group-hover/btn:text-white transition-colors" />
-                                    )}
-                                </button>
-                                <label className={`w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-emerald-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-emerald-400 shadow-xl transition-all duration-200 active:scale-95 cursor-pointer group/btn ${isRegeneratingImage || isUploadingImage ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Custom Image">
-                                    {isUploadingImage ? (
-                                        <Loader2 className="w-5 h-5 animate-spin text-emerald-300" />
-                                    ) : (
-                                        <Upload className="w-5 h-5 text-emerald-300 group-hover/btn:text-white transition-colors" />
-                                    )}
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={handleUploadFeaturedImage}
+                            {role !== 'viewer' && (
+                                <div className="absolute top-6 right-6 z-[60] flex items-center gap-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto">
+                                    <button
+                                        type="button"
                                         disabled={isRegeneratingImage || isUploadingImage}
-                                    />
-                                </label>
-                            </div>
+                                        onClick={handleRegenerateFeaturedImage}
+                                        className="w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-violet-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-violet-400 shadow-xl transition-all duration-200 active:scale-95 disabled:opacity-50 group/btn"
+                                        title="Regenerate Image"
+                                    >
+                                        {isRegeneratingImage ? (
+                                            <Loader2 className="w-5 h-5 animate-spin text-violet-300" />
+                                        ) : (
+                                            <RefreshCw className="w-5 h-5 text-violet-300 group-hover/btn:text-white transition-colors" />
+                                        )}
+                                    </button>
+                                    <label className={`w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-emerald-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-emerald-400 shadow-xl transition-all duration-200 active:scale-95 cursor-pointer group/btn ${isRegeneratingImage || isUploadingImage ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Custom Image">
+                                        {isUploadingImage ? (
+                                            <Loader2 className="w-5 h-5 animate-spin text-emerald-300" />
+                                        ) : (
+                                            <Upload className="w-5 h-5 text-emerald-300 group-hover/btn:text-white transition-colors" />
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={handleUploadFeaturedImage}
+                                            disabled={isRegeneratingImage || isUploadingImage}
+                                        />
+                                    </label>
+                                </div>
+                            )}
                         </div>
 
                         {/* 2. Blog Title (Second for LinkedIn) */}
@@ -477,9 +480,8 @@ export const PostPreview = () => {
                                     </span>
                                 </div>
                             )}
-                        </div>
-                        <h1
-                            contentEditable
+                        </div>                        <h1
+                            contentEditable={role !== 'viewer'}
                             suppressContentEditableWarning
                             onBlur={(e) => {
                                 const newTitle = e.currentTarget.innerText;
@@ -505,7 +507,7 @@ export const PostPreview = () => {
                             )}
                         </div>
                         <h1
-                            contentEditable
+                            contentEditable={role !== 'viewer'}
                             suppressContentEditableWarning
                             onBlur={(e) => {
                                 const newTitle = e.currentTarget.innerText;
@@ -559,35 +561,37 @@ export const PostPreview = () => {
                             )}
 
                             {/* Layer 4: Docked Top-Right Square Glass Buttons for Regenerate & Upload */}
-                            <div className="absolute top-6 right-6 z-[60] flex items-center gap-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto">
-                                <button
-                                    type="button"
-                                    disabled={isRegeneratingImage || isUploadingImage}
-                                    onClick={handleRegenerateFeaturedImage}
-                                    className="w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-violet-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-violet-400 shadow-xl transition-all duration-200 active:scale-95 disabled:opacity-50 group/btn"
-                                    title="Regenerate Image"
-                                >
-                                    {isRegeneratingImage ? (
-                                        <Loader2 className="w-5 h-5 animate-spin text-violet-300" />
-                                    ) : (
-                                        <RefreshCw className="w-5 h-5 text-violet-300 group-hover/btn:text-white transition-colors" />
-                                    )}
-                                </button>
-                                <label className={`w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-emerald-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-emerald-400 shadow-xl transition-all duration-200 active:scale-95 cursor-pointer group/btn ${isRegeneratingImage || isUploadingImage ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Custom Image">
-                                    {isUploadingImage ? (
-                                        <Loader2 className="w-5 h-5 animate-spin text-emerald-300" />
-                                    ) : (
-                                        <Upload className="w-5 h-5 text-emerald-300 group-hover/btn:text-white transition-colors" />
-                                    )}
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={handleUploadFeaturedImage}
+                            {role !== 'viewer' && (
+                                <div className="absolute top-6 right-6 z-[60] flex items-center gap-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto">
+                                    <button
+                                        type="button"
                                         disabled={isRegeneratingImage || isUploadingImage}
-                                    />
-                                </label>
-                            </div>
+                                        onClick={handleRegenerateFeaturedImage}
+                                        className="w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-violet-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-violet-400 shadow-xl transition-all duration-200 active:scale-95 disabled:opacity-50 group/btn"
+                                        title="Regenerate Image"
+                                    >
+                                        {isRegeneratingImage ? (
+                                            <Loader2 className="w-5 h-5 animate-spin text-violet-300" />
+                                        ) : (
+                                            <RefreshCw className="w-5 h-5 text-violet-300 group-hover/btn:text-white transition-colors" />
+                                        )}
+                                    </button>
+                                    <label className={`w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-emerald-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-emerald-400 shadow-xl transition-all duration-200 active:scale-95 cursor-pointer group/btn ${isRegeneratingImage || isUploadingImage ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Custom Image">
+                                        {isUploadingImage ? (
+                                            <Loader2 className="w-5 h-5 animate-spin text-emerald-300" />
+                                        ) : (
+                                            <Upload className="w-5 h-5 text-emerald-300 group-hover/btn:text-white transition-colors" />
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={handleUploadFeaturedImage}
+                                            disabled={isRegeneratingImage || isUploadingImage}
+                                        />
+                                    </label>
+                                </div>
+                            )}
                         </div>
                     </>
                 )}
@@ -595,7 +599,7 @@ export const PostPreview = () => {
                 {/* Content Area */}
                 <div
                     ref={editorRef}
-                    contentEditable
+                    contentEditable={role !== 'viewer'}
                     suppressContentEditableWarning
                     onFocus={() => setIsEditorFocused(true)}
                     onBlur={(e) => {
@@ -752,93 +756,97 @@ export const PostPreview = () => {
                     </div>
 
                     {/* 2. AI Refinement Section */}
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center justify-between">
-                            <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
-                                <Wand2 className="w-3.5 h-3.5" />
-                                REFINE WITH AI
-                            </h4>
-                        </div>
-                        {!primaryKeyword && (
-                            <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mt-2">
-                                <AlertCircle className="w-3.5 h-3.5" />
-                                Action Locked: Select a primary keyword to enable refinement
+                    {role !== 'viewer' && (
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                                    <Wand2 className="w-3.5 h-3.5" />
+                                    REFINE WITH AI
+                                </h4>
                             </div>
-                        )}
-                        <div className="mt-2">
-                            <textarea
-                                value={feedback}
-                                onChange={(e) => setFeedback(e.target.value)}
-                                placeholder="Type instructions to refine this post..."
-                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none min-h-[120px]"
-                            />
-                            <Button
-                                variant="primary"
-                                onClick={handleApplyFeedback}
-                                isLoading={isGenerating}
-                                disabled={isGenerating || !feedback}
-                                className="w-full h-14 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
-                            >
-                                {isGenerating ? 'Processing...' : 'Apply AI Refinement'}
-                            </Button>
+                            {!primaryKeyword && (
+                                <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-tight flex items-center gap-1.5 mt-2">
+                                    <AlertCircle className="w-3.5 h-3.5" />
+                                    Action Locked: Select a primary keyword to enable refinement
+                                </div>
+                            )}
+                            <div className="mt-2">
+                                <textarea
+                                    value={feedback}
+                                    onChange={(e) => setFeedback(e.target.value)}
+                                    placeholder="Type instructions to refine this post..."
+                                    className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-none p-6 text-base focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none min-h-[120px]"
+                                />
+                                <Button
+                                    variant="primary"
+                                    onClick={handleApplyFeedback}
+                                    isLoading={isGenerating}
+                                    disabled={isGenerating || !feedback}
+                                    className="w-full h-14 rounded-none bg-violet-600 hover:bg-violet-700 uppercase tracking-widest text-[11px] font-bold shadow-lg"
+                                >
+                                    {isGenerating ? 'Processing...' : 'Apply AI Refinement'}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* MAIN ACTION BAR - Fixed positioning or stable end-of-flow */}
-                    <div className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex gap-0 sticky bottom-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md z-20 -mx-6 px-6">
-                        <Button
-                            variant="secondary"
-                            onClick={() => handleAutoSave(preview)}
-                            isLoading={isSavingManual}
-                            className="flex-1 h-14 rounded-none border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2 bg-white dark:bg-slate-900"
-                        >
-                            <Save className={`w-4 h-4 ${isSavingManual ? 'animate-spin' : ''}`} />
-                            Save Edits
-                        </Button>
-                        <Button
-                            variant="primary"
-                            onClick={async () => {
-                                if (!user) return;
-                                const result = await upsertPost({
-                                    id: currentPostId || undefined,
-                                    title: preview.title,
-                                    content: preview.content,
-                                    image_url: preview.imageUrl,
-                                    infographic_url: infographicUrl,
-                                    metaDesc: description || preview.meta || "",
-                                    status: 'review',
-                                    platform: targetPlatform,
-                                    created_by: user.uid,
-                                    authorEmail: user.email,
-                                    prompt: mainTopic || preview.prompt || '',
-                                    keywords: keywords.length > 0 ? keywords : (preview.keywords || []),
-                                    primaryKeyword: primaryKeyword,
-                                    ideaBox: ideaBox,
-                                    referenceUrl1: referenceUrl1,
-                                    referenceUrl2: referenceUrl2,
-                                    referenceUrl3: referenceUrl3
-                                });
+                    {role !== 'viewer' && (
+                        <div className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex gap-0 sticky bottom-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md z-20 -mx-6 px-6">
+                            <Button
+                                variant="secondary"
+                                onClick={() => handleAutoSave(preview)}
+                                isLoading={isSavingManual}
+                                className="flex-1 h-14 rounded-none border-slate-200 dark:border-slate-800 font-bold text-[11px] uppercase tracking-widest gap-2 bg-white dark:bg-slate-900"
+                            >
+                                <Save className={`w-4 h-4 ${isSavingManual ? 'animate-spin' : ''}`} />
+                                Save Edits
+                            </Button>
+                            <Button
+                                variant="primary"
+                                onClick={async () => {
+                                    if (!user) return;
+                                    const result = await upsertPost({
+                                        id: currentPostId || undefined,
+                                        title: preview.title,
+                                        content: preview.content,
+                                        image_url: preview.imageUrl,
+                                        infographic_url: infographicUrl,
+                                        metaDesc: description || preview.meta || "",
+                                        status: 'review',
+                                        platform: targetPlatform,
+                                        created_by: user.uid,
+                                        authorEmail: user.email,
+                                        prompt: mainTopic || preview.prompt || '',
+                                        keywords: keywords.length > 0 ? keywords : (preview.keywords || []),
+                                        primaryKeyword: primaryKeyword,
+                                        ideaBox: ideaBox,
+                                        referenceUrl1: referenceUrl1,
+                                        referenceUrl2: referenceUrl2,
+                                        referenceUrl3: referenceUrl3
+                                    });
 
-                                // Clean up the in-progress draft after successful save to review
-                                if (user?.uid) {
-                                    await deleteInProgressDraft(user.uid);
-                                    await checkForResumeDraft();
-                                }
+                                    // Clean up the in-progress draft after successful save to review
+                                    if (user?.uid) {
+                                        await deleteInProgressDraft(user.uid);
+                                        await checkForResumeDraft();
+                                    }
 
-                                if (result?.id) {
-                                    setCurrentPostId(result.id);
-                                    setSelectedReviewDraft(result);
-                                }
-                                setActiveTab('review');
-                                resetEditorState();
-                            }}
-                            isLoading={isSavingReview}
-                            className="flex-1 h-14 rounded-none bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 font-bold text-[11px] uppercase tracking-widest gap-2"
-                        >
-                            <ArrowRight className={`w-4 h-4 ${isSavingReview ? 'animate-spin' : ''}`} />
-                            Send to Review Queue
-                        </Button>
-                    </div>
+                                    if (result?.id) {
+                                        setCurrentPostId(result.id);
+                                        setSelectedReviewDraft(result);
+                                    }
+                                    setActiveTab('review');
+                                    resetEditorState();
+                                }}
+                                isLoading={isSavingReview}
+                                className="flex-1 h-14 rounded-none bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/10 font-bold text-[11px] uppercase tracking-widest gap-2"
+                            >
+                                <ArrowRight className={`w-4 h-4 ${isSavingReview ? 'animate-spin' : ''}`} />
+                                Send to Review Queue
+                            </Button>
+                        </div>
+                    )}
 
                 </div>
             </div>
