@@ -99,13 +99,14 @@ export async function POST(req: Request) {
       const userOverride = refinement ? `\nCRITICAL USER OVERRIDE: The user has commanded the following custom art direction: "${refinement}". You MUST strictly obey this custom command and change the shapes, colors, or themes to match it exactly!` : "";
 
       const imagePrompt = `
-      A horizontal strip of ${numIcons} premium 3D abstract geometric crystal structures for an enterprise technology blog. 
-      STYLE: High-contrast white 3D Glassmorphism, ray-traced lighting, holographic effects. ${userOverride}
-      ICONS: Draw ${numIcons} distinct, purely abstract 3D geometric shapes (e.g. faceted crystals, floating light-nodes, or prismatic shields) representing the energy of: ${parsedData.pillars.join(', ')}.
-      LAYOUT: Draw ${numIcons} circular glass nodes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
-      BACKGROUND: Solid deep purple background (#1A0B2E). 
+      A horizontal strip of ${numIcons} premium 3D vector-style scenes for an enterprise technology blog. 
+      STYLE: Clean 3D vector-style illustrations, soft shadows, clay-like smooth textures. ${userOverride}
+      ICONS: Draw ${numIcons} distinct scenes featuring clean, stylized 3D human figures (e.g. business professionals, analysts, or developers) interacting with literal symbolic icons (such as a shield, a gear, a magnifying glass, or a bar chart) representing: ${parsedData.pillars.join(', ')}.
+      COLORS: The human characters and icons must strictly use a unified color palette of deep purple (#7c3aed) and clean white/grey.
+      LAYOUT: Draw ${numIcons} circular scenes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
+      BACKGROUND: Solid white background (#FFFFFF). 
       STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, CAPTIONS, OR LABELS ANYWHERE ON THE IMAGE (ESPECIALLY BENEATH THE ICONS). THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.
-      FOCUS: Draw ONLY abstract shapes. The image must be 100% free of any human-readable text or characters.
+      FOCUS: Draw ONLY illustrations. The image must be 100% free of any human-readable text or characters.
       `;
 
       const response = await client.request({

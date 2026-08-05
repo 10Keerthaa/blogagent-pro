@@ -51,13 +51,13 @@ export async function POST(request: Request) {
           <div style={{
             width: '800px',
             height: '1200px',
-            backgroundColor: '#1A0B2E',
+            backgroundColor: '#FFFFFF',
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
             overflow: 'hidden',
             padding: '40px 50px',
-            color: 'white'
+            color: '#0F172A'
           }}>
             {/* Header */}
             <div style={{
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
               <h1 style={{
                 fontSize: '36px',
                 fontFamily: 'EliteBold',
-                color: '#FFD700',
+                color: '#7C3AED',
                 textTransform: 'uppercase',
                 margin: 0,
                 lineHeight: 1.1,
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
               <p style={{
                 fontSize: '18px',
                 fontFamily: 'EliteReg',
-                color: '#FFFFFF',
+                color: '#475569',
                 margin: 0,
                 opacity: 0.9,
                 display: 'flex'
@@ -95,9 +95,9 @@ export async function POST(request: Request) {
             {/* Separator / Executive Summary Box */}
             <div style={{
               width: '700px',
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              backgroundColor: '#F8FAFC',
+              borderTop: '1px solid #E2E8F0',
+              borderBottom: '1px solid #E2E8F0',
               padding: '10px 20px',
               marginBottom: '20px',
               display: 'flex',
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
               <p style={{
                 fontSize: '12px',
                 fontFamily: 'EliteReg',
-                color: '#FFFFFF',
+                color: '#475569',
                 margin: 0,
                 textAlign: 'center',
                 lineHeight: 1.4,
@@ -134,8 +134,8 @@ export async function POST(request: Request) {
                 top: '10px',
                 width: '2px',
                 height: axisHeight,
-                backgroundColor: '#FFD700',
-                opacity: 0.6
+                backgroundColor: '#7C3AED',
+                opacity: 0.25
               }} />
 
               {/* Rows Alternating */}
@@ -158,8 +158,8 @@ export async function POST(request: Request) {
                       width: badgeSize,
                       height: badgeSize,
                       borderRadius: '50%',
-                      backgroundColor: '#1A0B2E',
-                      border: '2px solid #FFD700',
+                      backgroundColor: '#FFFFFF',
+                      border: '2px solid #7C3AED',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -168,7 +168,7 @@ export async function POST(request: Request) {
                       <span style={{
                         fontSize: badgeFontSize,
                         fontFamily: 'EliteBold',
-                        color: '#FFD700'
+                        color: '#7C3AED'
                       }}>
                         {stepNum}
                       </span>
@@ -184,11 +184,11 @@ export async function POST(request: Request) {
                       {isLeft ? (
                         <div style={{
                           width: '290px',
-                          backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                          borderRight: '3px solid #FFD700',
-                          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                          borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
+                          backgroundColor: '#F8FAFC',
+                          borderRight: '3px solid #7C3AED',
+                          borderTop: '1px solid #E2E8F0',
+                          borderBottom: '1px solid #E2E8F0',
+                          borderLeft: '1px solid #E2E8F0',
                           borderRadius: '8px',
                           padding: '8px 12px',
                           display: 'flex',
@@ -198,7 +198,7 @@ export async function POST(request: Request) {
                           <span style={{
                             fontSize: titleSize,
                             fontFamily: 'EliteBold',
-                            color: '#FFD700',
+                            color: '#7C3AED',
                             textTransform: 'uppercase',
                             marginBottom: '4px',
                             display: 'flex',
@@ -208,8 +208,8 @@ export async function POST(request: Request) {
                           </span>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                             {block.items.slice(0, 2).map((item: string, i: number) => (
-                              <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9, textAlign: 'left' }}>
-                                <span style={{ marginRight: '6px', color: '#2DD4BF' }}>•</span>
+                              <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#334155', fontFamily: 'EliteReg', opacity: 0.9, textAlign: 'left' }}>
+                                <span style={{ marginRight: '6px', color: '#7C3AED' }}>•</span>
                                 <span style={{ flex: 1 }}>{item}</span>
                               </div>
                             ))}
@@ -233,11 +233,11 @@ export async function POST(request: Request) {
                       {!isLeft ? (
                         <div style={{
                           width: '290px',
-                          backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                          borderLeft: '3px solid #FFD700',
-                          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                          borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+                          backgroundColor: '#F8FAFC',
+                          borderLeft: '3px solid #7C3AED',
+                          borderTop: '1px solid #E2E8F0',
+                          borderBottom: '1px solid #E2E8F0',
+                          borderRight: '1px solid #E2E8F0',
                           borderRadius: '8px',
                           padding: '8px 12px',
                           display: 'flex',
@@ -247,7 +247,7 @@ export async function POST(request: Request) {
                           <span style={{
                             fontSize: titleSize,
                             fontFamily: 'EliteBold',
-                            color: '#FFD700',
+                            color: '#7C3AED',
                             textTransform: 'uppercase',
                             marginBottom: '4px',
                             display: 'flex',
@@ -257,8 +257,8 @@ export async function POST(request: Request) {
                           </span>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                             {block.items.slice(0, 2).map((item: string, i: number) => (
-                              <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9, textAlign: 'left' }}>
-                                <span style={{ marginRight: '6px', color: '#2DD4BF' }}>•</span>
+                              <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#334155', fontFamily: 'EliteReg', opacity: 0.9, textAlign: 'left' }}>
+                                <span style={{ marginRight: '6px', color: '#7C3AED' }}>•</span>
                                 <span style={{ flex: 1 }}>{item}</span>
                               </div>
                             ))}
@@ -290,13 +290,13 @@ export async function POST(request: Request) {
           <div style={{
             width: '800px',
             height: '1200px',
-            backgroundColor: '#1A0B2E',
+            backgroundColor: '#FFFFFF',
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
             overflow: 'hidden',
             padding: '40px 45px',
-            color: 'white'
+            color: '#0F172A'
           }}>
             {/* Header */}
             <div style={{
@@ -311,7 +311,7 @@ export async function POST(request: Request) {
               <h1 style={{
                 fontSize: '32px',
                 fontFamily: 'EliteBold',
-                color: '#FFD700',
+                color: '#7C3AED',
                 textTransform: 'uppercase',
                 margin: 0,
                 lineHeight: 1.1,
@@ -322,7 +322,7 @@ export async function POST(request: Request) {
               <p style={{
                 fontSize: '16px',
                 fontFamily: 'EliteReg',
-                color: '#FFFFFF',
+                color: '#475569',
                 margin: 0,
                 opacity: 0.9,
                 display: 'flex'
@@ -343,10 +343,13 @@ export async function POST(request: Request) {
               {/* Executive Summary */}
               <div style={{
                 width: '320px',
-                borderLeft: '4px solid #2DD4BF',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                borderLeft: '4px solid #7C3AED',
+                backgroundColor: '#F8FAFC',
                 padding: '12px 15px',
                 borderRadius: '0 8px 8px 0',
+                borderTop: '1px solid #E2E8F0',
+                borderRight: '1px solid #E2E8F0',
+                borderBottom: '1px solid #E2E8F0',
                 display: 'flex'
               }}>
                 <p style={{
@@ -354,6 +357,7 @@ export async function POST(request: Request) {
                   fontFamily: 'EliteReg',
                   lineHeight: 1.4,
                   margin: 0,
+                  color: '#475569',
                   opacity: 0.9
                 }}>
                   {data.executiveSummary || 'A comprehensive, multi-pillar architecture designed for scale.'}
@@ -374,15 +378,15 @@ export async function POST(request: Request) {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                    backgroundColor: '#F1F5F9',
                     borderRadius: '8px',
                     padding: '6px 4px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                    border: '1px solid #E2E8F0'
                   }}>
                     <span style={{
                       fontSize: '9px',
                       fontFamily: 'EliteBold',
-                      color: '#FFD700',
+                      color: '#7C3AED',
                       textTransform: 'uppercase',
                       textAlign: 'center',
                       lineHeight: 1.1
@@ -408,8 +412,11 @@ export async function POST(request: Request) {
                 <div key={idx} style={{
                   width: '347px',
                   height: '135px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  borderLeft: '4px solid #2DD4BF',
+                  backgroundColor: '#F8FAFC',
+                  borderLeft: '4px solid #7C3AED',
+                  borderTop: '1px solid #E2E8F0',
+                  borderRight: '1px solid #E2E8F0',
+                  borderBottom: '1px solid #E2E8F0',
                   borderRadius: '10px',
                   padding: '10px 15px',
                   display: 'flex',
@@ -419,7 +426,7 @@ export async function POST(request: Request) {
                   <span style={{
                     fontSize: '13px',
                     fontFamily: 'EliteBold',
-                    color: '#FFD700',
+                    color: '#7C3AED',
                     textTransform: 'uppercase',
                     marginBottom: '6px',
                     display: 'flex'
@@ -428,8 +435,8 @@ export async function POST(request: Request) {
                   </span>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                     {block.items.slice(0, 2).map((item: string, i: number) => (
-                      <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9 }}>
-                        <span style={{ marginRight: '6px', color: '#2DD4BF' }}>•</span>
+                      <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#334155', fontFamily: 'EliteReg', opacity: 0.9 }}>
+                        <span style={{ marginRight: '6px', color: '#7C3AED' }}>•</span>
                         <span style={{ flex: 1 }}>{item}</span>
                       </div>
                     ))}
@@ -454,13 +461,13 @@ export async function POST(request: Request) {
         <div style={{
           width: '800px',
           height: '1000px',
-          backgroundColor: '#1A0B2E',
+          backgroundColor: '#FFFFFF',
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
           overflow: 'hidden',
           padding: '30px 50px',
-          color: 'white'
+          color: '#0F172A'
         }}>
           {/* Header */}
           <div style={{
@@ -473,7 +480,7 @@ export async function POST(request: Request) {
             <h1 style={{
               fontSize: '34px',
               fontFamily: 'EliteBold',
-              color: '#FFD700',
+              color: '#7C3AED',
               textTransform: 'uppercase',
               margin: 0,
               lineHeight: 1.1,
@@ -484,7 +491,7 @@ export async function POST(request: Request) {
             <p style={{
               fontSize: '16px',
               fontFamily: 'EliteReg',
-              color: '#FFFFFF',
+              color: '#475569',
               margin: 0,
               opacity: 0.9,
               display: 'flex'
@@ -497,8 +504,8 @@ export async function POST(request: Request) {
           <div style={{
             width: '700px',
             height: '180px',
-            backgroundColor: 'rgba(255, 255, 255, 0.12)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
+            backgroundColor: '#F8FAFC',
+            border: '1px solid #E2E8F0',
             borderRadius: '16px',
             display: 'flex',
             flexDirection: 'column',
@@ -535,7 +542,7 @@ export async function POST(request: Request) {
                 <span key={i} style={{
                   width: '20%',
                   fontSize: '9px',
-                  color: '#FFFFFF',
+                  color: '#7C3AED',
                   textTransform: 'uppercase',
                   textAlign: 'center',
                   fontFamily: 'EliteBold',
@@ -561,8 +568,11 @@ export async function POST(request: Request) {
             {data.blocks.slice(0, 5).map((block: any, idx: number) => (
               <div key={idx} style={{
                 width: '700px',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                borderLeft: '4px solid #2DD4BF',
+                backgroundColor: '#F8FAFC',
+                borderLeft: '4px solid #7C3AED',
+                borderTop: '1px solid #E2E8F0',
+                borderRight: '1px solid #E2E8F0',
+                borderBottom: '1px solid #E2E8F0',
                 borderRadius: '10px',
                 padding: '6px 15px',
                 display: 'flex',
@@ -572,7 +582,7 @@ export async function POST(request: Request) {
                 <span style={{
                   fontSize: '14px',
                   fontFamily: 'EliteBold',
-                  color: '#FFD700',
+                  color: '#7C3AED',
                   textTransform: 'uppercase',
                   marginBottom: '4px',
                   display: 'flex'
@@ -581,8 +591,8 @@ export async function POST(request: Request) {
                 </span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   {block.items.slice(0, 2).map((item: string, i: number) => (
-                    <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#FFFFFF', fontFamily: 'EliteReg', opacity: 0.9 }}>
-                      <span style={{ marginRight: '6px', color: '#2DD4BF' }}>•</span>
+                    <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#334155', fontFamily: 'EliteReg', opacity: 0.9 }}>
+                      <span style={{ marginRight: '6px', color: '#7C3AED' }}>•</span>
                       <span style={{ flex: 1 }}>{item}</span>
                     </div>
                   ))}
