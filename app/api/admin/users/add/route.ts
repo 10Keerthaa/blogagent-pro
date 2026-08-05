@@ -70,7 +70,7 @@ export async function POST(req: Request) {
                                     <!-- BRAND HEADER -->
                                     <tr>
                                       <td align="center" style="padding: 32px 0 24px 0;">
-                                        <span style="color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;">
+                                        <span style="color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 0.08em;">
                                           10xBlog<span style="color: #a78bfa;">Agent</span>
                                         </span>
                                       </td>
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
                                         </p>
                                         
                                         <p style="color: #9ca3af; font-size: 14px; line-height: 1.6; margin: 0 0 28px 0; text-align: center;">
-                                          You have been formally invited to join the official <strong>Editorial Team</strong> on the <strong>10xBlogAgent</strong> platform as an <strong style="color: #c084fc; background-color: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); padding: 4px 10px; border-radius: 20px; font-size: 12px; letter-spacing: 0.05em; display: inline-block; margin-left: 4px;">${role.toUpperCase()}</strong>.
+                                          You have been formally invited to join the official <strong>Editorial Team</strong> on the <strong>10xBlogAgent</strong> platform as an <strong style="color: #ffffff; background-color: #7c3aed; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; display: inline-block; margin-left: 4px; text-transform: uppercase;">${role.toUpperCase()}</strong>.
                                         </p>
  
                                         <!-- PRIVILEGES BLOCK -->
@@ -121,7 +121,7 @@ export async function POST(req: Request) {
                                             <td align="center" style="padding: 8px 0 20px 0;">
                                               <table border="0" cellpadding="0" cellspacing="0">
                                                 <tr>
-                                                  <td align="center" style="border-radius: 6px; background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);">
+                                                  <td align="center" style="border-radius: 6px; background-color: #8b5cf6; background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);">
                                                     <a href="${appUrl}" target="_blank" style="display: inline-block; font-size: 13px; font-weight: 700; color: #ffffff; text-decoration: none; padding: 14px 40px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em;">
                                                       Get Started
                                                     </a>
@@ -131,6 +131,14 @@ export async function POST(req: Request) {
                                             </td>
                                           </tr>
                                         </table>
+ 
+                                        <!-- FALLBACK LINK -->
+                                        <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 16px 0 24px 0;">
+                                          If the button doesn't work, copy and paste this link into your browser:<br />
+                                          <a href="${appUrl}" target="_blank" style="color: #a78bfa; text-decoration: underline; word-break: break-all; display: inline-block; margin-top: 8px;">
+                                            ${appUrl}
+                                          </a>
+                                        </p>
  
                                         <!-- HELP TEXT / DISCLAIMER -->
                                         <p style="color: #6b7280; font-size: 11px; line-height: 1.6; text-align: center; margin: 24px 0 0 0; padding-top: 20px; border-top: 1px solid #1f2937;">
