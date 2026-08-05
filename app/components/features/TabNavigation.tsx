@@ -30,7 +30,7 @@ export const TabNavigation = () => {
     const displayRole = role === 'admin' ? 'Elite Admin' : role === 'viewer' ? 'Elite Viewer' : 'Elite Editor';
 
     const tabs = [
-        { id: 'create', label: 'Editor' },
+        ...(role !== 'viewer' ? [{ id: 'create', label: 'Editor' }] : []),
         { id: 'review', label: 'Review', count: reviewDrafts.length },
         { id: 'history', label: 'History' }
     ];

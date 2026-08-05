@@ -548,6 +548,12 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     }, [user, checkForResumeDraft]);
 
     useEffect(() => {
+        if (role === 'viewer' && activeTab === 'create') {
+            setActiveTab('review');
+        }
+    }, [role, activeTab]);
+
+    useEffect(() => {
         if (activeTab === 'review') {
             fetchDrafts();
         }
