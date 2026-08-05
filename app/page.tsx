@@ -8,7 +8,7 @@ import { PostPreview } from './components/features/PostPreview';
 import { ReviewList } from './components/features/ReviewList';
 import { HistoryList } from './components/features/HistoryList';
 import { Login } from './components/features/Login';
-import { X, XCircle, Loader2, CheckCircle, Sparkles } from 'lucide-react';
+import { X, XCircle, Loader2, CheckCircle, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const DashboardContent = () => {
   const { 
@@ -18,6 +18,7 @@ const DashboardContent = () => {
 
   const [showSuccessToast, setShowSuccessToast] = React.useState(false);
   const [successType, setSuccessType] = React.useState<'text' | 'image'>('text');
+  const [isReviewSidebarCollapsed, setIsReviewSidebarCollapsed] = React.useState(false);
   
   const prevIsApplyingFeedback = React.useRef(isApplyingFeedback);
   const prevIsInfographicRefining = React.useRef(isInfographicRefining);
@@ -42,6 +43,20 @@ const DashboardContent = () => {
     prevIsInfographicRefining.current = isInfographicRefining;
   }, [isInfographicRefining]);
 
+  // Auto-expand sidebar when switching tabs away from review
+  React.useEffect(() => {
+    if (activeTab !== 'review') {
+      setIsReviewSidebarCollapsed(false);
+    }
+  }, [activeTab]);
+
+  // Auto-expand sidebar if selectedReviewDraft becomes null (closed draft)
+  React.useEffect(() => {
+    if (!selectedReviewDraft) {
+      setIsReviewSidebarCollapsed(false);
+    }
+  }, [selectedReviewDraft]);
+
   // Sidebar visibility rule:
   // Show on 'create' tab always (split screen preserved)
   // Also show when a review draft is actively open
@@ -49,6 +64,18 @@ const DashboardContent = () => {
   const showSidebar =
     activeTab === 'create' ||
     (activeTab === 'review' && !!selectedReviewDraft);
+
+  const isSidebarCollapsed = activeTab === 'review' && isReviewSidebarCollapsed;
+
+  const sidebarWidthClass = !showSidebar
+    ? 'w-0 opacity-0 pointer-events-none'
+    : isSidebarCollapsed
+      ? 'w-0 opacity-0 pointer-events-none'
+      : `w-full md:w-[32%] ${activeTab === 'review' ? 'lg:w-[30%] xl:w-[30%]' : 'lg:w-[28%] xl:w-[25%]'}`;
+
+  const mainWidthClass = (!showSidebar || isSidebarCollapsed)
+    ? 'w-full'
+    : `md:w-[68%] ${activeTab === 'review' ? 'lg:w-[70%] xl:w-[70%]' : 'lg:w-[72%] xl:w-[75%]'}`;
 
   if (!user) {
     return <Login />;
@@ -117,19 +144,27 @@ const DashboardContent = () => {
       <div className="flex-1 flex overflow-hidden md:flex-row flex-col bg-slate-50 dark:bg-[#0a0a0a]">
         {/* LEFT PANEL: Sidebar Form (Part 2 - Topic, Keywords, Description) */}
         <div
-          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0 border-r border-slate-200 dark:border-slate-800
-            ${showSidebar 
-              ? `w-full md:w-[32%] ${activeTab === 'review' ? 'lg:w-[30%] xl:w-[30%]' : 'lg:w-[28%] xl:w-[25%]'}` 
-              : 'w-0 opacity-0 pointer-events-none'}`}
+          className={`transition-all duration-500 ease-in-out overflow-hidden shrink-0 border-r border-slate-200 dark:border-slate-800 ${sidebarWidthClass}`}
         >
           <SidebarForm />
         </div>
 
         {/* RIGHT PANEL: Dynamic Workspace (Part 3 - Editor Area) */}
-        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative transition-all duration-500 ease-in-out
-          ${showSidebar 
-            ? `md:w-[68%] ${activeTab === 'review' ? 'lg:w-[70%] xl:w-[70%]' : 'lg:w-[72%] xl:w-[75%]'}` 
-            : 'w-full'}`}>
+        <main className={`flex-1 flex flex-col min-w-0 overflow-hidden relative transition-all duration-500 ease-in-out ${mainWidthClass}`}>
+          {/* Collapse/Expand Toggle Button (Review Tab split screen only) */}
+          {activeTab === 'review' && !!selectedReviewDraft && (
+            <button
+              onClick={() => setIsReviewSidebarCollapsed(!isReviewSidebarCollapsed)}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-[45] w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg flex items-center justify-center text-slate-500 hover:text-violet-600 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+              title={isReviewSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            >
+              {isReviewSidebarCollapsed ? (
+                <ChevronRight className="w-4 h-4" />
+              ) : (
+                <ChevronLeft className="w-4 h-4" />
+              )}
+            </button>
+          )}
 
           {/* Frosted Glass Workspace Overlay for AI Text Refinement */}
           {isApplyingFeedback && (
