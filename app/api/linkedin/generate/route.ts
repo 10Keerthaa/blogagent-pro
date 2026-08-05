@@ -132,7 +132,7 @@ export async function POST(req: Request) {
            - **NO bullet lists under H3:** Under every <h3> heading, you must write ONLY prose paragraphs of exactly 3 to 4 sentences. No bullet points or numbered lists are allowed under H3 headings.
            - **H2 Bullet Point Placement & HTML Structure:** Bullet points can ONLY be placed directly under main <h2> headings. You MUST use a standard HTML <ul> list, and every single bullet item MUST be placed inside its own separate <li> tag (e.g., <ul><li><b>Bolded Core Concept:</b> exactly 1 sentence of explanation.</li><li><b>Another Concept:</b> ...</li></ul>).
            - **NO SQUISHED BULLETS:** Never place multiple bolded concepts inside a single paragraph or inside a single <li> tag. Every single core concept must begin on a brand-new line inside its own separate <li> tag.
-           - **Roadmap Section:** Include an optional "Crawl, Walk, Run" phased adoption framework ONLY if it is contextually relevant to the implementation of the topic.
+           - **Implementation Section:** Include a custom, topic-specific strategic implementation framework or action plan with a unique subheading and points relevant to the topic (do not use generic "Crawl, Walk, Run" terms).
         8. NO INTERNAL LINKS: DO NOT generate any <a> tags or links within the content.
         9. CONCLUSION (MANDATORY): You MUST include a final "<h2>Conclusion</h2>" heading followed by exactly 1 paragraph of 3 to 4 sentences looking towards the future and ending on a strong, definitive statement celebrating the new operational era.
 

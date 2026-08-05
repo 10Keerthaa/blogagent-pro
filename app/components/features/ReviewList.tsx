@@ -44,6 +44,7 @@ export const ReviewList = () => {
     const [savedRange, setSavedRange] = React.useState<Range | null>(null);
     const [isRegeneratingImage, setIsRegeneratingImage] = React.useState(false);
     const [isUploadingImage, setIsUploadingImage] = React.useState(false);
+    const [isUploadingInfographic, setIsUploadingInfographic] = React.useState(false);
     const [isRefiningVisual, setIsRefiningVisual] = React.useState(false);
     const [selectedDraftIds, setSelectedDraftIds] = React.useState<string[]>([]);
     const [draftToDelete, setDraftToDelete] = React.useState<string | null>(null);
@@ -91,6 +92,28 @@ export const ReviewList = () => {
         } catch (err) {
             console.error("Failed to upload featured image in review:", err);
             setIsUploadingImage(false);
+        }
+    };
+
+    const handleUploadInfographicImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || isInfographicRefining || isUploadingInfographic) return;
+        setIsUploadingInfographic(true);
+        try {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64Url = reader.result as string;
+                if (base64Url && selectedReviewDraft) {
+                    const updated = { ...selectedReviewDraft, infographicUrl: base64Url };
+                    setSelectedReviewDraft(updated);
+                    handleSaveManualEdits(updated);
+                }
+                setIsUploadingInfographic(false);
+            };
+            reader.readAsDataURL(file);
+        } catch (err) {
+            console.error("Failed to upload infographic image in review:", err);
+            setIsUploadingInfographic(false);
         }
     };
 
@@ -752,6 +775,26 @@ export const ReviewList = () => {
 
                                     <div className="bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden shadow-2xl relative group">
                                         <img src={selectedReviewDraft.infographicUrl} alt="Infographic" className="w-full h-auto" />
+                                        
+                                        {/* Docked Top-Right Square Glass Button for Uploading Custom Infographic */}
+                                        {role !== 'viewer' && (
+                                            <div className="absolute top-6 right-6 z-[60] opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto">
+                                                <label className={`w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-emerald-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-emerald-400 shadow-xl transition-all duration-200 active:scale-95 cursor-pointer group/btn ${isInfographicRefining || isUploadingInfographic ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Custom Graphic">
+                                                    {isUploadingInfographic ? (
+                                                        <Loader2 className="w-5 h-5 animate-spin text-emerald-300" />
+                                                    ) : (
+                                                        <Upload className="w-5 h-5 text-emerald-300 group-hover/btn:text-white transition-colors" />
+                                                    )}
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={handleUploadInfographicImage}
+                                                        disabled={isInfographicRefining || isUploadingInfographic}
+                                                    />
+                                                </label>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
