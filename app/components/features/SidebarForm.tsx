@@ -83,9 +83,9 @@ export const SidebarForm = () => {
             </div>
 
             {/* SCROLLABLE INPUT ZONE */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-8 space-y-10">
+            <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-8 flex flex-col gap-8">
                 {/* Blog Topic */}
-                <section className="space-y-4">
+                <section className="flex flex-col gap-2">
                     <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 !pl-4">Main Blog Topic</label>
                     <Textarea
                         placeholder="E.g., The Future of AI in Enterprise Automation..."
@@ -97,7 +97,7 @@ export const SidebarForm = () => {
                 </section>
 
                 {/* SEO Keywords */}
-                <section className="space-y-4">
+                <section className="flex flex-col gap-2">
                     <div className="flex items-center justify-between !pl-4">
                         <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Keywords</label>
                         <button
@@ -158,7 +158,7 @@ export const SidebarForm = () => {
                 </section>
 
                 {/* Meta Description */}
-                <section className="space-y-4">
+                <section className="flex flex-col gap-2">
                     <div className="flex items-center justify-between !pl-4">
                         <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Description</label>
                         <button
@@ -190,7 +190,7 @@ export const SidebarForm = () => {
 
                 {/* Reference URLs (Optional) */}
                 {!isReadOnly && (
-                    <section className="space-y-4">
+                    <section className="flex flex-col gap-2">
                         <div className="flex items-center gap-2 !pl-4">
                             <Link2 className="w-3.5 h-3.5 text-slate-400" />
                             <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Reference URLs <span className="normal-case font-medium tracking-normal text-slate-300">(Optional)</span></label>
@@ -225,7 +225,7 @@ export const SidebarForm = () => {
                 )}
 
                 {/* Idea Box */}
-                <section className="space-y-4">
+                <section className="flex flex-col gap-2">
                     <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 !pl-4">Idea Box <span className="normal-case font-medium tracking-normal text-slate-300">(Optional)</span></label>
                     <Textarea
                         placeholder="Add details for the post content. E.g., 'Add a section with details about this page based on the URLs above...'"
@@ -237,7 +237,7 @@ export const SidebarForm = () => {
                 </section>
 
                 {/* Refinement History */}
-                <section className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800/60">
+                <section className="flex flex-col gap-2 pt-4 border-t border-slate-100 dark:border-slate-800/60">
                     <div className="flex items-center justify-between !pl-4">
                         <label className="block text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 flex items-center gap-1.5">
                             <Sparkles className="w-3.5 h-3.5 text-violet-500" />
@@ -272,7 +272,7 @@ export const SidebarForm = () => {
             </div>
 
             {/* STICKY ACTION ZONE */}
-            <div className={`px-4 py-8 border-t border-slate-100 dark:border-slate-800 space-y-3 shrink-0 ${isReadOnly ? 'hidden' : ''}`}>
+            <div className={`px-4 py-8 border-t border-slate-100 dark:border-slate-800 flex flex-col space-y-3 shrink-0 ${isReadOnly ? 'hidden' : ''}`}>
                 {user && (
                     <Button
                         variant="secondary"
