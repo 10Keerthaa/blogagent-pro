@@ -185,7 +185,7 @@ export async function POST(request: Request) {
                         <div style={{
                           width: '290px',
                           backgroundColor: '#F8FAFC',
-                          borderRight: '3px solid #7C3AED',
+                          borderRight: `3px solid ${idx % 2 === 0 ? '#7C3AED' : '#EAB308'}`,
                           borderTop: '1px solid #E2E8F0',
                           borderBottom: '1px solid #E2E8F0',
                           borderLeft: '1px solid #E2E8F0',
@@ -209,7 +209,7 @@ export async function POST(request: Request) {
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                             {block.items.slice(0, 2).map((item: string, i: number) => (
                               <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#334155', fontFamily: 'EliteReg', opacity: 0.9, textAlign: 'left' }}>
-                                <span style={{ marginRight: '6px', color: '#7C3AED' }}>•</span>
+                                <span style={{ marginRight: '6px', color: (idx + i) % 2 === 0 ? '#7C3AED' : '#EAB308' }}>•</span>
                                 <span style={{ flex: 1 }}>{item}</span>
                               </div>
                             ))}
@@ -234,7 +234,7 @@ export async function POST(request: Request) {
                         <div style={{
                           width: '290px',
                           backgroundColor: '#F8FAFC',
-                          borderLeft: '3px solid #7C3AED',
+                          borderLeft: `3px solid ${idx % 2 === 0 ? '#7C3AED' : '#EAB308'}`,
                           borderTop: '1px solid #E2E8F0',
                           borderBottom: '1px solid #E2E8F0',
                           borderRight: '1px solid #E2E8F0',
@@ -258,7 +258,7 @@ export async function POST(request: Request) {
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                             {block.items.slice(0, 2).map((item: string, i: number) => (
                               <div key={i} style={{ display: 'flex', fontSize: textSize, color: '#334155', fontFamily: 'EliteReg', opacity: 0.9, textAlign: 'left' }}>
-                                <span style={{ marginRight: '6px', color: '#7C3AED' }}>•</span>
+                                <span style={{ marginRight: '6px', color: (idx + i) % 2 === 0 ? '#7C3AED' : '#EAB308' }}>•</span>
                                 <span style={{ flex: 1 }}>{item}</span>
                               </div>
                             ))}
@@ -413,7 +413,7 @@ export async function POST(request: Request) {
                   width: '347px',
                   height: '135px',
                   backgroundColor: '#F8FAFC',
-                  borderLeft: '4px solid #7C3AED',
+                  borderLeft: `4px solid ${idx % 2 === 0 ? '#7C3AED' : '#EAB308'}`,
                   borderTop: '1px solid #E2E8F0',
                   borderRight: '1px solid #E2E8F0',
                   borderBottom: '1px solid #E2E8F0',
@@ -436,7 +436,7 @@ export async function POST(request: Request) {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                     {block.items.slice(0, 2).map((item: string, i: number) => (
                       <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#334155', fontFamily: 'EliteReg', opacity: 0.9 }}>
-                        <span style={{ marginRight: '6px', color: '#7C3AED' }}>•</span>
+                        <span style={{ marginRight: '6px', color: (idx + i) % 2 === 0 ? '#7C3AED' : '#EAB308' }}>•</span>
                         <span style={{ flex: 1 }}>{item}</span>
                       </div>
                     ))}
@@ -569,7 +569,7 @@ export async function POST(request: Request) {
               <div key={idx} style={{
                 width: '700px',
                 backgroundColor: '#F8FAFC',
-                borderLeft: '4px solid #7C3AED',
+                borderLeft: `4px solid ${idx % 2 === 0 ? '#7C3AED' : '#EAB308'}`,
                 borderTop: '1px solid #E2E8F0',
                 borderRight: '1px solid #E2E8F0',
                 borderBottom: '1px solid #E2E8F0',
@@ -592,7 +592,7 @@ export async function POST(request: Request) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   {block.items.slice(0, 2).map((item: string, i: number) => (
                     <div key={i} style={{ display: 'flex', fontSize: '11px', color: '#334155', fontFamily: 'EliteReg', opacity: 0.9 }}>
-                      <span style={{ marginRight: '6px', color: '#7C3AED' }}>•</span>
+                      <span style={{ marginRight: '6px', color: (idx + i) % 2 === 0 ? '#7C3AED' : '#EAB308' }}>•</span>
                       <span style={{ flex: 1 }}>{item}</span>
                     </div>
                   ))}

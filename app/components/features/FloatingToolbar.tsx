@@ -7,7 +7,6 @@ import {
     Italic,
     Link as LinkIcon,
     Link2Off,
-    Wand2,
     Sparkles,
     AlignLeft,
     AlignJustify,
@@ -242,23 +241,6 @@ export const FloatingToolbar = ({ isVisible, rect, onAction, onClose, isLink: is
                         </span>
                     </button>
 
-                    {/* --- AI Action: Improve --- */}
-                    <button
-                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                        onClick={() => handleAiAction('improve')}
-                        className="p-2 hover:bg-violet-50 dark:hover:bg-violet-950/30 rounded-lg transition-colors group flex items-center gap-1.5 disabled:opacity-50"
-                        title="Improve Writing"
-                        disabled={!!loadingAction}
-                    >
-                        {loadingAction === 'improve' ? (
-                            <Loader2 className="w-4 h-4 text-violet-600 animate-spin" />
-                        ) : (
-                            <Wand2 className="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-violet-600" />
-                        )}
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-violet-600 hidden sm:inline">
-                            {loadingAction === 'improve' ? '...' : 'Improve'}
-                        </span>
-                    </button>
 
                     {/* --- AI Action: Shorten --- */}
                     <button

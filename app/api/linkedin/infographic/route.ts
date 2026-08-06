@@ -102,7 +102,7 @@ export async function POST(req: Request) {
       A horizontal strip of ${numIcons} premium 3D vector-style scenes for an enterprise technology blog. 
       STYLE: Clean 3D vector-style illustrations, soft shadows, clay-like smooth textures. ${userOverride}
       ICONS: Draw ${numIcons} distinct scenes featuring clean, stylized 3D human figures (e.g. business professionals, analysts, or developers) interacting with literal symbolic icons (such as a shield, a gear, a magnifying glass, or a bar chart) representing: ${parsedData.pillars.join(', ')}.
-      COLORS: The human characters and icons must strictly use a unified color palette of deep purple (#7c3aed) and clean white/grey.
+      COLORS: The human characters and icons must strictly use a unified corporate color palette of deep purple (#7c3aed), gold-yellow (#eab308), clean white, and black. No other colors.
       LAYOUT: Draw ${numIcons} circular scenes in a single, perfectly straight horizontal row in the UPPER HALF of the canvas. 
       BACKGROUND: Solid white background (#FFFFFF). 
       STRICT NO-TEXT RULE: DO NOT DRAW ANY LETTERS, WORDS, ALPHABETS, CAPTIONS, OR LABELS ANYWHERE ON THE IMAGE (ESPECIALLY BENEATH THE ICONS). THE ICONS MUST BE 100% GRAPHICAL ONLY. ZERO TEXT TOLERANCE.
