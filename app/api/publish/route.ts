@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ASSETS, FONTS } from '@/lib/constants';
+import { CATEGORIES, LOCKED_CATEGORY_ID } from '@/lib/constants/categories';
 import { db } from "@/lib/firebaseAdmin";
 import sharp from "sharp";
 
@@ -196,9 +197,28 @@ export async function POST(req: Request) {
         const blogTagBase64 = ASSETS.blogTag;
         const logoBase64 = ASSETS.logo;
 
-        const titleParts = title.split(':');
-        const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
-        const subtitle = titleParts.length > 1 ? titleParts.slice(1).join(':').trim() : '';
+        // Fetch raw image first with stealth headers to prevent CDN 403 blocks
+        let rawBuffer: ArrayBuffer | null = null;
+        try {
+          const rawImgRes = await fetch(imageUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+              'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+            }
+          });
+          if (rawImgRes.ok) {
+            rawBuffer = await rawImgRes.arrayBuffer();
+          } else {
+            console.warn(`⚠️ Direct fetch of imageUrl returned status ${rawImgRes.status}`);
+          }
+        } catch (fetchErr) {
+          console.warn("⚠️ Direct fetch of imageUrl failed:", fetchErr);
+        }
+
+        // Convert raw image to Data URI so /api/banner loads instantly from memory without network timeouts
+        const bgDataUri = rawBuffer 
+          ? `data:image/png;base64,${Buffer.from(rawBuffer).toString('base64')}`
+          : imageUrl;
 
         const ogUrl = new URL(`${origin}/api/banner`);
 
@@ -211,7 +231,7 @@ export async function POST(req: Request) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             title: title,
-            bgUrl: imageUrl,
+            bgUrl: bgDataUri,
             logoBase64: logoBase64,
             tagBase64: blogTagBase64,
             fontBoldBase64: fontBoldBase64,
@@ -220,39 +240,140 @@ export async function POST(req: Request) {
           })
         });
 
+        let imgBuffer: ArrayBuffer | null = null;
         if (imgRes.ok) {
-          const imgBuffer = await imgRes.arrayBuffer();
-
-          const filename = `featured-${Date.now()}.png`;
-          const formData = new FormData();
-          const blob = new Blob([new Uint8Array(imgBuffer)], { type: 'image/png' });
-          formData.append('file', blob, filename);
-
-          const mediaResponse = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
-            method: 'POST',
-            headers: {
-              'Authorization': authHeader,
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-              'Accept': 'application/json, text/plain, */*'
-            },
-            body: formData
-          });
-
-          if (mediaResponse.ok) {
-            const mediaData = await mediaResponse.json();
-            featuredMediaId = mediaData.id;
-            console.log(`✅ Media Composited & Sideloaded: ID ${featuredMediaId}`);
-          } else {
-            const mediaErr = await mediaResponse.text();
-            console.error("❌ WordPress Media Upload Failed:", mediaErr.substring(0, 500));
-          }
+          imgBuffer = await imgRes.arrayBuffer();
         } else {
-          console.error("❌ Vercel OG Banner Generation Failed:", await imgRes.text());
+          console.warn("⚠️ Banner Generation Failed, using downloaded rawBuffer fallback...");
+          imgBuffer = rawBuffer;
+        }
+
+        if (imgBuffer) {
+          const filename = `featured-${Date.now()}.png`;
+
+          // Method A: Try Multipart FormData upload first (bypasses Sucuri Firewall Block MET043)
+          try {
+            const formData = new FormData();
+            const blob = new Blob([new Uint8Array(imgBuffer)], { type: 'image/png' });
+            formData.append('file', blob, filename);
+
+            const mediaResponse = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
+              method: 'POST',
+              headers: {
+                'Authorization': authHeader,
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                'Accept': 'application/json, text/plain, */*'
+              },
+              body: formData
+            });
+
+            if (mediaResponse.ok) {
+              const mediaData = await mediaResponse.json();
+              featuredMediaId = mediaData.id;
+              console.log(`✅ Media Composited & Sideloaded via FormData: ID ${featuredMediaId}`);
+            } else {
+              const mediaErr = await mediaResponse.text();
+              console.warn("⚠️ FormData Media Upload failed, attempting raw binary fallback:", mediaErr.substring(0, 300));
+            }
+          } catch (fdErr) {
+            console.warn("⚠️ FormData upload error:", fdErr);
+          }
+
+          // Method B: Raw binary upload fallback if FormData fails
+          if (!featuredMediaId) {
+            const rawMediaRes = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
+              method: 'POST',
+              headers: {
+                'Authorization': authHeader,
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                'Content-Type': 'image/png',
+                'Content-Disposition': `attachment; filename="${filename}"`,
+                'Accept': 'application/json'
+              },
+              body: Buffer.from(imgBuffer)
+            });
+
+            if (rawMediaRes.ok) {
+              const mediaData = await rawMediaRes.json();
+              featuredMediaId = mediaData.id;
+              console.log(`✅ Media Sideloaded via Raw Binary: ID ${featuredMediaId}`);
+            } else {
+              console.error("❌ Both Media Upload methods failed:", (await rawMediaRes.text()).substring(0, 300));
+            }
+          }
         }
       } catch (sideloadErr) {
         console.error("⚠️ Sideloading/Compositing failed (continuing without ID):", sideloadErr);
       }
     }
+
+    // Step 2.5: Dynamically resolve Category IDs on live WordPress site
+    let finalWpCategories: number[] = [];
+    try {
+      const categoryIdToName: Record<number, string> = {};
+      CATEGORIES.forEach(c => {
+        categoryIdToName[c.id] = c.name;
+      });
+
+      const wpCatResponse = await fetch(`${wpUrl}/wp-json/wp/v2/categories?per_page=100`, {
+        method: 'GET',
+        headers: stealthHeaders
+      });
+
+      if (wpCatResponse.ok) {
+        const wpExistingCats = await wpCatResponse.json();
+        const rawCats: (number | string)[] = Array.isArray(categories) && categories.length > 0 
+          ? categories 
+          : [LOCKED_CATEGORY_ID];
+
+        for (const catInput of rawCats) {
+          let targetName = '';
+          if (typeof catInput === 'number') {
+            targetName = categoryIdToName[catInput] || String(catInput);
+          } else {
+            targetName = String(catInput);
+          }
+
+          let matchedCat = Array.isArray(wpExistingCats) ? wpExistingCats.find((c: any) => 
+            c.name.toLowerCase() === targetName.toLowerCase() ||
+            c.slug.toLowerCase() === targetName.toLowerCase().replace(/\s+/g, '-')
+          ) : null;
+
+          if (matchedCat) {
+            finalWpCategories.push(matchedCat.id);
+          } else {
+            try {
+              const createCatRes = await fetch(`${wpUrl}/wp-json/wp/v2/categories`, {
+                method: 'POST',
+                headers: {
+                  ...stealthHeaders,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: targetName })
+              });
+              if (createCatRes.ok) {
+                const newCat = await createCatRes.json();
+                finalWpCategories.push(newCat.id);
+                console.log(`✅ Created missing WP Category "${targetName}": ID ${newCat.id}`);
+              } else if (typeof catInput === 'number') {
+                finalWpCategories.push(catInput);
+              }
+            } catch {
+              if (typeof catInput === 'number') finalWpCategories.push(catInput);
+            }
+          }
+        }
+      }
+    } catch (catErr) {
+      console.warn("⚠️ Dynamic WP category lookup failed, using fallback categories:", catErr);
+    }
+
+    if (finalWpCategories.length === 0) {
+      finalWpCategories = Array.isArray(categories) && categories.length > 0 
+        ? categories.map(Number).filter(Boolean) 
+        : [LOCKED_CATEGORY_ID];
+    }
+    finalWpCategories = Array.from(new Set(finalWpCategories));
 
     // Step 3: Create the Post on WordPress
     const postResponse = await fetch(`${wpUrl}/wp-json/wp/v2/posts`, {
@@ -268,7 +389,7 @@ export async function POST(req: Request) {
         status: 'publish',
         featured_media: featuredMediaId, // 🔥 KEY FIX: Assign the sideloaded ID here
         rank_math_description: metaDesc,
-        categories: categories || [253] // Default to Blog if missing
+        categories: finalWpCategories
       })
     });
 

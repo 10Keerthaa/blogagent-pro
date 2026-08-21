@@ -717,6 +717,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     referenceUrl3: referenceUrl3.trim() || null,
                     ideaBox: ideaBox || null
                 });
+
+                // Automatically reset editor text inputs so editor is clean for the next topic
+                handleClearForm();
             } catch (err) {
                 console.warn("Post-generation sync failed:", err);
             }
