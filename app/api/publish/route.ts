@@ -155,11 +155,20 @@ export async function POST(req: Request) {
     }
 
     const authHeader = 'Basic ' + Buffer.from(`${wpUser}:${wpPassword}`).toString('base64');
-    const stealthHeaders = {
+    const stealthHeaders: Record<string, string> = {
       'Authorization': authHeader,
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
       'Accept': 'application/json, text/plain, */*',
-      'Accept-Language': 'en-US,en;q=0.9',
+      'Accept-Language': 'en-US,en;q=0.9,en-GB;q=0.8',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Sec-Fetch-Dest': 'empty',
+      'Sec-Fetch-Mode': 'cors',
+      'Sec-Fetch-Site': 'same-site',
+      'Sec-Ch-Ua': '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+      'Sec-Ch-Ua-Mobile': '?0',
+      'Sec-Ch-Ua-Platform': '"Windows"',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
     };
 
     let finalContent = "";
@@ -275,9 +284,7 @@ export async function POST(req: Request) {
             const mediaResponse = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
               method: 'POST',
               headers: {
-                'Authorization': authHeader,
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                'Accept': 'application/json, text/plain, */*'
+                ...stealthHeaders
               },
               body: formData
             });
@@ -299,11 +306,9 @@ export async function POST(req: Request) {
             const rawMediaRes = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
               method: 'POST',
               headers: {
-                'Authorization': authHeader,
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                ...stealthHeaders,
                 'Content-Type': mimeType,
-                'Content-Disposition': `attachment; filename="${filename}"`,
-                'Accept': 'application/json'
+                'Content-Disposition': `attachment; filename="${filename}"`
               },
               body: new Uint8Array(compressedBuffer)
             });
