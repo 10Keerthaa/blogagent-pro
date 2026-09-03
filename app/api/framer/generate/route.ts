@@ -74,10 +74,10 @@ export async function POST(req: Request) {
           searchQuery: z.string().min(3).describe('REQUIRED: The specific Google-style search query string to find statistics (e.g., "2024 remote work retention statistics"). DO NOT LEAVE EMPTY.'),
         }),
         execute: async ({ searchQuery }: { searchQuery: string }) => {
-          const query = searchQuery;
+          let query = searchQuery;
           if (!query || query === "undefined" || query.trim() === "") {
-            console.log(`[AGENT TOOL] Tavily search rejected: AI passed undefined or empty query.`);
-            return "ERROR: You MUST provide a specific string for the 'query' parameter. Please try calling the tool again with a real search query.";
+            query = `${prompt} statistics 2026`;
+            console.log(`[AGENT TOOL] Tavily query was empty, using fallback query: "${query}"`);
           }
           console.log(`[AGENT TOOL] Tavily searching for: "${query}"`);
           try {

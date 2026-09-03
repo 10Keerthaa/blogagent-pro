@@ -718,8 +718,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
                     ideaBox: ideaBox || null
                 });
 
-                // Automatically reset editor text inputs so editor is clean for the next topic
-                handleClearForm();
+                // Sync in-progress draft status
+                checkForResumeDraft();
             } catch (err) {
                 console.warn("Post-generation sync failed:", err);
             }
