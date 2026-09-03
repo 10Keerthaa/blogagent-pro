@@ -10,7 +10,7 @@ import { Input } from '../ui/Input';
 import { Skeleton } from '../ui/Skeleton';
 import {
     FileText, Calendar, ArrowLeft, ArrowRight, X, CheckCircle, XCircle, Zap, Sparkles, Users,
-    AlertCircle, Loader2, Trash2, CheckSquare, RefreshCw, Upload
+    AlertCircle, Loader2, Trash2, CheckSquare, RefreshCw, Upload, Download
 } from 'lucide-react';
 import { FloatingToolbar } from './FloatingToolbar';
 import { Portal } from '../ui/Portal';
@@ -49,7 +49,40 @@ export const ReviewList = () => {
     const [selectedDraftIds, setSelectedDraftIds] = React.useState<string[]>([]);
     const [draftToDelete, setDraftToDelete] = React.useState<string | null>(null);
     const [isBulkDeleting, setIsBulkDeleting] = React.useState(false);
+    const [isDownloadingImage, setIsDownloadingImage] = React.useState(false);
     const editorRef = React.useRef<HTMLDivElement>(null);
+
+    const handleDownloadLinkedInBanner = async () => {
+        if (!selectedReviewDraft || isDownloadingImage) return;
+        setIsDownloadingImage(true);
+        try {
+            const res = await fetch('/api/banner', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: selectedReviewDraft.title,
+                    bgUrl: selectedReviewDraft.imageUrl,
+                    platform: 'linkedin'
+                })
+            });
+
+            if (!res.ok) throw new Error('Failed to generate banner image');
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `linkedin-banner-${Date.now()}.png`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error('Failed to download banner in review:', err);
+        } finally {
+            setIsDownloadingImage(false);
+        }
+    };
 
     const handleRegenerateFeaturedImage = async () => {
         if (!selectedReviewDraft?.title || isRegeneratingImage || isUploadingImage) return;
@@ -505,11 +538,24 @@ export const ReviewList = () => {
                                                 </div>
                                             </div>
 
-                                            {/* Layer 4: Docked Top-Right Square Glass Buttons for Regenerate & Upload */}
+                                            {/* Layer 4: Docked Top-Right Square Glass Buttons for Download, Regenerate & Upload */}
                                             <div className="absolute top-6 right-6 z-[60] flex items-center gap-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto">
                                                 <button
                                                     type="button"
-                                                    disabled={isRegeneratingImage || isUploadingImage}
+                                                    disabled={isRegeneratingImage || isUploadingImage || isDownloadingImage}
+                                                    onClick={handleDownloadLinkedInBanner}
+                                                    className="w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-sky-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-sky-400 shadow-xl transition-all duration-200 active:scale-95 disabled:opacity-50 group/btn"
+                                                    title="Download LinkedIn Banner"
+                                                >
+                                                    {isDownloadingImage ? (
+                                                        <Loader2 className="w-5 h-5 animate-spin text-sky-300" />
+                                                    ) : (
+                                                        <Download className="w-5 h-5 text-sky-300 group-hover/btn:text-white transition-colors" />
+                                                    )}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    disabled={isRegeneratingImage || isUploadingImage || isDownloadingImage}
                                                     onClick={handleRegenerateFeaturedImage}
                                                     className="w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-violet-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-violet-400 shadow-xl transition-all duration-200 active:scale-95 disabled:opacity-50 group/btn"
                                                     title="Regenerate Image"
@@ -520,7 +566,7 @@ export const ReviewList = () => {
                                                         <RefreshCw className="w-5 h-5 text-violet-300 group-hover/btn:text-white transition-colors" />
                                                     )}
                                                 </button>
-                                                <label className={`w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-emerald-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-emerald-400 shadow-xl transition-all duration-200 active:scale-95 cursor-pointer group/btn ${isRegeneratingImage || isUploadingImage ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Custom Image">
+                                                <label className={`w-10 h-10 flex items-center justify-center bg-slate-900/90 hover:bg-emerald-600 text-white rounded-xl backdrop-blur-xl border border-white/20 hover:border-emerald-400 shadow-xl transition-all duration-200 active:scale-95 cursor-pointer group/btn ${isRegeneratingImage || isUploadingImage || isDownloadingImage ? 'opacity-50 pointer-events-none' : ''}`} title="Upload Custom Image">
                                                     {isUploadingImage ? (
                                                         <Loader2 className="w-5 h-5 animate-spin text-emerald-300" />
                                                     ) : (
@@ -531,7 +577,7 @@ export const ReviewList = () => {
                                                         accept="image/*"
                                                         className="hidden"
                                                         onChange={handleUploadFeaturedImage}
-                                                        disabled={isRegeneratingImage || isUploadingImage}
+                                                        disabled={isRegeneratingImage || isUploadingImage || isDownloadingImage}
                                                     />
                                                 </label>
                                             </div>

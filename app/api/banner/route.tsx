@@ -1,15 +1,41 @@
 import { ImageResponse } from 'next/og';
+import fs from 'fs';
+import path from 'path';
 
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {
-    const { title = 'Blog Title', bgUrl = '', logoBase64 = '', tagBase64 = '', fontBoldBase64 = '', fontRegBase64 = '', platform = 'framer' } = await request.json();
+    let { title = 'Blog Title', bgUrl = '', logoBase64 = '', tagBase64 = '', fontBoldBase64 = '', fontRegBase64 = '', platform = 'framer' } = await request.json();
 
     const isWordPress = platform === 'wordpress';
     const isLinkedIn = platform === 'linkedin';
     const canvasWidth = isLinkedIn ? 1706 : isWordPress ? 960 : 1376;
     const canvasHeight = isLinkedIn ? 960 : isWordPress ? 720 : 768;
+
+    // Auto-load default logos from public directory if not explicitly passed
+    if (!logoBase64) {
+      try {
+        const logoPath = path.join(process.cwd(), 'public', '10xDS.png');
+        if (fs.existsSync(logoPath)) {
+          logoBase64 = fs.readFileSync(logoPath).toString('base64');
+        }
+      } catch (e) {
+        console.error("Failed to load default logo in banner API:", e);
+      }
+    }
+
+    if (!tagBase64) {
+      try {
+        const tagFileName = isLinkedIn ? 'linkedlin tag.png' : 'Blog.png';
+        const tagPath = path.join(process.cwd(), 'public', tagFileName);
+        if (fs.existsSync(tagPath)) {
+          tagBase64 = fs.readFileSync(tagPath).toString('base64');
+        }
+      } catch (e) {
+        console.error("Failed to load default tag in banner API:", e);
+      }
+    }
 
     const titleParts = title.split(':');
     const mainTitle = titleParts[0] + (title.includes(':') ? ':' : '');
