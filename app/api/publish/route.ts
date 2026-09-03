@@ -249,12 +249,27 @@ export async function POST(req: Request) {
         }
 
         if (imgBuffer) {
-          const filename = `featured-${Date.now()}.png`;
+          let compressedBuffer: Buffer = Buffer.from(imgBuffer);
+          let mimeType = 'image/jpeg';
+          let extension = 'jpg';
+          try {
+            compressedBuffer = await sharp(Buffer.from(imgBuffer))
+              .resize(1200, 630, { fit: 'cover' })
+              .jpeg({ quality: 82 })
+              .toBuffer();
+            console.log(`⚡ Compressed banner image: ${imgBuffer.byteLength} bytes -> ${compressedBuffer.length} bytes`);
+          } catch (sharpErr) {
+            console.warn("⚠️ Sharp banner compression fallback:", sharpErr);
+            mimeType = 'image/png';
+            extension = 'png';
+          }
+
+          const filename = `featured-${Date.now()}.${extension}`;
 
           // Method A: Try Multipart FormData upload first (bypasses Sucuri Firewall Block MET043)
           try {
             const formData = new FormData();
-            const blob = new Blob([new Uint8Array(imgBuffer)], { type: 'image/png' });
+            const blob = new Blob([new Uint8Array(compressedBuffer)], { type: mimeType });
             formData.append('file', blob, filename);
 
             const mediaResponse = await fetch(`${wpUrl}/wp-json/wp/v2/media`, {
@@ -286,11 +301,11 @@ export async function POST(req: Request) {
               headers: {
                 'Authorization': authHeader,
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                'Content-Type': 'image/png',
+                'Content-Type': mimeType,
                 'Content-Disposition': `attachment; filename="${filename}"`,
                 'Accept': 'application/json'
               },
-              body: Buffer.from(imgBuffer)
+              body: new Uint8Array(compressedBuffer)
             });
 
             if (rawMediaRes.ok) {
